@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Data? A Manufacturing Worker's Guide to the Information AI Actually Runs On</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Data types grid */
+.data-types{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.dt-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:20px;}
+.dt-icon{font-size:28px;margin-bottom:8px;}
+.dt-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.dt-name{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.dt-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.dt-example{margin-top:10px;font-size:12px;padding:8px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+@media(max-width:560px){.data-types{grid-template-columns:1fr;}}
+
+/* Data quality interactive */
+.quality-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.qs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.qs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.qs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.qs-records{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.qs-record{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all .2s;}
+.qs-record:hover{border-color:var(--purple);}
+.qs-record.flagged-good{border-color:var(--green);background:var(--green-pale);}
+.qs-record.flagged-bad{border-color:var(--red);background:var(--red-pale);}
+.qs-record-data{flex:1;font-size:13px;font-family:monospace;color:var(--gray-text);}
+.qs-record-btn{font-size:12px;font-weight:600;padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.qs-record-btn.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.qs-record-btn.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.qs-record-result{font-size:12px;font-weight:700;display:none;}
+.qs-record.flagged-good .qs-record-result,.qs-record.flagged-bad .qs-record-result{display:block;}
+.flagged-good .qs-record-result{color:var(--green);}
+.flagged-bad .qs-record-result{color:var(--red);}
+.qs-score-area{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-top:14px;display:none;font-size:15px;line-height:1.7;}
+.qs-score-area.show{display:block;}
+
+/* What happens with bad data */
+.bad-data-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.bd-card{display:flex;gap:16px;border-radius:16px;padding:20px;border:1.5px solid;}
+.bd-card.c1{background:var(--red-pale);border-color:var(--red);}
+.bd-card.c2{background:var(--orange-pale);border-color:var(--orange);}
+.bd-card.c3{background:var(--blue-pale);border-color:var(--blue-mid);}
+.bd-icon{font-size:28px;flex-shrink:0;}
+.bd-body{}
+.bd-title{font-weight:700;font-size:15px;margin-bottom:5px;}
+.c1 .bd-title{color:var(--red);}
+.c2 .bd-title{color:#92400E;}
+.c3 .bd-title{color:var(--blue);}
+.bd-desc{font-size:14px;line-height:1.7;color:var(--gray-text);}
+
+/* Worker's role in data */
+.worker-role{background:var(--purple-dark);border-radius:20px;padding:28px;margin:24px 0;color:var(--white);}
+.wr-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.wr-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:16px;}
+.wr-items{display:flex;flex-direction:column;gap:10px;}
+.wr-item{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;}
+.wr-item-icon{font-size:18px;flex-shrink:0;}
+.wr-item-text{font-size:14px;line-height:1.65;color:rgba(255,255,255,.85);}
+.wr-item-text strong{color:var(--purple-mid);}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:20px;font-weight:700;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{font-size:15px;line-height:1.7;padding:16px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+
+.summary{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:36px;margin:40px 0;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:16px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;margin:0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 · Foundation Article</div>
+  <h1>What Is Data? A Manufacturing Worker's Guide to the Information AI Actually Runs On</h1>
+  <p class="hero-sub">Everyone says AI runs on data. But what does that actually mean in a factory? What does manufacturing data look like, where does it come from, and why does its quality determine everything?</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>You've probably heard "AI runs on data" so many times it's started to feel like a slogan. But if you ask most people to explain what manufacturing data actually <em>looks like</em> — what it is, where it comes from, and why it matters — they struggle to answer.</p>
+    <p>This article answers that question directly. Because if you don't understand data, you can't understand why AI sometimes works brilliantly, why it sometimes fails, and — most importantly — how your own actions on the floor affect the quality of the AI systems you work with.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Data Actually Is</h2>
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term: Data</div>
+      <div class="vocab-def"><strong>Data</strong> is recorded information — any fact, measurement, or observation that has been captured and stored in a form that can be read, compared, and analyzed. In manufacturing, data is collected constantly: every sensor reading, every machine log entry, every quality inspection result, every shift report is data. AI learns from historical data and analyzes current data to make predictions.</div>
+    </div>
+    <p>Data isn't just numbers. It includes images (photos of parts for quality inspection), text (maintenance notes, shift logs), categories (pass/fail, shift A/B/C), and timestamps (what time did this happen?). What all of these have in common is that they've been <mark>recorded in a way that a computer can store and compare</mark>.</p>
+    <p>Here's a simple example: a maintenance technician inspects a motor and mentally notes "it's running a bit hot." That observation exists only in their head — it's not data yet. But if they log that observation in a maintenance system — "Motor 7, noted elevated temperature, 163°F at 2:14 PM" — <em>now it's data</em>. It can be searched, compared to other records, included in AI training, and used to spot patterns.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Types of Data in a Manufacturing Facility</h2>
+    <p>Manufacturing facilities generate several distinct categories of data. Understanding each type helps you see how AI pulls them together to make sense of what's happening on the floor.</p>
+
+    <div class="data-types fade-in">
+      <div class="dt-card">
+        <div class="dt-icon">📡</div>
+        <div class="dt-type">Type 1</div>
+        <div class="dt-name">Machine / Sensor Data</div>
+        <div class="dt-desc">Readings automatically collected from sensors attached to equipment. Temperature, vibration, pressure, power draw, speed, cycle counts. This data is continuous — collected hundreds or thousands of times per hour — and is the backbone of predictive maintenance AI.</div>
+        <div class="dt-example">📋 Example: "Motor 7 — Temp: 163°F | Vibration: 3.2 mm/s | Current: 14.8A | Timestamp: 14:14:32"</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">🔍</div>
+        <div class="dt-type">Type 2</div>
+        <div class="dt-name">Quality / Inspection Data</div>
+        <div class="dt-desc">Records of inspection results — measurements, pass/fail decisions, defect types, defect locations. Collected by human inspectors or automatically by machine vision cameras. The training data for quality control AI comes from millions of labeled records like these.</div>
+        <div class="dt-example">📋 Example: "Part #48291 — Dimension check: PASS | Surface scan: FAIL (scratch, 2.3mm, Zone B) | Inspector: J. Torres | Time: 09:41"</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">📦</div>
+        <div class="dt-type">Type 3</div>
+        <div class="dt-name">Production / Operational Data</div>
+        <div class="dt-desc">Information about production rates, shift schedules, material usage, downtime events, and workflow status. This data tells AI how the facility is performing over time — and helps scheduling systems optimize production plans.</div>
+        <div class="dt-example">📋 Example: "Shift A — Units produced: 2,847 | Downtime events: 2 (total 47 min) | Scrap rate: 0.8% | Material usage: 94% of plan"</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">🔧</div>
+        <div class="dt-type">Type 4</div>
+        <div class="dt-name">Maintenance Records</div>
+        <div class="dt-desc">Logs of every maintenance action: what was done, when, by whom, and what condition the equipment was in. When an AI learns to predict failures, it trains on the correlation between sensor readings and what the maintenance records say happened next.</div>
+        <div class="dt-example">📋 Example: "Machine 12 — Bearing replacement | Condition at inspection: inner race worn, 0.8mm play | Hours since last service: 1,847 | Tech: R. Patel"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Golden Rule: Garbage In, Garbage Out</h2>
+    <p>There's a saying in every field that uses data: <mark>"Garbage in, garbage out."</mark> It means that the quality of what comes out of a system is directly determined by the quality of what goes in. For AI in manufacturing, this is not a metaphor — it's a literal description of how these systems fail.</p>
+    <p>If the data an AI trains on is inaccurate, incomplete, or inconsistent, the AI will learn wrong patterns. And then it will apply those wrong patterns to real situations — with confidence, because AI doesn't know what it doesn't know.</p>
+
+    <div class="bad-data-cards fade-in">
+      <div class="bd-card c1">
+        <div class="bd-icon">❌</div>
+        <div class="bd-body">
+          <div class="bd-title">Inaccurate data: The wrong answer recorded as fact</div>
+          <div class="bd-desc">A technician records a machine temperature as 145°F but the actual reading was 165°F — a transcription error. The AI trains on this record and learns that 165°F correlates with "normal operation." Now when that machine actually runs at 165°F, the AI doesn't flag it as elevated — because its training data said 165°F is fine.</div>
+        </div>
+      </div>
+      <div class="bd-card c2">
+        <div class="bd-icon">⚠️</div>
+        <div class="bd-body">
+          <div class="bd-title">Missing data: Gaps the AI fills in with guesses</div>
+          <div class="bd-desc">A sensor malfunctions for two days and records nothing. During that time, a bearing was developing a failure. When the AI looks back at historical data to learn failure patterns, it sees no data for those two days — so it doesn't learn from that failure event. The next time that bearing pattern develops, the AI misses it.</div>
+        </div>
+      </div>
+      <div class="bd-card c3">
+        <div class="bd-icon">ℹ️</div>
+        <div class="bd-body">
+          <div class="bd-title">Inconsistent data: Different people recording the same thing differently</div>
+          <div class="bd-desc">Three inspectors record surface defects differently — one writes "scratch," another writes "surface irregularity," another writes "cosmetic defect." The AI treating these as three different categories instead of one defect type can't accurately count how many scratches are occurring or track whether the problem is getting better or worse.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Practice: Spot the Data Quality Problem</h2>
+
+    <div class="quality-sim fade-in">
+      <div class="qs-label">🎮 Data Quality Exercise</div>
+      <div class="qs-title">Review These Maintenance Log Entries</div>
+      <div class="qs-sub">Below are 6 maintenance log entries submitted by workers on different shifts. Some are high-quality data. Some have problems. Click "Good Data" or "Bad Data" for each one.</div>
+      <div class="qs-records" id="records">
+        <div class="qs-record" id="r1">
+          <div class="qs-record-data">Machine 7 | Bearing replaced | Temp at inspection: 171°F | Hours since last service: 2,104 | Cause: AI alert (vibration + temp pattern) | Tech: M. Johnson | Time: 06:22</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r1','good','✅ Good data — specific, complete, timestamped, includes cause and technician. This is exactly the kind of record AI can learn from.')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r1','bad','')">Bad Data</button>
+          <div class="qs-record-result" id="r1-result"></div>
+        </div>
+        <div class="qs-record" id="r2">
+          <div class="qs-record-data">Machine 3 | Fixed it | Shift B</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r2','good','')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r2','bad','❌ Bad data — what was fixed? What was wrong? No timestamp, no technician name, no measurements. An AI analyzing this record learns nothing about what happened, when, or why.')">Bad Data</button>
+          <div class="qs-record-result" id="r2-result"></div>
+        </div>
+        <div class="qs-record" id="r3">
+          <div class="qs-record-data">Machine 12 | Pressure sensor replaced | Old sensor reading: 42 PSI (should be 85–95 PSI) | New sensor verified: 89 PSI | Root cause: sensor failure, not equipment fault | Tech: R. Patel | Time: 14:07</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r3','good','✅ Good data — this is excellent. It includes the old vs. new readings, correctly identifies that the sensor failed (not the machine), and gives the AI important context: sometimes a reading is wrong because the sensor is broken, not because the machine has a problem.')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r3','bad','')">Bad Data</button>
+          <div class="qs-record-result" id="r3-result"></div>
+        </div>
+        <div class="qs-record" id="r4">
+          <div class="qs-record-data">Machine 9 | Temp: HIGH | Fixed | OK now</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r4','good','')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r4','bad','❌ Bad data — "HIGH" and "OK now" are not measurable values. What was the actual temperature? What was done to fix it? What component was involved? Without specifics, this tells an AI almost nothing useful about what happened.')">Bad Data</button>
+          <div class="qs-record-result" id="r4-result"></div>
+        </div>
+        <div class="qs-record" id="r5">
+          <div class="qs-record-data">Machine 4 | Scheduled bearing replacement (preventive) | Condition at inspection: normal wear, within spec | Hours: 1,500 | Tech: S. Williams | Time: 22:14</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r5','good','✅ Good data — importantly, this records that the bearing was in normal condition when replaced. This is valuable for AI training: it teaches the system what sensor readings looked like when a part was healthy, which helps it distinguish normal from abnormal.')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r5','bad','')">Bad Data</button>
+          <div class="qs-record-result" id="r5-result"></div>
+        </div>
+        <div class="qs-record" id="r6">
+          <div class="qs-record-data">Machine 6 | Weird noise, lubed it up | Prob fine | Thursday night</div>
+          <button class="qs-record-btn good" onclick="flagRecord('r6','good','')">Good Data</button>
+          <button class="qs-record-btn bad" onclick="flagRecord('r6','bad','❌ Bad data — no specific timestamp, no measurements, no description of the noise (grinding? squealing? intermittent?), no confirmation that the lubrication actually resolved the issue. "Prob fine" is not a verifiable outcome. This record creates more questions than it answers.')">Bad Data</button>
+          <div class="qs-record-result" id="r6-result"></div>
+        </div>
+      </div>
+      <div class="qs-score-area" id="scoreArea"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>You Are Part of the Data Pipeline</h2>
+    <p>Here's the most important practical takeaway from this article: <mark>every worker in a manufacturing facility contributes to the data that AI systems depend on</mark>. And the quality of that contribution directly affects how well the AI performs.</p>
+    <p>This isn't abstract. When you fill out a maintenance log, run a quality inspection, or report a machine issue, that record becomes part of the dataset that trains and refines the AI systems in your facility. If your records are specific, accurate, and complete — the AI learns better. If they're vague, approximate, or missing — the AI learns worse patterns.</p>
+
+    <div class="worker-role fade-in">
+      <div class="wr-label">👷 Your Role in the Data System</div>
+      <div class="wr-title">How Workers Affect AI Quality Every Day</div>
+      <div class="wr-items">
+        <div class="wr-item">
+          <div class="wr-item-icon">📝</div>
+          <div class="wr-item-text"><strong>When you write a maintenance log:</strong> Be specific about measurements, causes, and outcomes. "Motor temp 171°F, replaced bearing, condition: advanced wear" gives AI far more to learn from than "fixed motor."</div>
+        </div>
+        <div class="wr-item">
+          <div class="wr-item-icon">🔍</div>
+          <div class="wr-item-text"><strong>When you report a quality defect:</strong> Use consistent terms. If the quality system uses "surface scratch" as the defect code, don't write "cosmetic mark" or "scratch" — even if they mean the same thing to you. Consistency is what allows AI to count and track accurately.</div>
+        </div>
+        <div class="wr-item">
+          <div class="wr-item-icon">⚠️</div>
+          <div class="wr-item-text"><strong>When a sensor seems wrong:</strong> Report it. A malfunctioning sensor that nobody flags creates a gap in the data — which means the AI is missing information for that time period. Reporting sensor issues protects the integrity of the data stream.</div>
+        </div>
+        <div class="wr-item">
+          <div class="wr-item-icon">🕐</div>
+          <div class="wr-item-text"><strong>Timestamps matter more than you think:</strong> AI systems use time to correlate events. "The machine made a noise around 3 PM-ish" is much less useful than "vibration alert at 14:47, investigated at 14:52." Precise timestamps help AI connect sensor readings to outcomes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="pull-quote">
+      <p>The AI system is only as smart as the data it was trained on — and the data it was trained on came from workers just like you.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A quality inspector records a defect as "cosmetic issue" on one shift and "surface scratch" on another shift — even though both describe identical defects. What problem does this create for AI?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ This isn\'t actually a legal issue — it\'s a data quality issue. The problem is that the AI treats "cosmetic issue" and "surface scratch" as two different types of defects, which makes it impossible to accurately track, count, or analyze that specific defect type over time.')">It creates a legal compliance problem for the facility</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Inconsistent terminology means the AI treats identical defects as different categories. It can\'t accurately count how many scratches are occurring, can\'t track whether the problem is getting better or worse, and can\'t connect these records to the machine conditions that caused them. Consistent terminology is one of the most important — and often overlooked — data quality practices.')">The AI treats them as different defect types, making it impossible to accurately track the scratch problem over time</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While it might cause confusion for human reviewers too, the specific problem this creates for AI is that it can\'t recognize these records as describing the same type of defect — so it can\'t analyze the pattern effectively.')">It slows down the quality inspection process</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">What does "garbage in, garbage out" mean in the context of manufacturing AI?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Physical waste isn\'t the point here. "Garbage in, garbage out" is specifically about data quality affecting AI output quality — not physical materials or waste management.')">That manufacturing AI generates a lot of physical waste that needs to be managed carefully</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Recyclability isn\'t the concept. "Garbage in, garbage out" is a data quality principle — not a description of hardware or software lifecycle.')">That old AI systems need to be replaced with new ones regularly</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. If an AI is trained on inaccurate, incomplete, or inconsistent data, its predictions and decisions will be inaccurate, incomplete, or inconsistent — no matter how sophisticated the AI itself is. The quality of data flowing into the system determines the quality of insights flowing out.')">If inaccurate or incomplete data goes into an AI system, the AI\'s predictions and decisions will also be inaccurate or incomplete</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Data is any recorded information — sensor readings, inspection results, maintenance logs, shift reports — that a computer can store and analyze. Manufacturing facilities generate four main types: machine/sensor data, quality data, production data, and maintenance records.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>"Garbage in, garbage out" — the quality of AI predictions is directly determined by the quality of the data it was trained on. Inaccurate, missing, or inconsistent data creates AI systems that learn wrong patterns and make unreliable predictions.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Every worker is part of the data pipeline. Maintenance logs, quality reports, and sensor alerts that workers generate become the training data and operational data that AI systems depend on. Specific, accurate, consistently formatted records make AI smarter. Vague, inaccurate records make it dumber.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The practical habits that matter most: use specific measurements (not vague terms), use consistent terminology, include timestamps, and report sensor malfunctions promptly so they don't create gaps in the data record.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const correctAnswers={r1:'good',r2:'bad',r3:'good',r4:'bad',r5:'good',r6:'bad'};
+const messages={
+  r1:{good:'✅ Good data — specific, complete, timestamped, includes cause and technician.',bad:''},
+  r2:{good:'',bad:'❌ Bad data — what was fixed? No measurements, no timestamp, no details.'},
+  r3:{good:'✅ Good data — shows old vs. new readings and correctly identifies sensor failure as the cause.',bad:''},
+  r4:{good:'',bad:'❌ Bad data — "HIGH" and "OK now" are not measurable values. No specifics.'},
+  r5:{good:'✅ Good data — records the healthy condition, which helps AI learn what normal looks like.',bad:''},
+  r6:{good:'',bad:'❌ Bad data — vague description, no timestamp, no confirmation of resolution.'}
+};
+let answered=0;
+let correct=0;
+function flagRecord(id,choice,msg){
+  const rec=document.getElementById(id);
+  if(rec.classList.contains('flagged-good')||rec.classList.contains('flagged-bad'))return;
+  const isCorrect=correctAnswers[id]===choice;
+  rec.classList.add(isCorrect?'flagged-good':'flagged-bad');
+  rec.querySelectorAll('.qs-record-btn').forEach(b=>b.style.pointerEvents='none');
+  const result=document.getElementById(id+'-result');
+  const m=messages[id][choice];
+  if(m){result.textContent=m;}
+  if(isCorrect)correct++;
+  answered++;
+  if(answered===6){
+    const sa=document.getElementById('scoreArea');
+    sa.className='qs-score-area show';
+    sa.innerHTML=`<strong style="color:var(--purple-dark);font-family:'Fraunces',serif;font-size:20px;">${correct}/6 correct</strong><br><br>${correct===6?'Perfect — you can spot every quality issue in these records. That instinct for precision is exactly what makes data useful for AI.':correct>=4?'Good work. Review the records you flagged incorrectly — the patterns in bad data (missing measurements, vague terms, no timestamps) apply everywhere.':'Take another look at the records you flagged incorrectly. The key question for each one: could an AI learn something specific and actionable from this record?'}`;
+  }
+}
+function doQ(id,btn,correct,msg){
+  const opts=document.getElementById(id+'opts');
+  if(opts.querySelector('.correct,.wrong'))return;
+  btn.classList.add(correct?'correct':'wrong');
+  const fb=document.getElementById(id+'fb');
+  fb.className='qfb show '+(correct?'cfb':'wfb');
+  fb.textContent=msg;
+}
+</script>
+</body>
+</html>

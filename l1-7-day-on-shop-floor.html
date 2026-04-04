@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Day on the Shop Floor Before AI: What Manufacturing Work Actually Looked Like</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Timeline / shift schedule */
+.shift-timeline{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.st-item{display:flex;gap:0;align-items:stretch;}
+.st-left{display:flex;flex-direction:column;align-items:center;width:80px;flex-shrink:0;}
+.st-time{font-size:12px;font-weight:700;color:var(--purple);padding-top:20px;text-align:center;width:70px;}
+.st-line-wrap{display:flex;flex-direction:column;align-items:center;flex:1;}
+.st-dot{width:14px;height:14px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:22px;}
+.st-vline{width:2px;background:var(--purple-mid);flex:1;}
+.st-item:last-child .st-vline{display:none;}
+.st-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0 8px 10px;}
+.st-card-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.st-card-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.st-card-before{margin-top:7px;font-size:12px;padding:7px 11px;background:var(--orange-pale);border-radius:8px;color:#92400E;border:1px solid var(--orange);}
+.st-card-after{margin-top:7px;font-size:12px;padding:7px 11px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+
+/* Roles */
+.roles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.role-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:20px;}
+.role-icon{font-size:28px;margin-bottom:8px;}
+.role-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.role-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.role-challenge{margin-top:8px;font-size:12px;padding:7px 11px;background:var(--orange-pale);border-radius:8px;color:#92400E;border:1px solid var(--orange);}
+@media(max-width:520px){.roles-grid{grid-template-columns:1fr;}}
+
+/* Downtime cost calculator */
+.cost-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.cs-controls{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.cs-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.cs-row label{font-size:14px;font-weight:600;color:var(--gray-text);min-width:160px;}
+.cs-row select,.cs-row input[type=range]{font-family:"DM Sans",sans-serif;font-size:14px;border:1.5px solid var(--purple-mid);border-radius:8px;padding:7px 10px;background:var(--white);color:var(--gray-text);cursor:pointer;}
+.cs-row input[type=range]{padding:0;width:160px;accent-color:var(--purple);}
+.cs-row .cs-val{font-size:14px;font-weight:700;color:var(--purple);min-width:50px;}
+.cs-result{background:var(--white);border:2px solid var(--purple);border-radius:16px;padding:20px 24px;}
+.cs-result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:10px;}
+.cs-breakdown{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.cs-line{display:flex;justify-content:space-between;font-size:14px;color:var(--gray-text);}
+.cs-line strong{color:var(--purple-dark);}
+.cs-total{display:flex;justify-content:space-between;border-top:2px solid var(--purple-mid);padding-top:12px;margin-top:4px;}
+.cs-total-label{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);}
+.cs-total-num{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--red);}
+.cs-context{margin-top:10px;font-size:13px;color:var(--gray-muted);font-style:italic;line-height:1.6;}
+
+/* How problems got caught */
+.detection-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.det-card{display:flex;gap:16px;border-radius:16px;padding:18px 20px;border:1.5px solid;}
+.det-card.d1{background:var(--orange-pale);border-color:var(--orange);}
+.det-card.d2{background:var(--red-pale);border-color:var(--red);}
+.det-card.d3{background:var(--blue-pale);border-color:var(--blue-mid);}
+.det-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+.det-body{}
+.det-method{font-weight:700;font-size:14px;margin-bottom:4px;}
+.d1 .det-method{color:#92400E;}
+.d2 .det-method{color:var(--red);}
+.d3 .det-method{color:var(--blue);}
+.det-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.det-limit{margin-top:7px;font-size:12px;padding:6px 10px;border-radius:7px;font-weight:500;}
+.d1 .det-limit{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.d2 .det-limit{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.d3 .det-limit{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+
+/* Before / After compare */
+.ba-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.ba-col{border-radius:18px;padding:24px;}
+.ba-col.before{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.ba-col.after{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.ba-header{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.ba-col.before .ba-header{color:#92400E;}
+.ba-col.after .ba-header{color:var(--purple);}
+.ba-item{display:flex;gap:8px;margin-bottom:9px;font-size:13px;line-height:1.6;align-items:flex-start;}
+.ba-col.before .ba-item::before{content:"✗";color:var(--orange);font-weight:700;flex-shrink:0;}
+.ba-col.after .ba-item::before{content:"✓";color:var(--purple);font-weight:700;flex-shrink:0;}
+@media(max-width:520px){.ba-compare{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Summary */
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 — AI Overview in Manufacturing</div>
+  <h1>A Day on the Shop Floor Before AI: What Manufacturing Work Actually Looked Like</h1>
+  <p class="hero-sub">To understand what AI changes, you first need to understand what you're changing from. This is what a manufacturing shift used to look like — and why it was harder than it sounds.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <!-- Hook -->
+  <div class="section fade-in">
+    <p>Before sensors could monitor a machine's health 24 hours a day. Before cameras could spot a defect too small for a human eye. Before an algorithm could predict a failure three weeks in advance.</p>
+    <p>Before all of that — manufacturing still happened. Products still got made. Workers still showed up at 5am, learned their machines inside and out, and kept the line running through sheer skill, experience, and gut instinct.</p>
+    <p>If you've never worked in a factory, this article gives you the foundation you need. If you have, you'll recognize what's being described — and understand more clearly what AI is changing, and why.</p>
+  </div>
+
+  <!-- What a shift looks like -->
+  <div class="section fade-in">
+    <h2>What Does a Manufacturing Shift Actually Look Like?</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Shift:</strong> A scheduled block of work time. Most factories run in shifts — often three 8-hour shifts that together cover 24 hours a day. The "day shift" typically runs from around 6am–2pm, "afternoon shift" from 2pm–10pm, and "night shift" (sometimes called the "graveyard shift") from 10pm–6am.</div>
+    </div>
+    <p>A manufacturing shift is not just "show up and do the same thing repeatedly." Each one has a structure, and within that structure, workers are constantly monitoring, adjusting, and problem-solving. Here's what a typical day shift used to look like — before AI:</p>
+
+    <div class="shift-timeline">
+      <div class="st-item">
+        <div class="st-left">
+          <div class="st-time">5:45 AM</div>
+          <div class="st-line-wrap"><div class="st-dot"></div><div class="st-vline"></div></div>
+        </div>
+        <div class="st-card">
+          <div class="st-card-title">Shift Handoff from Night Crew</div>
+          <div class="st-card-desc">Incoming workers meet outgoing ones for a verbal briefing. What broke overnight? What's running slow? Any quality issues? This conversation was the primary way information transferred between shifts.</div>
+          <div class="st-card-before">⚠️ Before AI: All of this was word-of-mouth. If the night shift forgot to mention a problem, the day shift had no way to know until they ran into it themselves.</div>
+        </div>
+      </div>
+      <div class="st-item">
+        <div class="st-left">
+          <div class="st-time">6:00 AM</div>
+          <div class="st-line-wrap"><div class="st-dot"></div><div class="st-vline"></div></div>
+        </div>
+        <div class="st-card">
+          <div class="st-card-title">Machine Startup and Warmup</div>
+          <div class="st-card-desc">Before production started, workers ran a startup checklist — checking oil levels, listening for unusual sounds, feeling for unusual vibrations, visually inspecting components. This was the machine's "health check."</div>
+          <div class="st-card-before">⚠️ Before AI: Entirely dependent on the worker's experience. A new worker might miss what a veteran immediately recognized as a warning sign. There was no baseline to compare against — just memory and instinct.</div>
+        </div>
+      </div>
+      <div class="st-item">
+        <div class="st-left">
+          <div class="st-time">6:30 AM</div>
+          <div class="st-line-wrap"><div class="st-dot"></div><div class="st-vline"></div></div>
+        </div>
+        <div class="st-card">
+          <div class="st-card-title">Production Begins</div>
+          <div class="st-card-desc">The line starts running. Workers at each station execute their assigned tasks — pressing, welding, assembling, inspecting — while keeping an eye on output volume, part quality, and machine behavior.</div>
+          <div class="st-card-before">⚠️ Before AI: Monitoring happened in between tasks. Workers were doing their job AND watching for problems simultaneously — which meant problems were sometimes missed when workload was high.</div>
+        </div>
+      </div>
+      <div class="st-item">
+        <div class="st-left">
+          <div class="st-time">Midshift</div>
+          <div class="st-line-wrap"><div class="st-dot"></div><div class="st-vline"></div></div>
+        </div>
+        <div class="st-card">
+          <div class="st-card-title">Quality Checks and Paperwork</div>
+          <div class="st-card-desc">Supervisors and quality inspectors pulled samples from the line at set intervals — maybe every hour or every 100 parts — to check dimensions, finish, and function. Results were recorded on paper forms or in spreadsheets.</div>
+          <div class="st-card-before">⚠️ Before AI: Sampling meant you only checked a fraction of what was produced. A bad run of 50 parts between inspections could ship before anyone noticed. Data lived in binders and filing cabinets.</div>
+        </div>
+      </div>
+      <div class="st-item">
+        <div class="st-left">
+          <div class="st-time">2:00 PM</div>
+          <div class="st-line-wrap"><div class="st-dot"></div><div class="st-vline"></div></div>
+        </div>
+        <div class="st-card">
+          <div class="st-card-title">End-of-Shift Report</div>
+          <div class="st-card-desc">Supervisors filled out production reports by hand: units produced, downtime incidents, quality issues, anything unusual. This report was the official record of the shift.</div>
+          <div class="st-card-before">⚠️ Before AI: Reports were only as complete as what supervisors remembered and had time to write. Patterns across shifts could take weeks to spot — if they were spotted at all.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key roles -->
+  <div class="section fade-in">
+    <h2>Who's on the Floor, and What Are They Responsible For?</h2>
+    <p>A factory isn't just one person doing one job. Even a single production line has several distinct roles, each with its own focus. Understanding who does what is important — because AI changes each of these jobs differently.</p>
+
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-icon">⚙️</div>
+        <div class="role-title">Machine Operator</div>
+        <div class="role-desc">Runs the equipment. Feeds in raw materials, monitors the machine during production, catches jams or misfires, and performs basic adjustments within their scope. The heartbeat of the line.</div>
+        <div class="role-challenge">Before AI challenge: Had to monitor their machine, do their task, and watch output quality — often all at once, with no automated alerts. Experience was everything.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🔎</div>
+        <div class="role-title">Quality Inspector</div>
+        <div class="role-desc">Pulls samples from the line at regular intervals, measures them against specifications, and decides whether to pass or flag product. If something fails, they trace it back to find when it started.</div>
+        <div class="role-challenge">Before AI challenge: Sampling caught most problems, but not all. Defects between inspection cycles could slip through. Tracing a problem's source meant reviewing paper logs manually.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🔧</div>
+        <div class="role-title">Maintenance Technician</div>
+        <div class="role-desc">Responds to machine breakdowns and performs scheduled preventive maintenance — replacing parts on a calendar schedule regardless of actual wear. Keeps equipment running.</div>
+        <div class="role-challenge">Before AI challenge: Reactive by nature. Machines broke, then maintenance responded. Preventive schedules replaced parts too early or too late — wasting parts or causing unexpected failures.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">📋</div>
+        <div class="role-title">Production Supervisor</div>
+        <div class="role-desc">Oversees the entire line. Manages workers, tracks output against targets, handles problems as they arise, reports up the chain, and coordinates between operators, quality, and maintenance.</div>
+        <div class="role-challenge">Before AI challenge: Got information after the fact. If output dropped, they found out when they checked the numbers — not when it started happening. Decision-making lagged behind events.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">📦</div>
+        <div class="role-title">Material Handler</div>
+        <div class="role-desc">Keeps raw materials flowing to the line and finished goods moving out. Monitors inventory at each station, coordinates with the warehouse, and prevents stockouts that would stop production.</div>
+        <div class="role-challenge">Before AI challenge: Inventory tracking was manual — clipboards, walkie-talkies, and physical counts. A miscommunication could starve a station of material and stop the entire line.</div>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">📊</div>
+        <div class="role-title">Process Engineer</div>
+        <div class="role-desc">Designs and improves the manufacturing process itself. Analyzes defect patterns, identifies bottlenecks, proposes equipment changes, and tracks performance metrics over time.</div>
+        <div class="role-challenge">Before AI challenge: Worked from data collected in the past — shift reports, quality logs, maintenance records. Spotting a trend could take weeks. Changes were based on good analysis, but always looked backward.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How problems got caught -->
+  <div class="section fade-in">
+    <h2>How Did Problems Actually Get Caught?</h2>
+    <p>Here's the honest answer: problems got caught three ways before AI — and all three had real limitations.</p>
+
+    <div class="detection-cards">
+      <div class="det-card d1">
+        <div class="det-icon">👁️</div>
+        <div class="det-body">
+          <div class="det-method">Human Observation</div>
+          <div class="det-desc">Experienced workers developed an instinct for when something was wrong — a sound changed, a part felt different, a machine vibrated slightly more than usual. This intuition was genuinely valuable and hard-earned over years.</div>
+          <div class="det-limit">Limit: Works for obvious problems. Misses subtle early-stage issues. Depends entirely on the specific worker present. If the experienced worker is on break, the pattern goes unnoticed.</div>
+        </div>
+      </div>
+      <div class="det-card d2">
+        <div class="det-icon">🗓️</div>
+        <div class="det-body">
+          <div class="det-method">Scheduled Inspections</div>
+          <div class="det-desc">Maintenance followed a calendar — replace the belt every 90 days, check the seals every Friday, lubricate the bearings monthly. Quality inspectors pulled samples every hour or every X parts.</div>
+          <div class="det-limit">Limit: Time-based, not condition-based. A belt replaced at 90 days might have lasted 150 — or might have failed at 60. Inspections between scheduled checks found nothing even if a problem was developing.</div>
+        </div>
+      </div>
+      <div class="det-card d3">
+        <div class="det-icon">🚨</div>
+        <div class="det-body">
+          <div class="det-method">The Machine Breaking</div>
+          <div class="det-desc">The third way a problem got caught was when it announced itself — loudly. A machine stops, a part jams, an alarm trips, quality drops dramatically. Now everyone knows. Now it's an emergency.</div>
+          <div class="det-limit">Limit: By this point, the problem has fully developed. Damage may already be done. The line is down. The scramble to diagnose and repair begins — under pressure, without preparation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>The old system wasn't incompetent. It was limited by what humans can perceive and remember. AI doesn't replace the skill — it extends the reach of what the best workers were already trying to do.</p></div>
+  </div>
+
+  <!-- What downtime costs -->
+  <div class="section fade-in">
+    <h2>What Does Downtime Actually Cost?</h2>
+    <p>Downtime is when a production line stops making product. It sounds simple. The cost is anything but.</p>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Downtime:</strong> Any period when a machine or production line is not producing output due to a malfunction, maintenance, material shortage, or other disruption. Even a single hour of downtime on a busy line can cost a factory tens of thousands of dollars.</div>
+    </div>
+    <p>When a machine goes down, you lose more than just production time. Workers still get paid. Overhead costs — electricity, facilities, equipment leases — keep running. Downstream processes may stall. Customers waiting on orders get delayed. Rush repairs cost premium prices. The true cost is often three to five times the obvious number.</p>
+
+    <div class="cost-sim">
+      <div class="cs-label">💰 Downtime Cost Calculator</div>
+      <div class="cs-title">See What an Unplanned Stoppage Really Costs</div>
+      <div class="cs-sub">Adjust the sliders to see how downtime costs add up across different factory types and outage lengths.</div>
+      <div class="cs-controls">
+        <div class="cs-row">
+          <label>Factory type:</label>
+          <select id="cs-type" onchange="calcCost()">
+            <option value="auto">Automotive parts</option>
+            <option value="food">Food & beverage packaging</option>
+            <option value="electronics">Electronics assembly</option>
+            <option value="metal">Metal fabrication</option>
+          </select>
+        </div>
+        <div class="cs-row">
+          <label>Hours of downtime:</label>
+          <input type="range" id="cs-hours" min="1" max="24" value="4" oninput="calcCost()">
+          <span class="cs-val" id="cs-hours-val">4 hrs</span>
+        </div>
+      </div>
+      <div class="cs-result">
+        <div class="cs-result-label">Estimated Downtime Cost Breakdown</div>
+        <div class="cs-breakdown">
+          <div class="cs-line"><span>Lost production value</span><strong id="cs-prod">—</strong></div>
+          <div class="cs-line"><span>Labor (workers still paid)</span><strong id="cs-labor">—</strong></div>
+          <div class="cs-line"><span>Emergency repair premium</span><strong id="cs-repair">—</strong></div>
+          <div class="cs-line"><span>Overhead (facilities, equipment)</span><strong id="cs-overhead">—</strong></div>
+        </div>
+        <div class="cs-total">
+          <div class="cs-total-label">Total estimated cost</div>
+          <div class="cs-total-num" id="cs-total">—</div>
+        </div>
+        <div class="cs-context" id="cs-context"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Before vs After -->
+  <div class="section fade-in">
+    <h2>The Same Problems, Handled Differently</h2>
+    <p>The challenges of the shop floor haven't disappeared with AI. Machines still wear out. Defects still happen. Shifts still need to hand off information. The difference is in how those challenges are detected, communicated, and responded to.</p>
+
+    <div class="ba-compare">
+      <div class="ba-col before">
+        <div class="ba-header">🕰️ Before AI</div>
+        <div class="ba-item">Machine problems detected by ear, feel, and luck</div>
+        <div class="ba-item">Quality checked by sampling — most parts never inspected</div>
+        <div class="ba-item">Shift handoff was a verbal conversation — things got forgotten</div>
+        <div class="ba-item">Downtime was reactive — scramble after failure</div>
+        <div class="ba-item">Maintenance replaced parts on a calendar, not on condition</div>
+        <div class="ba-item">Supervisors got data hours after events happened</div>
+        <div class="ba-item">Worker expertise lived in individuals — left when they retired</div>
+      </div>
+      <div class="ba-col after">
+        <div class="ba-header">🤖 With AI</div>
+        <div class="ba-item">Sensors measure machine health continuously, 24/7</div>
+        <div class="ba-item">Computer vision can inspect every single part, not just samples</div>
+        <div class="ba-item">Sensor data is logged automatically — nothing gets forgotten</div>
+        <div class="ba-item">Predictive systems flag failures days or weeks before they happen</div>
+        <div class="ba-item">Maintenance scheduled when the machine actually needs it</div>
+        <div class="ba-item">Supervisors see real-time dashboards as events unfold</div>
+        <div class="ba-item">Patterns captured in software — organizational knowledge persists</div>
+      </div>
+    </div>
+    <p>That said — AI doesn't eliminate the need for skilled workers. It changes what those skills are focused on. Less time diagnosing problems that could have been caught earlier. More time making decisions about what to do with better information.</p>
+  </div>
+
+  <!-- Quiz 1 -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Before AI, how did most factories detect early-stage machine problems?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">Continuous sensor monitoring that ran 24 hours a day</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Real-time dashboards that supervisors checked every 15 minutes</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Experienced workers using their senses and intuition — listening, feeling, and watching for changes</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Weekly computer diagnostic reports generated automatically</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. Before sensors and AI, human perception was the primary detection system. Experienced workers could hear a bad bearing, feel unusual vibration, or notice a change in a machine's behavior. This worked — but it depended on the right person being present, paying attention, and having enough experience to recognize the signal.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not right. Continuous sensors and real-time dashboards are what AI enables — they didn't exist at most factories before that technology arrived. Before AI, early problem detection depended on the observational skills of experienced workers on the floor.</div>
+    </div>
+  </div>
+
+  <!-- Quiz 2 -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">A factory's quality inspector pulls a sample of parts every hour to check for defects. What is the main limitation of this approach?</div>
+      <div class="quiz-opts" id="q2">
+        <button class="quiz-opt" onclick="doQ2(0)">Inspectors are paid too much to check parts that often</button>
+        <button class="quiz-opt" onclick="doQ2(1)">Parts produced between inspections could be defective and still ship — since they were never checked</button>
+        <button class="quiz-opt" onclick="doQ2(2)">Hourly sampling is too frequent and wastes production time</button>
+        <button class="quiz-opt" onclick="doQ2(3)">Quality inspectors lack the training to catch real defects</button>
+      </div>
+      <div class="quiz-feedback good" id="q2-good">✅ Exactly right. Sampling is better than nothing, but it means most parts are never individually inspected. If a machine starts producing defects at 10:05am, those bad parts could ship before the 11:00am inspection reveals the problem. This gap is exactly what AI-powered computer vision solves — by inspecting every part, not just samples.</div>
+      <div class="quiz-feedback bad" id="q2-bad">❌ Not the issue. The real limitation of sampling is the gaps between inspections. Parts produced between sample pulls are never individually checked — so defects can develop, ship, and reach customers before anyone catches them. That's the problem AI-powered visual inspection is designed to solve.</div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A manufacturing shift has a structure — startup, production, quality checks, end-of-shift reporting — and each stage had real limitations before AI.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Six key roles operate on the shop floor: machine operator, quality inspector, maintenance technician, production supervisor, material handler, and process engineer.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Before AI, problems were caught three ways: human observation, scheduled inspections, or the machine failing outright — each with serious limitations.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Downtime is expensive — often three to five times the obvious number when you account for labor, overhead, emergency repairs, and downstream disruption.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI doesn't replace shop floor skill — it extends its reach. Workers who understand both sides of this transition are the most valuable ones on the floor.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';
+});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Downtime calculator
+const factories={
+  auto:{prod:8500,labor:420,repair:2200,overhead:1100,name:"automotive plant"},
+  food:{prod:3200,labor:280,repair:900,overhead:600,name:"food packaging facility"},
+  electronics:{prod:5800,labor:380,repair:1600,overhead:900,name:"electronics assembly plant"},
+  metal:{prod:4100,labor:320,repair:1200,overhead:750,name:"metal fabrication shop"}
+};
+function fmt(n){return '$'+n.toLocaleString();}
+function calcCost(){
+  const type=document.getElementById('cs-type').value;
+  const hours=parseInt(document.getElementById('cs-hours').value);
+  document.getElementById('cs-hours-val').textContent=hours+' hr'+(hours>1?'s':'');
+  const f=factories[type];
+  const prod=f.prod*hours;
+  const labor=f.labor*hours;
+  const repair=f.repair*(hours>4?1.5:1); // emergency premium increases for longer outages
+  const overhead=f.overhead*hours;
+  const total=prod+labor+repair+overhead;
+  document.getElementById('cs-prod').textContent=fmt(prod);
+  document.getElementById('cs-labor').textContent=fmt(labor);
+  document.getElementById('cs-repair').textContent=fmt(repair);
+  document.getElementById('cs-overhead').textContent=fmt(overhead);
+  document.getElementById('cs-total').textContent=fmt(total);
+  document.getElementById('cs-context').textContent=`That's what ${hours} hour${hours>1?'s':''} of unplanned downtime at a mid-sized ${f.name} can realistically cost — before accounting for late delivery penalties or customer relationship damage.`;
+}
+calcCost();
+
+// Quizzes
+let q1done=false;
+function doQ1(i){if(q1done)return;q1done=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===2){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+let q2done=false;
+function doQ2(i){if(q2done)return;q2done=true;const o=document.querySelectorAll('#q2 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q2-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q2-bad').classList.add('show');}}
+</script>
+</body>
+</html>

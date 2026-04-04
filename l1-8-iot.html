@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is the Internet of Things (IoT) and How Does It Connect to AI in Manufacturing?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Everyday IoT examples */
+.iot-everyday{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0;}
+.iot-eg{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;text-align:center;}
+.iot-eg-icon{font-size:32px;margin-bottom:8px;}
+.iot-eg-name{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:5px;}
+.iot-eg-what{font-size:12px;color:var(--gray-muted);line-height:1.5;}
+@media(max-width:560px){.iot-everyday{grid-template-columns:repeat(2,1fr);}}
+
+/* Data flow layers */
+.layers{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.layer-item{position:relative;}
+.layer-card{border-radius:16px;padding:22px 26px;border:2px solid;margin-bottom:0;}
+.layer-card.l1{background:#FFF7ED;border-color:#FB923C;}
+.layer-card.l2{background:var(--blue-pale);border-color:var(--blue-mid);}
+.layer-card.l3{background:var(--purple-pale);border-color:var(--purple-mid);}
+.layer-card.l4{background:var(--green-pale);border-color:#86EFAC;}
+.layer-arrow{text-align:center;font-size:22px;color:var(--purple-mid);padding:4px 0;}
+.layer-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.l1 .layer-num{color:#EA580C;}
+.l2 .layer-num{color:var(--blue);}
+.l3 .layer-num{color:var(--purple);}
+.l4 .layer-num{color:var(--green);}
+.layer-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--gray-text);margin-bottom:6px;}
+.layer-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.layer-example{margin-top:8px;font-size:12px;padding:7px 12px;border-radius:8px;}
+.l1 .layer-example{background:#FFF7ED;color:#92400E;border:1px solid #FB923C;}
+.l2 .layer-example{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.l3 .layer-example{background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid);}
+.l4 .layer-example{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+
+/* IIoT vs IoT */
+.compare-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.ct-col{border-radius:18px;padding:24px;border:1.5px solid;}
+.ct-col.consumer{background:var(--blue-pale);border-color:var(--blue-mid);}
+.ct-col.industrial{background:var(--purple-pale);border-color:var(--purple-mid);}
+.ct-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+.consumer .ct-badge{color:var(--blue);}
+.industrial .ct-badge{color:var(--purple);}
+.ct-icon{font-size:36px;margin-bottom:8px;}
+.ct-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:10px;}
+.consumer .ct-title{color:var(--blue);}
+.industrial .ct-title{color:var(--purple-dark);}
+.ct-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.ct-list li{font-size:13px;line-height:1.6;color:var(--gray-text);padding-left:16px;position:relative;}
+.ct-list li::before{content:"•";position:absolute;left:0;}
+.consumer .ct-list li::before{color:var(--blue);}
+.industrial .ct-list li::before{color:var(--purple);}
+@media(max-width:520px){.compare-two{grid-template-columns:1fr;}}
+
+/* Live dashboard sim */
+.dashboard-sim{background:#1a1025;border-radius:24px;padding:28px;margin:28px 0;color:var(--white);}
+.ds-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:gap;}
+.ds-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;}
+.ds-live{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border-radius:100px;padding:5px 12px;font-size:12px;}
+.ds-live-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.ds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.ds-tile{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;}
+.ds-tile-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.ds-tile-val{font-family:"Fraunces",serif;font-size:24px;font-weight:900;line-height:1;}
+.ds-tile-val.ok{color:#4ADE80;}
+.ds-tile-val.warn{color:#FACC15;}
+.ds-tile-val.crit{color:#F87171;}
+.ds-tile-unit{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+.ds-tile-status{font-size:11px;margin-top:6px;padding:3px 8px;border-radius:100px;display:inline-block;}
+.ds-tile-status.ok-s{background:rgba(74,222,128,.15);color:#4ADE80;}
+.ds-tile-status.warn-s{background:rgba(250,204,21,.15);color:#FACC15;}
+.ds-tile-status.crit-s{background:rgba(248,113,113,.15);color:#F87171;}
+.ds-alert{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:12px;padding:14px 16px;display:none;margin-bottom:12px;}
+.ds-alert.show{display:block;}
+.ds-alert-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#F87171;margin-bottom:5px;}
+.ds-alert-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;}
+.ds-btn{background:var(--purple);border:none;color:var(--white);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:4px;}
+.ds-scenario-label{font-size:11px;color:rgba(255,255,255,.4);text-align:center;}
+@media(max-width:520px){.ds-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* What happens without IoT */
+.no-iot-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ni-card{display:flex;gap:14px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.ni-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.ni-body{}
+.ni-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.ni-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Summary */
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 — AI Overview in Manufacturing</div>
+  <h1>What Is the Internet of Things (IoT) and How Does It Connect to AI in Manufacturing?</h1>
+  <p class="hero-sub">AI needs data to work. IoT is the system that collects it. Understanding how these two technologies connect will help you make sense of everything happening on the modern shop floor.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <!-- Hook -->
+  <div class="section fade-in">
+    <p>You've probably heard the phrase "Internet of Things" — maybe in a news article, maybe in a tech ad, maybe in this course. It sounds abstract. The concept is actually very concrete.</p>
+    <p>The Internet of Things just means: <mark>physical objects connected to the internet, reporting information automatically.</mark></p>
+    <p>Your smartwatch tracks your heart rate and sends it to your phone. Your car monitors tire pressure and alerts you on the dashboard. Your home thermostat learns your schedule and adjusts the temperature before you get home. All of these are IoT devices.</p>
+    <p>In manufacturing, the same idea applies — except instead of your heart rate, it's a motor's temperature. Instead of tire pressure, it's a hydraulic line's PSI. And instead of adjusting the heat at home, it's AI deciding whether to schedule maintenance or keep the line running.</p>
+  </div>
+
+  <!-- Everyday examples -->
+  <div class="section fade-in">
+    <h2>IoT Is Already Part of Your Life</h2>
+    <p>Before we get into the factory, let's ground the concept in things you've already seen. Each of these is an IoT device — a physical thing that collects data and sends it somewhere automatically:</p>
+    <div class="iot-everyday">
+      <div class="iot-eg"><div class="iot-eg-icon">⌚</div><div class="iot-eg-name">Smartwatch</div><div class="iot-eg-what">Tracks heart rate, steps, sleep. Syncs to your phone.</div></div>
+      <div class="iot-eg"><div class="iot-eg-icon">🌡️</div><div class="iot-eg-name">Smart Thermostat</div><div class="iot-eg-what">Monitors temperature. Learns your schedule. Adjusts automatically.</div></div>
+      <div class="iot-eg"><div class="iot-eg-icon">🚗</div><div class="iot-eg-name">Connected Car</div><div class="iot-eg-what">Reports engine health, location, fuel level — to you and the manufacturer.</div></div>
+      <div class="iot-eg"><div class="iot-eg-icon">📦</div><div class="iot-eg-name">Package Tracker</div><div class="iot-eg-what">A sensor reports location as your delivery moves from warehouse to door.</div></div>
+      <div class="iot-eg"><div class="iot-eg-icon">💡</div><div class="iot-eg-name">Smart Light Bulb</div><div class="iot-eg-what">Turns on/off remotely. Reports when it's about to burn out.</div></div>
+      <div class="iot-eg"><div class="iot-eg-icon">🔔</div><div class="iot-eg-name">Video Doorbell</div><div class="iot-eg-what">Detects motion. Records video. Sends alert to your phone instantly.</div></div>
+    </div>
+    <p>None of these feel like technology for its own sake. Each one is useful because it <mark>provides information automatically</mark> that you'd otherwise have to check manually — and it does it in real time, even when you're not paying attention.</p>
+    <p>That's exactly what IoT does in a factory. Except the stakes are much higher than whether your front porch light is on.</p>
+  </div>
+
+  <!-- Definition -->
+  <div class="section fade-in">
+    <h2>IoT in Manufacturing: The IIoT</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>IIoT (Industrial Internet of Things):</strong> The application of IoT specifically to industrial settings — factories, power plants, oil refineries, logistics operations. Sometimes just called "connected manufacturing." The machines, sensors, and devices on the shop floor are wired or wirelessly connected, continuously reporting their status to systems that track, analyze, and act on that data.</div>
+    </div>
+    <p>IIoT differs from consumer IoT in one critical way: the consequences of a failure are much bigger. If your smart thermostat goes offline, your house gets a bit warm. If an IIoT sensor on a $4 million turbine goes offline, a factory could lose hundreds of thousands of dollars of production — or have a safety incident.</p>
+
+    <div class="compare-two">
+      <div class="ct-col consumer">
+        <div class="ct-badge">Consumer IoT</div>
+        <div class="ct-icon">🏠</div>
+        <div class="ct-title">Your Home Devices</div>
+        <ul class="ct-list">
+          <li>Smart speakers, thermostats, lights</li>
+          <li>Updates once every few minutes is fine</li>
+          <li>Failure = minor inconvenience</li>
+          <li>Data is personal — no one else needs it</li>
+          <li>Simple dashboards on your phone</li>
+        </ul>
+      </div>
+      <div class="ct-col industrial">
+        <div class="ct-badge">Industrial IoT (IIoT)</div>
+        <div class="ct-icon">🏭</div>
+        <div class="ct-title">Your Factory Devices</div>
+        <ul class="ct-list">
+          <li>Sensors, motors, conveyors, robots, cameras</li>
+          <li>Updates multiple times per second required</li>
+          <li>Failure = production loss, safety risk, cost</li>
+          <li>Data feeds AI systems and operators</li>
+          <li>Complex dashboards, alerts, automated responses</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- How data flows -->
+  <div class="section fade-in">
+    <h2>How Does IoT Data Flow Through a Factory?</h2>
+    <p>Data doesn't teleport from a sensor on a machine straight to an AI system. It travels through layers — each with a specific job. Understanding these layers helps explain why a factory's "connected" system is actually a complex infrastructure, not just a bunch of wires.</p>
+
+    <div class="layers">
+      <div class="layer-item">
+        <div class="layer-card l1">
+          <div class="layer-num">Layer 1: Devices</div>
+          <div class="layer-title">The Physical Things with Sensors</div>
+          <div class="layer-desc">Machines, motors, conveyors, valves, tanks, cameras, robots — anything on the shop floor with a sensor attached. These devices collect raw data: temperature readings, vibration measurements, pressure levels, image captures, speed counts.</div>
+          <div class="layer-example">Example: A conveyor belt motor has a temperature sensor and a vibration sensor. Every 500 milliseconds, both take a reading.</div>
+        </div>
+        <div class="layer-arrow">↓</div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-card l2">
+          <div class="layer-num">Layer 2: Connectivity</div>
+          <div class="layer-title">The Wires, Wi-Fi, and Protocols That Carry the Data</div>
+          <div class="layer-desc">Raw sensor readings need to travel somewhere. This layer is the network — industrial Wi-Fi, wired ethernet, Bluetooth, or specialized protocols like MQTT that are designed for high-speed, reliable data transmission in harsh industrial environments.</div>
+          <div class="layer-example">Example: The conveyor's sensor readings are transmitted every half-second over the factory's industrial Wi-Fi network to a central hub.</div>
+        </div>
+        <div class="layer-arrow">↓</div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-card l3">
+          <div class="layer-num">Layer 3: Processing</div>
+          <div class="layer-title">Where Data Gets Organized and Analyzed</div>
+          <div class="layer-desc">Raw data is noisy and massive. This layer — often called "edge computing" or cloud processing — cleans the data, organizes it, and runs AI analysis on it. Pattern detection, anomaly alerts, and predictive models live here. This is where AI actually runs.</div>
+          <div class="layer-example">Example: The AI system analyzes 90 days of the conveyor's temperature readings and detects that the pattern this morning looks like what happened 3 days before the last bearing failure.</div>
+        </div>
+        <div class="layer-arrow">↓</div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-card l4">
+          <div class="layer-num">Layer 4: Action</div>
+          <div class="layer-title">What Happens as a Result</div>
+          <div class="layer-desc">The processed data becomes something actionable — an alert on a supervisor's screen, an automatic maintenance work order, a line slowdown, or a report. This is the layer workers interact with directly. The dashboard, the alert, the text message.</div>
+          <div class="layer-example">Example: A maintenance work order is automatically generated and sent to the technician's tablet: "Conveyor 4B — bearing inspection recommended within 72 hours."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live dashboard demo -->
+  <div class="section fade-in">
+    <h2>What a Connected Factory Dashboard Looks Like</h2>
+    <p>All that IoT data from sensors across the plant flows into dashboards that supervisors and operators watch in real time. Here's a simplified version — click the button to simulate different conditions on the floor:</p>
+
+    <div class="dashboard-sim">
+      <div class="ds-header">
+        <div class="ds-title">🏭 Plant Floor Monitor — Line 3</div>
+        <div class="ds-live"><div class="ds-live-dot"></div>LIVE</div>
+      </div>
+      <div class="ds-alert" id="ds-alert">
+        <div class="ds-alert-label">⚠️ AI Alert</div>
+        <div class="ds-alert-text" id="ds-alert-text"></div>
+      </div>
+      <div class="ds-grid">
+        <div class="ds-tile">
+          <div class="ds-tile-label">Motor Temp</div>
+          <div class="ds-tile-val" id="ds-temp">142°F</div>
+          <div class="ds-tile-unit">Normal range: 110–155°F</div>
+          <div class="ds-tile-status ok-s" id="ds-temp-s">● Normal</div>
+        </div>
+        <div class="ds-tile">
+          <div class="ds-tile-label">Vibration</div>
+          <div class="ds-tile-val" id="ds-vib">0.8</div>
+          <div class="ds-tile-unit">mm/s — Normal: 0–1.5</div>
+          <div class="ds-tile-status ok-s" id="ds-vib-s">● Normal</div>
+        </div>
+        <div class="ds-tile">
+          <div class="ds-tile-label">Line Speed</div>
+          <div class="ds-tile-val" id="ds-speed">98%</div>
+          <div class="ds-tile-unit">of target rate</div>
+          <div class="ds-tile-status ok-s" id="ds-speed-s">● On Target</div>
+        </div>
+        <div class="ds-tile">
+          <div class="ds-tile-label">Defect Rate</div>
+          <div class="ds-tile-val" id="ds-defect">0.04%</div>
+          <div class="ds-tile-unit">Threshold: 0.1%</div>
+          <div class="ds-tile-status ok-s" id="ds-defect-s">● Within Spec</div>
+        </div>
+        <div class="ds-tile">
+          <div class="ds-tile-label">Hydraulic PSI</div>
+          <div class="ds-tile-val" id="ds-psi">2,850</div>
+          <div class="ds-tile-unit">Normal: 2,600–3,100</div>
+          <div class="ds-tile-status ok-s" id="ds-psi-s">● Normal</div>
+        </div>
+        <div class="ds-tile">
+          <div class="ds-tile-label">OEE Score</div>
+          <div class="ds-tile-val" id="ds-oee">91%</div>
+          <div class="ds-tile-unit">Target: ≥85%</div>
+          <div class="ds-tile-status ok-s" id="ds-oee-s">● Exceeding Target</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="ds-btn" onclick="nextScenario()">Simulate Next Scenario →</button>
+        <div class="ds-scenario-label" id="ds-scenario-label">Scenario 1 of 4 — Normal operations</div>
+      </div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>OEE (Overall Equipment Effectiveness):</strong> A single score that measures how well a machine or production line is actually performing compared to its full potential. It factors in availability (is it running?), performance (how fast?), and quality (how many good parts?). World-class manufacturing targets 85% OEE or higher. IoT makes it possible to calculate OEE in real time, not just at the end of a shift.</div>
+    </div>
+  </div>
+
+  <!-- What happens without IoT -->
+  <div class="section fade-in">
+    <h2>Why IoT Is the Foundation AI Requires</h2>
+    <p>Here's the critical connection that's easy to miss: <mark>AI in manufacturing is only as good as the IoT system feeding it.</mark></p>
+    <div class="pull-quote"><p>AI needs data to think. IoT is what collects that data, continuously, from everywhere in the factory. Without IoT, AI has nothing to work with.</p></div>
+    <p>Consider what each AI capability requires from IoT infrastructure:</p>
+    <div class="no-iot-cards">
+      <div class="ni-card">
+        <div class="ni-icon">🔮</div>
+        <div class="ni-body">
+          <div class="ni-title">Predictive Maintenance</div>
+          <div class="ni-desc">Requires sensors on every critical machine, transmitting data frequently enough for AI to detect pattern changes days before failure. No IoT = no continuous data = no prediction. You're back to reactive repairs.</div>
+        </div>
+      </div>
+      <div class="ni-card">
+        <div class="ni-icon">🔍</div>
+        <div class="ni-body">
+          <div class="ni-title">Quality Control AI</div>
+          <div class="ni-desc">Requires cameras and imaging sensors capturing every part at every stage. The images travel over the network to an AI vision system that checks them in milliseconds. No IIoT network = images can't get there fast enough to stop bad parts in real time.</div>
+        </div>
+      </div>
+      <div class="ni-card">
+        <div class="ni-icon">💻</div>
+        <div class="ni-body">
+          <div class="ni-title">Digital Twins</div>
+          <div class="ni-desc">A digital twin is only accurate if it's receiving real-time data from the real machine. That data travels via the IoT network. Without that connection, the twin is just a static diagram — not a live model you can trust for predictions.</div>
+        </div>
+      </div>
+      <div class="ni-card">
+        <div class="ni-icon">📊</div>
+        <div class="ni-body">
+          <div class="ni-title">Real-Time Dashboards</div>
+          <div class="ni-desc">Supervisors watching live plant status only works if every machine is reporting its status in real time. That real-time reporting is entirely IoT. Pull the network, and the dashboard goes dark.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">A factory's AI system can predict equipment failures 10 days in advance. What does this AI system fundamentally depend on to make those predictions?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">A large team of engineers reviewing machine logs every day</button>
+        <button class="quiz-opt" onclick="doQ1(1)">IoT sensors on the equipment continuously collecting and transmitting data the AI can analyze</button>
+        <button class="quiz-opt" onclick="doQ1(2)">The manufacturer's warranty documentation for each machine</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Workers filing daily reports on how each machine is performing</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. Predictive AI can only predict because it's analyzing patterns in continuous sensor data — and continuous sensor data only exists because IoT infrastructure is collecting and transmitting it constantly. Sensors → network → AI analysis → alert. Remove any link in that chain and prediction breaks down.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. Human reviews, warranty docs, and daily reports all existed before IoT — and they couldn't predict failures reliably because they were periodic, not continuous. What makes AI prediction possible is the constant stream of real-time sensor data from IoT devices. That's the foundation.</div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">IoT means physical objects connected to the internet, reporting data automatically — from smartwatches to factory motors.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">IIoT (Industrial IoT) is IoT applied to manufacturing — machines, sensors, cameras, and devices all connected and reporting continuously.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Data flows through four layers: devices that collect it, networks that carry it, processing systems that analyze it, and action outputs (alerts, dashboards) that workers interact with.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every major AI capability in manufacturing — predictive maintenance, quality control, digital twins, real-time dashboards — depends on IIoT infrastructure to collect the data AI needs.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">IoT is the infrastructure that AI runs on. Understanding both — and how they connect — is what separates workers who use AI tools from workers who understand them.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';
+});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Dashboard sim
+const scenarios=[
+  {
+    label:'Scenario 1 of 4 — Normal operations',
+    temp:'142°F',tempClass:'ok',tempS:'● Normal',tempSClass:'ok-s',
+    vib:'0.8',vibClass:'ok',vibS:'● Normal',vibSClass:'ok-s',
+    speed:'98%',speedClass:'ok',speedS:'● On Target',speedSClass:'ok-s',
+    defect:'0.04%',defectClass:'ok',defectS:'● Within Spec',defectSClass:'ok-s',
+    psi:'2,850',psiClass:'ok',psiS:'● Normal',psiSClass:'ok-s',
+    oee:'91%',oeeClass:'ok',oeeS:'● Exceeding Target',oeeSClass:'ok-s',
+    alert:false,alertText:''
+  },
+  {
+    label:'Scenario 2 of 4 — Early warning detected',
+    temp:'168°F',tempClass:'warn',tempS:'● Elevated',tempSClass:'warn-s',
+    vib:'1.9',vibClass:'warn',vibS:'● Above Normal',vibSClass:'warn-s',
+    speed:'94%',speedClass:'ok',speedS:'● Slight Drop',speedSClass:'ok-s',
+    defect:'0.06%',defectClass:'ok',defectS:'● Within Spec',defectSClass:'ok-s',
+    psi:'2,780',psiClass:'ok',psiS:'● Normal',psiSClass:'ok-s',
+    oee:'87%',oeeClass:'ok',oeeS:'● Above Target',oeeSClass:'ok-s',
+    alert:true,alertText:'AI pattern match: Motor temp and vibration trending upward over last 18 hours matches bearing wear signature seen before 3 previous failures. Recommend inspection within 48 hours. Machine can continue operating.'
+  },
+  {
+    label:'Scenario 3 of 4 — Defect spike detected',
+    temp:'145°F',tempClass:'ok',tempS:'● Normal',tempSClass:'ok-s',
+    vib:'0.9',vibClass:'ok',vibS:'● Normal',vibSClass:'ok-s',
+    speed:'97%',speedClass:'ok',speedS:'● On Target',speedSClass:'ok-s',
+    defect:'0.31%',defectClass:'crit',defectS:'● Above Threshold',defectSClass:'crit-s',
+    psi:'2,620',psiClass:'warn',psiS:'● Low Range',psiSClass:'warn-s',
+    oee:'74%',oeeClass:'warn',oeeS:'● Below Target',oeeSClass:'warn-s',
+    alert:true,alertText:'Quality alert: Defect rate 3× above threshold in last 22 minutes. Vision inspection showing dimensional variation on Part #4 station. Hydraulic pressure low — possible tooling pressure issue. Recommend supervisor review immediately.'
+  },
+  {
+    label:'Scenario 4 of 4 — Critical: Machine intervention needed',
+    temp:'204°F',tempClass:'crit',tempS:'● Critical',tempSClass:'crit-s',
+    vib:'4.7',vibClass:'crit',vibS:'● Danger Zone',vibSClass:'crit-s',
+    speed:'61%',speedClass:'warn',speedS:'● Line Slowing',speedSClass:'warn-s',
+    defect:'0.88%',defectClass:'crit',defectS:'● Far Above Limit',defectSClass:'crit-s',
+    psi:'1,940',psiClass:'crit',psiS:'● Critical Low',psiSClass:'crit-s',
+    oee:'43%',oeeClass:'crit',oeeS:'● Critical',oeeSClass:'crit-s',
+    alert:true,alertText:'CRITICAL: Motor temperature approaching thermal shutdown threshold (210°F). Vibration at 4.7 mm/s indicates imminent bearing failure. AI recommends controlled line stop immediately. Estimated cost of planned stop now vs. unplanned failure: $4,200 vs. $67,000+. Maintenance dispatch recommended.'
+  }
+];
+let scIdx=0;
+function setScenario(s){
+  document.getElementById('ds-temp').textContent=s.temp;document.getElementById('ds-temp').className='ds-tile-val '+s.tempClass;
+  document.getElementById('ds-temp-s').textContent=s.tempS;document.getElementById('ds-temp-s').className='ds-tile-status '+s.tempSClass;
+  document.getElementById('ds-vib').textContent=s.vib;document.getElementById('ds-vib').className='ds-tile-val '+s.vibClass;
+  document.getElementById('ds-vib-s').textContent=s.vibS;document.getElementById('ds-vib-s').className='ds-tile-status '+s.vibSClass;
+  document.getElementById('ds-speed').textContent=s.speed;document.getElementById('ds-speed').className='ds-tile-val '+s.speedClass;
+  document.getElementById('ds-speed-s').textContent=s.speedS;document.getElementById('ds-speed-s').className='ds-tile-status '+s.speedSClass;
+  document.getElementById('ds-defect').textContent=s.defect;document.getElementById('ds-defect').className='ds-tile-val '+s.defectClass;
+  document.getElementById('ds-defect-s').textContent=s.defectS;document.getElementById('ds-defect-s').className='ds-tile-status '+s.defectSClass;
+  document.getElementById('ds-psi').textContent=s.psi;document.getElementById('ds-psi').className='ds-tile-val '+s.psiClass;
+  document.getElementById('ds-psi-s').textContent=s.psiS;document.getElementById('ds-psi-s').className='ds-tile-status '+s.psiSClass;
+  document.getElementById('ds-oee').textContent=s.oee;document.getElementById('ds-oee').className='ds-tile-val '+s.oeeClass;
+  document.getElementById('ds-oee-s').textContent=s.oeeS;document.getElementById('ds-oee-s').className='ds-tile-status '+s.oeeSClass;
+  const alertEl=document.getElementById('ds-alert');
+  if(s.alert){alertEl.classList.add('show');document.getElementById('ds-alert-text').textContent=s.alertText;}
+  else{alertEl.classList.remove('show');}
+  document.getElementById('ds-scenario-label').textContent=s.label;
+}
+function nextScenario(){
+  scIdx=(scIdx+1)%scenarios.length;
+  setScenario(scenarios[scIdx]);
+}
+setScenario(scenarios[0]);
+
+// Quiz
+let q1done=false;
+function doQ1(i){if(q1done)return;q1done=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

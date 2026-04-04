@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is AI, Really? A Plain-Language Guide for Manufacturing and Trade Workers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.steps{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.step-item{display:flex;gap:20px;position:relative;padding-bottom:24px;}
+.step-item:last-child{padding-bottom:0;}
+.step-item:not(:last-child)::after{content:"";position:absolute;left:22px;top:48px;bottom:0;width:2px;background:var(--purple-mid);}
+.step-circle{width:44px;height:44px;border-radius:50%;background:var(--purple-dark);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-weight:900;font-size:18px;flex-shrink:0;z-index:1;}
+.step-body{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;margin-top:4px;}
+.step-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.step-desc{font-size:14px;line-height:1.75;color:var(--gray-text);}
+.step-example{margin-top:8px;padding:8px 12px;background:var(--purple-pale);border-radius:8px;font-size:13px;color:var(--purple-dark);font-style:italic;}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.compare-col{border-radius:18px;padding:22px;}
+.compare-col.rules{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.compare-col.ml{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.compare-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.rules .compare-label{color:var(--blue);}
+.ml .compare-label{color:var(--purple);}
+.compare-col h3{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:10px;}
+.rules h3{color:var(--blue);}
+.ml h3{color:var(--purple-dark);}
+.compare-col p{font-size:14px;line-height:1.7;color:var(--gray-text);margin-bottom:8px;}
+@media(max-width:600px){.compare{grid-template-columns:1fr;}}
+.pattern-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ps-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ps-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;line-height:1.3;}
+.ps-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ps-data-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.data-point{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 14px;text-align:center;min-width:90px;flex:1;}
+.data-point.anomaly{border-color:var(--red);background:var(--red-pale);}
+.dp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-muted);margin-bottom:6px;}
+.dp-temp{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--gray-text);margin-bottom:2px;}
+.data-point.anomaly .dp-temp{color:var(--red);}
+.dp-details{font-size:11px;color:var(--gray-muted);line-height:1.5;}
+.data-point.anomaly .dp-details{color:var(--red);}
+.ps-question{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;margin:0 0 14px;}
+.ps-opts{display:flex;flex-direction:column;gap:8px;}
+.ps-opt{background:var(--white);border:2px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.ps-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.ps-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.ps-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ps-fb{font-size:14px;line-height:1.7;padding:14px 16px;border-radius:10px;margin-top:12px;display:none;}
+.ps-fb.show{display:block;}
+.ps-fb.good{background:var(--green-pale);color:var(--green);}
+.ps-fb.bad{background:var(--red-pale);color:var(--red);}
+.mistake-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0;}
+.mistake-card{background:var(--orange-pale);border:1.5px solid var(--orange);border-radius:18px;padding:22px;}
+.mc-icon{font-size:28px;margin-bottom:10px;}
+.mc-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:#92400E;margin-bottom:8px;}
+.mc-desc{font-size:14px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:600px){.mistake-cards{grid-template-columns:1fr;}}
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:20px;font-weight:700;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{font-size:15px;line-height:1.7;padding:16px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:36px;margin:40px 0;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:16px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;margin:0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 · Foundation Article</div>
+  <h1>What Is AI, Really? A Plain-Language Guide for Manufacturing and Trade Workers</h1>
+  <p class="hero-sub">No jargon, no hype. A clear explanation of what AI actually is, how it learns, why it's powerful on the shop floor — and why it still makes mistakes.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <p>The term "artificial intelligence" gets thrown around constantly. You hear it in the news, in job postings, from your employer. But if someone asked you to explain what AI actually is — not a definition, but a real explanation of how it works — could you do it?</p>
+    <p>Most people can't. And that's not their fault. Once you understand the basic idea though, you'll be able to look at any AI tool in any factory and understand, at least roughly, what it's doing and why. That's what this article is for.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Start Here: What AI Is NOT</h2>
+    <p>Movies and news coverage have given most people the wrong mental picture. AI is not a robot with a brain that thinks like a human. It's not a computer that has feelings or goals. It's not something that "knows" things the way you know things.</p>
+    <p>What AI actually is, at its most basic, is <mark>a system that finds patterns in large amounts of data and uses those patterns to make predictions or decisions</mark>. That's it. Pattern recognition in data. Everything else — the alerts, the recommendations, the quality flags — flows from that one core ability.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Best Analogy: Training a New Employee</h2>
+    <p>Here's the clearest way to think about how AI learns. Imagine you're training a brand-new employee who has never worked in a factory before.</p>
+    <p>On their first day, you show them thousands of metal parts — some good, some defective. You say: "This one is good. This one has a crack — it's bad. This one is good. This one is scratched — it's bad." Over and over, example after example.</p>
+    <p>After enough examples, that employee starts to recognize the patterns. They learn what a crack looks like, what a good surface finish looks like, what defective versus acceptable means. Eventually, they can look at a part they've never seen before and say: "That looks like the defective ones I was shown — flag it."</p>
+    <p>That is <mark>exactly</mark> how AI learns. The employee is the AI system. The thousands of examples are called <mark>training data</mark>. The process of learning from those examples is called <mark>machine learning</mark>.</p>
+
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term: Machine Learning</div>
+      <div class="vocab-def"><strong>Machine learning</strong> is how an AI learns — by studying examples rather than being given a fixed set of rules. Instead of a programmer writing "if the part has a crack, reject it," the AI looks at thousands of good and bad parts and learns to tell the difference on its own. The more quality examples it sees, the better it gets.</div>
+    </div>
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term: Training Data</div>
+      <div class="vocab-def"><strong>Training data</strong> is the collection of labeled examples an AI learns from. In manufacturing, this might be photos of good and defective parts, years of machine sensor readings, or production logs. The quality and quantity of training data directly determines how accurate the AI becomes — which is why the phrase "garbage in, garbage out" is so commonly used in AI.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Rules vs. Learning: A Key Difference</h2>
+    <p>Before AI became practical, factory computers worked on strict rules. A programmer would write: "If temperature exceeds 180°F, send an alert." That works fine — until a machine starts running just a few degrees hotter than normal for 36 hours before actually failing. The rule never fires, but a breakdown is coming.</p>
+    <p>AI works differently. Instead of rules it can't go beyond, it learns subtle patterns across many variables:</p>
+
+    <div class="compare fade-in">
+      <div class="compare-col rules">
+        <div class="compare-label">📋 Traditional Rules-Based System</div>
+        <h3>How it works</h3>
+        <p>A programmer writes specific conditions: "If X exceeds Y, do Z." The computer follows those rules exactly — no more, no less.</p>
+        <p><strong>Good for:</strong> Simple, clear-cut situations where thresholds are obvious.</p>
+        <p><strong>Problem:</strong> Can't detect gradual drift, unusual combinations of readings, or patterns no one thought to write a rule for.</p>
+      </div>
+      <div class="compare-col ml">
+        <div class="compare-label">🤖 Machine Learning / AI</div>
+        <h3>How it works</h3>
+        <p>The AI studies thousands of examples of machines before failure and learns the subtle combination of sensor readings that typically appears 48 hours in advance.</p>
+        <p><strong>Good for:</strong> Complex, subtle patterns across many variables that rules would never catch.</p>
+        <p><strong>Problem:</strong> Can make surprising errors, especially in situations different from its training data.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Actually Learns: Step by Step</h2>
+    <div class="steps fade-in">
+      <div class="step-item">
+        <div class="step-circle">1</div>
+        <div class="step-body">
+          <div class="step-title">Data is collected</div>
+          <div class="step-desc">Sensors on machines collect readings — temperature, vibration, pressure, speed — thousands of times per hour. Photos are taken. Shift logs are recorded. All of it is stored.</div>
+          <div class="step-example">Factory example: A CNC machine has sensors that log spindle speed, cutting force, and temperature every 10 seconds across two years of operation.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">2</div>
+        <div class="step-body">
+          <div class="step-title">Data is labeled</div>
+          <div class="step-desc">Humans review the data and add answers for the AI to learn from. This is called "labeled training data." Labor-intensive, but essential — the AI needs to know what right and wrong look like.</div>
+          <div class="step-example">Factory example: An engineer marks every stretch of sensor data that led to a breakdown. Now the AI has "before failure" and "normal" examples to learn from.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-body">
+          <div class="step-title">The AI finds the patterns</div>
+          <div class="step-desc">The AI studies the labeled examples, looking for combinations of readings that consistently appear before bad outcomes. It processes this data far faster than any human could.</div>
+          <div class="step-example">Factory example: The AI discovers that 36 hours before a bearing failure, vibration rises 8% while temperature rises only 2% — a combination no technician would have noticed consciously.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">4</div>
+        <div class="step-body">
+          <div class="step-title">The AI is tested, then goes live</div>
+          <div class="step-desc">Before deployment, the AI is tested on data it has never seen. Engineers verify that it catches real problems without generating too many false alarms. Then it goes on the floor — and keeps learning from new data over time.</div>
+          <div class="step-example">Factory example: The AI correctly predicts 87% of failures at least 24 hours in advance on test data. It goes live, and maintenance techs' feedback further improves it over months.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Try It: Can You Spot the Pattern?</h2>
+    <p>Here's a simplified version of what an AI does when monitoring machine health. Look at these sensor readings from a milling machine across one week. Normal ranges: temperature 140–165°F, vibration 0.8–1.4 mm/s, speed 2,800–3,200 RPM.</p>
+
+    <div class="pattern-sim fade-in">
+      <div class="ps-label">🎮 Pattern Recognition Practice</div>
+      <div class="ps-title">Milling Machine #3 — End-of-Shift Sensor Readings</div>
+      <div class="ps-sub">Each card shows that day's temperature, vibration level, and spindle speed. One day's readings are clearly outside normal range across multiple sensors.</div>
+
+      <div class="ps-data-row">
+        <div class="data-point">
+          <div class="dp-label">Monday</div>
+          <div class="dp-temp">155°F</div>
+          <div class="dp-details">Vibration: 1.1<br>RPM: 3,050</div>
+        </div>
+        <div class="data-point">
+          <div class="dp-label">Tuesday</div>
+          <div class="dp-temp">158°F</div>
+          <div class="dp-details">Vibration: 1.2<br>RPM: 3,020</div>
+        </div>
+        <div class="data-point">
+          <div class="dp-label">Wednesday</div>
+          <div class="dp-temp">157°F</div>
+          <div class="dp-details">Vibration: 1.1<br>RPM: 3,060</div>
+        </div>
+        <div class="data-point anomaly">
+          <div class="dp-label">⚠ Thursday</div>
+          <div class="dp-temp">163°F</div>
+          <div class="dp-details">Vibration: 1.9<br>RPM: 2,760</div>
+        </div>
+        <div class="data-point">
+          <div class="dp-label">Friday</div>
+          <div class="dp-temp">156°F</div>
+          <div class="dp-details">Vibration: 1.2<br>RPM: 3,040</div>
+        </div>
+      </div>
+
+      <div class="ps-question">Which day should trigger an AI alert — and why?</div>
+      <div class="ps-opts" id="psopts">
+        <div class="ps-opt" onclick="doPat(this,false,'❌ Monday\'s readings are all within normal range: 155°F temp, 1.1 vibration, 3,050 RPM. Everything looks healthy.')">Monday — the temperature is at 155°F, which feels elevated</div>
+        <div class="ps-opt" onclick="doPat(this,true,'✅ Correct. Thursday shows three sensors going abnormal at the same time: temperature at 163°F (near the top of normal), vibration at 1.9 mm/s (well above the 1.4 maximum), and RPM dropped to 2,760 (below the 2,800 minimum). When multiple sensors deviate simultaneously, that combination is a strong signal of a developing problem. An AI trained on historical data would flag this immediately — and a maintenance tech would be sent to investigate before anything failed.')">Thursday — multiple readings are outside normal range at the same time</div>
+        <div class="ps-opt" onclick="doPat(this,false,'❌ Friday\'s readings are completely normal. 156°F temp, 1.2 vibration, 3,040 RPM — all within range. No concern.')">Friday — the vibration reading seems slightly high</div>
+      </div>
+      <div class="ps-fb" id="psfb"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why AI Can Spot Patterns Humans Miss</h2>
+    <p>An experienced technician might notice if a machine sounds off or feels unusually hot. That's valuable intuition. But there are real limits to what any human can detect:</p>
+    <ul style="list-style:none;padding:0;margin:0 0 16px 0;">
+      <li style="padding:8px 0 8px 28px;position:relative;font-size:16px;line-height:1.7;border-bottom:1px solid var(--purple-mid);"><span style="position:absolute;left:0;font-size:18px;">👁</span>A human can watch one machine at a time. AI can monitor hundreds simultaneously.</li>
+      <li style="padding:8px 0 8px 28px;position:relative;font-size:16px;line-height:1.7;border-bottom:1px solid var(--purple-mid);"><span style="position:absolute;left:0;font-size:18px;">📊</span>A human can track a few variables at once. AI can analyze 50 sensor readings and find interactions between them that no technician would ever consciously notice.</li>
+      <li style="padding:8px 0 8px 28px;position:relative;font-size:16px;line-height:1.7;border-bottom:1px solid var(--purple-mid);"><span style="position:absolute;left:0;font-size:18px;">💤</span>Humans need breaks and sleep. AI runs 24/7 without attention lapses.</li>
+      <li style="padding:8px 0 8px 28px;position:relative;font-size:16px;line-height:1.7;"><span style="position:absolute;left:0;font-size:18px;">📚</span>A human learns from machines they've worked on. AI can learn from data across thousands of machines at thousands of facilities — an experience base no individual could accumulate.</li>
+    </ul>
+    <p>This isn't about AI being "smarter." It's about AI being able to process <em>more information, faster, more consistently</em> — while humans bring judgment, context, and accountability that AI fundamentally cannot replicate.</p>
+  </div>
+
+  <div class="section fade-in">
+    <div class="pull-quote">
+      <p>AI is not a replacement for your judgment. It's a tool that gives you better information so your judgment can work with more than your eyes and ears alone.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why AI Also Makes Mistakes — And Why This Matters for You</h2>
+    <p><mark>AI makes mistakes, and it makes them in ways that can be hard to predict.</mark> Understanding why makes you a better, safer user of these tools.</p>
+
+    <div class="mistake-cards fade-in">
+      <div class="mistake-card">
+        <div class="mc-icon">🎭</div>
+        <div class="mc-title">It only knows what it was trained on</div>
+        <div class="mc-desc">If trained on Machine A, it may not work well on Machine B. A new type of failure it has never seen in training data may go completely undetected.</div>
+      </div>
+      <div class="mistake-card">
+        <div class="mc-icon">🔔</div>
+        <div class="mc-title">It generates false alarms</div>
+        <div class="mc-desc">Sometimes the AI flags a problem when everything is fine. Too many false alarms cause workers to start ignoring them — including the real ones. This is called "alert fatigue" and it's a documented safety risk.</div>
+      </div>
+      <div class="mistake-card">
+        <div class="mc-icon">🌐</div>
+        <div class="mc-title">It doesn't understand context</div>
+        <div class="mc-desc">The AI sees data — not context. It doesn't know there's construction next door causing extra vibration, that a new coolant was introduced this week, or that the machine runs hotter on hot days. That context is invisible to it.</div>
+      </div>
+      <div class="mistake-card">
+        <div class="mc-icon">😎</div>
+        <div class="mc-title">It sounds confident even when wrong</div>
+        <div class="mc-desc">AI systems present outputs the same way whether they're 99% certain or 51% certain. They don't say "I'm not sure." That's why human review of AI alerts is essential, not optional.</div>
+      </div>
+    </div>
+
+    <p>Your role as a trade worker using AI is not to blindly follow alerts. It's to use AI as one powerful input — combined with your training, your experience, and your direct observation of what's actually happening on the floor.</p>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A factory trains an AI on aluminum parts to detect defects. Then they start making steel parts and use the same AI. What problem is likely?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The AI was trained only on aluminum part data. Steel parts look different — different surface characteristics, different defect types. The AI may miss real defects or flag things incorrectly because it has never seen steel examples. This is one of the most common real-world AI failures: using a system outside the conditions it was trained for.')">The AI might miss defects or flag things incorrectly because it was only trained on aluminum data</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ AI systems don\'t automatically adapt to new conditions. They only know what they were trained on. Using an AI on a new material requires retraining on new examples — or very careful human oversight to catch where it falls short.')">The AI will automatically adjust because it has learned general defect recognition principles</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The AI won\'t give an error — it will keep producing outputs. But those outputs may be unreliable because steel is different from aluminum. That\'s actually more dangerous than an error message, because the unreliable results look exactly like reliable ones.')">The AI will give an error message because it doesn\'t recognize the new material</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">What does "machine learning" mean in simple terms?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Programming a machine to follow specific rules is traditional computer programming — not machine learning. Machine learning is specifically about learning from examples, not being given rules to follow.')">Programming a machine to follow a specific set of rules for every situation</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. Machine learning is a process where the AI learns by studying many labeled examples rather than following fixed rules. The more quality examples it sees, the better its pattern recognition becomes. This is what makes it powerful for complex situations where no one could write a complete set of rules.')">A process where AI learns by studying many examples rather than following fixed rules written by a programmer</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Machine learning refers to how AI is trained before deployment — not to how machines physically maintain themselves. Machines still require skilled maintenance technicians for physical upkeep.')">The process by which factory machines automatically fix themselves using AI</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI is a system that finds patterns in large amounts of data and uses those patterns to make predictions. It's not a thinking machine — it's a very powerful pattern recognizer.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Machine learning is how AI gets trained: by showing it thousands of labeled examples so it learns to recognize patterns on its own, rather than being given a fixed set of rules.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI can process more data, across more variables, more consistently than humans — which is why it catches patterns humans miss. But it lacks context, judgment, and accountability, which is why humans remain essential.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI makes mistakes — especially outside its training conditions, with false alarms, and when it lacks context. Use AI alerts as one powerful input, not as the final word.</p></div>
+    </div>
+  </div>
+
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doPat(btn,correct,msg){const opts=document.getElementById('psopts');if(opts.querySelector('.correct,.wrong'))return;btn.classList.add(correct?'correct':'wrong');const fb=document.getElementById('psfb');fb.className='ps-fb show '+(correct?'good':'bad');fb.textContent=msg;}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+'opts');if(opts.querySelector('.correct,.wrong'))return;btn.classList.add(correct?'correct':'wrong');const fb=document.getElementById(id+'fb');fb.className='qfb show '+(correct?'cfb':'wfb');fb.textContent=msg;}
+</script>
+</body>
+</html>

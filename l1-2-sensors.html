@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Sensor, and Why Is It the Secret Behind AI on the Shop Floor?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.sensor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0;}
+.sensor-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:22px;}
+.sc-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:6px;}
+.sc-name{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.sc-icon{font-size:28px;margin-bottom:8px;}
+.sc-what{font-size:14px;line-height:1.7;color:var(--gray-text);margin-bottom:10px;}
+.sc-example{font-size:13px;padding:8px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);border-left:3px solid var(--purple);}
+@media(max-width:580px){.sensor-grid{grid-template-columns:1fr;}}
+.live-sim{background:var(--purple-dark);border-radius:24px;padding:28px;margin:28px 0;color:var(--white);}
+.ls-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.ls-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:4px;}
+.ls-sub{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:24px;}
+.ls-gauges{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.ls-gauge{background:rgba(255,255,255,.07);border-radius:16px;padding:16px;text-align:center;}
+.ls-gauge-icon{font-size:24px;margin-bottom:6px;}
+.ls-gauge-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.ls-gauge-value{font-family:"Fraunces",serif;font-size:26px;font-weight:900;margin-bottom:2px;}
+.ls-gauge-unit{font-size:11px;color:rgba(255,255,255,.5);}
+.ls-gauge-status{font-size:11px;font-weight:700;margin-top:6px;padding:3px 8px;border-radius:100px;display:inline-block;}
+.status-ok{background:rgba(39,103,73,.4);color:#6EE7A8;}
+.status-warn{background:rgba(217,119,6,.35);color:#FCD34D;}
+.status-alert{background:rgba(220,38,38,.35);color:#FCA5A5;}
+.ls-ai-status{background:rgba(255,255,255,.07);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.ls-ai-dot{width:12px;height:12px;border-radius:50%;background:#6EE7A8;flex-shrink:0;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.ls-ai-text{font-size:14px;line-height:1.6;color:rgba(255,255,255,.8);}
+.ls-refresh{background:rgba(255,255,255,.12);color:var(--white);border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:14px;transition:all .2s;}
+.ls-refresh:hover{background:rgba(255,255,255,.2);}
+@media(max-width:580px){.ls-gauges{grid-template-columns:repeat(2,1fr);}}
+.data-flow{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.df-step{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px dashed var(--purple-mid);}
+.df-step:last-child{border-bottom:none;}
+.df-icon{width:48px;height:48px;background:var(--purple-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.df-title{font-weight:700;font-size:16px;color:var(--purple-dark);margin-bottom:4px;}
+.df-desc{font-size:14px;line-height:1.7;color:var(--gray-text);}
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:20px;font-weight:700;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{font-size:15px;line-height:1.7;padding:16px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:36px;margin:40px 0;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:16px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;margin:0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 · Foundation Article</div>
+  <h1>What Is a Sensor, and Why Is It the Secret Behind AI on the Shop Floor?</h1>
+  <p class="hero-sub">You've heard AI monitors machines, catches defects, and prevents accidents. But how does it actually see what's happening? The answer starts with sensors.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+  <div class="section fade-in">
+    <p>When people talk about AI in manufacturing, they often skip right to what the AI decides. But there's a critical step that comes first: the AI has to be able to <em>sense</em> what's happening before it can analyze anything.</p>
+    <p>Think about your own senses. You can't tell if something is too hot to touch without your sense of touch. You can't hear a machine running rough without your sense of hearing. Your brain depends completely on your senses to know what's going on.</p>
+    <p>On the shop floor, <mark>sensors are the AI's senses</mark>. Without them, AI is blind. With them, AI can monitor dozens of machines simultaneously — 24 hours a day, 7 days a week, without ever getting tired.</p>
+  </div>
+  <div class="section fade-in">
+    <h2>What a Sensor Is</h2>
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term: Sensor</div>
+      <div class="vocab-def">A <strong>sensor</strong> is a device that detects and measures something in the physical world — temperature, movement, pressure, sound, light — and converts it into a number that a computer can read and store. Every sensor does two things: it measures something, and it reports that measurement as data.</div>
+    </div>
+    <p>You already use sensors every day. The thermostat in your house uses a temperature sensor. Your phone knows to rotate the screen because it has a motion sensor inside. Your car's check-engine light is connected to sensors monitoring the engine.</p>
+    <p>In a modern manufacturing facility, there can be <mark>hundreds or thousands of sensors</mark> — attached to machines, embedded in conveyor belts, mounted on walls and ceilings — all feeding data into a central system that AI analyzes continuously.</p>
+  </div>
+  <div class="section fade-in">
+    <h2>The Six Types of Sensors That Matter Most in Manufacturing</h2>
+    <div class="sensor-grid fade-in">
+      <div class="sensor-card">
+        <div class="sc-icon">🌡️</div>
+        <div class="sc-type">Sensor Type 1</div>
+        <div class="sc-name">Temperature Sensors</div>
+        <div class="sc-what">Measure how hot or cold something is. Attached to machine bearings, motors, cooling systems, and workpieces. Running too hot usually means something is working too hard or is about to break.</div>
+        <div class="sc-example">📍 Real use: A bearing temperature rises gradually from 140°F to 175°F over two days — the AI flags it as a predictive maintenance alert before the bearing seizes.</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sc-icon">📳</div>
+        <div class="sc-type">Sensor Type 2</div>
+        <div class="sc-name">Vibration Sensors</div>
+        <div class="sc-what">Detect shaking, rattling, and abnormal movement in machines. Every healthy machine has a normal vibration "signature." Changes in that signature — new frequencies, increased intensity — often signal a developing problem like a worn gear or failing bearing.</div>
+        <div class="sc-example">📍 Real use: A vibration sensor on a CNC spindle detects a subtle new frequency pattern. The AI alerts the crew that the spindle bearings show early signs of wear — 3 weeks before they would have failed visibly.</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sc-icon">⚡</div>
+        <div class="sc-type">Sensor Type 3</div>
+        <div class="sc-name">Current / Power Sensors</div>
+        <div class="sc-what">Measure how much electricity a motor or machine is drawing. If a machine starts consuming more power than usual to do the same job, it's working harder than it should — which usually means something is wearing out.</div>
+        <div class="sc-example">📍 Real use: A conveyor motor starts drawing 8% more current than its normal range. The AI flags it — turns out the belt was misaligned and creating extra friction.</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sc-icon">🔧</div>
+        <div class="sc-type">Sensor Type 4</div>
+        <div class="sc-name">Pressure Sensors</div>
+        <div class="sc-what">Measure the force of fluids or gases in pipes, hydraulic systems, and pneumatic tools. Too much or too little pressure can mean a leak, a clog, or a pump failure. Critical in any system using hydraulics or compressed air.</div>
+        <div class="sc-example">📍 Real use: Hydraulic pressure drops slightly in a stamping press. The AI schedules a seal inspection — preventing a complete failure that would have shut down the line.</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sc-icon">📏</div>
+        <div class="sc-type">Sensor Type 5</div>
+        <div class="sc-name">Proximity / Position Sensors</div>
+        <div class="sc-what">Detect whether an object is present, where it is, or whether a part has reached a specific position. Used to confirm that assembly steps have been completed and parts are in the right place before moving forward.</div>
+        <div class="sc-example">📍 Real use: A position sensor on an assembly station confirms that a component was actually installed before the part moves on — catching missed installations that a camera might not see.</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sc-icon">📷</div>
+        <div class="sc-type">Sensor Type 6</div>
+        <div class="sc-name">Vision Sensors (Cameras)</div>
+        <div class="sc-what">Capture images or video that AI analyzes for defects, hazards, or process states. The most flexible sensor type — a camera can be trained to recognize almost anything visible: surface scratches, missing parts, workers without PPE, or blocked exits.</div>
+        <div class="sc-example">📍 Real use: A camera scans each finished product in under 0.1 seconds. The AI flags parts that don't match the expected appearance — catching defects invisible to the naked eye.</div>
+      </div>
+    </div>
+  </div>
+  <div class="section fade-in">
+    <h2>Watch It Live: A Machine Being Monitored</h2>
+    <p>This simulation shows what real-time sensor monitoring looks like. Four sensors on a single machine report their readings. The AI analyzes all four together to assess machine health. Click "Refresh Readings" to see different scenarios.</p>
+    <div class="live-sim fade-in">
+      <div class="ls-label">🔴 Live Simulation</div>
+      <div class="ls-title">CNC Machine — Real-Time Sensor Dashboard</div>
+      <div class="ls-sub">Click "Refresh Readings" to simulate a new snapshot from this machine's sensors.</div>
+      <div class="ls-gauges">
+        <div class="ls-gauge"><div class="ls-gauge-icon">🌡️</div><div class="ls-gauge-name">Temperature</div><div class="ls-gauge-value" id="g-temp">148°</div><div class="ls-gauge-unit">Fahrenheit</div><div class="ls-gauge-status status-ok" id="s-temp">Normal</div></div>
+        <div class="ls-gauge"><div class="ls-gauge-icon">📳</div><div class="ls-gauge-name">Vibration</div><div class="ls-gauge-value" id="g-vib">2.1</div><div class="ls-gauge-unit">mm/s RMS</div><div class="ls-gauge-status status-ok" id="s-vib">Normal</div></div>
+        <div class="ls-gauge"><div class="ls-gauge-icon">⚡</div><div class="ls-gauge-name">Power Draw</div><div class="ls-gauge-value" id="g-pwr">14.2</div><div class="ls-gauge-unit">Kilowatts</div><div class="ls-gauge-status status-ok" id="s-pwr">Normal</div></div>
+        <div class="ls-gauge"><div class="ls-gauge-icon">🔧</div><div class="ls-gauge-name">Pressure</div><div class="ls-gauge-value" id="g-prs">87</div><div class="ls-gauge-unit">PSI</div><div class="ls-gauge-status status-ok" id="s-prs">Normal</div></div>
+      </div>
+      <div class="ls-ai-status"><div class="ls-ai-dot" id="aiDot"></div><div class="ls-ai-text" id="aiText">🤖 AI Assessment: All readings within normal operating range. No action required. Machine health score: <strong>94/100</strong></div></div>
+      <button class="ls-refresh" onclick="refreshReadings()">↻ Refresh Readings</button>
+    </div>
+  </div>
+  <div class="section fade-in">
+    <h2>From Sensor to Decision: How the Data Flows</h2>
+    <div class="data-flow fade-in">
+      <div class="df-step"><div class="df-icon">🔌</div><div><div class="df-title">Step 1: The sensor detects something</div><div class="df-desc">A temperature sensor on a bearing measures 171°F. The sensor converts that physical measurement into an electrical signal — a number — that can be transmitted.</div></div></div>
+      <div class="df-step"><div class="df-icon">📡</div><div><div class="df-title">Step 2: The data is transmitted</div><div class="df-desc">That number is sent via wired or wireless connection to a central data collection system. This happens continuously, often hundreds of times per second.</div></div></div>
+      <div class="df-step"><div class="df-icon">💾</div><div><div class="df-title">Step 3: The data is stored</div><div class="df-desc">Readings are stored in a database alongside all other sensor data. This builds the historical record that AI uses to learn patterns and compare current readings to past behavior.</div></div></div>
+      <div class="df-step"><div class="df-icon">🤖</div><div><div class="df-title">Step 4: The AI analyzes it</div><div class="df-desc">The AI compares current readings to historical data, considers multiple sensors simultaneously, and calculates how likely this combination is to precede a failure — based on everything it learned during training.</div></div></div>
+      <div class="df-step"><div class="df-icon">🚨</div><div><div class="df-title">Step 5: An alert goes to a human</div><div class="df-desc">If the AI's assessment crosses a threshold, it sends an alert: "Bearing on Machine 7 — temperature and vibration suggest 65% probability of failure within 48 hours. Recommend inspection." The human decides what to do next.</div></div></div>
+    </div>
+    <div class="pull-quote fade-in"><p>The AI is only as good as the sensors feeding it. A broken sensor, a dirty lens, or a disconnected wire turns a smart system into a blind one.</p></div>
+  </div>
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A vibration sensor on a machine starts reporting readings 15% higher than its normal range. What should happen next?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ A single elevated vibration reading doesn\'t necessarily mean the machine is broken right now. Shutting down immediately would cause unnecessary downtime. The right step is investigation.')">Immediately shut down the machine — any vibration increase means it\'s broken</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The AI uses the elevated reading as one input — ideally combined with temperature and other sensors — to generate an alert. The maintenance tech then physically investigates to determine cause and urgency. The AI flags; the human decides.')">The AI flags it as worth investigating; a maintenance technician inspects the machine to determine the cause</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Ignoring it misses a potential early warning. One of the main advantages of AI monitoring is catching problems before they become failures. Ignoring alerts defeats the purpose.')">Ignore it — small vibration changes are normal and don\'t need to be acted on</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">Why can't a manufacturing AI system work without sensors?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Sensors aren\'t about power — they\'re about information. The AI needs to know what\'s happening physically in the facility, and sensors are how it gets that information.')">Because sensors provide the electricity that powers the AI computers</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Sensors don\'t store training data — that\'s done in databases. Sensors collect current, real-time readings about what\'s happening right now.')">Because sensors are where training data is permanently stored</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Exactly right. AI can only analyze information it has. Without sensors, there\'s no real-time data about machine conditions, product quality, or worker safety. Sensors are the eyes, ears, and nerve endings that make AI-powered monitoring physically possible.')">Because sensors are how AI perceives the physical world — without them, the AI has no data to analyze</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A sensor is a device that measures something physical — temperature, vibration, pressure, power, position, or images — and converts it into data a computer can read. Sensors are how AI perceives the shop floor.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The six key sensor types in manufacturing are temperature, vibration, power/current, pressure, proximity/position, and vision (cameras). Each gives the AI a different "sense" of what's happening on the floor.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The data flow goes: sensor detects → data transmitted → data stored → AI analyzes → alert sent to human. The human is always at the end of that chain — making the actual decision.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Sensors don't replace skilled workers — they give skilled workers better information. A maintenance technician who can read and respond to sensor-based AI alerts is more effective because they have data to act on that no human could collect manually at scale.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+const scenarios=[
+  {temp:"148°",tvib:"2.1",pwr:"14.2",prs:"87",ts:"ok",vs:"ok",ps:"ok",pss:"ok",msg:"🤖 AI Assessment: All readings within normal operating range. No action required. Machine health score: <strong>94/100</strong>"},
+  {temp:"162°",tvib:"3.7",pwr:"15.8",prs:"85",ts:"warn",vs:"warn",ps:"ok",pss:"ok",msg:"⚠️ AI Assessment: Temperature and vibration elevated. Pattern matches early bearing wear in 73% of historical cases. <strong>Recommend scheduling inspection within 48 hours.</strong>"},
+  {temp:"145°",tvib:"2.0",pwr:"14.0",prs:"61",ts:"ok",vs:"ok",ps:"ok",pss:"alert",msg:"🚨 AI Assessment: Pressure critically low — possible hydraulic leak or pump failure. <strong>Recommend immediate inspection before next production run.</strong>"},
+  {temp:"155°",tvib:"2.4",pwr:"14.5",prs:"88",ts:"warn",vs:"ok",ps:"ok",pss:"ok",msg:"⚠️ AI Assessment: Temperature slightly elevated — within borderline range. Low probability of immediate failure. <strong>Monitor closely; no immediate action required.</strong>"},
+  {temp:"149°",tvib:"5.9",pwr:"17.1",prs:"84",ts:"ok",vs:"alert",ps:"alert",pss:"ok",msg:"🚨 AI Assessment: Vibration critically high combined with elevated power draw. This combination preceded spindle failure in 89% of historical cases. <strong>Recommend stopping machine and inspecting immediately.</strong>"}
+];
+let scIdx=0;
+function refreshReadings(){
+  scIdx=(scIdx+1)%scenarios.length;
+  const s=scenarios[scIdx];
+  document.getElementById('g-temp').textContent=s.temp;
+  document.getElementById('g-vib').textContent=s.tvib;
+  document.getElementById('g-pwr').textContent=s.pwr;
+  document.getElementById('g-prs').textContent=s.prs;
+  const statMap={ok:'status-ok',warn:'status-warn',alert:'status-alert'};
+  const statLabel={ok:'Normal',warn:'Elevated',alert:'ALERT'};
+  ['temp','vib','pwr','prs'].forEach((k,i)=>{
+    const key=[s.ts,s.vs,s.ps,s.pss][i];
+    const el=document.getElementById('s-'+k);
+    el.className='ls-gauge-status '+statMap[key];
+    el.textContent=statLabel[key];
+  });
+  document.getElementById('aiText').innerHTML=s.msg;
+  const hasAlert=s.ts==='alert'||s.vs==='alert'||s.ps==='alert'||s.pss==='alert';
+  const hasWarn=s.ts==='warn'||s.vs==='warn'||s.ps==='warn'||s.pss==='warn';
+  document.getElementById('aiDot').style.background=hasAlert?'#FCA5A5':hasWarn?'#FCD34D':'#6EE7A8';
+}
+function doQ(id,btn,correct,msg){
+  const opts=document.getElementById(id+'opts');
+  if(opts.querySelector('.correct,.wrong'))return;
+  btn.classList.add(correct?'correct':'wrong');
+  const fb=document.getElementById(id+'fb');
+  fb.className='qfb show '+(correct?'cfb':'wfb');
+  fb.textContent=msg;
+}
+</script>
+</body>
+</html>
