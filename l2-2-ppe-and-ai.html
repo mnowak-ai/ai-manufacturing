@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is PPE and Why Does AI Now Help Make Sure Workers Are Actually Wearing It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* PPE grid */
+.ppe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+.ppe-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:20px;text-align:center;}
+.ppe-icon{font-size:36px;margin-bottom:10px;}
+.ppe-name{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.ppe-protects{font-size:12px;color:var(--gray-muted);margin-bottom:8px;}
+.ppe-hazard{font-size:12px;padding:6px 10px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);line-height:1.5;}
+@media(max-width:600px){.ppe-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* Why people skip */
+.skip-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.skip-card{display:flex;gap:16px;border-radius:16px;padding:18px 20px;align-items:flex-start;}
+.skip-card.c1{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.skip-card.c2{background:var(--red-pale);border:1.5px solid var(--red);}
+.skip-card.c3{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.skip-icon{font-size:24px;flex-shrink:0;}
+.skip-excuse{font-weight:700;font-size:14px;margin-bottom:4px;}
+.c1 .skip-excuse{color:#92400E;}
+.c2 .skip-excuse{color:var(--red);}
+.c3 .skip-excuse{color:var(--blue);}
+.skip-truth{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* How AI detects PPE - flow */
+.detect-flow{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.df-item{display:flex;gap:0;align-items:stretch;}
+.df-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.df-num{width:34px;height:34px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;margin-top:18px;}
+.df-line{width:2px;background:var(--purple-mid);flex:1;}
+.df-item:last-child .df-line{display:none;}
+.df-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0;}
+.df-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.df-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.df-detail{margin-top:6px;font-size:12px;padding:7px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+
+/* Before/After compliance */
+.ba-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.ba-col{border-radius:18px;padding:24px;}
+.ba-col.before{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.ba-col.after{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.ba-header{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.before .ba-header{color:#92400E;}
+.after .ba-header{color:var(--purple);}
+.ba-item{display:flex;gap:8px;margin-bottom:9px;font-size:13px;line-height:1.6;align-items:flex-start;}
+.before .ba-item::before{content:"✗";color:var(--orange);font-weight:700;flex-shrink:0;}
+.after .ba-item::before{content:"✓";color:var(--purple);font-weight:700;flex-shrink:0;}
+@media(max-width:520px){.ba-compare{grid-template-columns:1fr;}}
+
+/* PPE zone sim */
+.zone-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.zs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.zs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.zs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.zs-scene{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 24px;margin-bottom:16px;}
+.zs-sc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.zs-sc-text{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.zs-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:16px 0 12px;}
+.zs-choices{display:flex;flex-direction:column;gap:9px;}
+.zs-choice{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.zs-choice:hover{border-color:var(--purple);background:var(--purple-pale);}
+.zs-choice.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.zs-choice.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.zs-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.zs-result.show{display:block;}
+.zs-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.zs-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.zs-next{margin-top:14px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.zs-next.show{display:inline-block;}
+
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.2 — Safety &amp; AI</div>
+  <h1>What Is PPE and Why Does AI Now Help Make Sure Workers Are Actually Wearing It?</h1>
+  <p class="hero-sub">Personal Protective Equipment is one of the last lines of defense between a worker and a serious injury. AI is now helping ensure that defense is always in place.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <p>The number one cause of workplace injuries in manufacturing isn't equipment failure. It isn't lack of training. It's something simpler and more preventable: workers not wearing the protective gear they're supposed to wear.</p>
+    <p>A hard hat takes two seconds to put on. Safety glasses weigh almost nothing. Cut-resistant gloves are standard issue. And yet, every year, workers are injured by exactly the hazards these items protect against — because in the rush of a busy shift, gear gets skipped.</p>
+    <p>That's the problem AI is now helping solve. Not by replacing human judgment, but by <mark>watching for PPE gaps that humans miss</mark> — constantly, across every corner of the facility, every hour of every shift.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Is PPE?</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>PPE (Personal Protective Equipment):</strong> Wearable equipment designed to protect workers from physical, chemical, or environmental hazards. OSHA requires employers to provide appropriate PPE for each job task at no cost to the worker — and to ensure it is actually being used. PPE is considered a <strong>last line of defense</strong> because it only protects the individual worker, not the hazard itself.</div>
+    </div>
+    <p>That phrase — "last line of defense" — matters. Safety professionals prefer to eliminate hazards entirely (remove the dangerous machine), then control them (add a physical guard), and only then rely on PPE (give the worker protection). PPE is the final backup, not the first solution.</p>
+    <p>But in manufacturing, some hazards can't be fully eliminated. There will always be environments where workers need eye protection, where chemicals require gloves, where falling objects require head protection. For those situations, PPE is not optional — and OSHA treats failure to enforce it as a serious violation.</p>
+
+    <div class="ppe-grid">
+      <div class="ppe-card"><div class="ppe-icon">⛑️</div><div class="ppe-name">Hard Hat</div><div class="ppe-protects">Protects: Head</div><div class="ppe-hazard">Required near overhead work, construction areas, equipment with falling debris risk</div></div>
+      <div class="ppe-card"><div class="ppe-icon">🥽</div><div class="ppe-name">Safety Glasses / Goggles</div><div class="ppe-protects">Protects: Eyes</div><div class="ppe-hazard">Required in grinding, cutting, welding, chemical handling — any flying particle risk</div></div>
+      <div class="ppe-card"><div class="ppe-icon">🧤</div><div class="ppe-name">Gloves</div><div class="ppe-protects">Protects: Hands</div><div class="ppe-hazard">Cut-resistant for metal work, chemical-resistant for hazmat, heat-resistant for welding</div></div>
+      <div class="ppe-card"><div class="ppe-icon">👢</div><div class="ppe-name">Steel-Toed Boots</div><div class="ppe-protects">Protects: Feet</div><div class="ppe-hazard">Required where heavy objects, machinery, or falling materials pose foot crush risk</div></div>
+      <div class="ppe-card"><div class="ppe-icon">🦺</div><div class="ppe-name">High-Visibility Vest</div><div class="ppe-protects">Protects: Whole body (visibility)</div><div class="ppe-hazard">Required in forklift traffic areas, loading docks, and anywhere vehicles operate near workers</div></div>
+      <div class="ppe-card"><div class="ppe-icon">😷</div><div class="ppe-name">Respirator / Dust Mask</div><div class="ppe-protects">Protects: Lungs</div><div class="ppe-hazard">Required when working with chemicals, dust, fumes, or in poorly ventilated spaces</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Do Workers Skip PPE — and Why That's a Problem</h2>
+    <p>Workers who skip PPE are almost never reckless. They're usually just busy, uncomfortable, or working in a culture that looks the other way. Understanding the real reasons helps explain why enforcement has always been difficult — and why AI changes the equation.</p>
+    <div class="skip-cards">
+      <div class="skip-card c1"><div class="skip-icon">⏱️</div><div><div class="skip-excuse">"I'm only doing this for two minutes."</div><div class="skip-truth">Most serious injuries happen in seconds — not during long planned tasks, but during quick, unplanned ones. The "two-minute job" is where injuries spike precisely because PPE gets skipped.</div></div></div>
+      <div class="skip-card c2"><div class="skip-icon">🥵</div><div><div class="skip-excuse">"It's too hot / uncomfortable / slows me down."</div><div class="skip-truth">Discomfort is real. But the consequence of a metal fragment in an unprotected eye is permanent vision loss. The discomfort of safety glasses weighs a few ounces. The math is not close.</div></div></div>
+      <div class="skip-card c3"><div class="skip-icon">👀</div><div><div class="skip-excuse">"Nobody else is wearing theirs and nobody says anything."</div><div class="skip-truth">Safety culture is contagious in both directions. When non-compliance goes unchallenged, it normalizes. This is exactly what consistent AI monitoring is designed to interrupt — the gradual drift toward treating violations as acceptable.</div></div></div>
+    </div>
+    <div class="pull-quote"><p>A facility where PPE violations go unchallenged isn't just breaking OSHA rules — it's building a culture where the next serious injury is only a matter of time.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Detects PPE Compliance in Real Time</h2>
+    <p>Traditional PPE enforcement required a supervisor to be present, observing, and willing to intervene. With dozens of workers across a large facility, full-time human monitoring is impossible. AI cameras change what's achievable.</p>
+    <div class="detect-flow">
+      <div class="df-item"><div class="df-left"><div class="df-num">1</div><div class="df-line"></div></div><div class="df-card"><div class="df-title">Cameras Capture the Scene</div><div class="df-desc">Fixed cameras positioned throughout the facility capture continuous video of every work area. The AI system processes this video in real time — not saving hours of footage to review later, but analyzing it as it happens.</div><div class="df-detail">A typical facility might have dozens of cameras already installed for security. AI safety systems often integrate with existing CCTV infrastructure rather than requiring all-new hardware.</div></div></div>
+      <div class="df-item"><div class="df-left"><div class="df-num">2</div><div class="df-line"></div></div><div class="df-card"><div class="df-title">AI Identifies People and PPE Items</div><div class="df-desc">The AI model has been trained on thousands of images of workers with and without each type of PPE. It can detect whether a hard hat is present on someone's head, whether safety glasses are covering their eyes, or whether a high-vis vest is being worn — and it does this for every person in the frame simultaneously.</div><div class="df-detail">The model doesn't just look for "something on a head" — it distinguishes between a hard hat and a regular cap, between safety glasses and sunglasses, between a vest and a regular jacket.</div></div></div>
+      <div class="df-item"><div class="df-left"><div class="df-num">3</div><div class="df-line"></div></div><div class="df-card"><div class="df-title">System Checks Against Zone Requirements</div><div class="df-desc">Each area of the facility is mapped to its PPE requirements. A worker without safety glasses in the break room is fine. A worker without safety glasses in the grinding bay triggers an alert. The AI applies the right rules to the right location.</div><div class="df-detail">This is more sophisticated than a simple "glasses detected / not detected" check — it requires the AI to know where in the building each camera is, and what the rules are for that zone.</div></div></div>
+      <div class="df-item"><div class="df-left"><div class="df-num">4</div><div class="df-line"></div></div><div class="df-card"><div class="df-title">Alert Goes to Supervisor — Immediately</div><div class="df-desc">When a violation is detected, the system sends a real-time alert — typically to a supervisor's phone, tablet, or a monitor on the floor — with a timestamp, camera ID, and often a screenshot of the violation. Response time drops from "noticed at the next safety walk" to seconds.</div><div class="df-detail">At Swire Coca-Cola, which you'll study in the next article, AI camera alerts reached supervisors in under 30 seconds — fast enough to intervene before a hazard became an injury.</div></div></div>
+      <div class="df-item"><div class="df-left"><div class="df-num">5</div><div class="df-line"></div></div><div class="df-card"><div class="df-title">Violation Is Logged Automatically</div><div class="df-desc">Every detected violation creates a timestamped record. Over time, these logs reveal patterns: which areas generate the most violations, which shifts show higher non-compliance, which types of PPE are most frequently skipped. The data drives targeted improvements.</div><div class="df-detail">This log also serves as OSHA compliance documentation — evidence that the employer is actively monitoring and responding to PPE violations, which matters enormously if an incident ever occurs.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Changes — Before and After AI PPE Monitoring</h2>
+    <div class="ba-compare">
+      <div class="ba-col before">
+        <div class="ba-header">🕰️ Before AI Monitoring</div>
+        <div class="ba-item">PPE compliance checked during scheduled safety walks — once or twice per shift</div>
+        <div class="ba-item">Violations between walks go undetected and unchallenged</div>
+        <div class="ba-item">Night shift and weekend coverage spotty — less supervision present</div>
+        <div class="ba-item">Culture of non-compliance can develop in low-supervision areas</div>
+        <div class="ba-item">Violations not systematically recorded — no pattern data to act on</div>
+        <div class="ba-item">OSHA compliance relies on human memory and paper records</div>
+      </div>
+      <div class="ba-col after">
+        <div class="ba-header">🤖 With AI PPE Monitoring</div>
+        <div class="ba-item">PPE compliance monitored continuously, 24 hours a day, 7 days a week</div>
+        <div class="ba-item">Violations detected within seconds and escalated immediately</div>
+        <div class="ba-item">Night and weekend shifts receive identical monitoring coverage</div>
+        <div class="ba-item">Consistent enforcement discourages non-compliance before it normalizes</div>
+        <div class="ba-item">Every violation auto-logged with timestamp, location, and image</div>
+        <div class="ba-item">Documented compliance trail available instantly for OSHA review</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What AI Can't Do — The Limits of PPE Monitoring</h2>
+    <p>AI PPE detection is genuinely powerful, but it isn't perfect. Understanding its limitations is part of understanding how to use it responsibly.</p>
+    <div class="skip-cards">
+      <div class="skip-card c3"><div class="skip-icon">📐</div><div><div class="skip-excuse">It can detect presence, not fit.</div><div class="skip-truth">AI can see that a hard hat is on someone's head. It cannot reliably tell whether the chinstrap is fastened correctly, whether safety glasses are sealed against the face, or whether gloves have a hole in them. Proper PPE use still requires human training and judgment.</div></div></div>
+      <div class="skip-card c1"><div class="skip-icon">💡</div><div><div class="skip-excuse">Lighting and angle affect accuracy.</div><div class="skip-truth">Poor lighting, obstructed camera angles, or crowded work areas can reduce detection accuracy. Facilities need well-placed cameras and adequate lighting for AI monitoring to work reliably. Garbage camera placement produces garbage alerts.</div></div></div>
+      <div class="skip-card c2"><div class="skip-icon">⚡</div><div><div class="skip-excuse">Alerts still require a human response.</div><div class="skip-truth">When the AI fires an alert, a supervisor still has to see it, decide what to do, find the worker, and address the situation. AI detection compresses the response window — but doesn't eliminate the need for a human to act on what the camera finds.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Zone sim -->
+  <div class="section fade-in">
+    <div class="zone-sim">
+      <div class="zs-label">🎯 PPE Decision Practice</div>
+      <div class="zs-title">Is This an AI Alert Situation?</div>
+      <div class="zs-sub">Read each scenario. Decide whether AI PPE monitoring would — and should — trigger an alert.</div>
+      <div class="zs-scene"><div class="zs-sc-label" id="zs-label">Situation 1 of 3</div><div class="zs-sc-text" id="zs-text"></div></div>
+      <div class="zs-q" id="zs-q"></div>
+      <div class="zs-choices" id="zs-choices"></div>
+      <div class="zs-result good" id="zs-good"></div>
+      <div class="zs-result bad" id="zs-bad"></div>
+      <button class="zs-next" id="zs-next" onclick="nextZS()">Next Situation →</button>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why is PPE described as the "last line of defense" in workplace safety?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ(0)">Because PPE is the most important safety measure a facility can take</button>
+        <button class="quiz-opt" onclick="doQ(1)">Because safety professionals prefer to eliminate or control hazards first — PPE only protects the individual worker if those other approaches fail or can't fully eliminate the risk</button>
+        <button class="quiz-opt" onclick="doQ(2)">Because PPE is the last piece of equipment workers receive when they're hired</button>
+        <button class="quiz-opt" onclick="doQ(3)">Because OSHA only requires PPE as a last resort when all other safety investments have been exhausted</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Right. "Last line of defense" means PPE is the final layer of protection — not the first. Safety engineers first try to eliminate the hazard entirely, then engineer controls that reduce exposure, then administrative rules, and only then rely on PPE. PPE protects the individual but does nothing about the underlying hazard.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. "Last line of defense" refers to the hierarchy of hazard controls. The preferred approach is to eliminate the hazard, then control it with engineering or procedures. PPE is the final backstop — it only protects the individual worker and does nothing to address the root cause of the hazard.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">PPE is wearable equipment that protects workers from physical hazards — hard hats, glasses, gloves, boots, vests, and respirators each address specific risks.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">PPE is the "last line of defense" — safety engineers prefer to eliminate hazards first, then control them, and use PPE as the final protective layer.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Workers skip PPE for real reasons — time pressure, discomfort, cultural drift — which is why consistent enforcement has always been a challenge for supervisors.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI PPE monitoring uses computer vision to detect missing gear in real time, alert supervisors within seconds, and create a complete log of violations for OSHA documentation.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI can detect whether PPE is present, but cannot verify proper fit — human training and supervision remain essential parts of a complete PPE program.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const situations=[
+  {label:'Situation 1 of 3',text:"A worker enters the grinding bay — a high-dust, high-spark environment — without safety glasses. They're only walking through to reach the other side of the building. They don't plan to operate any equipment.",q:"Should AI PPE monitoring alert on this situation?",choices:["No — the worker isn't operating equipment, so there's no real hazard","Yes — the grinding bay requires eye protection for all personnel, regardless of whether they're operating machines or just passing through","No — the alert would be a false alarm since the worker is only there briefly","Yes, but only if someone else is grinding at the time"],correct:1,good:"✅ Correct. PPE requirements are zone-based, not task-based. If the grinding bay requires eye protection, it applies to anyone entering that zone — whether they're grinding or just passing through. Sparks and particles don't check whether a person is 'officially working.' The AI is right to alert.",bad:"❌ Not accurate. OSHA PPE requirements apply to the hazard zone, not just to people actively performing the hazardous task. Flying particles from a nearby grinder don't distinguish between operators and passers-through. The AI should — and would — flag this."},
+  {label:'Situation 2 of 3',text:"The AI system flags a worker in the welding area as missing a face shield. The supervisor reviews the alert and realizes the camera angle was poor — the worker is actually wearing a full face shield that the camera couldn't fully capture from its position.",q:"What does this situation demonstrate about AI PPE monitoring?",choices:["AI monitoring is unreliable and shouldn't be used for safety decisions","This is a false positive — it shows why AI alerts require human review before action is taken","The worker should be cited for the violation anyway since the AI flagged it","The camera should be immediately replaced with a human observer"],correct:1,good:"✅ Right. This is a false positive — the AI was wrong in this case because of camera angle limitations. It demonstrates exactly why AI alerts are sent to a human supervisor for review, not acted on automatically. The AI catches events humans would miss; humans verify what the AI flags. That's the intended workflow.",bad:"❌ Not the right takeaway. One false positive doesn't make the system unreliable — it illustrates why human review is part of the process. AI monitoring creates alerts; supervisors verify and act on them. In this case, the supervisor correctly identified the limitation. The system worked as designed."},
+  {label:'Situation 3 of 3',text:"After three months of AI PPE monitoring, the safety manager reviews the logs and notices that 73% of all PPE violations in the facility happen during the last 90 minutes of the night shift, in the packaging area specifically.",q:"What is the most valuable thing this AI-generated data enables?",choices:["The company can use this to fire the night shift workers who aren't complying","The safety manager can investigate what makes that time and location prone to violations and make targeted changes — rather than just reminding everyone to wear PPE again","The AI system should automatically lock equipment in the packaging area during those hours","This data proves night shift workers are less professional than day shift workers"],correct:1,good:"✅ Exactly right. This is where AI data becomes a genuine safety tool. Instead of generic reminders, the safety manager can now investigate a specific pattern: Why that area? Why that time? Is it fatigue? Inadequate PPE storage nearby? A particular supervisor absent? The data enables targeted solutions — far more effective than another all-hands safety memo.",bad:"❌ That response uses data punitively rather than constructively. The value of this data is that it identifies a specific problem worth investigating. Is PPE storage inconvenient in that area? Are workers fatigued at end of shift? Is a particular role skipping compliance? Answering those questions leads to real fixes — which is what safety programs are supposed to do."}
+];
+let zsIdx=0,zsDone=false;
+function initZS(){
+  const s=situations[zsIdx];
+  document.getElementById('zs-label').textContent=s.label;
+  document.getElementById('zs-text').textContent=s.text;
+  document.getElementById('zs-q').textContent=s.q;
+  const c=document.getElementById('zs-choices');c.innerHTML='';
+  s.choices.forEach((ch,i)=>{const b=document.createElement('button');b.className='zs-choice';b.textContent=ch;b.onclick=()=>doZS(i);c.appendChild(b);});
+  document.getElementById('zs-good').className='zs-result good';
+  document.getElementById('zs-bad').className='zs-result bad';
+  document.getElementById('zs-next').className='zs-next';
+}
+function doZS(i){
+  if(zsDone)return;zsDone=true;
+  const s=situations[zsIdx];
+  document.querySelectorAll('.zs-choice').forEach(b=>b.disabled=true);
+  if(i===s.correct){document.querySelectorAll('.zs-choice')[i].classList.add('correct');document.getElementById('zs-good').textContent=s.good;document.getElementById('zs-good').classList.add('show');}
+  else{document.querySelectorAll('.zs-choice')[i].classList.add('wrong');document.getElementById('zs-bad').textContent=s.bad;document.getElementById('zs-bad').classList.add('show');}
+  if(zsIdx<situations.length-1)document.getElementById('zs-next').classList.add('show');
+}
+function nextZS(){zsIdx++;zsDone=false;initZS();}
+initZS();
+
+let qdone=false;
+function doQ(i){if(qdone)return;qdone=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Cameras See Danger: A Plain-Language Explanation of Computer Vision on the Shop Floor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* How cameras see - pixel explainer */
+.pixel-analogy{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:28px;margin:24px 0;}
+.pa-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:12px;}
+.pa-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+.pa-side-label{font-weight:700;font-size:14px;margin-bottom:8px;color:var(--purple-dark);}
+.pa-pixels{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;margin-bottom:8px;}
+.px{width:100%;aspect-ratio:1;border-radius:2px;}
+.pa-desc{font-size:13px;line-height:1.6;color:var(--gray-text);}
+@media(max-width:520px){.pa-grid{grid-template-columns:1fr;}}
+
+/* Training process */
+.train-steps{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.ts-item{display:flex;gap:0;align-items:stretch;}
+.ts-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.ts-num{width:34px;height:34px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;margin-top:18px;}
+.ts-line{width:2px;background:var(--purple-mid);flex:1;}
+.ts-item:last-child .ts-line{display:none;}
+.ts-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0;}
+.ts-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.ts-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ts-detail{margin-top:6px;font-size:12px;padding:7px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+
+/* What CV detects */
+.detects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.det-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:20px;}
+.det-icon{font-size:28px;margin-bottom:8px;}
+.det-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.det-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.det-how{margin-top:8px;font-size:12px;padding:7px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+@media(max-width:520px){.detects-grid{grid-template-columns:1fr;}}
+
+/* Error types */
+.error-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.err-card{display:flex;gap:16px;border-radius:16px;padding:18px 20px;align-items:flex-start;}
+.err-card.e1{background:var(--red-pale);border:1.5px solid var(--red);}
+.err-card.e2{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.err-card.e3{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.err-icon{font-size:26px;flex-shrink:0;}
+.err-type{font-weight:700;font-size:14px;margin-bottom:4px;}
+.e1 .err-type{color:var(--red);}
+.e2 .err-type{color:#92400E;}
+.e3 .err-type{color:var(--blue);}
+.err-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.err-example{margin-top:7px;font-size:12px;padding:6px 10px;border-radius:7px;}
+.e1 .err-example{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.e2 .err-example{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.e3 .err-example{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+
+/* Interactive: spot the alert sim */
+.alert-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.as-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.as-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.as-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.as-scene{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 24px;margin-bottom:16px;}
+.as-sc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.as-sc-text{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.as-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:16px 0 12px;}
+.as-choices{display:flex;flex-direction:column;gap:9px;}
+.as-choice{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.as-choice:hover{border-color:var(--purple);background:var(--purple-pale);}
+.as-choice.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.as-choice.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.as-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.as-result.show{display:block;}
+.as-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.as-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.as-next{margin-top:14px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.as-next.show{display:inline-block;}
+
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.2 — Safety &amp; AI</div>
+  <h1>How AI Cameras See Danger: A Plain-Language Explanation of Computer Vision on the Shop Floor</h1>
+  <p class="hero-sub">The video shows AI detecting missing PPE and hazard zone violations. This article explains exactly how that works — and where it doesn't.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <p>When you watch a camera feed from a factory floor, you see it instantly: the worker by the stamping press, the forklift moving down the aisle, the hard hat on the supervisor's head. Your brain processes all of that in milliseconds, effortlessly.</p>
+    <p>A camera without AI sees none of it. It just sees millions of colored dots — pixels — arranged in a rectangle. It has no idea what any of them mean.</p>
+    <p>Computer vision is the technology that teaches a camera to understand what it's looking at. To turn a grid of pixels into meaning: <mark>that's a person, that's a hard hat, that person is not wearing a hard hat, that person just stepped into a restricted zone.</mark></p>
+    <p>Understanding how this works — and where it fails — is essential for anyone working alongside these systems on the floor.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What a Camera Actually Sees</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Computer vision:</strong> A field of AI that trains computers to interpret and understand visual information — photographs, video frames, live camera feeds. A computer vision system analyzes images pixel by pixel and applies patterns learned during training to identify objects, people, actions, and relationships between them.</div>
+    </div>
+    <p>Here's the fundamental challenge: a camera captures an image as a grid of tiny colored squares called pixels. A high-definition camera might capture 2 million of them per frame — and it captures 30 frames per second. That's 60 million pixel readings per second, streaming continuously.</p>
+    <p>None of those pixels come labeled. The camera doesn't know a pixel is part of a hard hat versus part of a wall versus part of a human face. All of that meaning has to be learned — by training an AI model to recognize patterns that reliably indicate specific objects.</p>
+
+    <div class="pixel-analogy">
+      <div class="pa-label">How cameras see images</div>
+      <div class="pa-grid">
+        <div>
+          <div class="pa-side-label">What you see: A hard hat</div>
+          <div class="pa-pixels" id="hat-pixels"></div>
+          <div class="pa-desc">Your brain immediately recognizes shape, color, context, and purpose. You know what it is without thinking about it.</div>
+        </div>
+        <div>
+          <div class="pa-side-label">What a camera sees: Pixel values</div>
+          <div style="font-family:monospace;font-size:11px;line-height:1.8;color:var(--gray-muted);background:var(--white);border-radius:8px;padding:10px;border:1px solid var(--purple-mid);">255,210,30 | 252,208,28<br>248,205,25 | 255,212,32<br>80,60,10 | 82,62,11<br>78,58,9 | 81,61,10<br>120,90,40 | 118,88,38</div>
+          <div class="pa-desc" style="margin-top:8px;">The camera only captures RGB color values. Every pixel is just three numbers — red, green, blue intensity. No meaning, no labels, no context.</div>
+        </div>
+      </div>
+    </div>
+
+    <p>The AI's job is to learn the pixel patterns that correspond to hard hats, safety glasses, restricted zones, and dangerous postures — across thousands of different lighting conditions, angles, workers, and environments. That learning process is called training.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Learns to See: The Training Process</h2>
+    <p>Computer vision models don't come pre-programmed to recognize hard hats. They learn by example — by being shown thousands of images and being told what's in them. Here's how that works:</p>
+    <div class="train-steps">
+      <div class="ts-item"><div class="ts-left"><div class="ts-num">1</div><div class="ts-line"></div></div><div class="ts-card"><div class="ts-title">Collect Training Images</div><div class="ts-desc">Engineers gather thousands of photos and video frames showing the objects the AI needs to learn: workers with hard hats, workers without hard hats, safety glasses on faces, safety glasses on heads incorrectly, restricted zone boundaries with and without workers inside them.</div><div class="ts-detail">A well-trained safety model might use 50,000–200,000 labeled images — captured in different factories, different lighting conditions, different worker body types and clothing, different camera angles.</div></div></div>
+      <div class="ts-item"><div class="ts-left"><div class="ts-num">2</div><div class="ts-line"></div></div><div class="ts-card"><div class="ts-title">Label Every Image by Hand</div><div class="ts-desc">Human annotators go through each image and mark exactly where each object is — drawing boxes around each hard hat, each person's head, each safety vest. This labeling is what teaches the AI what it's looking at. The labels are the answers the AI is trying to learn to predict.</div><div class="ts-detail">This step is painstaking and expensive — but it's why high-quality training data is so valuable. The AI is only as accurate as its training images are correctly labeled.</div></div></div>
+      <div class="ts-item"><div class="ts-left"><div class="ts-num">3</div><div class="ts-line"></div></div><div class="ts-card"><div class="ts-title">Train the Model to Find Patterns</div><div class="ts-desc">The AI model is shown each image repeatedly, asked to predict what's in it, told whether it was right or wrong, and adjusted accordingly — millions of times. Over time it learns the pixel patterns that reliably indicate "hard hat" versus "no hard hat," separated from all the visual noise in the image.</div><div class="ts-detail">Modern training can run for days on specialized hardware, processing billions of pixel values to fine-tune the model's accuracy.</div></div></div>
+      <div class="ts-item"><div class="ts-left"><div class="ts-num">4</div><div class="ts-line"></div></div><div class="ts-card"><div class="ts-title">Test on New Images It's Never Seen</div><div class="ts-desc">Before deployment, the model is tested on a separate set of images it wasn't trained on. If it performs well on new images, it has genuinely learned the concept — not just memorized the training data. If accuracy is poor, more training data or model adjustments are needed.</div><div class="ts-detail">A typical safety model might need to reach 90–95% accuracy on test data before it's considered ready for deployment — because false alarms erode trust and false misses allow real hazards through.</div></div></div>
+      <div class="ts-item"><div class="ts-left"><div class="ts-num">5</div><div class="ts-line"></div></div><div class="ts-card"><div class="ts-title">Deploy to Live Cameras and Keep Improving</div><div class="ts-desc">The trained model runs on live camera feeds, making predictions in real time. As it encounters new situations in a specific factory — unusual lighting, new equipment, different worker uniforms — it can be refined with additional training data from that environment.</div><div class="ts-detail">This is why AI safety systems often perform better over time at a given facility — they accumulate more relevant training data from that specific environment.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Computer Vision Can Detect on the Shop Floor</h2>
+    <p>Modern AI camera systems can be trained to detect a wide range of safety-relevant situations. Each requires its own model or combination of models working together:</p>
+    <div class="detects-grid">
+      <div class="det-card"><div class="det-icon">⛑️</div><div class="det-title">PPE Presence and Absence</div><div class="det-desc">Hard hats, safety glasses, gloves, high-vis vests, face shields — for each hazard zone's requirements.</div><div class="det-how">How: Detects the distinctive shape, color, and position of each PPE item relative to the person's body. A hard hat has a specific silhouette on top of a head that is distinct from uncovered hair.</div></div>
+      <div class="det-card"><div class="det-icon">🚧</div><div class="det-title">Hazard Zone Violations</div><div class="det-desc">Workers entering restricted areas around dangerous equipment — stamping presses, robotic arms, high-voltage zones.</div><div class="det-how">How: The system maps virtual boundaries onto the camera feed. When a person's body crosses that boundary, it triggers an alert — regardless of what the person is doing.</div></div>
+      <div class="det-card"><div class="det-icon">🚜</div><div class="det-title">Vehicle and Pedestrian Proximity</div><div class="det-desc">Forklifts or other vehicles getting dangerously close to workers on foot — one of manufacturing's most common fatal hazard categories.</div><div class="det-how">How: The AI tracks both the vehicle and nearby pedestrians simultaneously, calculating proximity in real time and alerting when the gap drops below a safe threshold.</div></div>
+      <div class="det-card"><div class="det-icon">🧍</div><div class="det-title">Unsafe Body Posture</div><div class="det-desc">Workers bending, reaching, or lifting in ways that significantly increase the risk of musculoskeletal injury over time.</div><div class="det-how">How: Skeleton tracking — the AI identifies key body joints (shoulders, hips, knees) and calculates angles. Dangerous postures produce measurable angle patterns the model can recognize.</div></div>
+      <div class="det-card"><div class="det-icon">🧯</div><div class="det-title">Blocked Emergency Exits and Equipment</div><div class="det-desc">Objects, pallets, or equipment blocking fire exits, emergency stops, or fire extinguisher access points.</div><div class="det-how">How: The camera learns what these specific locations look like when clear. When objects appear in the frame at those locations, it flags the obstruction.</div></div>
+      <div class="det-card"><div class="det-icon">😴</div><div class="det-title">Fatigue and Distraction Indicators</div><div class="det-desc">Head drooping, eyes closing, prolonged phone use — behaviors that correlate with increased accident risk during demanding shifts.</div><div class="det-how">How: Facial landmark tracking monitors eye openness and head position over time. Patterns that deviate from alert behavior trigger a review flag.</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Computer Vision Gets It Wrong</h2>
+    <p>No AI system is perfect. Computer vision makes mistakes — and understanding the types of mistakes helps you work with these systems more effectively. There are two types of errors that matter most:</p>
+    <div class="error-cards">
+      <div class="err-card e1"><div class="err-icon">🚨</div><div><div class="err-type">False Positive — The AI alerts when there's no real problem</div><div class="err-desc">The system flags something as a violation when actually everything is fine. A worker in a brightly colored jacket gets flagged as a "high-vis vest not worn." A welding mask catches the light at an angle that makes the AI think no face shield is present.</div><div class="err-example">Why it matters: Too many false positives erode trust. If supervisors get 50 alerts and 45 are wrong, they start ignoring them — which defeats the entire purpose of the system. Managing false positive rates is critical to keeping AI safety tools effective.</div></div></div>
+      <div class="err-card e2"><div class="err-icon">👁️</div><div><div class="err-type">False Negative — The AI misses a real problem</div><div class="err-desc">A genuine safety violation occurs and the AI doesn't catch it. A worker without safety glasses in a restricted zone passes through a camera's blind spot. Poor lighting makes the hard hat detection unreliable for that shift.</div><div class="err-example">Why it matters: False negatives are the more dangerous error — they create false security. A system that supervisors trust but that misses real violations is worse than no system at all, because it stops humans from watching closely themselves.</div></div></div>
+      <div class="err-card e3"><div class="err-icon">🌦️</div><div><div class="err-type">Environmental Factors That Reduce Accuracy</div><div class="err-desc">Accuracy drops when conditions deviate from what the model was trained on: unusual lighting, steam or smoke obscuring the view, new types of equipment blocking camera angles, workers in non-standard gear or uniforms.</div><div class="err-example">What it means for you: AI safety systems work best in well-designed environments with good lighting and thoughtfully placed cameras. If conditions change — a temporary barrier, different shift lighting — the system's accuracy may change too. A human eye is still needed to catch what the camera misses.</div></div></div>
+    </div>
+    <div class="pull-quote"><p>The goal of computer vision in safety isn't to replace human judgment. It's to watch more things, more consistently, than any human team could — and flag what needs a closer look.</p></div>
+  </div>
+
+  <!-- Alert sim -->
+  <div class="section fade-in">
+    <div class="alert-sim">
+      <div class="as-label">🎯 Think Like the AI</div>
+      <div class="as-title">Alert or Not?</div>
+      <div class="as-sub">For each scene description, decide whether a well-designed computer vision system should generate a safety alert — and why.</div>
+      <div class="as-scene"><div class="as-sc-label" id="as-label">Scene 1 of 3</div><div class="as-sc-text" id="as-text"></div></div>
+      <div class="as-q" id="as-q"></div>
+      <div class="as-choices" id="as-choices"></div>
+      <div class="as-result good" id="as-good"></div>
+      <div class="as-result bad" id="as-bad"></div>
+      <button class="as-next" id="as-next" onclick="nextAS()">Next Scene →</button>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">A computer vision safety system generates many false positive alerts. Why is this a problem even if no real safety violations are being missed?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ(0)">False positives waste camera storage space</button>
+        <button class="quiz-opt" onclick="doQ(1)">False positives make supervisors less likely to respond to real alerts — undermining the system's effectiveness when a genuine danger occurs</button>
+        <button class="quiz-opt" onclick="doQ(2)">False positives generate too much paperwork for the safety manager</button>
+        <button class="quiz-opt" onclick="doQ(3)">False positives cause the AI to stop learning over time</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. This is called "alert fatigue" — and it's one of the most serious failure modes for any monitoring system. When supervisors see dozens of incorrect alerts and learn to dismiss them, they also start dismissing the real ones. Managing false positive rates isn't just an accuracy problem; it's a safety-culture problem.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ The core problem with false positives is behavioral, not technical. When supervisors receive too many incorrect alerts, they begin to distrust and ignore the system — including when the alert is real. This phenomenon is called alert fatigue, and it makes an otherwise functional AI safety system dangerous.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Computer vision teaches cameras to understand what they're looking at — turning pixel data into meaningful detections like "hard hat present" or "person in restricted zone."</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The AI learns by training on thousands of labeled images — seeing examples of correct and incorrect PPE, safe and unsafe zones, until it can reliably identify patterns in new images.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Modern CV systems can detect PPE violations, zone breaches, vehicle proximity hazards, unsafe posture, blocked exits, and fatigue indicators.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Two key errors: false positives (unnecessary alerts that erode trust) and false negatives (missed real violations that create false security). Both require careful management.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Computer vision extends human observation — watching more places, more consistently, than any supervisor team could. Human judgment is still required to review alerts and act on them.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Hard hat pixel art
+const hat=[
+  [0,0,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1],
+  [0,0,1,0,0,1,0,0],
+  [0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0]
+];
+const pxEl=document.getElementById('hat-pixels');
+hat.forEach(row=>row.forEach(v=>{const d=document.createElement('div');d.className='px';d.style.background=v?'#F59E0B':'#E5E7EB';pxEl.appendChild(d);}));
+
+const scenes=[
+  {label:'Scene 1 of 3',text:"Camera 7 is positioned at the entrance to the chemical mixing area. It detects a worker walking in wearing a lab coat and safety glasses — but no chemical splash goggles, which are required in this zone specifically because the glasses don't provide side protection from chemical splashes.",q:"Should the AI system alert?",choices:["No — the worker is wearing safety glasses, which is close enough","Yes — the worker is missing the specific required PPE for this zone, even though they are wearing some eye protection","No — the camera can't distinguish between safety glasses and goggles","Yes, but only after the worker has been in the zone for more than 30 seconds"],correct:1,good:"✅ Correct. A well-trained system distinguishes between safety glasses and splash goggles — they have different shapes, different coverage areas, and different visual profiles. The PPE requirement for this zone is specific: splash goggles. Being close isn't the same as being compliant, and the AI should flag the difference.",bad:"❌ Not right. A properly trained computer vision system distinguishes between safety glasses and chemical splash goggles based on their visual differences — goggle shape, seal around the face, coverage area. Zone-specific requirements exist because the hazards are specific. Partial compliance isn't full compliance."},
+  {label:'Scene 2 of 3',text:"Camera 12 overlooks a forklift aisle. It detects two workers walking on foot approximately 15 feet from an active forklift moving in their direction. The forklift is within the designated traffic lane. The workers are in the pedestrian zone, which is marked with painted lines on the floor.",q:"Should the AI alert on this situation?",choices:["Yes — any forklift near workers should generate an alert","No — the workers are in the designated pedestrian zone and the forklift is in the traffic lane. Both are where they should be.","Yes — forklifts and pedestrians should never be in the same camera frame","No — the 15-foot distance is close but the speed would need to be factored in first"],correct:1,good:"✅ Right. The AI should understand not just position but context. Both the forklift and the workers are in their correctly designated areas. If the system generated an alert every time a forklift was near a pedestrian zone, supervisors would get hundreds of false positives per shift. The AI needs to understand that designated separation zones exist — and an alert should fire when those zones are violated, not when they're working as designed.",bad:"❌ This would be a false positive. A good AI safety system understands context — not just proximity. The pedestrian zone and forklift lane exist precisely to allow both to operate safely near each other. If the system flagged every forklift-near-pedestrian situation, it would generate so many alerts that supervisors would stop responding to them."},
+  {label:'Scene 3 of 3',text:"Camera 3 is positioned above a welding station. Due to smoke and fumes from the welding operation, the camera's view of the worker's face and upper body becomes partially obscured for 40 seconds while a welding cycle runs. The AI cannot reliably determine whether the face shield is in place during this period.",q:"What is the most accurate description of what the AI should do — and what this situation represents?",choices:["The AI should flag a PPE violation since it cannot confirm the shield is present","The AI should not flag a violation — uncertain situations should default to no alert","The AI should pause all monitoring until the smoke clears","This is an environmental limitation — the system's accuracy is reduced, and a human supervisor should be aware that camera coverage is unreliable during welding cycles in this area"],correct:3,good:"✅ Exactly right. This is an environmental limitation, not a failure. Heavy smoke and fumes are predictable in a welding environment — and camera placement, additional ventilation, or supplementary monitoring should be considered for this station. The right response isn't a false flag or silence; it's recognizing where the system needs human backup and designing the monitoring program accordingly.",bad:"❌ Not quite. Automatically flagging uncertainty as a violation generates false positives. Silently assuming compliance during a camera blackout creates false security. The most honest response is to acknowledge the environmental limitation and ensure human oversight covers this known gap. AI safety monitoring works best when its own blind spots are understood and managed."}
+];
+let asIdx=0,asDone=false;
+function initAS(){
+  const s=scenes[asIdx];
+  document.getElementById('as-label').textContent=s.label;
+  document.getElementById('as-text').textContent=s.text;
+  document.getElementById('as-q').textContent=s.q;
+  const c=document.getElementById('as-choices');c.innerHTML='';
+  s.choices.forEach((ch,i)=>{const b=document.createElement('button');b.className='as-choice';b.textContent=ch;b.onclick=()=>doAS(i);c.appendChild(b);});
+  document.getElementById('as-good').className='as-result good';
+  document.getElementById('as-bad').className='as-result bad';
+  document.getElementById('as-next').className='as-next';
+}
+function doAS(i){
+  if(asDone)return;asDone=true;
+  const s=scenes[asIdx];
+  document.querySelectorAll('.as-choice').forEach(b=>b.disabled=true);
+  if(i===s.correct){document.querySelectorAll('.as-choice')[i].classList.add('correct');document.getElementById('as-good').textContent=s.good;document.getElementById('as-good').classList.add('show');}
+  else{document.querySelectorAll('.as-choice')[i].classList.add('wrong');document.getElementById('as-bad').textContent=s.bad;document.getElementById('as-bad').classList.add('show');}
+  if(asIdx<scenes.length-1)document.getElementById('as-next').classList.add('show');
+}
+function nextAS(){asIdx++;asDone=false;initAS();}
+initAS();
+
+let qdone=false;
+function doQ(i){if(qdone)return;qdone=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>
