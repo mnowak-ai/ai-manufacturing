@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Twins: What They Are and Why Factories Use Them to Test Ideas Before Spending a Dollar</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Real vs Digital side-by-side */
+.twin-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0;}
+.twin-side{border-radius:20px;padding:28px;border:2px solid;}
+.twin-side.real{background:var(--orange-pale);border-color:var(--orange);}
+.twin-side.digital{background:var(--purple-pale);border-color:var(--purple-mid);}
+.twin-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;}
+.twin-side.real .twin-badge{color:#92400E;}
+.twin-side.digital .twin-badge{color:var(--purple);}
+.twin-side-icon{font-size:40px;margin-bottom:10px;}
+.twin-side-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.twin-side.real .twin-side-title{color:#92400E;}
+.twin-side.digital .twin-side-title{color:var(--purple-dark);}
+.twin-side-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.twin-side-list li{font-size:13px;line-height:1.6;color:var(--gray-text);padding-left:18px;position:relative;}
+.twin-side-list li::before{content:"→";position:absolute;left:0;font-weight:700;}
+.real .twin-side-list li::before{color:#92400E;}
+.digital .twin-side-list li::before{color:var(--purple);}
+@media(max-width:540px){.twin-compare{grid-template-columns:1fr;}}
+
+/* Sync animation visual */
+.sync-visual{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:28px;margin:28px 0;text-align:center;}
+.sync-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:16px;}
+.sync-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;}
+.sync-box{background:var(--white);border:2px solid var(--purple-mid);border-radius:16px;padding:18px 22px;min-width:140px;}
+.sync-box.real-box{border-color:var(--orange);}
+.sync-box.digital-box{border-color:var(--purple);}
+.sync-box-icon{font-size:32px;margin-bottom:6px;}
+.sync-box-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;}
+.real-box .sync-box-label{color:#92400E;}
+.digital-box .sync-box-label{color:var(--purple);}
+.sync-box-sub{font-size:11px;color:var(--gray-muted);margin-top:4px;}
+.sync-arrow{font-size:22px;color:var(--purple-mid);}
+.sync-note{margin-top:14px;font-size:13px;color:var(--gray-muted);font-style:italic;}
+
+/* Use cases */
+.use-cases{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.uc-card{display:flex;gap:18px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:22px 24px;align-items:flex-start;}
+.uc-icon{font-size:30px;flex-shrink:0;margin-top:2px;}
+.uc-body{}
+.uc-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.uc-desc{font-size:14px;line-height:1.7;color:var(--gray-text);}
+.uc-example{margin-top:8px;font-size:13px;padding:8px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+
+/* Siemens callout */
+.siemens-box{background:linear-gradient(135deg,#1a0533,var(--purple-dark));border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.siemens-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:12px;}
+.siemens-heading{font-family:"Fraunces",serif;font-size:22px;font-weight:700;margin-bottom:14px;line-height:1.3;}
+.siemens-body{font-size:14px;line-height:1.8;opacity:.88;}
+.siemens-stats{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;}
+.siemens-stat{background:rgba(255,255,255,.1);border-radius:12px;padding:14px 18px;flex:1;min-width:120px;}
+.siemens-stat-num{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--purple-mid);margin-bottom:4px;}
+.siemens-stat-label{font-size:12px;opacity:.8;line-height:1.4;}
+
+/* What-if simulator */
+.whatif-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.wi-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.wi-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.wi-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.wi-context{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:18px;}
+.wi-context-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:7px;}
+.wi-context-text{font-size:14px;line-height:1.75;color:var(--gray-text);}
+.wi-prompt{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:14px;}
+.wi-options{display:flex;flex-direction:column;gap:10px;}
+.wi-option{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.wi-option:hover{border-color:var(--purple);background:var(--purple-pale);}
+.wi-option.selected-right{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.wi-option.selected-wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.wi-result{margin-top:16px;padding:16px 20px;border-radius:14px;font-size:14px;line-height:1.75;display:none;}
+.wi-result.show{display:block;}
+.wi-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.wi-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.wi-next{margin-top:14px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.wi-next.show{display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Summary */
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.1 — AI Overview in Manufacturing</div>
+  <h1>Digital Twins: What They Are and Why Factories Use Them to Test Ideas Before Spending a Dollar</h1>
+  <p class="hero-sub">A virtual copy of a real machine sounds like science fiction. It's not — and understanding it will help you make sense of how modern factories make decisions.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <!-- Hook -->
+  <div class="section fade-in">
+    <p>Imagine you're a factory manager. You have an idea: if you rearrange the production line, you think you could cut assembly time by 20%. But moving heavy equipment costs money, takes days, and shuts down production while it happens. And what if the idea doesn't work?</p>
+    <p>Before digital twins, managers faced a brutal choice: test the idea in real life and risk the disruption, or never test it at all.</p>
+    <p>Digital twins changed that equation completely. Now you can <mark>run the experiment in a virtual copy of your factory</mark> before touching a single bolt in the real one.</p>
+  </div>
+
+  <!-- Definition -->
+  <div class="section fade-in">
+    <h2>So What Exactly Is a Digital Twin?</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Digital twin:</strong> A virtual model of a real physical object, machine, process, or entire factory. It's built using real data from sensors and updated continuously as conditions change. Engineers use it to simulate scenarios, test changes, and predict what will happen — without touching the real thing.</div>
+    </div>
+    <p>The word "twin" is key. It's not just a diagram or a drawing. A good digital twin <mark>behaves the way the real thing behaves</mark> — because it's built on real data flowing in from the actual machine, updated in real time.</p>
+    <p>Think of it like a very sophisticated flight simulator. Pilots practice emergencies in a simulator so they're prepared when something goes wrong in a real plane. A digital twin lets engineers practice changes to a factory so they know what will happen before anything goes wrong in real life.</p>
+
+    <div class="twin-compare">
+      <div class="twin-side real">
+        <div class="twin-badge">The Real Machine</div>
+        <div class="twin-side-icon">⚙️</div>
+        <div class="twin-side-title">Physical World</div>
+        <ul class="twin-side-list">
+          <li>Exists on the shop floor</li>
+          <li>Sensors measure temperature, vibration, speed</li>
+          <li>Changes cost time and money</li>
+          <li>Mistakes cause real damage or downtime</li>
+          <li>Only one version exists</li>
+        </ul>
+      </div>
+      <div class="twin-side digital">
+        <div class="twin-badge">The Digital Twin</div>
+        <div class="twin-side-icon">💻</div>
+        <div class="twin-side-title">Virtual World</div>
+        <ul class="twin-side-list">
+          <li>Exists in a computer simulation</li>
+          <li>Fed by real sensor data — updates live</li>
+          <li>Changes cost nothing to test</li>
+          <li>Mistakes teach without causing harm</li>
+          <li>Run unlimited "what-if" experiments</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- How they sync -->
+  <div class="section fade-in">
+    <h2>How Does a Digital Twin Stay Accurate?</h2>
+    <p>A digital twin that was built three years ago and never updated isn't very useful. The real machine has changed — worn parts, new settings, different operating conditions. A stale model gives you stale predictions.</p>
+    <p>This is where <mark>sensors and AI come together</mark>. The real machine is covered with sensors measuring dozens of variables. Those readings flow continuously into the digital model, which updates to reflect the current real-world state.</p>
+
+    <div class="sync-visual">
+      <div class="sync-label">How real and virtual stay connected</div>
+      <div class="sync-row">
+        <div class="sync-box real-box">
+          <div class="sync-box-icon">🏭</div>
+          <div class="sync-box-label">Real Machine</div>
+          <div class="sync-box-sub">Sensors measure actual conditions every second</div>
+        </div>
+        <div class="sync-arrow">→</div>
+        <div class="sync-box" style="border-color:var(--purple-mid);">
+          <div class="sync-box-icon">📡</div>
+          <div class="sync-box-label" style="color:var(--gray-muted);">Live Data Feed</div>
+          <div class="sync-box-sub">Temperature, vibration, speed, output</div>
+        </div>
+        <div class="sync-arrow">→</div>
+        <div class="sync-box digital-box">
+          <div class="sync-box-icon">💻</div>
+          <div class="sync-box-label">Digital Twin</div>
+          <div class="sync-box-sub">Model updates to match real conditions in real time</div>
+        </div>
+      </div>
+      <div class="sync-note">The digital twin is only as accurate as the sensor data feeding it. This is why sensor quality matters so much.</div>
+    </div>
+
+    <p>Because the twin reflects the current state of the machine, when engineers ask "what would happen if we increased the speed by 15%?" — the simulation gives an answer based on how the machine is actually performing right now, not how it performed when it was new.</p>
+  </div>
+
+  <!-- What factories use them for -->
+  <div class="section fade-in">
+    <h2>What Do Factories Actually Use Digital Twins For?</h2>
+    <p>There are three main uses, and each one saves a different kind of resource — time, money, or safety.</p>
+
+    <div class="use-cases">
+      <div class="uc-card">
+        <div class="uc-icon">🔬</div>
+        <div class="uc-body">
+          <div class="uc-title">Testing Changes Before They Happen</div>
+          <div class="uc-desc">Before changing a machine setting, swapping out a part, or reorganizing a production line, engineers run the change in the digital twin first. If the simulation shows problems, they adjust the plan — before touching anything real.</div>
+          <div class="uc-example">Example: An automotive plant wants to add a new welding step to their line. They model it in the digital twin, discover it would create a bottleneck at the paint station, and redesign the process — all without stopping production for a single hour.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🔮</div>
+        <div class="uc-body">
+          <div class="uc-title">Predicting Failures Before They Happen</div>
+          <div class="uc-desc">When sensor data shows a machine behaving differently than its digital twin predicts it should behave, that gap is a warning sign. AI compares the real readings to the model's expected readings and flags the difference as a potential failure developing.</div>
+          <div class="uc-example">Example: A motor's vibration pattern starts diverging from what the digital twin says it should be at that temperature and load. The AI flags it as a bearing wear issue — 11 days before any human would have noticed a problem.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">⚡</div>
+        <div class="uc-body">
+          <div class="uc-title">Optimizing Performance Without Guessing</div>
+          <div class="uc-desc">Instead of guessing at the best settings for a machine, engineers run hundreds of virtual experiments to find the combination that produces the best output with the least energy, wear, or waste. The winning settings go into the real machine.</div>
+          <div class="uc-example">Example: A food packaging facility runs 400 simulations in an afternoon to find the conveyor speed, temperature, and pressure combination that reduces packaging waste by 12% — then dials those exact settings into the real line.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Siemens connection -->
+  <div class="section fade-in">
+    <div class="siemens-box">
+      <div class="siemens-eyebrow">🏭 Real World: Siemens Amberg</div>
+      <div class="siemens-heading">The Factory That Twins Itself — Digitally</div>
+      <div class="siemens-body">The Siemens Electronics Works in Amberg, Germany — the same facility you studied earlier in this lesson — runs digital twins of its entire production process. Every product, every machine, and every process step has a virtual counterpart. Before Siemens makes any change to the factory, it runs in the simulation first. This is part of how they achieve a 99.9988% quality rate. They don't guess. They test — virtually, thousands of times — before committing to anything in the real world.</div>
+      <div class="siemens-stats">
+        <div class="siemens-stat">
+          <div class="siemens-stat-num">99.9988%</div>
+          <div class="siemens-stat-label">quality rate — made possible in part by digital twin testing</div>
+        </div>
+        <div class="siemens-stat">
+          <div class="siemens-stat-num">75%</div>
+          <div class="siemens-stat-label">reduction in scrap and defects since AI and digital twins were introduced</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What it means for workers -->
+  <div class="section fade-in">
+    <h2>What Does This Mean for the Workers on the Floor?</h2>
+    <p>You might not be the engineer building the digital twin. But you'll feel its effects every day.</p>
+    <div class="pull-quote"><p>When a factory uses digital twins well, workers stop being surprised by machine failures. Instead, they get a heads-up days in advance — and the fix is scheduled, not scrambled.</p></div>
+    <p>Digital twins also make training better. Some factories let new workers practice on a digital twin of the actual equipment they'll be operating — making mistakes in software, not on a $2 million machine. Onboarding becomes faster and safer.</p>
+    <p>And when engineers want to propose a change to how your line works, a digital twin means they come to you with <mark>data, not hunches</mark>. "We simulated this 500 times and here's what we expect to happen" is a very different conversation than "we think this might work."</p>
+  </div>
+
+  <!-- What-if simulator -->
+  <div class="section fade-in">
+    <div class="whatif-sim">
+      <div class="wi-label">🖥️ Think Like an Engineer</div>
+      <div class="wi-title">Digital Twin Decision Practice</div>
+      <div class="wi-sub">Read each situation. Decide how a digital twin would help — or where it has limits.</div>
+      <div id="wi-wrap">
+        <div class="wi-context">
+          <div class="wi-context-label">Situation 1 of 3</div>
+          <div class="wi-context-text" id="wi-text">Your factory produces automotive parts. A supplier just changed the grade of metal you're receiving — it's slightly harder than before. Your plant manager wants to know if your stamping presses can handle it at the same speed, or if you need to slow down to avoid cracking the material.</div>
+        </div>
+        <div class="wi-prompt" id="wi-prompt">What's the best way to get an answer quickly without risking damage to the real presses?</div>
+        <div class="wi-options" id="wi-opts">
+          <button class="wi-option" onclick="doWI(0)">Run the new metal through the real presses at full speed and see what happens</button>
+          <button class="wi-option" onclick="doWI(1)">Update the digital twin with the new metal's properties and simulate press runs at different speeds to find the safe range</button>
+          <button class="wi-option" onclick="doWI(2)">Ask a more experienced worker what speed they think would work</button>
+          <button class="wi-option" onclick="doWI(3)">Order a different metal supplier instead of testing the current one</button>
+        </div>
+        <div class="wi-result good" id="wi-good"></div>
+        <div class="wi-result bad" id="wi-bad"></div>
+        <button class="wi-next" id="wi-next" onclick="nextWI()">Next Situation →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">What makes a digital twin different from just a diagram or blueprint of a machine?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">A digital twin is drawn by engineers, while a blueprint is made by a computer</button>
+        <button class="quiz-opt" onclick="doQ1(1)">A digital twin is fed real sensor data and updates to reflect current conditions, so it behaves the way the actual machine behaves right now</button>
+        <button class="quiz-opt" onclick="doQ1(2)">A digital twin is a 3D model, while a blueprint is only 2D</button>
+        <button class="quiz-opt" onclick="doQ1(3)">A digital twin is only useful for machines that are already broken</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Exactly right. The key is the live data connection. A static diagram shows what a machine looks like. A digital twin shows what it's doing right now — and lets you simulate what it would do under different conditions. That's what makes it so powerful for prediction and testing.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. The defining feature of a digital twin isn't how it looks — it's that it's connected to real sensor data and updates continuously. That live connection is what lets it predict failures and test scenarios accurately.</div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A digital twin is a virtual copy of a real machine or factory that updates continuously using live sensor data.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The "twin" stays accurate because it's connected to real-world sensors — it reflects how the machine is performing right now, not just how it was designed.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Factories use digital twins for three main purposes: testing changes before making them, predicting failures before they happen, and optimizing performance without guessing.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Siemens Amberg runs digital twins of its entire production process — a key reason it achieves a 99.9988% quality rate.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">For workers on the floor, digital twins mean fewer surprise failures, better-planned maintenance, and changes backed by data instead of hunches.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';
+});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Quiz 1
+let q1done=false;
+function doQ1(i){if(q1done)return;q1done=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+
+// What-if sim
+const situations=[
+  {
+    label:'Situation 1 of 3',
+    text:"Your factory produces automotive parts. A supplier just changed the grade of metal you're receiving — it's slightly harder than before. Your plant manager wants to know if your stamping presses can handle it at the same speed, or if you need to slow down to avoid cracking the material.",
+    prompt:"What's the best way to get an answer quickly without risking damage to the real presses?",
+    choices:["Run the new metal through the real presses at full speed and see what happens","Update the digital twin with the new metal's properties and simulate press runs at different speeds to find the safe range","Ask a more experienced worker what speed they think would work","Order a different metal supplier instead of testing the current one"],
+    correct:1,
+    good:"✅ Right. This is exactly what digital twins are built for. You update the model with the new material properties and run simulations at different speeds. You get a data-backed answer in hours instead of days — and you don't crack a single real part or risk damaging your actual presses.",
+    bad:"❌ That approach puts real equipment and materials at risk. The whole point of a digital twin is to absorb the risk of experimentation virtually. Simulating the new metal first would give you a speed range to try — and you'd only touch the real machine once you know it's safe."
+  },
+  {
+    label:'Situation 2 of 3',
+    text:"The digital twin of your assembly line predicts that if the current temperature trend in the welding bay continues, a hydraulic seal is likely to fail within 8 days. The maintenance team isn't sure they trust the prediction — the machine 'sounds fine.'",
+    prompt:"What should the maintenance team do?",
+    choices:["Ignore the warning because the machine sounds fine — the twin is probably wrong","Schedule a seal inspection within the next 2-3 days while the machine is still running, so they can plan the repair","Wait until the seal actually fails, then replace it on an emergency basis","Replace every seal in the factory to be safe"],
+    correct:1,
+    good:"✅ Correct. The digital twin gave an 8-day warning — that's exactly the window maintenance needs to schedule a planned inspection and repair during a convenient time. Waiting for actual failure turns a $300 repair into a potential $20,000 emergency shutdown. The machine 'sounding fine' is the whole point: AI catches what ears can't.",
+    bad:"❌ This misses the value of predictive technology. The digital twin detected a pattern — not a noise. Hydraulic seals fail gradually in ways humans can't hear until it's too late. An 8-day lead time is a gift: it lets you schedule a repair, order the right part, and avoid emergency downtime."
+  },
+  {
+    label:'Situation 3 of 3',
+    text:"A new engineer proposes using the factory's digital twin to simulate what would happen if the facility ran a third shift at full capacity. The factory has never done this. The simulation runs and shows that the conveyor cooling system would overheat within 4 hours at that load level.",
+    prompt:"What does this simulation result tell management, and what should they do with it?",
+    choices:["Ignore it — a simulation can't really predict physical problems like overheating","The cooling system is a bottleneck that must be fixed before adding a third shift — upgrade it first, then simulate again","The factory should run the third shift anyway and monitor temperatures manually","Digital twins are too unreliable for major decisions like this"],
+    correct:1,
+    good:"✅ Exactly right. The simulation revealed a specific, actionable constraint: the cooling system. Now management knows exactly what to fix before adding a shift — they don't have to discover it the hard way at 3am when a system overheats for real. That's the whole business case for digital twins.",
+    bad:"❌ The simulation gave management crucial information — not a reason to proceed blindly. Physical systems like cooling have real thermal limits that simulations can model accurately. The right move is to take the finding seriously, upgrade the cooling system, and simulate again before committing to a third shift."
+  }
+];
+let wiIdx=0,wiDone=false;
+function doWI(choice){
+  if(wiDone)return;wiDone=true;
+  const s=situations[wiIdx];
+  const btns=document.querySelectorAll('#wi-opts .wi-option');
+  btns.forEach(b=>b.disabled=true);
+  const goodEl=document.getElementById('wi-good');
+  const badEl=document.getElementById('wi-bad');
+  if(choice===s.correct){btns[choice].classList.add('selected-right');goodEl.textContent=s.good;goodEl.classList.add('show');}
+  else{btns[choice].classList.add('selected-wrong');badEl.textContent=s.bad;badEl.classList.add('show');}
+  if(wiIdx<situations.length-1)document.getElementById('wi-next').classList.add('show');
+}
+function nextWI(){
+  wiIdx++;wiDone=false;
+  const s=situations[wiIdx];
+  document.querySelector('.wi-context-label').textContent=s.label;
+  document.getElementById('wi-text').textContent=s.text;
+  document.getElementById('wi-prompt').textContent=s.prompt;
+  const container=document.getElementById('wi-opts');
+  container.innerHTML='';
+  s.choices.forEach((c,i)=>{const b=document.createElement('button');b.className='wi-option';b.textContent=c;b.onclick=()=>doWI(i);container.appendChild(b);});
+  document.getElementById('wi-good').className='wi-result good';
+  document.getElementById('wi-bad').className='wi-result bad';
+  document.getElementById('wi-next').classList.remove('show');
+}
+(function init(){
+  const s=situations[0];
+  document.querySelector('.wi-context-label').textContent=s.label;
+  document.getElementById('wi-text').textContent=s.text;
+  document.getElementById('wi-prompt').textContent=s.prompt;
+  const c=document.getElementById('wi-opts');c.innerHTML='';
+  s.choices.forEach((ch,i)=>{const b=document.createElement('button');b.className='wi-option';b.textContent=ch;b.onclick=()=>doWI(i);c.appendChild(b);});
+})();
+</script>
+</body>
+</html>
