@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>False Positives vs. False Negatives: The Two Ways AI Can Fail in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* The 2x2 grid */
+.outcomes-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:28px 0;border-radius:20px;overflow:hidden;border:2px solid var(--purple-mid);}
+.og-cell{padding:24px;}
+.og-cell.tp{background:var(--green-pale);}
+.og-cell.fp{background:var(--orange-pale);}
+.og-cell.fn{background:var(--red-pale);}
+.og-cell.tn{background:var(--blue-pale);}
+.og-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.tp .og-label{color:var(--green);}
+.fp .og-label{color:#92400E;}
+.fn .og-label{color:var(--red);}
+.tn .og-label{color:var(--blue);}
+.og-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.2;}
+.tp .og-title{color:var(--green);}
+.fp .og-title{color:#92400E;}
+.fn .og-title{color:var(--red);}
+.tn .og-title{color:var(--blue);}
+.og-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.og-cost{margin-top:8px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:100px;display:inline-block;}
+.tp .og-cost{background:var(--green-pale);color:var(--green);}
+.fp .og-cost{background:var(--orange-pale);color:#92400E;}
+.fn .og-cost{background:var(--red-pale);color:var(--red);}
+.tn .og-cost{background:var(--blue-pale);color:var(--blue);}
+@media(max-width:560px){.outcomes-grid{grid-template-columns:1fr;}}
+
+/* Side by side comparison */
+.fp-fn{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.fpfn-card{border-radius:20px;padding:24px;border:1.5px solid;}
+.fpfn-card.fp{background:var(--orange-pale);border-color:var(--orange);}
+.fpfn-card.fn{background:var(--red-pale);border-color:var(--red);}
+.fpfn-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.fp .fpfn-label{color:var(--orange);}
+.fn .fpfn-label{color:var(--red);}
+.fpfn-card h3{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:10px;}
+.fp h3{color:#92400E;}
+.fn h3{color:var(--red);}
+.fpfn-card p{font-size:13px;line-height:1.7;color:var(--gray-text);margin-bottom:8px;}
+.fpfn-causes{margin-top:10px;}
+.fpfn-causes-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px;}
+.fp .fpfn-causes-label{color:var(--orange);}
+.fn .fpfn-causes-label{color:var(--red);}
+.fpfn-cause{font-size:12px;padding:4px 10px;border-radius:8px;margin-bottom:4px;line-height:1.5;}
+.fp .fpfn-cause{background:#FEF3C7;color:#92400E;}
+.fn .fpfn-cause{background:#FFF1F1;color:var(--red);}
+@media(max-width:560px){.fp-fn{grid-template-columns:1fr;}}
+
+/* Tradeoff sim */
+.tradeoff-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ts-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ts-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ts-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ts-slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.ts-label2{font-size:14px;font-weight:600;color:var(--gray-text);min-width:110px;}
+.ts-slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--purple-mid);outline:none;}
+.ts-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--purple-dark);cursor:pointer;border:3px solid white;box-shadow:0 2px 6px rgba(74,21,128,.3);}
+.ts-result{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
+.ts-rc{border-radius:14px;padding:14px;text-align:center;}
+.ts-rc.fp-side{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.ts-rc.fn-side{background:var(--red-pale);border:1.5px solid var(--red);}
+.ts-rc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.fp-side .ts-rc-label{color:#92400E;}
+.fn-side .ts-rc-label{color:var(--red);}
+.ts-rc-val{font-family:"Fraunces",serif;font-size:24px;font-weight:900;}
+.fp-side .ts-rc-val{color:#92400E;}
+.fn-side .ts-rc-val{color:var(--red);}
+.ts-rc-sub{font-size:11px;color:var(--gray-muted);margin-top:3px;}
+.ts-insight{margin-top:14px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;line-height:1.55;}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.2</div>
+  <h1>False Positives vs. False Negatives: The Two Ways AI Can Fail in Manufacturing</h1>
+  <p class="hero-sub">AI doesn't just fail by being "wrong" in one direction. There are two completely different ways it can fail — and each one causes a different kind of damage. Understanding both is essential for anyone who acts on AI alerts.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Two Very Different Kinds of Wrong</h2>
+    <p>When a doctor tests you for a disease, there are four possible outcomes. The test can say you have the disease and be right (correct alarm). It can say you have the disease and be wrong (false alarm). It can say you don't have the disease and be right (correct all-clear). Or it can say you don't have the disease and be wrong (missed diagnosis).</p>
+    <p>Manufacturing AI works the same way. When it generates an alert, it can be right or wrong. When it stays silent, it can be right or wrong. The two failure modes — alerting when there's no problem, and staying silent when there is one — have completely different consequences.</p>
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Terms</div>
+      <div class="vocab-def"><strong>False Positive</strong> — AI alerts when there is NO real problem. The alarm fires but everything is actually fine. <strong>False Negative</strong> — AI stays silent when there IS a real problem. The machine is developing a failure, but no alert is generated. <strong>True Positive</strong> — AI correctly alerts on a real problem. <strong>True Negative</strong> — AI correctly stays silent when everything is fine.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Possible Outcomes</h2>
+    <div class="outcomes-grid fade-in">
+      <div class="og-cell tp">
+        <div class="og-label">✅ True Positive</div>
+        <div class="og-title">AI alerts — real problem exists</div>
+        <div class="og-desc">The AI correctly detected a developing failure. The maintenance team investigates, confirms the problem, and fixes it before catastrophic failure. This is the ideal outcome — exactly what the system is designed for.</div>
+        <div class="og-cost">Outcome: Failure prevented</div>
+      </div>
+      <div class="og-cell fp">
+        <div class="og-label">⚠️ False Positive</div>
+        <div class="og-title">AI alerts — no real problem</div>
+        <div class="og-desc">The AI flagged an anomaly that turned out to be normal variation, environmental factors, or a sensor glitch. The maintenance team investigated and found nothing wrong. Time and money wasted — and trust eroded.</div>
+        <div class="og-cost">Outcome: Wasted time + alert fatigue</div>
+      </div>
+      <div class="og-cell fn">
+        <div class="og-label">🔴 False Negative</div>
+        <div class="og-title">AI silent — real problem missed</div>
+        <div class="og-desc">The AI didn't detect a genuine developing failure. No alert was generated. The maintenance team didn't know to look. The machine eventually failed without warning — exactly the outcome the system was supposed to prevent.</div>
+        <div class="og-cost">Outcome: Unplanned failure = highest cost</div>
+      </div>
+      <div class="og-cell tn">
+        <div class="og-label">✅ True Negative</div>
+        <div class="og-title">AI silent — everything fine</div>
+        <div class="og-desc">The AI correctly identified that the machine is operating normally and didn't generate an unnecessary alert. The maintenance team can focus their attention elsewhere. This is the second ideal outcome.</div>
+        <div class="og-cost">Outcome: Normal operations continue</div>
+      </div>
+    </div>
+    <p>The two outcomes in the middle — false positives and false negatives — are where AI systems fail. And they fail in opposite directions, with very different consequences.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>False Positive vs. False Negative: A Direct Comparison</h2>
+    <div class="fp-fn fade-in">
+      <div class="fpfn-card fp">
+        <div class="fpfn-label">⚠️ False Positive</div>
+        <h3>Alert When There's No Problem</h3>
+        <p>The AI flags an anomaly. The maintenance team investigates. They find nothing wrong. The machine was fine. The alert was unnecessary.</p>
+        <p><strong>Immediate cost:</strong> Technician time (typically 30 min–2 hrs per false alarm), possible production interruption, and wear on the maintenance team's confidence in the system.</p>
+        <p><strong>Long-term cost:</strong> Alert fatigue. When false alarms are frequent, workers start dismissing alerts faster — eventually dismissing real ones too. False positives eventually cause false negatives.</p>
+        <div class="fpfn-causes">
+          <div class="fpfn-causes-label">Common Causes</div>
+          <div class="fpfn-cause">Poor baseline (seasonal data missing)</div>
+          <div class="fpfn-cause">Dirty or miscalibrated sensor</div>
+          <div class="fpfn-cause">Alert threshold set too sensitive</div>
+          <div class="fpfn-cause">Normal operational variation mistaken for anomaly</div>
+        </div>
+      </div>
+      <div class="fpfn-card fn">
+        <div class="fpfn-label">🔴 False Negative</div>
+        <h3>Silence When There's a Problem</h3>
+        <p>A real failure is developing. The AI doesn't detect it. No alert fires. The maintenance team has no reason to look. The machine fails — often catastrophically.</p>
+        <p><strong>Immediate cost:</strong> Full unplanned downtime — the most expensive manufacturing event. Emergency repairs, potential secondary damage, production delays, customer penalties.</p>
+        <p><strong>Long-term cost:</strong> Loss of confidence in the AI system's ability to protect the facility. Workers may stop relying on AI monitoring entirely after a serious missed failure.</p>
+        <div class="fpfn-causes">
+          <div class="fpfn-causes-label">Common Causes</div>
+          <div class="fpfn-cause">New failure mode not in training data</div>
+          <div class="fpfn-cause">Gradual degradation masked by adaptive baseline</div>
+          <div class="fpfn-cause">Alert threshold set too lenient</div>
+          <div class="fpfn-cause">Sensor failure not detected (sensor monitors itself poorly)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Tradeoff: You Can't Eliminate Both at Once</h2>
+    <p>Here's the uncomfortable truth about AI performance: <mark>reducing false positives often increases false negatives, and vice versa.</mark> This is called the precision-recall tradeoff, and every manufacturing AI team has to decide where to set the balance.</p>
+    <p>Use the slider below to see how changing the AI's sensitivity threshold affects both error types:</p>
+
+    <div class="tradeoff-sim fade-in">
+      <div class="ts-label">⚖️ Interactive Tradeoff Explorer</div>
+      <div class="ts-title">AI Sensitivity Threshold</div>
+      <div class="ts-sub">Move the slider to see how sensitivity settings affect false positive and false negative rates. There's no setting that eliminates both.</div>
+      <div class="ts-slider-row">
+        <div class="ts-label2">Sensitivity</div>
+        <input type="range" class="ts-slider" id="ts-sl" min="1" max="10" value="5" oninput="updateTradeoff()">
+        <span id="ts-setting" style="font-weight:700;color:var(--purple-dark);min-width:80px;">Balanced</span>
+      </div>
+      <div class="ts-result">
+        <div class="ts-rc fp-side">
+          <div class="ts-rc-label">False Positives / Week</div>
+          <div class="ts-rc-val" id="ts-fp">8</div>
+          <div class="ts-rc-sub">unnecessary alerts</div>
+        </div>
+        <div class="ts-rc fn-side">
+          <div class="ts-rc-label">False Negatives / Month</div>
+          <div class="ts-rc-val" id="ts-fn">2</div>
+          <div class="ts-rc-sub">missed real problems</div>
+        </div>
+      </div>
+      <div class="ts-insight" id="ts-insight"></div>
+    </div>
+
+    <p>This tradeoff is why context matters so much in how AI systems are configured. A nuclear plant might accept many false positives to minimize false negatives — the cost of a missed problem is catastrophic. A low-risk consumer goods line might accept a higher false negative rate to avoid alert fatigue that disrupts production flow.</p>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A manufacturing plant's AI system was recently recalibrated to reduce false positives after complaints from technicians about too many unnecessary alerts. Three weeks later, a bearing failure occurs without any AI warning. What likely happened?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The AI system was recalibrated after this period — not removed. The issue is that recalibrating to reduce false positives often means raising the threshold at which the AI generates alerts, which can cause it to miss real problems that don\'t cross the new, higher threshold.')">The AI system was turned off during maintenance and someone forgot to turn it back on</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is the precision-recall tradeoff in action. When the threshold was raised to reduce false positives, it simultaneously made the system less sensitive to developing problems. The bearing failure likely produced signals that would have triggered an alert under the old threshold — but fell below the new, higher one. Reducing false positives often increases false negatives. This is why threshold calibration decisions require careful analysis, not just responding to technician complaints.')">Recalibrating to reduce false positives likely raised the alert threshold, which simultaneously made the AI less sensitive to real developing problems — a classic precision-recall tradeoff</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The bearing failure was a false negative — a real problem the AI missed. This is different from a false positive (alerting on a non-problem). The recalibration likely made the system less sensitive overall, causing it to miss the real bearing failure signal.')">The bearing failure was a false positive — the AI incorrectly reported it as a real problem</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">In a food safety manufacturing environment (where contaminated products could harm consumers), which failure mode is more dangerous — and why?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ False positives cause wasted time and alert fatigue — real costs. But in food safety, stopping production unnecessarily is recoverable. A contaminated product reaching consumers is not. The relative severity depends entirely on the consequences of each error type.')">False positives — stopping production unnecessarily is the biggest risk in a tight production schedule</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. In food safety manufacturing, a false negative means a contamination event, a defective product, or a safety-critical process failure goes undetected. The product ships. Consumers are harmed. Recalls are issued. The consequences are potentially catastrophic and irreversible. A false positive, by contrast, means an unnecessary production stop — frustrating and costly, but recoverable. In high-stakes safety environments, systems are typically configured to accept more false positives in exchange for fewer false negatives.')">False negatives — missing a real food safety problem means contaminated products could reach consumers, which is a harm that can\'t be undone</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ While both error types matter, they don\'t have equal consequences in food safety. The specific risk profile of the application determines which error is worse. In food safety, the harm from a missed contamination event far exceeds the cost of an unnecessary production stop.')">They\'re equally dangerous — both cost money and should be weighted the same in system design</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>False positives are alerts that fire when nothing is wrong. They waste time, frustrate technicians, and cause alert fatigue — which eventually leads to real alerts being ignored. False negatives are silences when something IS wrong — the most expensive outcome because failures occur without warning.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Reducing one error type tends to increase the other. This is the precision-recall tradeoff. AI systems must be calibrated for the specific environment — high-stakes safety applications accept more false positives to minimize false negatives. Low-risk applications may do the opposite.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Alert fatigue is the bridge between false positives and false negatives. When workers experience too many false positives, they start dismissing alerts quickly — and eventually dismiss real ones. False positives, left unaddressed, eventually cause false negatives.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The relative danger of each error type depends on the application. Know your environment: in safety-critical manufacturing, a missed problem is usually far more dangerous than an unnecessary investigation.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function updateTradeoff(){
+  const v=+document.getElementById("ts-sl").value;
+  const fp=Math.round(v*3.2);
+  const fn=Math.round((11-v)*0.55);
+  document.getElementById("ts-fp").textContent=fp;
+  document.getElementById("ts-fn").textContent=fn;
+  let setting,insight,cls;
+  if(v<=3){setting="Very Lenient";insight="⚠️ Low sensitivity: very few unnecessary alerts, but "+fn+" real problems per month slip through undetected. Workers trust the alerts — but many failures are missed.";cls="background:var(--red-pale);color:var(--red);border:1px solid #FECACA;";}
+  else if(v<=4){setting="Lenient";insight="⚠️ Below-average sensitivity: alerts are trusted because false alarms are rare, but ~"+fn+" real issues missed monthly. Good for low-stakes applications.";cls="background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;";}
+  else if(v<=6){setting="Balanced";insight="📊 Balanced: "+fp+" false alarms per week vs "+fn+" missed issues per month. Workers investigate most alerts — sustainable if investigation is fast. Common default setting.";cls="background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid)";}
+  else if(v<=8){setting="Sensitive";insight="⚠️ High sensitivity: catches almost everything real, but "+fp+" false alarms per week causes significant technician time loss. Alert fatigue risk growing.";cls="background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;";}
+  else{setting="Very Sensitive";insight="🔴 Alert overload: "+fp+" false alarms weekly overwhelms the team. Technicians start skipping investigations — ironically producing more false negatives over time. Not sustainable.";cls="background:var(--red-pale);color:var(--red);border:1px solid #FECACA;";}
+  document.getElementById("ts-setting").textContent=setting;
+  const el=document.getElementById("ts-insight");
+  el.textContent=insight;el.style.cssText=cls+"padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;line-height:1.55;margin-top:14px;";
+}
+updateTradeoff();
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

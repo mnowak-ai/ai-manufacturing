@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidence Scores: What Does It Mean When AI Is "85% Sure"?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Error code AI output panel */
+.ai-output{background:#1A0A25;border-radius:20px;padding:26px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.aio-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.aio-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);}
+.aio-label{font-size:12px;font-weight:700;color:#E2D9F3;letter-spacing:.06em;font-family:var(--mono);}
+.aio-title{font-size:15px;font-weight:600;color:#BFDBFE;margin-bottom:14px;}
+.aio-bars{display:flex;flex-direction:column;gap:12px;}
+.aio-bar-row{display:flex;flex-direction:column;gap:6px;}
+.aio-bar-label{display:flex;justify-content:space-between;align-items:center;}
+.aio-bar-name{font-size:13px;color:#E2D9F3;font-family:var(--mono);}
+.aio-bar-pct{font-size:14px;font-weight:700;font-family:var(--mono);}
+.aio-bar-name.p1+.aio-bar-pct,.aio-bar-pct.p1{color:#A78BFA;}
+.aio-bar-name.p2+.aio-bar-pct,.aio-bar-pct.p2{color:#6EE7B7;}
+.aio-bar-name.p3+.aio-bar-pct,.aio-bar-pct.p3{color:#FCA5A5;}
+.aio-track{height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;}
+.aio-fill{height:100%;border-radius:5px;transition:width 1s ease;}
+.fill-p1{background:linear-gradient(90deg,#7B2FBE,#A78BFA);}
+.fill-p2{background:linear-gradient(90deg,#276749,#6EE7B7);}
+.fill-p3{background:linear-gradient(90deg,#DC2626,#FCA5A5);}
+.aio-note{margin-top:16px;padding:12px 14px;background:rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;}
+
+/* What 85% means explainer */
+.meaning-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.mg-card{border-radius:18px;padding:20px;border:2px solid;}
+.mg-card.does{background:var(--green-pale);border-color:var(--green);}
+.mg-card.doesnt{background:var(--red-pale);border-color:var(--red);}
+.mg-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:10px;}
+.does .mg-title{color:var(--green);}
+.doesnt .mg-title{color:var(--red);}
+.mg-items{display:flex;flex-direction:column;gap:7px;}
+.mg-item{font-size:13px;line-height:1.6;color:var(--gray-text);display:flex;gap:8px;}
+@media(max-width:560px){.meaning-grid{grid-template-columns:1fr;}}
+
+/* Score spectrum */
+.score-spectrum{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.ss-track{position:relative;height:28px;border-radius:14px;background:linear-gradient(90deg,#DC2626 0%,#D97706 35%,#276749 65%,#1D4ED8 100%);margin-bottom:20px;}
+.ss-pointer{position:absolute;top:-12px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:left .3s;}
+.ss-pointer-arrow{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid var(--purple-dark);}
+.ss-pointer-label{background:var(--purple-dark);color:white;font-family:var(--mono);font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;margin-bottom:4px;}
+.ss-zones{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;}
+.ss-zone{border-radius:12px;padding:12px;text-align:center;}
+.ss-zone.low{background:var(--red-pale);border:1px solid #FECACA;}
+.ss-zone.med{background:var(--orange-pale);border:1px solid #FDE68A;}
+.ss-zone.high{background:var(--green-pale);border:1px solid #86EFAC;}
+.ss-zone.very-high{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.ss-zone-range{font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:4px;}
+.low .ss-zone-range{color:var(--red);}
+.med .ss-zone-range{color:#92400E;}
+.high .ss-zone-range{color:var(--green);}
+.very-high .ss-zone-range{color:var(--blue);}
+.ss-zone-title{font-size:12px;font-weight:700;margin-bottom:3px;}
+.ss-zone-desc{font-size:11px;color:var(--gray-muted);line-height:1.5;}
+.ss-selected{margin-top:14px;padding:14px 16px;border-radius:12px;font-size:14px;line-height:1.65;font-weight:600;min-height:52px;}
+
+/* Wrong reading zone */
+.misconceptions{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.mc-row{background:var(--gray-soft);border-radius:16px;padding:18px 20px;border:1.5px solid var(--purple-mid);}
+.mc-wrong{font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.mc-wrong::before{content:"✗  ";}
+.mc-right{font-size:14px;color:var(--green);line-height:1.65;}
+.mc-right::before{content:"✓  ";font-weight:700;}
+
+/* Interactive score explorer */
+.score-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.se-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.se-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.se-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.se-scenarios{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.se-btn{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--purple-mid);background:var(--white);color:var(--gray-text);transition:all .2s;font-family:"DM Sans",sans-serif;}
+.se-btn:hover{border-color:var(--purple);}
+.se-btn.active{background:var(--purple-dark);border-color:var(--purple-dark);color:var(--white);}
+.se-display{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px;}
+.se-scores{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.se-score-row{display:flex;align-items:center;gap:12px;}
+.se-cause{font-size:14px;flex:1;color:var(--gray-text);}
+.se-bar-wrap{width:160px;height:10px;background:var(--purple-pale);border-radius:5px;overflow:hidden;}
+.se-bar-fill{height:100%;border-radius:5px;transition:width .5s ease;}
+.se-pct{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--purple-dark);min-width:36px;text-align:right;}
+.se-interpretation{padding:14px;background:var(--purple-pale);border-radius:12px;font-size:14px;line-height:1.7;color:var(--purple-dark);}
+.se-action{margin-top:10px;padding:12px 14px;background:var(--green-pale);border-radius:12px;font-size:13px;font-weight:600;color:var(--green);line-height:1.65;}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.2</div>
+  <h1>Confidence Scores: What Does It Mean When AI Is "85% Sure"?</h1>
+  <p class="hero-sub">The error code analysis slide shows "Clogged Filter (85%) / Valve Stuck (10%) / Sensor Fault (5%)." You'll see numbers like these constantly in manufacturing AI tools. This article explains what they actually mean — and what they definitely don't.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Numbers You See Every Day</h2>
+    <p>When an AI system analyzes an error code and shows you a breakdown like this, it's giving you something called a confidence score — a probability distribution across possible causes.</p>
+
+    <div class="ai-output fade-in">
+      <div class="aio-header"><div class="aio-dot"></div><div class="aio-label">AI DIAGNOSTIC OUTPUT — Error Code E-301 · Thermal Overload</div></div>
+      <div class="aio-title">Probable Root Causes</div>
+      <div class="aio-bars">
+        <div class="aio-bar-row">
+          <div class="aio-bar-label"><span class="aio-bar-name p1">Clogged Coolant Filter</span><span class="aio-bar-pct p1">85%</span></div>
+          <div class="aio-track"><div class="aio-fill fill-p1" id="bar1" style="width:0%"></div></div>
+        </div>
+        <div class="aio-bar-row">
+          <div class="aio-bar-label"><span class="aio-bar-name p2">Partially Closed Valve</span><span class="aio-bar-pct p2">10%</span></div>
+          <div class="aio-track"><div class="aio-fill fill-p2" id="bar2" style="width:0%"></div></div>
+        </div>
+        <div class="aio-bar-row">
+          <div class="aio-bar-label"><span class="aio-bar-name p3">Sensor Fault</span><span class="aio-bar-pct p3">5%</span></div>
+          <div class="aio-track"><div class="aio-fill fill-p3" id="bar3" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="aio-note">These percentages represent the AI's confidence distribution across the three most probable causes based on the current sensor data pattern. They must sum to 100%. The highest-confidence cause should be investigated first — but not to the exclusion of others without physical verification.</div>
+    </div>
+
+    <p>These three numbers look simple. But they carry a lot of meaning — and a lot of common misreadings. Let's unpack exactly what "85% confident" actually means before you act on it.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What 85% Confidence Actually Means</h2>
+    <p>A confidence score is a probability — not a certainty, not an expert guarantee, not a diagnosis. It's the AI's way of saying: <mark>"Based on every similar pattern in my training data, 85 out of 100 times when I see this exact combination of sensor readings, the cause turned out to be a clogged coolant filter."</mark></p>
+    <p>That's powerful information. But it has to be read correctly.</p>
+
+    <div class="meaning-grid fade-in">
+      <div class="mg-card does">
+        <div class="mg-title">✅ What 85% Confidence DOES Mean</div>
+        <div class="mg-items">
+          <div class="mg-item">→ This pattern matches clogged filter cases in training data 85% of the time</div>
+          <div class="mg-item">→ Clogged filter is the most likely starting point for your investigation</div>
+          <div class="mg-item">→ The AI has seen enough similar cases to be reasonably confident in this direction</div>
+          <div class="mg-item">→ Check the filter before the valve or sensor — probability order matters for efficiency</div>
+          <div class="mg-item">→ If you check the filter and it's clean, then 10% (valve) becomes the next priority</div>
+        </div>
+      </div>
+      <div class="mg-card doesnt">
+        <div class="mg-title">❌ What 85% Confidence Does NOT Mean</div>
+        <div class="mg-items">
+          <div class="mg-item">→ "The filter is definitely clogged — skip inspection and just replace it"</div>
+          <div class="mg-item">→ "The other two causes are impossible or irrelevant"</div>
+          <div class="mg-item">→ "This is what an expert with 20 years of experience would conclude"</div>
+          <div class="mg-item">→ "No physical verification is needed before taking action"</div>
+          <div class="mg-item">→ "The AI is right 85% of the time overall — this specific case is probably fine"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Concept</div>
+      <div class="vocab-def"><strong>Probability distribution</strong> — When the AI shows multiple causes with percentages that add to 100%, it's showing a probability distribution: how it spreads its confidence across all possible explanations. The highest percentage is the best starting hypothesis. But the 10% and 5% cases are real possibilities — they happen in 1 out of 10 and 1 out of 20 cases respectively. Don't ignore them.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Do Different Score Levels Mean in Practice?</h2>
+    <p>Not all confidence scores should change your behavior the same way. Click on any zone in the spectrum to see how to interpret it and what action is appropriate.</p>
+
+    <div class="score-spectrum fade-in">
+      <div class="ss-label">📊 Confidence Score Interpreter</div>
+      <div class="ss-title">How to Read Any Score You See</div>
+      <div class="ss-track">
+        <div class="ss-pointer" id="ss-ptr" style="left:72%" onclick="">
+          <div class="ss-pointer-label">Click a zone ↓</div>
+          <div class="ss-pointer-arrow"></div>
+        </div>
+      </div>
+      <div class="ss-zones">
+        <div class="ss-zone low" onclick="selectZone('low',this)">
+          <div class="ss-zone-range">0–49%</div>
+          <div class="ss-zone-title">Low Confidence</div>
+          <div class="ss-zone-desc">AI is uncertain. Multiple causes equally possible.</div>
+        </div>
+        <div class="ss-zone med" onclick="selectZone('med',this)">
+          <div class="ss-zone-range">50–74%</div>
+          <div class="ss-zone-title">Moderate Confidence</div>
+          <div class="ss-zone-desc">One cause is likely but other explanations are real possibilities.</div>
+        </div>
+        <div class="ss-zone high" onclick="selectZone('high',this)">
+          <div class="ss-zone-range">75–89%</div>
+          <div class="ss-zone-title">High Confidence</div>
+          <div class="ss-zone-desc">Strong pattern match — but physical verification still required.</div>
+        </div>
+        <div class="ss-zone very-high" onclick="selectZone('very-high',this)">
+          <div class="ss-zone-range">90–99%</div>
+          <div class="ss-zone-title">Very High Confidence</div>
+          <div class="ss-zone-desc">Very strong match — but "very high" still means wrong 1–10 in 100 times.</div>
+        </div>
+      </div>
+      <div class="ss-selected" id="ss-selected" style="background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid);">Click any zone above to see how to interpret and act on that confidence level.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Common Misreadings to Avoid</h2>
+    <div class="misconceptions fade-in">
+      <div class="mc-row">
+        <div class="mc-wrong">"85% is basically certain — I don't need to check."</div>
+        <div class="mc-right">85% means the AI is wrong 15 times out of 100. In safety-critical manufacturing, 1-in-7 odds of being wrong is not "basically certain." Always verify before acting on any repair decision.</div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-wrong">"It's only 10% for the valve — so the valve definitely isn't the problem."</div>
+        <div class="mc-right">10% means the valve is the real cause 1 time in 10. That's not rare — that's a common occurrence at scale. If the filter checks out clean, the 10% case becomes your next investigation priority, not a dismissal.</div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-wrong">"A 5% chance means that cause is basically impossible."</div>
+        <div class="mc-right">5% means 1 in 20 cases. In a facility running 100 machines and generating dozens of alerts per month, 5% causes happen regularly. Never completely rule out low-confidence possibilities without physical elimination.</div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-wrong">"The AI is 85% confident — that's better than my 50/50 gut feeling, so I'll trust it."</div>
+        <div class="mc-right">The AI's 85% is based on historical pattern matching. Your gut feeling incorporates physical context the AI can't see: recent maintenance, unusual conditions, observations on the floor. Both should inform the investigation — neither alone is sufficient.</div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-wrong">"Lower confidence means the AI is broken or poorly trained."</div>
+        <div class="mc-right">Low confidence often means the situation is genuinely ambiguous — the sensor data matches multiple possible causes equally. This is honest and useful information: it tells you to investigate more broadly rather than assuming one answer.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>See How Scores Change Across Different Scenarios</h2>
+    <p>The same error code can produce very different confidence distributions depending on what other sensors are showing. Select a scenario to see how the AI's confidence shifts — and what that means for your investigation.</p>
+
+    <div class="score-explorer fade-in">
+      <div class="se-label">🔍 Score Explorer — Error Code E-301</div>
+      <div class="se-title">How sensor context changes confidence scores</div>
+      <div class="se-sub">Same error code. Different sensor readings. Completely different probability distribution.</div>
+      <div class="se-scenarios">
+        <button class="se-btn active" onclick="setScenario('s1',this)">Temp HIGH + Pressure LOW</button>
+        <button class="se-btn" onclick="setScenario('s2',this)">Temp HIGH + Pressure NORMAL</button>
+        <button class="se-btn" onclick="setScenario('s3',this)">All sensors in range</button>
+        <button class="se-btn" onclick="setScenario('s4',this)">Temp HIGH + erratic readings</button>
+      </div>
+      <div class="se-display">
+        <div class="se-scores" id="se-scores"></div>
+        <div class="se-interpretation" id="se-interpretation"></div>
+        <div class="se-action" id="se-action"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">An AI shows: "Bearing wear (72%) / Misalignment (20%) / Lubrication issue (8%)." You physically inspect the bearing and it looks fine — no scoring, no heat, smooth rotation. What should you do next?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The physical inspection of the bearing is important evidence — but the AI flagged a real anomaly (the underlying sensor reading that triggered the alert). The alert shouldn\'t be dismissed just because the top-confidence cause wasn\'t confirmed. The investigation needs to continue down the probability list.')">Close the alert — the bearing is fine so the AI was clearly wrong</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. When the top-confidence cause is eliminated by physical inspection, the next step is investigating the second-highest probability cause — not starting over or dismissing the alert. Misalignment at 20% is the next hypothesis: check shaft alignment with appropriate measurement tools. If that\'s clear too, investigate lubrication (8%). The AI\'s probability list is an ordered investigation guide. You\'ve completed step 1 (bearing clear), now move to step 2.')">Investigate the second-highest probability cause — misalignment at 20% — since the bearing was ruled out by physical inspection</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Replacing the bearing when physical inspection shows it\'s in good condition would be expensive and unnecessary. The inspection found no evidence of bearing wear. Acting on the AI suggestion despite contradicting physical evidence is a classic over-trust mistake.')">Replace the bearing anyway — the AI is 72% confident and a bearing replacement is cheaper than a breakdown</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">An AI shows three possible causes with these scores: 42%, 35%, 23%. What does this distribution tell you about how to approach the investigation?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ A 42% top score doesn\'t mean the AI is malfunctioning — it means the AI is genuinely uncertain because the sensor data matches multiple causes almost equally. This is honest and useful: it tells you the situation is ambiguous and you\'ll need more investigation before narrowing to one cause.')">The AI system is malfunctioning — confidence scores should never be this close together</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. When confidence scores are bunched together — 42%, 35%, 23% — the AI is telling you it can\'t distinguish between causes from sensor data alone. This distribution means: (1) Start with the 42% cause but don\'t expect it to be obviously right, (2) All three causes need physical investigation — don\'t skip the 23% just because it\'s lowest, and (3) Physical inspection and context will matter more here than in a high-confidence case. A spread distribution is a signal to gather more information before concluding.')">The AI is uncertain — the evidence matches multiple causes almost equally, so physical investigation of all three causes will be necessary before concluding</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Even at 42%, the top cause is not the only reasonable hypothesis. A 35% second cause means it\'s nearly as likely as the first. Both deserve full investigation. Only investigating the top cause when scores are this close together risks a 58% chance of missing the real problem.')">Focus only on the 42% cause — it\'s the highest, so investigating the others would be a waste of time</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A confidence score is a probability — not a certainty. "85% confident" means the AI sees this pattern matched a clogged filter in training data 85% of the time. It will be wrong 15 times out of 100. Physical verification is always required before acting on any suggestion.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The confidence distribution is an ordered investigation guide. Start with the highest-probability cause. If physical inspection rules it out, move to the next. A 10% cause still happens 1 in 10 times — don't ignore it without physical elimination.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Spread distributions (42%/35%/23%) signal genuine ambiguity. When scores are bunched together, the AI is telling you the sensor data doesn't clearly point to one cause — and physical investigation across all likely causes becomes more important.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The same error code can produce very different confidence distributions depending on what other sensors show. Context matters — which is why AI outputs always need to be read in combination with all available sensor data, not just the error code alone.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+// Animate bars
+const barObs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting){setTimeout(()=>{document.getElementById("bar1").style.width="85%";document.getElementById("bar2").style.width="10%";document.getElementById("bar3").style.width="5%";},300);barObs.unobserve(el);}}),{threshold:.5});
+const aiOut=document.querySelector(".ai-output");if(aiOut)barObs.observe(aiOut);
+
+// Score spectrum
+const zoneData={
+  low:{pos:"12%",txt:"⚠️ Low Confidence (0–49%): The AI sees nearly equal evidence for multiple causes. Don't anchor on the top suggestion — this distribution tells you to investigate broadly. Physical inspection across all suggested causes is essential. Treat this as 'I need more information' rather than a diagnosis.",cls:"background:var(--red-pale);color:var(--red);border:1px solid #FECACA;"},
+  med:{pos:"37%",txt:"📊 Moderate Confidence (50–74%): The AI leans toward one cause but alternative explanations are real possibilities — happening 1 in 4 or more cases. Start with the top cause but budget investigation time for alternatives. Physical verification will often change the picture.",cls:"background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;"},
+  high:{pos:"62%",txt:"✅ High Confidence (75–89%): Strong pattern match. The top cause is a good starting hypothesis — but physical verification is still required. 15 out of 100 cases at 85% are wrong causes. Inspect before acting. If the top cause is physically clear, proceed to secondary causes.",cls:"background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;"},
+  "very-high":{pos:"87%",txt:"🔵 Very High Confidence (90–99%): Very strong pattern match — the AI is rarely this certain. Still: physically verify before acting. At 90% confidence, 10 out of 100 cases are wrong. In high-stakes situations, that 10% is not negligible. The higher the consequence of a wrong action, the more essential verification becomes.",cls:"background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);"}
+};
+function selectZone(key,el){
+  document.querySelectorAll(".ss-zone").forEach(z=>z.style.outline="none");
+  el.style.outline="2px solid var(--purple-dark)";
+  const d=zoneData[key];
+  document.getElementById("ss-ptr").style.left=d.pos;
+  const sel=document.getElementById("ss-selected");
+  sel.textContent=d.txt;sel.style.cssText=d.cls+"padding:14px 16px;border-radius:12px;font-size:14px;font-weight:600;line-height:1.65;min-height:52px;margin-top:14px;";
+}
+
+// Score scenarios
+const scenarios={
+  s1:{scores:[{c:"Clogged Coolant Filter",p:85,col:"#7B2FBE"},{c:"Partially Closed Valve",p:10,col:"#276749"},{c:"Sensor Fault",p:5,col:"#DC2626"}],interp:"Strong signal: temperature high AND pressure low together is a classic coolant restriction signature. The AI has seen this exact combination many times and 85% of the time it was a clogged filter. High confidence — but inspect the filter before ordering a replacement.",action:"✅ Investigation order: (1) Check coolant filter — if blocked, replace. (2) If filter is clean, check for partially closed coolant valves. (3) If both clear, test sensor accuracy against handheld instrument."},
+  s2:{scores:[{c:"Bearing Overheating",p:52,col:"#7B2FBE"},{c:"Clogged Filter",p:31,col:"#276749"},{c:"Fan Failure",p:17,col:"#DC2626"}],interp:"Moderate confidence: temperature high but pressure is normal, which means coolant is flowing. The high-temperature cause is more likely something generating heat (bearing friction) rather than lack of cooling. But 31% for filter and 17% for fan mean those can't be dismissed.",action:"📊 Investigation order: (1) Check bearing temperature with infrared thermometer — excess heat at the bearing itself vs. motor casing tells different stories. (2) Inspect cooling fan. (3) Verify filter condition even at 31%."},
+  s3:{scores:[{c:"Sensor Drift / Calibration",p:61,col:"#7B2FBE"},{c:"Intermittent Electrical Fault",p:24,col:"#276749"},{c:"Transient Overload",p:15,col:"#DC2626"}],interp:"Interesting scenario: the E-301 triggered, but all current sensors are showing normal values. When an error code fires but current readings don't confirm it, the most likely explanation is sensor drift, a past transient event, or an electrical glitch. This is a 'verify the verifier' situation.",action:"🔍 Investigation order: (1) Check sensor calibration — when was it last calibrated? (2) Review the timestamp of the alert vs. current readings — was there a spike that normalized? (3) Check electrical connections for intermittent fault evidence."},
+  s4:{scores:[{c:"Sensor Damage / Noise",p:48,col:"#7B2FBE"},{c:"Electrical Interference",p:33,col:"#276749"},{c:"Real Thermal Event",p:19,col:"#DC2626"}],interp:"Spread distribution: erratic readings reduce the AI's ability to distinguish causes. When sensor data is noisy, the AI can't clearly pattern-match — resulting in a more even spread. This is the AI honestly communicating uncertainty. Physical investigation is essential here.",action:"⚠️ Don't act on AI suggestion alone with this distribution. First: physically verify the sensor is clean, undamaged, and properly connected. Check for nearby equipment that may be causing interference. Only after confirming sensor integrity should you investigate the other causes."}
+};
+function renderScores(scores){
+  return scores.map(s=>`<div class="se-score-row"><span class="se-cause">${s.c}</span><div class="se-bar-wrap"><div class="se-bar-fill" style="width:${s.p}%;background:${s.col};"></div></div><span class="se-pct">${s.p}%</span></div>`).join("");
+}
+function setScenario(key,btn){
+  document.querySelectorAll(".se-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  const d=scenarios[key];
+  document.getElementById("se-scores").innerHTML=renderScores(d.scores);
+  document.getElementById("se-interpretation").textContent=d.interp;
+  document.getElementById("se-action").textContent=d.action;
+}
+setScenario("s1",document.querySelector(".se-btn.active"));
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

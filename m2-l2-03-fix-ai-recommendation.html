@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise: Fix the AI Recommendation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--orange-pale);color:var(--orange);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FDE68A;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--orange);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--orange);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Scenario panel */
+.scenario{background:#1A0A25;border-radius:20px;padding:28px;margin:28px 0;border:2px solid var(--orange);}
+.sc-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.sc-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);}
+.sc-title{font-size:13px;font-weight:700;color:#FFB347;letter-spacing:.06em;font-family:var(--mono);}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.sc-cell{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;}
+.sc-cell-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8B7FA0;margin-bottom:6px;font-family:var(--mono);}
+.sc-cell-val{font-size:18px;font-weight:700;font-family:var(--mono);}
+.sc-cell-val.ok{color:#4ADE80;}
+.sc-cell-val.warn{color:#FBBF24;}
+.sc-cell-val.bad{color:#F87171;}
+.sc-cell-range{font-size:10px;color:#8B7FA0;margin-top:3px;font-family:var(--mono);}
+@media(max-width:560px){.sc-grid{grid-template-columns:1fr 1fr;}}
+
+/* Bad AI recommendation */
+.bad-rec{background:var(--red-pale);border:2px solid var(--red);border-radius:18px;padding:24px;margin:20px 0;}
+.br-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:12px;}
+.br-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--red);margin-bottom:14px;}
+.br-actions{display:flex;flex-direction:column;gap:8px;}
+.br-action{display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);}
+.br-x{font-size:18px;color:var(--red);}
+.br-action-text{font-size:14px;color:var(--gray-text);}
+.br-why{margin-top:12px;padding:12px 14px;background:rgba(220,38,38,.06);border-radius:10px;font-size:13px;color:var(--gray-text);line-height:1.65;}
+.br-why strong{color:var(--red);}
+
+/* Clue cards */
+.clue-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+.clue{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;cursor:pointer;transition:all .2s;}
+.clue:hover{border-color:var(--purple);background:var(--purple-pale);}
+.clue.revealed{border-color:var(--green);background:var(--green-pale);}
+.clue-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.clue.revealed .clue-num{color:var(--green);}
+.clue-label{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.clue.revealed .clue-label{color:var(--green);}
+.clue-content{font-size:13px;line-height:1.65;color:var(--gray-text);display:none;}
+.clue.revealed .clue-content{display:block;}
+.clue-hint{font-size:12px;color:var(--gray-muted);font-style:italic;}
+.clue.revealed .clue-hint{display:none;}
+@media(max-width:560px){.clue-grid{grid-template-columns:1fr;}}
+
+/* Fix choices */
+.fix-choices{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.fix-opt{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:16px 18px;cursor:pointer;font-size:14px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.fix-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.fix-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.fix-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.fix-fb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:12px;display:none;}
+.fix-fb.show{display:block;}
+.fix-fb.good{background:var(--green-pale);color:var(--green);}
+.fix-fb.bad{background:var(--red-pale);color:var(--red);}
+
+/* Correct diagnosis reveal */
+.correct-diag{background:var(--green-pale);border:2px solid var(--green);border-radius:18px;padding:24px;margin:24px 0;display:none;}
+.correct-diag.show{display:block;}
+.cd-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:10px;}
+.cd-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--green);margin-bottom:12px;}
+.cd-steps{display:flex;flex-direction:column;gap:8px;}
+.cd-step{display:flex;gap:10px;font-size:14px;line-height:1.65;color:var(--gray-text);}
+.cd-check{color:var(--green);font-weight:700;flex-shrink:0;}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.2 · Exercise</div>
+  <h1>Exercise Deep Dive: Fix the AI Recommendation</h1>
+  <p class="hero-sub">The slide shows three AI recommendations — all marked wrong. Here's the full scenario: the machine data, the clues the AI missed, and the exercise to figure out what the correct recommendation should have been.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Setup</h2>
+    <p>In Lesson 2.2, the slide deck shows an AI system making three recommendations — and all three are marked with X marks. Something went wrong with this AI. Your job is to figure out what the AI got wrong, find the clues it missed, and determine what the correct diagnosis and recommendation should be.</p>
+    <p>This is exactly the kind of critical thinking you'll use every day in a manufacturing career. <mark>Work through the clues before reading the answers.</mark></p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Situation: Conveyor Motor — Building 3</h2>
+    <p>It's 7:15 AM on a Wednesday. An AI alert has flagged the main drive motor on Conveyor Line B in Building 3. The line has been running since 6 AM with a new production batch. Here's what the AI sees:</p>
+
+    <div class="scenario fade-in">
+      <div class="sc-header"><div class="sc-dot"></div><div class="sc-title">AI MONITORING DASHBOARD — Conveyor B Motor — Building 3</div></div>
+      <div class="sc-grid">
+        <div class="sc-cell">
+          <div class="sc-cell-label">⚡ Current Draw</div>
+          <div class="sc-cell-val bad">18.4 A</div>
+          <div class="sc-cell-range">Normal: 11–13 A · Alert: &gt;16 A</div>
+        </div>
+        <div class="sc-cell">
+          <div class="sc-cell-label">🌡️ Motor Temp</div>
+          <div class="sc-cell-val warn">88°C</div>
+          <div class="sc-cell-range">Normal: 65–80°C · Limit: 100°C</div>
+        </div>
+        <div class="sc-cell">
+          <div class="sc-cell-label">📳 Vibration</div>
+          <div class="sc-cell-val ok">1.3 mm/s</div>
+          <div class="sc-cell-range">Normal: 0.8–2.5 mm/s · OK</div>
+        </div>
+        <div class="sc-cell">
+          <div class="sc-cell-label">⏱ Runtime Today</div>
+          <div class="sc-cell-val ok">75 min</div>
+          <div class="sc-cell-range">Shift started 6:00 AM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Bad AI Recommendation</h2>
+    <p>Based on this data, the AI system generated the following three recommendations. All three are marked wrong on the slide. Read them carefully — then we'll find the clues that explain why.</p>
+
+    <div class="bad-rec fade-in">
+      <div class="br-label">❌ AI Recommendations — All Incorrect</div>
+      <div class="br-title">AI Output: Conveyor B Motor Alert</div>
+      <div class="br-actions">
+        <div class="br-action"><div class="br-x">✗</div><div class="br-action-text"><strong>Option 1: Restart the system</strong> — Current anomaly may be transient. Restart motor and monitor.</div></div>
+        <div class="br-action"><div class="br-x">✗</div><div class="br-action-text"><strong>Option 2: Replace the sensor</strong> — Current draw reading may be faulty. Replace current sensor before further action.</div></div>
+        <div class="br-action"><div class="br-x">✗</div><div class="br-action-text"><strong>Option 3: Check the logs</strong> — Review performance log for previous similar events before deciding.</div></div>
+      </div>
+      <div class="br-why"><strong>Why are these wrong?</strong> The current draw is 41% above normal and the motor is running hot. "Restart and monitor" ignores a real problem. "Replace the sensor" dismisses a genuine reading without physical verification. "Check the logs" is vague — there are specific physical checks that should happen first. None of these recommendations address the root cause. Let's find it.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Find the Clues the AI Missed</h2>
+    <p>The AI only sees sensor data. It doesn't know what's happening in the physical world. Click each clue card to reveal information that the AI didn't have access to — but that a maintenance technician on the floor would discover.</p>
+
+    <div class="clue-grid fade-in">
+      <div class="clue" id="clue1" onclick="revealClue('clue1')">
+        <div class="clue-num">Clue 1</div>
+        <div class="clue-label">Check the load on the conveyor</div>
+        <div class="clue-hint">Click to reveal what the technician found →</div>
+        <div class="clue-content">The technician walked to the conveyor and immediately noticed: the line was carrying steel plate stock — the heaviest material in the production schedule. Each plate weighs 340 lbs. The conveyor was loaded to 118% of its rated capacity because a loading error occurred at the start of the shift. The AI has no sensor for "weight on belt."</div>
+      </div>
+      <div class="clue" id="clue2" onclick="revealClue('clue2')">
+        <div class="clue-num">Clue 2</div>
+        <div class="clue-label">Check the belt tension</div>
+        <div class="clue-hint">Click to reveal what the technician found →</div>
+        <div class="clue-content">The belt tension was set for the standard aluminum sheet load that runs on Tuesday. No one reconfigured it for the heavier Wednesday steel plate batch. Running a heavily loaded belt at incorrect tension forces the motor to work significantly harder — producing exactly the current spike and temperature rise the AI flagged.</div>
+      </div>
+      <div class="clue" id="clue3" onclick="revealClue('clue3')">
+        <div class="clue-num">Clue 3</div>
+        <div class="clue-label">Check the shift handover notes</div>
+        <div class="clue-hint">Click to reveal what the technician found →</div>
+        <div class="clue-content">The shift handover log from Tuesday night showed a note: "Wednesday batch is steel plate — conveyor tension needs to be adjusted per SOP-CON-14 before loading." The note was written. But it was never actioned. The morning crew loaded the conveyor without reading the handover notes or adjusting the tension.</div>
+      </div>
+      <div class="clue" id="clue4" onclick="revealClue('clue4')">
+        <div class="clue-num">Clue 4</div>
+        <div class="clue-label">Check historical data for similar patterns</div>
+        <div class="clue-hint">Click to reveal what the AI's own logs showed →</div>
+        <div class="clue-content">A search of the SCADA historian revealed that this exact pattern — current spike + temperature rise + normal vibration — had occurred three times in the past eight months. Each time, the root cause was operating the conveyor above rated load capacity. The AI hadn't been trained to recognize "overload" as distinct from "motor degradation" — both look similar in current/temperature data alone.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Now Fix It: What Should the AI Have Recommended?</h2>
+    <p>You've found the clues. Now select the correct recommendation — what a well-informed maintenance technician would actually do in this situation.</p>
+
+    <div class="fix-choices fade-in" id="fix-choices">
+      <button class="fix-opt" onclick="answerFix(this,false,'❌ Not yet. The motor is running at 88°C and drawing 41% above normal current. Running the conveyor to the end of the shift without addressing the overload could damage the motor windings — and the root cause (overloaded belt at wrong tension) hasn\'t been fixed. Investigate and correct first.')">Continue running — the motor temperature is still below the 100°C shutdown threshold so it\'s safe to finish the shift</button>
+      <button class="fix-opt" onclick="answerFix(this,false,'❌ The sensor is showing a real condition — the motor genuinely IS drawing 18.4A. The elevated current is explained by the physical situation (overloaded belt at wrong tension). Replacing a functioning sensor wastes money and delays finding the actual cause.')">Replace the current sensor — an 18.4A reading is so far above normal it must be a faulty sensor</button>
+      <button class="fix-opt" onclick="answerFix(this,true,'✅ Correct. This is the right sequence: (1) Stop the conveyor before motor damage occurs. (2) Remove excess load to bring the belt within rated capacity. (3) Reconfigure belt tension per SOP-CON-14 for steel plate stock. (4) Verify motor temperature has returned to normal range before restarting. (5) Conduct a shift handover process review so future crew members act on SOP notes. This addresses the root cause directly and prevents recurrence.')">Stop the conveyor, remove excess load, reconfigure belt tension per SOP-CON-14 for the steel plate batch, and restart once motor temperature normalizes</button>
+      <button class="fix-opt" onclick="answerFix(this,false,'❌ Restarting without fixing anything guarantees the problem recurs immediately. The overload condition and belt tension misconfiguration will still be present at restart. The motor will draw the same excessive current and continue overheating.')">Restart the system — the AI flagged it as a transient anomaly and it may self-correct</button>
+    </div>
+    <div class="fix-fb" id="fix-fb"></div>
+
+    <div class="correct-diag" id="correct-diag">
+      <div class="cd-label">✅ Correct Diagnosis and Action Plan</div>
+      <div class="cd-title">Root Cause: Conveyor Overload + Incorrect Belt Tension Configuration</div>
+      <div class="cd-steps">
+        <div class="cd-step"><span class="cd-check">1.</span>Stop the conveyor immediately — motor running at 88°C with 18.4A draw risks winding damage if continued</div>
+        <div class="cd-step"><span class="cd-check">2.</span>Remove excess steel plates to bring load within rated capacity (max 85% for continuous operation)</div>
+        <div class="cd-step"><span class="cd-check">3.</span>Reconfigure belt tension per SOP-CON-14 for heavy steel plate stock (different from aluminum sheet setting)</div>
+        <div class="cd-step"><span class="cd-check">4.</span>Allow motor to cool to below 75°C before restart (approx. 15–20 minutes with conveyor stopped)</div>
+        <div class="cd-step"><span class="cd-check">5.</span>Restart with corrected load and tension — monitor current draw for first 10 minutes to confirm return to normal range</div>
+        <div class="cd-step"><span class="cd-check">6.</span>Review shift handover process — the note was written but not acted on. Update SOP to require sign-off confirmation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What This Exercise Teaches</h2>
+    <p>The AI wasn't wrong about the data — the current draw and temperature readings were accurate. But it failed to diagnose the correct cause because:</p>
+    <p>It had no sensor for conveyor load weight. It had no access to the shift handover notes. It had no way to know belt tension wasn't configured for today's material. And it hadn't been trained to distinguish "motor degradation" from "motor overload" — even though both produce similar current/temperature patterns.</p>
+    <p>The AI's three recommendations (restart, replace sensor, check logs) all failed because they didn't address any of the physical root causes. A maintenance technician with access to the actual factory floor — and 5 minutes of physical investigation — found what the AI couldn't see.</p>
+
+    <div class="pull-quote fade-in">
+      <p>This is why AI is a starting point, not an endpoint. The sensors tell you something is wrong. Your legs, your eyes, and your conversation with the morning crew tell you why.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">The AI had historical data showing this same current+temperature pattern had occurred three times before — and each time the cause was conveyor overload. Why didn't it use this history to give a better recommendation?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The SCADA historian did have the historical data. The problem wasn\'t missing data — it was that the AI hadn\'t been trained to recognize "overload" as a labeled failure category distinct from motor degradation. Both look similar in current and temperature readings alone.')">The historical data wasn\'t stored in the SCADA historian — it was lost after each incident</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The historical pattern existed in the data — three identical events over eight months. But the AI hadn\'t been trained to recognize "conveyor overload" as a distinct category with a specific diagnosis. It was trained to recognize motor degradation patterns. Without labeled training examples for overload, the AI pattern-matched to the closest thing it knew: motor wear. This is a training data gap — the AI\'s knowledge library didn\'t include this failure mode, even though the evidence was right there in the historian.')">The AI hadn\'t been trained with labeled examples of "conveyor overload" — so it couldn\'t recognize the pattern even though the historical data existed</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Three identical events over eight months is a meaningful pattern. The AI could have used this data if it had been trained to recognize overload as a category. More events would strengthen the pattern, but the problem here is training data labeling, not quantity.')">Three events isn\'t enough data for AI pattern recognition — it needs at least 50 similar events</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Exercise Summary</div>
+    <h2>What This Exercise Teaches</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI can be right about the data but wrong about the cause. The motor really was drawing excess current and running hot — but the reason was conveyor overload, not motor failure. Accurate data doesn't guarantee an accurate diagnosis.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Physical context the AI can't see — load weight, belt tension settings, shift handover notes — is often the difference between a correct and incorrect diagnosis. The 5-minute physical walkdown found what no amount of sensor data analysis could reveal.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Training data gaps produce confident-sounding wrong answers. The AI gave three recommendations — all confidently wrong. A failure mode not in the training data will always be misdiagnosed. Workers who understand this stay skeptical of AI recommendations that don't have physical confirmation.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Fixing AI starts with fixing processes. The root cause here wasn't just technical — it was a process failure (shift handover notes not acted on). The correct action plan included both the technical fix and the process fix. AI failures often reveal process failures hiding underneath.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function revealClue(id){document.getElementById(id).classList.toggle("revealed");}
+function answerFix(btn,correct,msg){const choices=document.getElementById("fix-choices");if(choices.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById("fix-fb");fb.className="fix-fb show "+(correct?"good":"bad");fb.textContent=msg;if(correct)document.getElementById("correct-diag").classList.add("show");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

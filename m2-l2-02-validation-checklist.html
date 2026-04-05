@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Validation Checklist: How to Evaluate Any AI Recommendation Before Acting on It</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* 3 questions */
+.three-q{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.q-card{border-radius:18px;padding:22px;border:2px solid;}
+.q-card.q1{background:var(--blue-pale);border-color:var(--blue-mid);}
+.q-card.q2{background:var(--orange-pale);border-color:#FDE68A;}
+.q-card.q3{background:var(--purple-pale);border-color:var(--purple-mid);}
+.q-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.q1 .q-num{color:var(--blue);}
+.q2 .q-num{color:#92400E;}
+.q3 .q-num{color:var(--purple);}
+.q-text{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:8px;line-height:1.25;}
+.q1 .q-text{color:var(--blue);}
+.q2 .q-text{color:#92400E;}
+.q3 .q-text{color:var(--purple-dark);}
+.q-sub{font-size:14px;line-height:1.65;color:var(--gray-text);}
+
+/* Interactive checklist */
+.checklist-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+
+/* Alert display */
+.cl-alert{background:#1A0A25;border-radius:16px;padding:20px;margin-bottom:20px;}
+.cla-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.cla-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.cla-title{font-size:13px;font-weight:700;color:#E2D9F3;letter-spacing:.05em;}
+.cla-fields{display:flex;flex-direction:column;gap:6px;}
+.cla-f{display:flex;gap:10px;font-size:12px;}
+.cla-label{color:#8B7FA0;min-width:90px;flex-shrink:0;}
+.cla-val{color:#E2D9F3;}
+.cla-val.warn{color:#FBBF24;}
+.cla-val.hi{color:#A78BFA;}
+
+/* Checklist items */
+.cl-section{margin-bottom:24px;}
+.cl-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:12px;}
+.cl-items{display:flex;flex-direction:column;gap:8px;}
+.cl-item{display:flex;gap:14px;align-items:flex-start;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .2s;}
+.cl-item:hover{border-color:var(--purple);}
+.cl-item.checked{border-color:var(--green);background:var(--green-pale);}
+.cl-item.flagged{border-color:var(--red);background:var(--red-pale);}
+.cl-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--purple-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:all .2s;}
+.cl-item.checked .cl-check{background:var(--green);border-color:var(--green);color:var(--white);}
+.cl-item.flagged .cl-check{background:var(--red);border-color:var(--red);color:var(--white);}
+.cl-item-q{font-size:14px;font-weight:600;color:var(--gray-text);line-height:1.45;margin-bottom:3px;}
+.cl-item.checked .cl-item-q{color:var(--green);}
+.cl-item.flagged .cl-item-q{color:var(--red);}
+.cl-item-note{font-size:12px;color:var(--gray-muted);line-height:1.5;display:none;}
+.cl-item.checked .cl-item-note,.cl-item.flagged .cl-item-note{display:block;color:inherit;opacity:.8;}
+
+.cl-verdict{padding:16px 20px;border-radius:14px;font-size:15px;font-weight:600;margin-top:16px;display:none;line-height:1.6;}
+.cl-verdict.show{display:block;}
+.cl-verdict.proceed{background:var(--green-pale);color:var(--green);border:1.5px solid #86EFAC;}
+.cl-verdict.caution{background:var(--orange-pale);color:#92400E;border:1.5px solid #FDE68A;}
+.cl-verdict.stop{background:var(--red-pale);color:var(--red);border:1.5px solid #FECACA;}
+.cl-reset{margin-top:12px;background:var(--purple-dark);color:var(--white);border:none;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;}
+
+/* Printable version */
+.printable{background:var(--white);border:2px solid var(--purple-mid);border-radius:20px;padding:28px;margin:24px 0;}
+.print-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--purple-mid);}
+.print-badge{background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-size:22px;font-weight:900;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.print-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);}
+.print-sub{font-size:12px;color:var(--gray-muted);}
+.print-section{margin-bottom:18px;}
+.print-section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.print-items{display:flex;flex-direction:column;gap:6px;}
+.print-item{display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.6;color:var(--gray-text);}
+.print-box{width:16px;height:16px;border:2px solid var(--purple-mid);border-radius:4px;flex-shrink:0;margin-top:2px;}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.2</div>
+  <h1>The Validation Checklist: How to Evaluate Any AI Recommendation Before Acting on It</h1>
+  <p class="hero-sub">The slide says "validation starts with questions." This article turns those three questions into a complete, step-by-step framework — with an interactive checklist you can use on real alerts.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why a Checklist Matters</h2>
+    <p>Skilled maintenance technicians don't validate AI alerts by instinct alone. They use a mental checklist — a set of questions they ask themselves before acting on any recommendation. Over time, this becomes automatic. But when you're starting out, having an explicit checklist prevents the two most common mistakes: acting too fast (over-trust) or dismissing too quickly (under-trust).</p>
+    <p>The Lesson 2.2 slides identify three core validation questions. This article expands each one into a full set of checks — organized into a framework you can apply to any AI recommendation you receive on the factory floor.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Three Core Questions</h2>
+    <p>Every AI alert validation starts with these three questions. They're simple — but the depth of your answers is what separates a careful technician from one who causes expensive mistakes.</p>
+
+    <div class="three-q fade-in">
+      <div class="q-card q1">
+        <div class="q-num">Question 1</div>
+        <div class="q-text">Does this match the data?</div>
+        <div class="q-sub">Look at what the sensors are actually showing. Does the AI's suggested cause logically connect to the specific readings that triggered the alert? Or is the AI pattern-matching to a similar-looking scenario that has a different underlying cause?</div>
+      </div>
+      <div class="q-card q2">
+        <div class="q-num">Question 2</div>
+        <div class="q-text">Does this fit the situation?</div>
+        <div class="q-sub">What's happening in the real world that the sensors can't see? Recent maintenance work, new materials, new operators, environmental conditions — any of these can explain a sensor reading without there being a real equipment problem. Context is everything.</div>
+      </div>
+      <div class="q-card q3">
+        <div class="q-num">Question 3</div>
+        <div class="q-text">Does this make sense?</div>
+        <div class="q-sub">Step back. Given everything you know — the data, the context, the machine's history, your own experience — does the AI's recommendation actually make logical sense? If something feels off about it, investigate that feeling. You know things the AI doesn't.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Use the Full Validation Checklist</h2>
+    <p>Below is an AI alert for Machine 7 — a hydraulic press. Work through the full validation checklist by clicking each item. Check it off if you've confirmed it, or flag it if something doesn't add up. The checklist will generate a recommendation based on your responses.</p>
+
+    <div class="checklist-sim fade-in">
+      <div class="cs-label">✅ Interactive Validation Checklist</div>
+      <div class="cs-title">Validate This Alert: Machine 7 — Hydraulic System</div>
+      <div class="cs-sub">Click each checklist item to mark it checked (✓) or flagged (⚠). The verdict updates as you work through it.</div>
+
+      <div class="cl-alert">
+        <div class="cla-header"><div class="cla-dot"></div><div class="cla-title">AI ALERT — Machine 7 — Hydraulic Press · Priority: MEDIUM</div></div>
+        <div class="cla-fields">
+          <div class="cla-f"><span class="cla-label">Triggered by:</span><span class="cla-val warn">Pressure: 148 PSI (normal: 160–200 PSI)</span></div>
+          <div class="cla-f"><span class="cla-label">Trend:</span><span class="cla-val">Declining 5 PSI/day over 6 days</span></div>
+          <div class="cla-f"><span class="cla-label">Suggested cause:</span><span class="cla-val hi">Hydraulic pump wear — 71% confidence</span></div>
+          <div class="cla-f"><span class="cla-label">Other sensors:</span><span class="cla-val">Temperature: 74°C (normal) · Vibration: 1.4 mm/s (normal)</span></div>
+          <div class="cla-f"><span class="cla-label">Action suggested:</span><span class="cla-val">Inspect hydraulic pump, schedule replacement if wear confirmed</span></div>
+        </div>
+      </div>
+
+      <div class="cl-section">
+        <div class="cl-section-title">🔵 Question 1: Does This Match the Data?</div>
+        <div class="cl-items">
+          <div class="cl-item" id="ci1" onclick="toggleItem('ci1','checked','✓')">
+            <div class="cl-check" id="ck1"></div>
+            <div><div class="cl-item-q">Is the pressure reading genuinely below the normal range?</div><div class="cl-item-note">148 PSI is 12 PSI below the 160 PSI minimum. Yes — this is a real deviation, not a sensor rounding error.</div></div>
+          </div>
+          <div class="cl-item" id="ci2" onclick="toggleItem('ci2','checked','✓')">
+            <div class="cl-check" id="ck2"></div>
+            <div><div class="cl-item-q">Is the trend consistent and real (not a one-time spike)?</div><div class="cl-item-note">6 days of 5 PSI/day decline is a clear, sustained trend. Not a spike. This warrants investigation.</div></div>
+          </div>
+          <div class="cl-item" id="ci3" onclick="toggleItem('ci3','checked','✓')">
+            <div class="cl-check" id="ck3"></div>
+            <div><div class="cl-item-q">Do the other sensors support the AI's suggested cause?</div><div class="cl-item-note">Temperature and vibration are both normal. Pump wear typically increases vibration — normal vibration makes pump wear slightly less likely and points toward fluid-side issues (filter, leak, valve).</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-section">
+        <div class="cl-section-title">🟠 Question 2: Does This Fit the Situation?</div>
+        <div class="cl-items">
+          <div class="cl-item" id="ci4" onclick="toggleItem('ci4','flagged','⚠')">
+            <div class="cl-check" id="ck4"></div>
+            <div><div class="cl-item-q">Was any maintenance performed on this system in the past 2 weeks?</div><div class="cl-item-note">⚠ Check the maintenance log. If a valve was partially closed during recent work and not fully reopened, that alone would explain this pressure drop without any pump wear.</div></div>
+          </div>
+          <div class="cl-item" id="ci5" onclick="toggleItem('ci5','checked','✓')">
+            <div class="cl-check" id="ck5"></div>
+            <div><div class="cl-item-q">Has the hydraulic filter been changed on schedule?</div><div class="cl-item-note">Check the filter change log. A clogged hydraulic filter causes exactly this gradual pressure decline — and is far more common than pump wear. Filter check should happen before pump inspection.</div></div>
+          </div>
+          <div class="cl-item" id="ci6" onclick="toggleItem('ci6','checked','✓')">
+            <div class="cl-check" id="ck6"></div>
+            <div><div class="cl-item-q">Has hydraulic fluid level been checked recently?</div><div class="cl-item-note">Low hydraulic fluid causes pressure drops. Simple to check visually in under 2 minutes. Should be the first physical check — before any disassembly.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-section">
+        <div class="cl-section-title">🟣 Question 3: Does This Make Sense?</div>
+        <div class="cl-items">
+          <div class="cl-item" id="ci7" onclick="toggleItem('ci7','flagged','⚠')">
+            <div class="cl-check" id="ck7"></div>
+            <div><div class="cl-item-q">Does the AI's diagnosis (pump wear) logically explain ALL the sensor data?</div><div class="cl-item-note">⚠ Normal vibration is inconsistent with significant pump wear. Worn pump impellers almost always increase vibration signature. This discrepancy weakens the pump wear hypothesis — explore simpler causes first.</div></div>
+          </div>
+          <div class="cl-item" id="ci8" onclick="toggleItem('ci8','checked','✓')">
+            <div class="cl-check" id="ck8"></div>
+            <div><div class="cl-item-q">Is the AI's confidence level (71%) appropriate to the action suggested?</div><div class="cl-item-note">71% is moderate confidence — the AI is saying it might be pump wear. This is not a "replace the pump" instruction. It's a "investigate the pressure system" prompt. Pump replacement should only follow confirmed diagnosis.</div></div>
+          </div>
+          <div class="cl-item" id="ci9" onclick="toggleItem('ci9','checked','✓')">
+            <div class="cl-check" id="ck9"></div>
+            <div><div class="cl-item-q">Have you identified simpler causes that should be ruled out first?</div><div class="cl-item-note">Check fluid level (2 min), inspect hydraulic filter (10 min), verify all valves fully open (5 min). These are faster and cheaper than pump inspection — eliminate them first.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-verdict" id="cl-verdict"></div>
+      <button class="cl-reset" onclick="resetChecklist()">↺ Reset Checklist</button>
+    </div>
+
+    <p>The pattern this checklist reveals: the AI's alert is real and worth investigating — but its suggested cause (pump wear) is inconsistent with the normal vibration reading. The right first actions are simple physical checks (fluid level, filter, valves) before any mechanical disassembly. <mark>The checklist doesn't dismiss the AI — it focuses the investigation.</mark></p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Printable Reference: Your Field Checklist</h2>
+    <p>This is the condensed version to keep in mind on the floor. Every item represents a question you should be able to answer before acting on an AI recommendation.</p>
+
+    <div class="printable fade-in">
+      <div class="print-header">
+        <div class="print-badge">✓</div>
+        <div><div class="print-title">AI Alert Validation Checklist</div><div class="print-sub">Apply before acting on any AI recommendation</div></div>
+      </div>
+
+      <div class="print-section">
+        <div class="print-section-head">Question 1: Does This Match the Data?</div>
+        <div class="print-items">
+          <div class="print-item"><div class="print-box"></div>Is the reading genuinely outside the normal range — or just at the edge?</div>
+          <div class="print-item"><div class="print-box"></div>Is the trend sustained (days/weeks) or a one-time spike?</div>
+          <div class="print-item"><div class="print-box"></div>Do OTHER sensors support the AI's suggested cause — or contradict it?</div>
+          <div class="print-item"><div class="print-box"></div>Is the sensor itself clean, calibrated, and undamaged?</div>
+        </div>
+      </div>
+      <div class="print-section">
+        <div class="print-section-head">Question 2: Does This Fit the Situation?</div>
+        <div class="print-items">
+          <div class="print-item"><div class="print-box"></div>Was maintenance performed on this equipment recently?</div>
+          <div class="print-item"><div class="print-box"></div>Were new materials, parameters, or operators introduced recently?</div>
+          <div class="print-item"><div class="print-box"></div>Are there environmental factors (temperature, humidity, season) that explain the reading?</div>
+          <div class="print-item"><div class="print-box"></div>Does the maintenance log reveal anything relevant?</div>
+        </div>
+      </div>
+      <div class="print-section">
+        <div class="print-section-head">Question 3: Does This Make Sense?</div>
+        <div class="print-items">
+          <div class="print-item"><div class="print-box"></div>Does the AI's suggested cause logically explain ALL the abnormal readings?</div>
+          <div class="print-item"><div class="print-box"></div>Are there simpler causes that should be eliminated first?</div>
+          <div class="print-item"><div class="print-box"></div>Is the confidence level appropriate to the action being suggested?</div>
+          <div class="print-item"><div class="print-box"></div>What does your physical inspection actually show?</div>
+        </div>
+      </div>
+      <div class="print-section" style="margin-bottom:0;">
+        <div class="print-section-head">Before Acting:</div>
+        <div class="print-items">
+          <div class="print-item"><div class="print-box"></div>Can I explain WHY the AI is right — or just that it said so?</div>
+          <div class="print-item"><div class="print-box"></div>Would I be comfortable explaining this decision to my supervisor?</div>
+          <div class="print-item"><div class="print-box"></div>Have I documented my validation process and findings?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">You receive an AI alert: "Vibration anomaly — 83% confidence — probable coupling misalignment." You physically check the coupling and it looks properly aligned. The vibration reading is real and elevated. What should you do?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The vibration is real and elevated — dismissing it because the visual inspection didn\'t find the AI\'s suggested cause would be under-trust. The AI was right that something is wrong, even if its suggested cause is incorrect. The investigation needs to continue.')">Close the alert — if the coupling looks aligned, it must be a false alarm</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The AI correctly flagged a real vibration anomaly — the elevated reading is real. But the suggested cause (coupling misalignment) may not be right, since visual inspection didn\'t confirm it. The right next step is to continue investigating other possible causes of elevated vibration: bearing wear, shaft imbalance, loose mounting bolts, or other sources. The TRACE framework applies: you\'ve confirmed the anomaly exists, now find the real cause. Don\'t close the alert until you\'ve explained the vibration.')">Continue investigating — the vibration anomaly is real, so keep looking for the actual cause even though the AI\'s suggested cause wasn\'t confirmed</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Replacing the coupling based on an unconfirmed diagnosis would be acting on the AI\'s suggestion without validation — exactly what the checklist is designed to prevent. The visual inspection didn\'t confirm misalignment. Replacing a correctly aligned coupling is expensive and won\'t fix the actual problem causing the elevated vibration.')">Replace the coupling anyway — the AI is 83% confident and a new coupling is cheap insurance</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Every AI alert validation starts with three questions: Does this match the data? Does this fit the situation? Does this make sense? Together they prevent both over-trust and under-trust.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Cross-referencing sensors is critical. If the AI suggests pump wear but vibration is normal, that contradiction weakens the hypothesis. All sensors must tell a consistent story before you act on a diagnosis.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Always check simpler causes first. Fluid levels, filters, valve positions, and recent maintenance can explain many anomalies in minutes — before any disassembly. Eliminate cheap explanations before pursuing expensive ones.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>If the AI's suggested cause doesn't explain all the abnormal readings, keep investigating. A correct alert with a wrong suggested cause still means something is wrong — don't close it just because one hypothesis didn't pan out.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const states={};
+const total=9;
+function toggleItem(id,cls,sym){
+  if(!states[id]){states[id]=cls;document.getElementById(id).classList.add(cls);document.getElementById("ck"+id.replace("ci","")).textContent=sym;}
+  else if(states[id]===cls){delete states[id];document.getElementById(id).className="cl-item";document.getElementById("ck"+id.replace("ci","")).textContent="";}
+  updateVerdict();
+}
+function updateVerdict(){
+  const done=Object.keys(states).length;
+  const flags=Object.values(states).filter(s=>s==="flagged").length;
+  const verdict=document.getElementById("cl-verdict");
+  if(done<4){verdict.className="cl-verdict";return;}
+  verdict.className="cl-verdict show";
+  if(flags>=2){verdict.className+=" caution";verdict.textContent="⚠️ Caution: "+flags+" items flagged. Do not act on the AI's pump replacement suggestion yet. Investigate maintenance logs, check fluid level and filter first, and verify all valves are fully open. The normal vibration reading suggests pump wear is less likely than a fluid-side issue.";}
+  else if(flags===1){verdict.className+=" caution";verdict.textContent="⚠️ Proceed with investigation, but address the flagged item first. Pump inspection may be warranted, but verify simpler causes before scheduling any disassembly.";}
+  else{verdict.className+=" proceed";verdict.textContent="✅ Validation complete. The alert is credible and the investigation path is clear. Proceed with physical checks in this order: fluid level → filter condition → valve positions → pump inspection if previous checks are clear.";}
+}
+function resetChecklist(){Object.keys(states).forEach(k=>delete states[k]);for(let i=1;i<=9;i++){const el=document.getElementById("ci"+i);if(el){el.className="cl-item";document.getElementById("ck"+i).textContent="";}}document.getElementById("cl-verdict").className="cl-verdict";}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
