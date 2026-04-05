@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hands-On Scenario: The Overheating Machine (Error Code E-301)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--red-pale);color:var(--red);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FECACA;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--red);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Alert panel */
+.alert-panel{background:#1A0A0A;border-radius:20px;padding:28px;margin:28px 0;border:2px solid var(--red);}
+.ap-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.ap-dot{width:14px;height:14px;border-radius:50%;background:var(--red);animation:pulse 1.2s infinite;}
+.ap-title{font-family:var(--mono);font-size:14px;color:#FF6B6B;font-weight:700;letter-spacing:.08em;}
+.sensor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.sensor-readout{background:rgba(255,255,255,.05);border-radius:14px;padding:16px;text-align:center;border:1.5px solid rgba(255,255,255,.1);}
+.sensor-readout.danger-reading{border-color:var(--red);background:rgba(220,38,38,.1);}
+.sensor-readout.warning-reading{border-color:var(--orange);background:rgba(217,119,6,.1);}
+.sensor-readout.normal-reading{border-color:#27C93F;background:rgba(39,201,63,.07);}
+.sr-sensor{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8B7FA0;margin-bottom:8px;font-family:var(--mono);}
+.sr-val{font-family:var(--mono);font-size:28px;font-weight:700;margin-bottom:4px;line-height:1;}
+.danger-reading .sr-val{color:#FF6B6B;}
+.warning-reading .sr-val{color:#FBBF24;}
+.normal-reading .sr-val{color:#27C93F;}
+.sr-status{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:100px;display:inline-block;font-family:var(--mono);}
+.danger-reading .sr-status{background:rgba(220,38,38,.3);color:#FF6B6B;}
+.warning-reading .sr-status{background:rgba(217,119,6,.3);color:#FBBF24;}
+.normal-reading .sr-status{background:rgba(39,201,63,.2);color:#27C93F;}
+.sr-normal-range{font-size:10px;color:#8B7FA0;margin-top:4px;font-family:var(--mono);}
+.error-display{display:flex;align-items:center;gap:12px;margin-top:16px;background:rgba(220,38,38,.15);border:1.5px solid var(--red);border-radius:12px;padding:14px 18px;}
+.error-code-big{font-family:var(--mono);font-size:22px;font-weight:700;color:#FF6B6B;}
+.error-desc{font-family:var(--mono);font-size:12px;color:#E2D9F3;}
+@media(max-width:540px){.sensor-grid{grid-template-columns:1fr 1fr;}}
+
+/* Investigation steps */
+.investigation{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.inv-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.inv-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.inv-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.inv-steps{display:flex;flex-direction:column;gap:12px;}
+.inv-step{background:var(--white);border:2px solid var(--purple-mid);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .2s;}
+.inv-step:hover{border-color:var(--purple);}
+.inv-step.answered.correct{border-color:var(--green);}
+.inv-step.answered.wrong{border-color:var(--red);}
+.inv-step-header{padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.inv-step-num{width:32px;height:32px;border-radius:50%;background:var(--purple-mid);color:var(--purple-dark);font-family:"Fraunces",serif;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.inv-step.answered.correct .inv-step-num{background:var(--green);color:var(--white);}
+.inv-step.answered.wrong .inv-step-num{background:var(--red);color:var(--white);}
+.inv-step-q{font-weight:600;font-size:14px;color:var(--gray-text);line-height:1.5;}
+.inv-step-body{padding:0 20px 16px;display:none;}
+.inv-step.open .inv-step-body{display:block;}
+.inv-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.inv-opt{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:10px;padding:11px 14px;cursor:pointer;font-size:13px;line-height:1.6;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .15s;}
+.inv-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.inv-opt.c{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.inv-opt.w{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.inv-fb{font-size:13px;line-height:1.7;padding:12px 14px;border-radius:10px;display:none;}
+.inv-fb.show{display:block;}
+.inv-fb.good{background:var(--green-pale);color:var(--green);}
+.inv-fb.bad{background:var(--red-pale);color:var(--red);}
+.inv-progress{height:6px;background:var(--purple-mid);border-radius:3px;margin-top:20px;overflow:hidden;}
+.inv-progress-fill{height:100%;background:var(--purple);border-radius:3px;transition:width .5s;}
+
+/* Root cause reveal */
+.root-cause{background:var(--green-pale);border:2px solid var(--green);border-radius:20px;padding:28px;margin:28px 0;display:none;}
+.root-cause.show{display:block;}
+.rc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:10px;}
+.rc-title{font-family:"Fraunces",serif;font-size:22px;font-weight:700;color:var(--green);margin-bottom:12px;}
+.rc-body{font-size:15px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+.rc-steps{display:flex;flex-direction:column;gap:8px;}
+.rc-step{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.65;color:var(--gray-text);}
+.rc-check{color:var(--green);font-weight:700;flex-shrink:0;}
+
+/* AI vs human compare */
+.compare-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.cb-col{border-radius:18px;padding:22px;border:1.5px solid;}
+.cb-col.human{background:#FFF7ED;border-color:var(--orange);}
+.cb-col.ai{background:var(--purple-pale);border-color:var(--purple-mid);}
+.cb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.human .cb-label{color:var(--orange);}
+.ai .cb-label{color:var(--purple);}
+.cb-col h3{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:10px;}
+.human h3{color:#92400E;}
+.ai h3{color:var(--purple-dark);}
+.cb-col ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.cb-col ul li{font-size:13px;line-height:1.65;color:var(--gray-text);padding-left:18px;position:relative;}
+.cb-col ul li::before{position:absolute;left:0;font-weight:700;}
+.human ul li::before{content:"👤";font-size:11px;}
+.ai ul li::before{content:"🤖";font-size:11px;}
+@media(max-width:560px){.compare-box{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.1 · Hands-On Activity</div>
+  <h1>Hands-On Scenario: The Overheating Machine (Error Code E-301)</h1>
+  <p class="hero-sub">A machine just threw Error Code E-301. The alarm is going off. You're the maintenance technician on duty. Three sensors are giving you data. Work through the investigation step by step — figure out what's wrong and what to do next.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Situation</h2>
+    <p>It's 10:22 AM on a Thursday. You're a maintenance technician at a CNC machining facility. Your tablet buzzes with an AI alert — Machine 12 has triggered Error Code E-301 and automatically halted production.</p>
+    <p>The machine has been running a precision aluminum job for the morning shift. Your job is to figure out what's causing the overheating, determine the root cause, and decide what to do next. You have three sensor readings and the AI's preliminary analysis to work with.</p>
+    <p><mark>This is what real diagnostic work looks like.</mark> You won't have anyone walking you through it on the job. Work through each question carefully — the data is telling a story. Your job is to read it.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Alert: What You're Looking At</h2>
+    <p>Here's what's on your tablet screen when you arrive at Machine 12:</p>
+
+    <div class="alert-panel fade-in">
+      <div class="ap-header">
+        <div class="ap-dot"></div>
+        <div class="ap-title">⚠ MACHINE ALERT — MACHINE 12 — HALTED</div>
+      </div>
+      <div class="sensor-grid">
+        <div class="sensor-readout danger-reading">
+          <div class="sr-sensor">🌡️ Temperature</div>
+          <div class="sr-val">95°C</div>
+          <div class="sr-status">HIGH</div>
+          <div class="sr-normal-range">Normal: 60–80°C</div>
+        </div>
+        <div class="sensor-readout danger-reading">
+          <div class="sr-sensor">💨 Coolant Pressure</div>
+          <div class="sr-val">150 PSI</div>
+          <div class="sr-status">LOW</div>
+          <div class="sr-normal-range">Normal: 180–220 PSI</div>
+        </div>
+        <div class="sensor-readout normal-reading">
+          <div class="sr-sensor">📳 Vibration</div>
+          <div class="sr-val">1.2<span style="font-size:16px"> mm/s</span></div>
+          <div class="sr-status">NORMAL</div>
+          <div class="sr-normal-range">Normal: 0.8–2.0 mm/s</div>
+        </div>
+      </div>
+      <div class="error-display">
+        <div class="error-code-big">E-301</div>
+        <div class="error-desc">THERMAL OVERLOAD — SPINDLE MOTOR<br>Machine halted automatically. Awaiting technician review.</div>
+      </div>
+    </div>
+
+    <p>Take a moment to really look at those three numbers. Temperature is high. Pressure is low. Vibration is normal. Before you read anything else — what story is the data already telling you?</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Your Investigation — Work Through It Step by Step</h2>
+    <p>In a real maintenance situation, you'd work through a mental checklist — using the data to rule things in and out. Do that here. For each question, choose the answer that best reflects what a smart, data-driven technician would conclude. Click each step to open it.</p>
+
+    <div class="investigation fade-in">
+      <div class="inv-label">🔍 Diagnostic Investigation</div>
+      <div class="inv-title">Machine 12 — E-301 Root Cause Analysis</div>
+      <div class="inv-sub">Work through each step in order. Use the sensor data above — don't skip ahead.</div>
+
+      <div class="inv-steps">
+        <div class="inv-step" id="is1" onclick="toggleStep(1)">
+          <div class="inv-step-header">
+            <div class="inv-step-num">1</div>
+            <div class="inv-step-q">Step 1: What does E-301 tell you — and what doesn't it tell you?</div>
+          </div>
+          <div class="inv-step-body">
+            <div class="inv-opts" id="is1-opts">
+              <button class="inv-opt" onclick="answerStep(1,this,false,'❌ E-301 tells you the EFFECT (overheating caused a shutdown) but not the cause. The motor itself might be fine — it overheated because something else failed. Jumping straight to motor replacement without checking why it overheated is one of the most common and expensive mistakes in maintenance.')">E-301 tells me the motor is failing and needs to be replaced immediately</button>
+              <button class="inv-opt" onclick="answerStep(1,this,true,'✅ Correct. E-301 means one thing precisely: the spindle motor temperature crossed the 90–100°C safety threshold and the machine shut down automatically. It says nothing about WHY it overheated. The motor could be perfectly fine — and something external to the motor (like a failed cooling system) caused the overheating. The investigation starts here.')">E-301 tells me the motor exceeded its safe temperature limit and shut down automatically — but not what caused the overheating</button>
+              <button class="inv-opt" onclick="answerStep(1,this,false,'❌ E-301 is a real signal, not a false alarm. The temperature sensor is physically reading 95°C — that\'s not a malfunction, that\'s a genuine reading. A false alarm would typically show no other corresponding readings. Here, the pressure sensor is also showing an abnormal reading, which confirms something real is happening.')">E-301 is probably a false alarm — single error codes often trigger without real problems</button>
+            </div>
+            <div class="inv-fb" id="is1-fb"></div>
+          </div>
+        </div>
+
+        <div class="inv-step" id="is2" onclick="toggleStep(2)">
+          <div class="inv-step-header">
+            <div class="inv-step-num">2</div>
+            <div class="inv-step-q">Step 2: What does the vibration reading (1.2 mm/s — NORMAL) tell you about the motor bearings?</div>
+          </div>
+          <div class="inv-step-body">
+            <div class="inv-opts" id="is2-opts">
+              <button class="inv-opt" onclick="answerStep(2,this,true,'✅ Exactly right. Failing or damaged motor bearings almost always show up in vibration data before they show up in temperature data. A normal vibration reading of 1.2 mm/s is good evidence that the motor bearings are healthy. This doesn\'t completely rule out motor problems, but it makes bearing failure unlikely and shifts suspicion toward the cooling system.')">Normal vibration is good evidence the motor bearings are not the problem — bearing failures show up in vibration data</button>
+              <button class="inv-opt" onclick="answerStep(2,this,false,'❌ Vibration is actually very relevant to diagnosing motor problems. Bearing wear, shaft imbalance, and internal motor damage all produce characteristic vibration signatures. A normal vibration reading (1.2 mm/s within the 0.8–2.0 range) is meaningful diagnostic information — it makes motor-internal failure less likely.')">The vibration reading is irrelevant to this investigation — it only matters for mechanical components, not motor temperature</button>
+              <button class="inv-opt" onclick="answerStep(2,this,false,'❌ Vibration and temperature are related but different indicators. The fact that vibration is normal while temperature is high is diagnostic — it points away from mechanical/bearing failure and toward a cooling system failure. Both readings together are telling you something important.')">Normal vibration means the whole machine is fine — the temperature reading must be a sensor error</button>
+            </div>
+            <div class="inv-fb" id="is2-fb"></div>
+          </div>
+        </div>
+
+        <div class="inv-step" id="is3" onclick="toggleStep(3)">
+          <div class="inv-step-header">
+            <div class="inv-step-num">3</div>
+            <div class="inv-step-q">Step 3: Coolant pressure is at 150 PSI (LOW). The normal range is 180–220 PSI. What does this suggest?</div>
+          </div>
+          <div class="inv-step-body">
+            <div class="inv-opts" id="is3-opts">
+              <button class="inv-opt" onclick="answerStep(3,this,false,'❌ If the coolant pump failed completely, pressure would likely drop to near zero — not to 150 PSI. A partial drop from 200 to 150 PSI suggests reduced flow, not no flow. Common causes of partial pressure loss include a partially clogged filter, a partially blocked line, or a pump running at reduced capacity.')">The coolant pump has completely failed and needs immediate replacement</button>
+              <button class="inv-opt" onclick="answerStep(3,this,true,'✅ Correct. A coolant pressure of 150 PSI (down from a normal 180–220) means coolant is still flowing, but at reduced volume and speed. Less coolant flow means less heat removal from the motor — which is exactly what would cause the temperature to rise. Combined with the normal vibration reading, this pattern strongly points to a cooling system restriction: clogged filter, partially blocked coolant line, or sluggish pump.')">Coolant flow is reduced — not stopped, but not enough to adequately cool the motor. This directly explains the rising temperature.</button>
+              <button class="inv-opt" onclick="answerStep(3,this,false,'❌ 150 PSI is a significant deviation — 30–70 PSI below the normal range. Pressure sensor errors are possible but should be considered only after ruling out more common causes. Two sensors (temperature AND pressure) both showing abnormal readings makes sensor error unlikely. When two sensors agree there\'s a problem, there\'s usually a problem.')">The pressure sensor is probably faulty — a 30 PSI drop isn\'t significant enough to investigate</button>
+            </div>
+            <div class="inv-fb" id="is3-fb"></div>
+          </div>
+        </div>
+
+        <div class="inv-step" id="is4" onclick="toggleStep(4)">
+          <div class="inv-step-header">
+            <div class="inv-step-num">4</div>
+            <div class="inv-step-q">Step 4: Putting it all together. What is the most likely root cause of the E-301 error?</div>
+          </div>
+          <div class="inv-step-body">
+            <div class="inv-opts" id="is4-opts">
+              <button class="inv-opt" onclick="answerStep(4,this,false,'❌ The normal vibration reading (1.2 mm/s) makes motor bearing failure unlikely. Bearing problems almost always show up in vibration data. The data is pointing somewhere else — at the cooling system.')">Motor bearing failure — the heat built up inside the bearing and spread to the motor</button>
+              <button class="inv-opt" onclick="answerStep(4,this,true,'✅ Correct. This is the diagnostic logic: Temperature HIGH + Pressure LOW + Vibration NORMAL = cooling system problem, not a mechanical/motor problem. The motor is overheating because coolant isn\'t flowing adequately. The motor itself may be completely fine. The most likely culprit is a clogged coolant filter (most common), a kinked or partially blocked coolant line, or a coolant pump issue. This is the pattern the AI recognized and why it generates a "potential cooling failure" correlation alert.')">A cooling system problem — reduced coolant flow isn't removing heat fast enough, causing the motor to overheat</button>
+              <button class="inv-opt" onclick="answerStep(4,this,false,'❌ Ambient temperature affecting a machine enough to trigger a 95°C reading would require a very extreme environment — and would typically affect all machines equally, not just Machine 12. One machine with these specific readings points to an equipment-specific problem, not an environmental one.')">High ambient temperature in the factory — the room is too hot for the machine to cool itself</button>
+            </div>
+            <div class="inv-fb" id="is4-fb"></div>
+          </div>
+        </div>
+
+        <div class="inv-step" id="is5" onclick="toggleStep(5)">
+          <div class="inv-step-header">
+            <div class="inv-step-num">5</div>
+            <div class="inv-step-q">Step 5: What is the right first action to take?</div>
+          </div>
+          <div class="inv-step-body">
+            <div class="inv-opts" id="is5-opts">
+              <button class="inv-opt" onclick="answerStep(5,this,false,'❌ Restarting immediately is dangerous. The machine halted because the motor reached 95°C. If the cooling system problem isn\'t fixed, the motor will overheat again within minutes — and this time might cross into temperatures that cause permanent damage. Always address the root cause before restarting.')">Restart the machine — the coolant is probably just air-locked and will clear itself</button>
+              <button class="inv-opt" onclick="answerStep(5,this,false,'❌ Motor replacement is premature. The data suggests the motor may be fine — it\'s the cooling system that failed. Replacing a working motor is expensive ($2,000–$8,000) and time-consuming. Diagnose the actual cause first. If coolant inspection reveals the motor is undamaged, a filter cleaning or line flush might restore the machine in 30 minutes.')">Order a replacement motor — this level of overheating always indicates motor damage</button>
+              <button class="inv-opt" onclick="answerStep(5,this,true,'✅ Correct. The data points strongly to a cooling system problem. The right first action is a targeted physical inspection of that system — check the coolant filter for blockage, inspect coolant lines for kinks or restrictions, check coolant fluid level and condition, and verify the coolant pump is operating. This takes 15–30 minutes and will either confirm the suspected cause or rule it out. Only replace components after you\'ve confirmed what\'s actually wrong.')">Physically inspect the coolant system — check the filter, coolant lines, fluid level, and pump before doing anything else</button>
+            </div>
+            <div class="inv-fb" id="is5-fb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inv-progress"><div class="inv-progress-fill" id="inv-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="root-cause fade-in" id="root-cause-reveal">
+    <div class="rc-label">✅ Investigation Complete</div>
+    <div class="rc-title">Root Cause: Clogged Coolant Filter</div>
+    <div class="rc-body">The technician who investigated Machine 12 found what the data predicted: a coolant filter that had become partially clogged with aluminum chips from weeks of machining. The blockage reduced coolant flow enough that the spindle motor couldn't shed heat fast enough during the morning's heavy cuts — leading to the gradual temperature rise that triggered E-301.</div>
+    <div class="rc-steps">
+      <div class="rc-step"><span class="rc-check">✓</span> Coolant filter removed and found 60% blocked with aluminum chip debris</div>
+      <div class="rc-step"><span class="rc-check">✓</span> Filter cleaned and reinstalled (15 minutes)</div>
+      <div class="rc-step"><span class="rc-check">✓</span> Coolant system flushed and pressure tested — returned to 198 PSI</div>
+      <div class="rc-step"><span class="rc-check">✓</span> Motor allowed to cool to 68°C before restart</div>
+      <div class="rc-step"><span class="rc-check">✓</span> Machine restarted and monitored — temperature held at 71°C under full load</div>
+      <div class="rc-step"><span class="rc-check">✓</span> Total repair time: 45 minutes. Motor undamaged. Production resumed.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What the AI Did — vs. What the Human Did</h2>
+    <p>Let's break down how the human-AI collaboration worked in this scenario:</p>
+
+    <div class="compare-box fade-in">
+      <div class="cb-col ai">
+        <div class="cb-label">🤖 What AI Did</div>
+        <h3>Pattern Recognition at Speed</h3>
+        <ul>
+          <li>Monitored all three sensors simultaneously, all shift</li>
+          <li>Detected Temperature + Pressure correlation at 6:55 PM the night before</li>
+          <li>Generated a "cooling restriction" probability alert (78% confidence)</li>
+          <li>Logged all readings with timestamps for the technician to review</li>
+          <li>Triggered E-301 and halted machine automatically when temp hit threshold</li>
+        </ul>
+      </div>
+      <div class="cb-col human">
+        <div class="cb-label">👤 What the Human Did</div>
+        <h3>Judgment and Hands-On Action</h3>
+        <ul>
+          <li>Evaluated the AI alert and sensor data with experience</li>
+          <li>Decided which system to physically inspect first (cooling)</li>
+          <li>Physically located and inspected the actual filter</li>
+          <li>Made the call: clean it, don't replace it yet</li>
+          <li>Monitored the restart to confirm the fix worked</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>Neither the AI nor the technician could have solved this alone as effectively. The AI watched what humans can't watch continuously. The human went hands-on where AI can't go. Together, they resolved a potential $40,000 failure in 45 minutes.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">In this scenario, if the vibration reading had been 4.8 mm/s (HIGH) instead of 1.2 mm/s (NORMAL), how would your diagnosis change?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ High vibration wouldn\'t point to the cooling system — it would point to mechanical components like bearings. The investigation approach would change completely based on which sensors are abnormal and how they combine.')">Nothing would change — the coolant system should still be the first thing checked</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. High vibration (4.8 mm/s — well above the 2.0 mm/s alert threshold) combined with high temperature would shift the diagnosis significantly. High vibration from a motor usually indicates bearing wear or damage. Failing bearings generate both heat (from friction) and vibration (from uneven wear). This combination would point the investigation toward motor bearings first — a very different first action than checking the coolant filter.')">High vibration combined with high temperature would strongly suggest motor bearing failure — the investigation would shift away from the cooling system and toward inspecting the bearings first</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ High vibration and high temperature together are very specific: they suggest mechanical friction (likely bearings) rather than cooling failure. The specific combination of sensor readings is the diagnostic tool — changing one reading changes the entire story.')">The machine should simply be shut down without diagnosis — any abnormal vibration with high temperature is too dangerous to investigate</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Scenario Summary</div>
+    <h2>What This Case Teaches</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Error codes identify symptoms, not causes. E-301 said "motor overheated" — not "coolant filter is clogged." The investigation required reading multiple sensor readings together to find the actual root cause.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Normal readings are as diagnostic as abnormal ones. The normal vibration reading (1.2 mm/s) actively ruled out motor bearing failure and pointed the investigation toward the cooling system. All three readings together told the real story.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI generated a warning 12 hours before failure. The multi-sensor correlation alert the previous evening gave enough lead time to prevent the shutdown entirely. This is the business case for predictive AI in one real example.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Investigate before replacing. Acting on the full picture (cleaning a $12 filter, not replacing a $4,000 motor) saved thousands of dollars. The data gave the technician the confidence to take the right, targeted action instead of the most expensive obvious one.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+let openStep=null,correct=0;
+function toggleStep(n){
+  if(document.getElementById("is"+n).classList.contains("answered"))return;
+  const step=document.getElementById("is"+n);
+  if(openStep&&openStep!==n){document.getElementById("is"+openStep).classList.remove("open");}
+  step.classList.toggle("open");openStep=step.classList.contains("open")?n:null;
+}
+function answerStep(n,btn,isCorrect,msg){
+  const opts=document.getElementById("is"+n+"-opts");
+  if(opts.querySelector(".c,.w"))return;
+  btn.classList.add(isCorrect?"c":"w");
+  const fb=document.getElementById("is"+n+"-fb");
+  fb.className="inv-fb show "+(isCorrect?"good":"bad");
+  fb.textContent=msg;
+  const step=document.getElementById("is"+n);
+  step.classList.add("answered",isCorrect?"correct":"wrong");
+  if(isCorrect)correct++;
+  document.getElementById("inv-fill").style.width=(correct/5*100)+"%";
+  if(correct>=4){document.getElementById("root-cause-reveal").classList.add("show");}
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

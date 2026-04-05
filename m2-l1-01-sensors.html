@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Are Sensors and Why Is Every Machine Covered in Them?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Sensor type cards — tabbed explorer */
+.sensor-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.se-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.se-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.se-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.se-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.se-tab{padding:9px 18px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--purple-mid);background:var(--white);color:var(--gray-text);transition:all .2s;font-family:"DM Sans",sans-serif;}
+.se-tab:hover{border-color:var(--purple);color:var(--purple);}
+.se-tab.active{background:var(--purple-dark);border-color:var(--purple-dark);color:var(--white);}
+.se-panel{display:none;}
+.se-panel.active{display:block;}
+.se-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:18px;padding:24px;}
+.se-card-top{display:flex;align-items:flex-start;gap:18px;margin-bottom:16px;}
+.se-icon{font-size:40px;flex-shrink:0;}
+.se-card-head{}
+.se-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.se-name{font-family:"Fraunces",serif;font-size:22px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.se-oneliner{font-size:15px;color:var(--gray-muted);line-height:1.55;}
+.se-divider{height:1px;background:var(--purple-mid);margin:16px 0;}
+.se-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.se-box{border-radius:14px;padding:14px 16px;}
+.se-box.what{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.se-box.where{background:var(--orange-pale);border:1px solid #FDE68A;}
+.se-box.data{background:var(--purple-pale);border:1px solid var(--purple-mid);}
+.se-box.why{background:var(--green-pale);border:1px solid #86EFAC;}
+.se-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.what .se-box-label{color:var(--blue);}
+.where .se-box-label{color:var(--orange);}
+.data .se-box-label{color:var(--purple);}
+.why .se-box-label{color:var(--green);}
+.se-box p{font-size:13px;line-height:1.65;color:var(--gray-text);margin:0;}
+.se-example{margin-top:14px;padding:12px 16px;background:var(--gray-soft);border-radius:12px;font-size:13px;line-height:1.65;color:var(--gray-text);border-left:3px solid var(--purple);}
+.se-example strong{color:var(--purple-dark);}
+@media(max-width:540px){.se-grid{grid-template-columns:1fr;}}
+
+/* Machine diagram */
+.machine-map{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.mm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.mm-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.mm-machine{position:relative;background:var(--white);border:2.5px solid var(--purple-mid);border-radius:20px;padding:24px;min-height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.mm-body{text-align:center;}
+.mm-machine-icon{font-size:64px;display:block;margin-bottom:8px;}
+.mm-machine-name{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);}
+.mm-machine-sub{font-size:13px;color:var(--gray-muted);}
+.sensor-dot{position:absolute;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:2.5px solid;transition:transform .2s;z-index:2;}
+.sensor-dot:hover{transform:scale(1.2);}
+.sensor-dot.temp{background:#FFF1F1;border-color:var(--red);top:20px;left:30px;}
+.sensor-dot.vib{background:var(--orange-pale);border-color:var(--orange);bottom:20px;left:50px;}
+.sensor-dot.press{background:var(--blue-pale);border-color:var(--blue);top:20px;right:50px;}
+.sensor-dot.prox{background:var(--green-pale);border-color:var(--green);bottom:20px;right:30px;}
+.sensor-dot.power{background:var(--purple-pale);border-color:var(--purple);top:50%;right:16px;transform:translateY(-50%);}
+.sensor-dot.power:hover{transform:translateY(-50%) scale(1.2);}
+.mm-tooltip{display:none;position:absolute;background:var(--purple-dark);color:var(--white);font-size:12px;line-height:1.5;padding:10px 14px;border-radius:10px;max-width:200px;z-index:10;pointer-events:none;}
+.mm-tooltip.show{display:block;}
+.mm-legend{display:flex;flex-wrap:wrap;gap:10px;}
+.mm-leg-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-text);}
+.mm-leg-dot{width:14px;height:14px;border-radius:50%;border:2px solid;}
+.mm-leg-dot.temp{background:#FFF1F1;border-color:var(--red);}
+.mm-leg-dot.vib{background:var(--orange-pale);border-color:var(--orange);}
+.mm-leg-dot.press{background:var(--blue-pale);border-color:var(--blue);}
+.mm-leg-dot.prox{background:var(--green-pale);border-color:var(--green);}
+.mm-leg-dot.power{background:var(--purple-pale);border-color:var(--purple);}
+
+/* Data flow */
+.data-flow{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.df-step{display:flex;gap:16px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.df-num{width:32px;height:32px;border-radius:50%;background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.df-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.df-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+
+/* Summary */
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.1</div>
+  <h1>What Are Sensors and Why Is Every Machine Covered in Them?</h1>
+  <p class="hero-sub">Before AI can catch a problem, something has to collect the data. That something is sensors. They're everywhere on a modern factory floor — and understanding what they do is the foundation of everything else in this module.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Your Phone Has Sensors Too</h2>
+    <p>Before we talk about factory machines, let's start somewhere you already know. Your smartphone is packed with sensors. There's one that detects if the phone is face-up or face-down. There's one that measures how bright the room is and adjusts your screen. There's one that counts how many steps you've walked. There's one that feels when you lift the phone to your ear and turns off the touchscreen so your face doesn't accidentally press buttons.</p>
+    <p>None of those things required you to do anything. The phone just knows — because sensors are constantly measuring the physical world around the device and turning those measurements into data the phone can use.</p>
+    <p>Factory sensors work the exact same way. <mark>A sensor is a device that measures something physical — heat, movement, pressure, position — and converts that measurement into a number a computer can read.</mark> Put enough sensors on a machine and you can know, at any moment, exactly what that machine is doing and how it's doing it.</p>
+
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term</div>
+      <div class="vocab-def"><strong>Sensor</strong> — A device that detects a physical condition (like temperature, vibration, or pressure) and converts it into a digital signal that computers and AI systems can read. Sensors are the "eyes and ears" of an AI monitoring system — without them, there's no data to analyze.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Five Main Sensor Types in Manufacturing</h2>
+    <p>Industrial machines typically carry several different types of sensors, each watching a different aspect of the machine's health. Click each sensor type below to explore what it measures, where it's placed, and what problems it helps catch.</p>
+
+    <div class="sensor-explorer fade-in">
+      <div class="se-label">🔬 Sensor Type Explorer</div>
+      <div class="se-title">The Five Sensors That Watch Every Machine</div>
+      <div class="se-sub">Click a sensor type to learn what it does, where it lives, and what it's listening for.</div>
+      <div class="se-tabs">
+        <button class="se-tab active" onclick="showSensor('temp',this)">🌡️ Temperature</button>
+        <button class="se-tab" onclick="showSensor('vib',this)">📳 Vibration</button>
+        <button class="se-tab" onclick="showSensor('press',this)">💨 Pressure</button>
+        <button class="se-tab" onclick="showSensor('prox',this)">📏 Proximity</button>
+        <button class="se-tab" onclick="showSensor('power',this)">⚡ Power</button>
+      </div>
+
+      <div class="se-panel active" id="panel-temp">
+        <div class="se-card">
+          <div class="se-card-top">
+            <div class="se-icon">🌡️</div>
+            <div class="se-card-head">
+              <div class="se-type">Sensor Type 1</div>
+              <div class="se-name">Temperature Sensor</div>
+              <div class="se-oneliner">Measures how hot or cold a component is, continuously, in real time.</div>
+            </div>
+          </div>
+          <div class="se-divider"></div>
+          <div class="se-grid">
+            <div class="se-box what"><div class="se-box-label">What it measures</div><p>The exact temperature of machine parts — bearings, motors, gearboxes, hydraulic fluid, coolant systems. Reads in degrees Celsius or Fahrenheit, updating every few seconds.</p></div>
+            <div class="se-box where"><div class="se-box-label">Where it's placed</div><p>Mounted directly on or near the component being monitored — often glued, bolted, or clamped onto bearing housings, motor casings, or coolant lines.</p></div>
+            <div class="se-box data"><div class="se-box-label">What data it produces</div><p>A continuous stream of temperature readings: "Motor housing: 72°C... 73°C... 75°C..." Any sustained rise gets flagged by the AI as a developing problem.</p></div>
+            <div class="se-box why"><div class="se-box-label">Why it matters</div><p>Heat is the most common early warning sign of mechanical failure. A bearing that's starting to wear runs hotter than normal — often days or weeks before it breaks down completely.</p></div>
+          </div>
+          <div class="se-example"><strong>Real example:</strong> A pump's bearing housing normally runs at 65°C. The temperature sensor shows it slowly climbing over two weeks: 66°C, 68°C, 71°C, 74°C. The AI flags this trend and alerts the maintenance team. They inspect and find the bearing is starved of lubrication. They top it off and schedule a bearing replacement — preventing a $40,000 failure.</div>
+        </div>
+      </div>
+
+      <div class="se-panel" id="panel-vib">
+        <div class="se-card">
+          <div class="se-card-top">
+            <div class="se-icon">📳</div>
+            <div class="se-card-head">
+              <div class="se-type">Sensor Type 2</div>
+              <div class="se-name">Vibration Sensor (Accelerometer)</div>
+              <div class="se-oneliner">Detects tiny shaking movements in machine components — even ones invisible to the human hand.</div>
+            </div>
+          </div>
+          <div class="se-divider"></div>
+          <div class="se-grid">
+            <div class="se-box what"><div class="se-box-label">What it measures</div><p>The frequency and intensity of vibrations inside the machine. Measured in millimeters per second (mm/s) or g-force units. Even vibrations far too small to feel are captured.</p></div>
+            <div class="se-box where"><div class="se-box-label">Where it's placed</div><p>Bolted or magnetically attached to rotating components — motors, fans, pumps, gearboxes, shafts. Wherever something spins, a vibration sensor can watch it.</p></div>
+            <div class="se-box data"><div class="se-box-label">What data it produces</div><p>A vibration "signature" — the specific pattern of frequencies a healthy machine produces. When a part starts to wear, the signature changes in characteristic ways the AI has learned to recognize.</p></div>
+            <div class="se-box why"><div class="se-box-label">Why it matters</div><p>Bearing wear, shaft imbalance, gear tooth damage, and misalignment all create characteristic vibration changes before any visible signs appear. Vibration analysis is one of the most powerful early-warning tools in predictive maintenance.</p></div>
+          </div>
+          <div class="se-example"><strong>Real example:</strong> A CNC machine's spindle motor normally vibrates at a steady, smooth pattern. The vibration sensor starts picking up a new, higher-frequency signal at a specific rotation speed — a pattern the AI recognizes as early-stage bearing spalling (tiny cracks forming inside the bearing). The maintenance team schedules a replacement 8 days out. The bearing, when removed, shows exactly the spalling the AI predicted.</div>
+        </div>
+      </div>
+
+      <div class="se-panel" id="panel-press">
+        <div class="se-card">
+          <div class="se-card-top">
+            <div class="se-icon">💨</div>
+            <div class="se-card-head">
+              <div class="se-type">Sensor Type 3</div>
+              <div class="se-name">Pressure Sensor</div>
+              <div class="se-oneliner">Monitors the pressure of fluids and gases flowing through the machine's systems.</div>
+            </div>
+          </div>
+          <div class="se-divider"></div>
+          <div class="se-grid">
+            <div class="se-box what"><div class="se-box-label">What it measures</div><p>The pressure of hydraulic fluid, compressed air, coolant, oil, or gas inside pipes and cylinders. Measured in PSI (pounds per square inch) or bar units.</p></div>
+            <div class="se-box where"><div class="se-box-label">Where it's placed</div><p>Screwed into hydraulic lines, pneumatic (air) systems, coolant pipes, lubrication lines, and any other system where fluid or gas pressure matters.</p></div>
+            <div class="se-box data"><div class="se-box-label">What data it produces</div><p>A continuous pressure reading. The AI monitors for pressure that's too high (blockage), too low (leak or pump failure), or fluctuating (intermittent valve or seal problem).</p></div>
+            <div class="se-box why"><div class="se-box-label">Why it matters</div><p>Many machines run on hydraulics (fluid pressure) or pneumatics (air pressure). Wrong pressure means wrong force, wrong speed, wrong output — and often damage to seals, valves, and cylinders if left uncorrected.</p></div>
+          </div>
+          <div class="se-example"><strong>Real example:</strong> In the Module 2.1 video scenario, the machine shows Error Code E-301 with Pressure at 150 PSI (flagged as LOW). The normal operating range is 180–220 PSI. The pressure sensor caught this — and combined with the high temperature, the AI flagged it as a potential cooling system failure. A technician discovers a partially clogged coolant line.</div>
+        </div>
+      </div>
+
+      <div class="se-panel" id="panel-prox">
+        <div class="se-card">
+          <div class="se-card-top">
+            <div class="se-icon">📏</div>
+            <div class="se-card-head">
+              <div class="se-type">Sensor Type 4</div>
+              <div class="se-name">Proximity Sensor</div>
+              <div class="se-oneliner">Detects whether something is present, absent, or positioned correctly — without physical contact.</div>
+            </div>
+          </div>
+          <div class="se-divider"></div>
+          <div class="se-grid">
+            <div class="se-box what"><div class="se-box-label">What it measures</div><p>Distance or presence. Is a part in the correct position? Did the machine complete its cycle? Is a component moving at the right speed? Answers yes/no questions about machine position and motion.</p></div>
+            <div class="se-box where"><div class="se-box-label">Where it's placed</div><p>Near moving parts, at end-of-travel positions on robotic arms, at product detection points on conveyor belts, and anywhere a position check is needed.</p></div>
+            <div class="se-box data"><div class="se-box-label">What data it produces</div><p>Binary signals (on/off) or distance measurements. The AI tracks cycle counts, timing, and sequence — so if a machine starts taking longer than normal to complete each cycle, it gets noticed.</p></div>
+            <div class="se-box why"><div class="se-box-label">Why it matters</div><p>Slowing cycle times often indicate mechanical resistance, lubrication problems, or wear before any other sensor catches it. Proximity sensors also verify that safety systems (guards, stops) are functioning correctly.</p></div>
+          </div>
+          <div class="se-example"><strong>Real example:</strong> A stamping press normally completes one cycle every 2.1 seconds. The proximity sensor at the bottom of the stroke starts recording 2.3, then 2.4, then 2.6 seconds per cycle. The AI detects the slowdown trend and flags it. Technicians discover the ram guide is running dry — 10 minutes of lubrication prevents what would have become a seized guide and a 6-hour repair.</div>
+        </div>
+      </div>
+
+      <div class="se-panel" id="panel-power">
+        <div class="se-card">
+          <div class="se-card-top">
+            <div class="se-icon">⚡</div>
+            <div class="se-card-head">
+              <div class="se-type">Sensor Type 5</div>
+              <div class="se-name">Current / Power Sensor</div>
+              <div class="se-oneliner">Monitors how much electrical power a motor is drawing — a surprisingly revealing health indicator.</div>
+            </div>
+          </div>
+          <div class="se-divider"></div>
+          <div class="se-grid">
+            <div class="se-box what"><div class="se-box-label">What it measures</div><p>The amount of electrical current (amperes) flowing to a motor. A healthy motor doing its normal job draws a predictable amount of current. Changes in that draw signal problems.</p></div>
+            <div class="se-box where"><div class="se-box-label">Where it's placed</div><p>In the electrical panel that feeds each motor — doesn't require touching the motor itself. This makes power sensors easy to add to existing machines.</p></div>
+            <div class="se-box data"><div class="se-box-label">What data it produces</div><p>Continuous current draw readings. A motor drawing more power than normal is working harder — likely because of increased mechanical resistance (worn bearing, clogged filter, binding component).</p></div>
+            <div class="se-box why"><div class="se-box-label">Why it matters</div><p>Motors tell you more about the health of the whole machine than almost any other indicator. If something is making the motor work harder, the current draw goes up — even before temperatures or vibration readings change significantly.</p></div>
+          </div>
+          <div class="se-example"><strong>Real example:</strong> A conveyor belt motor normally draws 12 amps at full load. Over two weeks, current readings creep from 12.1 to 12.8 to 13.4 amps. The AI flags the upward trend. Technicians inspect the belt tensioner — it's been gradually over-tightening due to a stuck adjustment bolt. A 20-minute fix prevents a burned-out motor worth $3,200.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Sensors Live on a Real Machine</h2>
+    <p>On a modern industrial machine, sensors aren't placed randomly. Each one is positioned at a specific spot where it can capture the most meaningful data. Hover over the colored dots on the machine below to see where each sensor type lives and why it's placed there.</p>
+
+    <div class="machine-map fade-in">
+      <div class="mm-label">🏭 Machine Sensor Map</div>
+      <div class="mm-title">A Typical Industrial Machine — Sensor Placement</div>
+      <div class="mm-machine">
+        <div class="mm-body">
+          <span class="mm-machine-icon">⚙️</span>
+          <div class="mm-machine-name">CNC Machining Center</div>
+          <div class="mm-machine-sub">Hover the colored dots to see sensor placements</div>
+        </div>
+        <div class="sensor-dot temp" onmouseenter="showTip(event,'🌡️ Temperature Sensor — Mounted on the spindle motor housing. Spindle motors run hot when working hard, and overheating is the #1 cause of spindle failure.')" onmouseleave="hideTip()">🌡️</div>
+        <div class="sensor-dot vib" onmouseenter="showTip(event,'📳 Vibration Sensor — Bolted to the spindle bearing housing. Bearing wear creates characteristic vibration patterns the AI recognizes before any visible damage appears.')" onmouseleave="hideTip()">📳</div>
+        <div class="sensor-dot press" onmouseenter="showTip(event,'💨 Pressure Sensor — On the coolant supply line. Coolant keeps the cutting tool and workpiece from overheating. Low pressure means reduced cooling, which means damaged tools and workpieces.')" onmouseleave="hideTip()">💨</div>
+        <div class="sensor-dot prox" onmouseenter="showTip(event,'📏 Proximity Sensor — At the tool changer position. Verifies the tool is properly seated before cutting begins. A mis-seated tool can destroy a workpiece worth thousands of dollars.')" onmouseleave="hideTip()">📏</div>
+        <div class="sensor-dot power" onmouseenter="showTip(event,'⚡ Power Sensor — In the electrical panel feeding the main drive motor. Increased current draw often means the cutting tool is dull, the workpiece material is harder than expected, or a mechanical component is binding.')" onmouseleave="hideTip()">⚡</div>
+        <div class="mm-tooltip" id="mm-tip"></div>
+      </div>
+      <div class="mm-legend">
+        <div class="mm-leg-item"><div class="mm-leg-dot temp"></div>Temperature</div>
+        <div class="mm-leg-item"><div class="mm-leg-dot vib"></div>Vibration</div>
+        <div class="mm-leg-item"><div class="mm-leg-dot press"></div>Pressure</div>
+        <div class="mm-leg-item"><div class="mm-leg-dot prox"></div>Proximity</div>
+        <div class="mm-leg-item"><div class="mm-leg-dot power"></div>Power</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>From Physical World to AI — How Sensor Data Travels</h2>
+    <p>Once a sensor collects a measurement, that number doesn't just sit there. It travels through a chain of systems before reaching the AI that analyzes it. Understanding this chain helps you understand why good sensor placement and maintenance matters so much.</p>
+
+    <div class="data-flow fade-in">
+      <div class="df-step">
+        <div class="df-num">1</div>
+        <div><div class="df-title">The Sensor Measures</div><div class="df-desc">The physical sensor detects the current condition — temperature, vibration, pressure — and converts it into an electrical signal. This happens continuously, often multiple times per second.</div></div>
+      </div>
+      <div class="df-step">
+        <div class="df-num">2</div>
+        <div><div class="df-title">The Signal Gets Converted to a Number</div><div class="df-desc">A small device called an analog-to-digital converter (ADC) turns the electrical signal into a number a computer can read. For example: an electrical signal of 0.47 volts becomes "71.3°C" in the system.</div></div>
+      </div>
+      <div class="df-step">
+        <div class="df-num">3</div>
+        <div><div class="df-title">The Data Travels to a Controller</div><div class="df-desc">The numbers go to a local controller — either the machine's own computer or a separate data collection device called a PLC (Programmable Logic Controller). The controller logs readings and checks for obvious out-of-range values.</div></div>
+      </div>
+      <div class="df-step">
+        <div class="df-num">4</div>
+        <div><div class="df-title">The Data Reaches the AI Platform</div><div class="df-desc">Readings from across the factory are sent — either over a wired network or wirelessly — to the AI analysis platform. This might be running on computers in the factory or on cloud servers the factory connects to over the internet.</div></div>
+      </div>
+      <div class="df-step">
+        <div class="df-num">5</div>
+        <div><div class="df-title">AI Analyzes and Alerts</div><div class="df-desc">The AI compares incoming readings against the machine's baseline, looks for patterns that match known failure signatures, and generates alerts when something warrants attention. A maintenance technician gets a notification on their computer, tablet, or phone.</div></div>
+      </div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>Sensors are the reason AI can watch 200 machines at once. Without sensors collecting data, AI has nothing to analyze. The sensor is where the machine starts talking.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A conveyor belt motor normally draws 11 amps of electrical current. Over two weeks, its power sensor readings slowly rise to 14 amps. The motor hasn't stopped, nothing is visually wrong, and no error codes have appeared. What should a maintenance technician do?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Waiting for it to break is exactly the reactive maintenance approach — the old way. The power sensor is giving you an early warning right now. Acting on that warning is the whole point of having sensors.')">Ignore it — if no error code has appeared, nothing is wrong yet</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A 27% increase in current draw over two weeks is a significant trend. The motor is working harder than it should be — meaning something is creating more mechanical resistance. Common causes include a tightening belt, a stuck tensioner, low lubrication, or a beginning bearing failure. Investigating now — when the machine is still running — is far better than waiting for a failure that stops production entirely.')">Investigate the cause — a steady rise in current draw means the motor is working harder than it should be, indicating a developing problem</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While replacing it right away is better than waiting for it to fail completely, it\'s also premature if the motor itself isn\'t the problem. The current draw increase might be caused by something else making the motor work harder — a belt problem, a tensioner issue, a lubrication problem. Investigate first, then act based on what you find.')">Replace the motor immediately — a 14-amp reading means it\'s about to fail</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">Why are vibration sensors placed on rotating components like bearings and motors — rather than just on the outside of the machine's frame?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Exactly right. Vibration signals get weaker and more distorted the farther they travel through metal. A bearing starting to fail produces a very specific vibration signature at its location. By the time that signal travels through the motor casing, through the frame, and to the outside wall, the pattern that identifies the failure type may be undetectable. Placing the sensor directly on or very near the component captures the clearest, most diagnostic signal.')">Because vibration signals are strongest and most diagnostic closest to their source — by the time they travel through the machine frame, the specific patterns that identify a failure type may be too weak to detect</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Cost is actually a reason sensors ARE placed on the frame in some low-budget systems. But it\'s not the reason they\'re placed on rotating components specifically — the reason is signal quality and diagnostic accuracy.')">Because it\'s cheaper to attach sensors to rotating parts than to the frame</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ The rotation doesn\'t help sensor accuracy in any meaningful way, and sensors on rotating parts are actually more challenging to wire properly. The reason for proximity to rotating components is about signal quality — capturing the vibration signature before it gets distorted by traveling through the machine structure.')">Because sensors on rotating parts spin with the component and collect more data that way</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A sensor is a device that measures a physical condition and converts it into a number a computer can read. Sensors are the "eyes and ears" of any AI monitoring system — without them, there's no data to analyze.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The five main sensor types in manufacturing are temperature (detects heat buildup), vibration (detects mechanical wear in rotating parts), pressure (monitors fluid and air systems), proximity (verifies position and cycle timing), and power (tracks electrical current draw as an indirect health indicator).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Sensor placement matters. Sensors are positioned close to the components they monitor — especially rotating parts — because vibration and temperature signals are strongest and most diagnostic near their source.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Sensor data travels from the physical world through a controller and network to the AI analysis platform, where patterns are compared against the machine's baseline. This whole pipeline has to work correctly for the AI to give reliable alerts.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showSensor(id,tab){document.querySelectorAll(".se-panel").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".se-tab").forEach(t=>t.classList.remove("active"));document.getElementById("panel-"+id).classList.add("active");tab.classList.add("active");}
+function showTip(e,msg){const tip=document.getElementById("mm-tip");tip.textContent=msg;tip.classList.add("show");const rect=e.target.getBoundingClientRect();const machRect=e.target.closest(".mm-machine").getBoundingClientRect();tip.style.left=(rect.left-machRect.left+40)+"px";tip.style.top=(rect.top-machRect.top)+"px";}
+function hideTip(){document.getElementById("mm-tip").classList.remove("show");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
