@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is "Judgment" and Why Can't a Machine Have It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Judgment components */
+.judgment-parts{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.jp{display:flex;gap:18px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:22px 24px;align-items:flex-start;}
+.jp-icon{font-size:30px;flex-shrink:0;margin-top:2px;}
+.jp-body{}
+.jp-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.jp-desc{font-size:14px;line-height:1.75;color:var(--gray-text);}
+.jp-ai{margin-top:9px;font-size:13px;padding:8px 13px;border-radius:9px;background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.jp-ai strong{font-weight:700;}
+
+/* AI vs Human compare */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0;}
+.vs-col{border-radius:20px;padding:26px;}
+.vs-col.ai{background:#EFF6FF;border:2px solid var(--blue-mid);}
+.vs-col.human{background:var(--purple-pale);border:2px solid var(--purple-mid);}
+.vs-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+.vs-col.ai .vs-badge{color:var(--blue);}
+.vs-col.human .vs-badge{color:var(--purple);}
+.vs-icon{font-size:36px;margin-bottom:8px;}
+.vs-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:12px;}
+.vs-col.ai .vs-title{color:var(--blue);}
+.vs-col.human .vs-title{color:var(--purple-dark);}
+.vs-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.vs-list li{font-size:13px;line-height:1.6;color:var(--gray-text);padding-left:18px;position:relative;}
+.vs-list li::before{position:absolute;left:0;font-weight:700;}
+.vs-col.ai .vs-list li::before{content:"✓";color:var(--blue);}
+.vs-col.human .vs-list li::before{content:"✓";color:var(--purple);}
+@media(max-width:520px){.versus{grid-template-columns:1fr;}}
+
+/* Scenario test */
+.scenario-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ss-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ss-scene{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 24px;margin-bottom:16px;}
+.ss-scene-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ss-scene-text{font-size:15px;line-height:1.8;color:var(--gray-text);}
+.ss-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:16px 0 12px;}
+.ss-opts{display:flex;flex-direction:column;gap:9px;}
+.ss-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.ss-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.ss-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.ss-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.ss-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.ss-result.show{display:block;}
+.ss-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.ss-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.ss-next{margin-top:14px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.ss-next.show{display:inline-block;}
+
+/* Responsibility chain */
+.resp-chain{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.rc-item{display:flex;gap:0;align-items:stretch;}
+.rc-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.rc-dot{width:18px;height:18px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:22px;}
+.rc-line{width:2px;background:var(--purple-mid);flex:1;}
+.rc-item:last-child .rc-line{display:none;}
+.rc-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0 8px 10px;}
+.rc-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:4px;}
+.rc-role{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.rc-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.3 — Human vs. AI Roles</div>
+  <h1>What Is "Judgment" and Why Can't a Machine Have It?</h1>
+  <p class="hero-sub">The video says humans make the decisions. This article explains why — not as a feel-good claim, but as a structural reality about what AI is and what it isn't.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>At some point in this course, you've probably heard the phrase: "AI supports decisions — humans make them." It sounds reassuring. It's also true. But if you don't know <em>why</em> it's true, it's just a slogan.</p>
+    <p>This article gives you the real answer. Not "humans are better because we're special" — but a clear, specific explanation of what judgment actually is, what AI can and cannot do with information, and why the gap between them is <mark>not a temporary limitation that better AI will eventually close.</mark></p>
+    <p>It's structural. And understanding it will make you a better, more confident worker in any environment where AI is part of the picture.</p>
+  </div>
+
+  <!-- What judgment is -->
+  <div class="section fade-in">
+    <h2>What Is Judgment, Exactly?</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Judgment:</strong> The ability to make a considered decision by weighing incomplete information, applying experience and context, accounting for what matters ethically, and accepting responsibility for the outcome. Judgment isn't just processing facts — it's knowing which facts matter, what they mean in <em>this</em> specific situation, and being willing to own the result.</div>
+    </div>
+    <p>Judgment is not a single thing. It's a combination of four distinct abilities that work together when a person makes a real decision under real conditions. AI can partially replicate some of them. It cannot replicate all of them — and it cannot combine them the way humans do.</p>
+
+    <div class="judgment-parts">
+      <div class="jp">
+        <div class="jp-icon">🧩</div>
+        <div class="jp-body">
+          <div class="jp-title">Working with Incomplete Information</div>
+          <div class="jp-desc">Real decisions almost never happen with complete information. A supervisor deciding whether to stop a production line doesn't know for certain whether the AI alert is a real failure or a false alarm. A maintenance tech deciding whether to replace a part now or wait until end of shift is working with uncertainty. Judgment means making a good decision anyway — not waiting for certainty that will never come.</div>
+          <div class="jp-ai"><strong>What AI does instead:</strong> AI requires a threshold — a point at which the probability of X exceeds Y% before it fires an alert. Below the threshold, it says nothing. Above it, it alerts. It cannot say "this feels off in a way I can't quantify." That intuition — pattern recognition below the level of articulable data — is a uniquely human input.</div>
+        </div>
+      </div>
+      <div class="jp">
+        <div class="jp-icon">📚</div>
+        <div class="jp-body">
+          <div class="jp-title">Applying Lived Experience and Context</div>
+          <div class="jp-desc">An operator who's worked Line 4 for six years knows that this machine always runs a little hot on Monday mornings after the weekend shutdown — and that an AI temperature alert on Monday at 6:15am almost certainly doesn't mean the same thing as the same alert at 2pm on Wednesday. That knowledge isn't in a database. It's in the worker.</div>
+          <div class="jp-ai"><strong>What AI does instead:</strong> AI generalizes from historical patterns in its training data. It has no concept of "this specific machine, in this specific facility, under these specific conditions." It treats every 168°F reading as equally meaningful — because it can't know what only years on this floor would teach you.</div>
+        </div>
+      </div>
+      <div class="jp">
+        <div class="jp-icon">⚖️</div>
+        <div class="jp-body">
+          <div class="jp-title">Weighing Ethical and Human Factors</div>
+          <div class="jp-desc">Sometimes the technically correct decision and the right decision aren't the same thing. A supervisor told by the AI to halt a line might know that the worker operating it just came back from medical leave and really needs this shift. A quality call that means scrapping 500 units affects real people's jobs. Judgment means knowing when those factors belong in the calculation — and when they don't.</div>
+          <div class="jp-ai"><strong>What AI does instead:</strong> AI optimizes for the metric it was given. It has no concept of "this is technically the right call but it will crush someone." Ethics require caring about outcomes beyond the measurement — and caring is not a function AI can perform.</div>
+        </div>
+      </div>
+      <div class="jp">
+        <div class="jp-icon">🙋</div>
+        <div class="jp-body">
+          <div class="jp-title">Taking Responsibility for the Outcome</div>
+          <div class="jp-desc">This is the one that matters most — and the one that is most completely beyond what AI can do. When a supervisor decides to stop the line or keep it running, they own that decision. If it was wrong, it's on them. That ownership changes how people make decisions. It introduces a weight — a seriousness — that shapes the quality of judgment. AI has no stake in the outcome. It cannot be wrong. It cannot be held accountable. It cannot feel the weight of being wrong.</div>
+          <div class="jp-ai"><strong>What AI does instead:</strong> AI produces an output. It is not accountable for what happens next. No AI system has ever faced consequences for a bad recommendation. That's not a flaw to be fixed — it's a fundamental fact about what a software system is.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What AI is great at -->
+  <div class="section fade-in">
+    <h2>What AI Is Genuinely Great At — and Why That's Different From Judgment</h2>
+    <p>This isn't an argument that AI is useless. It's powerful — but in a different way than human judgment, and for different tasks.</p>
+
+    <div class="versus">
+      <div class="vs-col ai">
+        <div class="vs-badge">🤖 AI Strengths</div>
+        <div class="vs-icon">💻</div>
+        <div class="vs-title">What Machines Do Well</div>
+        <ul class="vs-list">
+          <li>Process millions of data points simultaneously</li>
+          <li>Apply rules consistently — never tired, never distracted</li>
+          <li>Spot statistical patterns across months of data</li>
+          <li>Monitor dozens of machines at once, without breaks</li>
+          <li>Generate alerts in milliseconds</li>
+          <li>Never forget a reading or miss an entry</li>
+          <li>Be completely objective about what the numbers say</li>
+        </ul>
+      </div>
+      <div class="vs-col human">
+        <div class="vs-badge">👤 Human Strengths</div>
+        <div class="vs-icon">🧠</div>
+        <div class="vs-title">What People Do Well</div>
+        <ul class="vs-list">
+          <li>Work with incomplete, ambiguous information</li>
+          <li>Apply years of context-specific experience</li>
+          <li>Notice things that fall outside expected patterns</li>
+          <li>Weigh factors that aren't in the data</li>
+          <li>Make ethical distinctions about what matters</li>
+          <li>Accept responsibility for the outcome</li>
+          <li>Adapt instantly to completely new situations</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>The right relationship between AI and humans in manufacturing is <mark>not competition — it's complementarity.</mark> AI handles the data volume humans can't manage. Humans apply the judgment AI can't perform. Together, they make better decisions than either could alone.</p>
+
+    <div class="pull-quote"><p>AI sees more. Humans understand more. The gap between seeing and understanding is where judgment lives — and that gap is not closing.</p></div>
+  </div>
+
+  <!-- The responsibility point -->
+  <div class="section fade-in">
+    <h2>Why "Taking Responsibility" Is the Deepest Difference</h2>
+    <p>Of the four components of judgment, responsibility deserves the most attention — because it's the one people most often misunderstand when AI is involved.</p>
+    <p>When an AI system recommends stopping a production line, and a supervisor follows that recommendation, and it turns out to be a false alarm — who made the decision? The supervisor did. The AI gave information. The human acted on it.</p>
+    <p>This is not a legal technicality. It reflects something real about how AI works: <mark>AI systems do not have stakes in outcomes.</mark> They produce outputs. The outputs may be right or wrong. The system doesn't know the difference in any meaningful sense, and it doesn't experience consequences either way.</p>
+    <p>Humans do. A supervisor who shuts down a line unnecessarily loses production, answers to management, and carries that experience into every future decision. That accountability loop — making a call, living with the consequences, learning from it — is what sharpens judgment over a career. AI has no such loop. It doesn't learn from being wrong in the way humans do.</p>
+    <p>This is why the phrase "humans make the decisions" isn't just a company policy. It's a description of where accountability actually lives — and accountability is what ensures that the weight of the decision is felt by someone who can actually do something with that weight.</p>
+  </div>
+
+  <!-- Simulation -->
+  <div class="section fade-in">
+    <h2>Judgment in Practice: Can You Spot the Difference?</h2>
+    <p>Let's test the concept. Each scenario below has both an AI output and a human judgment call. Your job is to identify which type of thinking the correct response requires.</p>
+
+    <div class="scenario-sim">
+      <div class="ss-label">🧠 Judgment vs. Analysis</div>
+      <div class="ss-title">Which Kind of Thinking Does This Require?</div>
+      <div class="ss-sub">Read each situation. Decide whether the right response requires AI-style analysis or human judgment — and why.</div>
+      <div id="ss-wrap">
+        <div class="ss-scene">
+          <div class="ss-scene-label" id="ss-label">Situation 1 of 3</div>
+          <div class="ss-scene-text" id="ss-text">The AI system flags that Conveyor 7 has shown a 12% increase in vibration over the past 72 hours and predicts a bearing failure within 6 days with 84% confidence. The maintenance schedule shows the conveyor is due for a belt replacement next Tuesday — 5 days from now. Should the team schedule a bearing inspection before Tuesday's planned maintenance?</div>
+        </div>
+        <div class="ss-q" id="ss-q">What kind of thinking should drive the decision to schedule or not schedule the early bearing inspection?</div>
+        <div class="ss-opts" id="ss-opts"></div>
+        <div class="ss-result good" id="ss-good"></div>
+        <div class="ss-result bad" id="ss-bad"></div>
+        <button class="ss-next" id="ss-next" onclick="nextSS()">Next Situation →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">The article says that AI's inability to take responsibility for outcomes is "not a flaw to be fixed." Why?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">Because AI companies don't care about fixing their products' limitations</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Because software systems fundamentally don't have stakes in outcomes — they produce outputs, but they don't experience consequences, and no amount of improvement changes that structural fact</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Because humans would become too dependent on AI if it could take responsibility</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Because OSHA regulations don't allow AI to be held legally responsible</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. This is the structural point. Responsibility requires experiencing consequences — learning from them, carrying their weight, having stakes in the outcome. Software doesn't have that. A more advanced AI will still produce outputs without experiencing consequences. That's not a bug; it's what a software system is. This is why the "humans make the decisions" rule isn't a temporary limitation to be overcome — it reflects a permanent, structural reality.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. The reason is more fundamental: software systems don't have stakes in outcomes by nature. They don't experience consequences. A more capable AI still produces outputs without any skin in the game. That's not an engineering limitation — it's a description of what a software system fundamentally is. Responsibility requires the ability to experience being wrong, and AI cannot do that.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Judgment is made up of four components: working with incomplete information, applying lived experience and context, weighing ethical factors, and taking responsibility for the outcome.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI is genuinely powerful at processing data volume, applying rules consistently, and detecting statistical patterns — but these are analytical capabilities, not judgment.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The deepest difference is responsibility: AI produces outputs without experiencing consequences. Humans own decisions and live with their results — and that accountability loop is what sharpens judgment over time.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">This gap is not temporary. It's structural. "Humans make the decisions" isn't a company policy or a feel-good slogan — it's a description of where accountability actually lives.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The right relationship is complementarity: AI sees more data than humans can process, humans understand more than AI can — together they make better decisions than either could alone.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const situations=[
+  {
+    label:'Situation 1 of 3',
+    text:"The AI system flags that Conveyor 7 has shown a 12% increase in vibration over the past 72 hours and predicts a bearing failure within 6 days with 84% confidence. The maintenance schedule shows the conveyor is due for a belt replacement next Tuesday — 5 days from now. Should the team schedule a bearing inspection before Tuesday's planned maintenance?",
+    q:"What kind of thinking should drive the decision to schedule or not schedule the early bearing inspection?",
+    opts:["AI analysis alone — the 84% prediction should automatically trigger an early inspection","Human judgment — a supervisor must weigh the AI's prediction against the maintenance calendar, parts availability, line priorities, and whether an early inspection makes sense given the specific context","Neither — just wait until Tuesday and see what happens","The AI should automatically reschedule maintenance without involving humans"],
+    correct:1,
+    good:"✅ Right. The AI gave excellent data — a specific probability, a timeline, a trend. But the decision requires weighing the AI's confidence against real-world factors: Is the maintenance team available early? Are the right parts in stock? Is this line critical for a customer order due Thursday? What does the experienced tech think when she looks at the machine? That's human judgment applied to AI analysis.",
+    bad:"❌ Not quite. The AI's 84% prediction is valuable data — but it's not a decision. Decisions require weighing the prediction against the maintenance calendar, parts availability, labor costs of an early inspection versus an unplanned failure, and the experienced technician's own read of the situation. That combination is human judgment — and it's exactly what the AI can't perform."
+  },
+  {
+    label:'Situation 2 of 3',
+    text:"Over the past 90 days, the AI quality system has inspected 2.3 million parts on Line 2 and flagged 847 as defective — a 0.037% defect rate. Management wants to know: Is this good or bad performance?",
+    q:"Can the AI answer this question on its own?",
+    opts:["Yes — the AI measured the defect rate, so it can judge whether that rate is acceptable","No — whether 0.037% is acceptable requires context the AI doesn't have: what the customer contract specifies, what competitors achieve, what it costs to improve further, and what the business consequences of each defect are","Yes — lower defect rates are always better, so 0.037% is better than 0.04%","No — AI can't count defects accurately enough to trust this number"],
+    correct:1,
+    good:"✅ Exactly. The AI measured the rate with precision. Judging whether that rate is acceptable requires human context: Is the customer contract 0.05% or 0.01%? What do best-in-class competitors achieve? What does it cost in equipment and process changes to cut the rate in half? What's the downstream cost of each defect that reaches a customer? The AI has none of that. A quality manager has all of it — or knows where to get it.",
+    bad:"❌ Not correct. Measuring a rate and judging a rate are different things. The AI did the measurement perfectly. But whether 0.037% is good, acceptable, or alarming depends entirely on context: customer specifications, industry benchmarks, improvement costs, and business consequences. Those are human judgment calls that require knowledge the AI doesn't possess."
+  },
+  {
+    label:'Situation 3 of 3',
+    text:"A worker named Jerome has been flagged by the AI ergonomics system 14 times in the past two weeks for unsafe lifting posture. His supervisor, Renata, gets a report showing he's the highest-flagged worker on the floor. She needs to decide how to address this.",
+    q:"What makes this situation one that requires human judgment — not just AI analysis?",
+    opts:["Nothing — Renata should just follow whatever the AI recommends for highest-flagged workers","The AI can tell Renata how often Jerome lifted incorrectly, but it cannot tell her why — whether it's a training gap, a workstation design issue, a physical limitation, a personal problem affecting his focus, or something else entirely. The response depends on the cause, and finding the cause requires a human conversation.","Renata should just increase Jerome's training frequency — that's always the answer for flagged workers","The AI data isn't reliable enough to have this conversation"],
+    correct:1,
+    good:"✅ Correct. The AI gave Renata a fact: 14 flags, highest on the floor. That's useful. But how she responds depends on why — and the AI can't tell her that. Is it a training gap the AI identified the behavior but didn't teach proper technique? A workstation problem where the station height forces the bad posture regardless of effort? A physical issue Jerome hasn't disclosed? A stressful personal situation affecting his attention? The right intervention for each cause is completely different. That's why a human conversation — using the AI data as a starting point, not a conclusion — is the judgment call Renata has to make.",
+    bad:"❌ Not the right frame. The AI data is reliable and useful. The issue is that knowing the frequency of a behavior doesn't explain the cause — and the response entirely depends on the cause. Only a human conversation with Jerome can surface whether this is a training, workstation, physical, or personal issue. The AI opened the door; walking through it requires human judgment."
+  }
+];
+let ssIdx=0,ssDone=false;
+function doSS(choice){
+  if(ssDone)return;ssDone=true;
+  const s=situations[ssIdx];
+  const btns=document.querySelectorAll('#ss-opts .ss-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(choice===s.correct){btns[choice].classList.add('correct');document.getElementById('ss-good').textContent=s.good;document.getElementById('ss-good').classList.add('show');}
+  else{btns[choice].classList.add('wrong');document.getElementById('ss-bad').textContent=s.bad;document.getElementById('ss-bad').classList.add('show');}
+  if(ssIdx<situations.length-1)document.getElementById('ss-next').classList.add('show');
+}
+function nextSS(){
+  ssIdx++;ssDone=false;
+  const s=situations[ssIdx];
+  document.getElementById('ss-label').textContent=s.label;
+  document.getElementById('ss-text').textContent=s.text;
+  document.getElementById('ss-q').textContent=s.q;
+  const c=document.getElementById('ss-opts');c.innerHTML='';
+  s.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='ss-opt';b.textContent=o;b.onclick=()=>doSS(i);c.appendChild(b);});
+  document.getElementById('ss-good').className='ss-result good';
+  document.getElementById('ss-bad').className='ss-result bad';
+  document.getElementById('ss-next').classList.remove('show');
+}
+(function init(){
+  const s=situations[0];
+  document.getElementById('ss-label').textContent=s.label;
+  document.getElementById('ss-text').textContent=s.text;
+  document.getElementById('ss-q').textContent=s.q;
+  const c=document.getElementById('ss-opts');c.innerHTML='';
+  s.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='ss-opt';b.textContent=o;b.onclick=()=>doSS(i);c.appendChild(b);});
+})();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

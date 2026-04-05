@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Tell a Good AI Alert From a Bad One: A Worker's Guide to Evaluating What the Machine Is Telling You</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,46px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Framework steps */
+.framework{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.fw-item{display:flex;gap:0;align-items:stretch;}
+.fw-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0;}
+.fw-num{width:38px;height:38px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0;margin-top:16px;}
+.fw-line{width:2px;background:var(--purple-mid);flex:1;}
+.fw-item:last-child .fw-line{display:none;}
+.fw-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;margin:8px 0 8px 10px;}
+.fw-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.fw-desc{font-size:14px;line-height:1.75;color:var(--gray-text);}
+.fw-signals{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;}
+.fw-signal{font-size:12px;padding:5px 11px;border-radius:100px;font-weight:600;}
+.fw-signal.trust{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.fw-signal.doubt{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Interactive alert evaluator */
+.evaluator{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ev-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ev-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ev-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ev-alert-box{background:#1a1025;border-radius:16px;padding:20px 24px;margin-bottom:20px;}
+.ev-alert-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ev-alert-dot{width:9px;height:9px;border-radius:50%;background:#F87171;}
+.ev-alert-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#F87171;}
+.ev-alert-num{font-size:11px;color:rgba(255,255,255,.4);margin-left:auto;}
+.ev-alert-text{font-size:13px;line-height:1.75;color:rgba(255,255,255,.85);}
+.ev-alert-text strong{color:var(--white);}
+.ev-questions{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.ev-q-row{display:flex;align-items:center;gap:12px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:13px 16px;}
+.ev-q-text{flex:1;font-size:14px;color:var(--gray-text);}
+.ev-q-btns{display:flex;gap:7px;flex-shrink:0;}
+.ev-q-btn{font-size:12px;font-weight:600;padding:5px 14px;border-radius:7px;border:none;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.ev-q-btn.yes{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.ev-q-btn.no{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.ev-q-btn.yes.selected{background:var(--green);color:var(--white);}
+.ev-q-btn.no.selected{background:var(--red);color:var(--white);}
+.ev-score-area{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;}
+.ev-score-area.show{display:block;}
+.ev-score-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ev-score-verdict{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:8px;}
+.ev-score-verdict.high{color:var(--green);}
+.ev-score-verdict.medium{color:var(--orange);}
+.ev-score-verdict.low{color:var(--red);}
+.ev-score-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ev-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:14px;}
+.ev-next-btn{background:var(--white);color:var(--purple);border:1.5px solid var(--purple);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;display:none;}
+.ev-next-btn.show{display:inline-block;}
+
+/* Urgency levels */
+.urgency-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+.ug{border-radius:18px;padding:20px;border:2px solid;text-align:center;}
+.ug.high{background:var(--red-pale);border-color:var(--red);}
+.ug.med{background:var(--orange-pale);border-color:var(--orange);}
+.ug.low{background:var(--green-pale);border-color:#86EFAC;}
+.ug-icon{font-size:30px;margin-bottom:8px;}
+.ug-level{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.ug.high .ug-level{color:var(--red);}
+.ug.med .ug-level{color:#92400E;}
+.ug.low .ug-level{color:var(--green);}
+.ug-desc{font-size:12px;line-height:1.6;color:var(--gray-text);}
+@media(max-width:520px){.urgency-grid{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.3 — Human vs. AI Roles</div>
+  <h1>How to Tell a Good AI Alert From a Bad One: A Worker's Guide to Evaluating What the Machine Is Telling You</h1>
+  <p class="hero-sub">The video shows workers reviewing AI alerts. This article explains what that review actually looks like — the specific questions to ask before you act.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>You get an alert. The AI system is telling you something needs your attention. What do you do next?</p>
+    <p>The worst answer is "immediately do whatever the alert recommends" — that's overtrust, and you've seen where it leads. The second worst answer is "ignore it because alerts are usually wrong" — that's alert fatigue, and you've seen where that leads too.</p>
+    <p>The right answer is in between: <mark>a fast, structured evaluation that takes 30–60 seconds and tells you how seriously to take this specific alert right now.</mark></p>
+    <p>This article gives you that framework — five questions, in order, that any worker can apply to any AI alert on any shop floor.</p>
+  </div>
+
+  <!-- The framework -->
+  <div class="section fade-in">
+    <h2>The 5-Question Alert Evaluation Framework</h2>
+    <p>These questions don't have to be written down. After practice, they become instinct — the mental checklist that runs automatically when an alert hits your screen or tablet.</p>
+
+    <div class="framework">
+      <div class="fw-item">
+        <div class="fw-left"><div class="fw-num">1</div><div class="fw-line"></div></div>
+        <div class="fw-card">
+          <div class="fw-q">What is the alert actually saying — and what data is it based on?</div>
+          <div class="fw-desc">Before you respond, understand what you're responding to. An alert that says "Motor 4 temperature elevated — 178°F, trending upward for 6 hours" is giving you specific, traceable data. An alert that just says "anomaly detected" with no further detail is much harder to evaluate. The more specific the data, the more you can check it against what you're observing.</div>
+          <div class="fw-signals">
+            <div class="fw-signal trust">✓ Trust signal: Specific sensor readings with trend data</div>
+            <div class="fw-signal trust">✓ Trust signal: Clear data source (which sensor, which timeframe)</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: Vague "anomaly" with no underlying data shown</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: Alert doesn't specify what it detected or why</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fw-item">
+        <div class="fw-left"><div class="fw-num">2</div><div class="fw-line"></div></div>
+        <div class="fw-card">
+          <div class="fw-q">Does this match what I'm observing right now with my own senses?</div>
+          <div class="fw-desc">Walk over. Look. Listen. Smell. Feel the vibration. Your senses are data — different data than the sensor, and often more contextual. If the AI says the motor is running dangerously hot and you can feel the heat from three feet away, those two signals are agreeing. If the AI says something is failing and the machine sounds, smells, and feels completely normal, you have a discrepancy worth investigating. Discrepancies go both ways — your senses can be wrong too, especially for slow-developing problems.</div>
+          <div class="fw-signals">
+            <div class="fw-signal trust">✓ Trust signal: Sensory observations match what the alert predicts</div>
+            <div class="fw-signal trust">✓ Trust signal: Something seems off even if you can't articulate what</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: Everything looks, sounds, and feels completely normal</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: Machine running identically to every other day this week</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fw-item">
+        <div class="fw-left"><div class="fw-num">3</div><div class="fw-line"></div></div>
+        <div class="fw-card">
+          <div class="fw-q">Has this type of alert been reliable before — or is it historically noisy?</div>
+          <div class="fw-desc">Not all alert types are created equal. On a well-tuned system, some alert types fire rarely and are almost always right. Others fire constantly and are frequently wrong. Over time, you develop a feel for which is which on your specific equipment. That track record should inform how quickly and seriously you respond — not override your response entirely, but calibrate the urgency. A first-ever alert from a sensor that never fires is different from the 12th alert this month from one that's been wrong 11 times.</div>
+          <div class="fw-signals">
+            <div class="fw-signal trust">✓ Trust signal: This alert type has been accurate in past similar situations</div>
+            <div class="fw-signal trust">✓ Trust signal: This sensor hasn't alerted in weeks or months</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: This alert type fires constantly and is usually wrong</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: 3rd alert this week with no follow-up issue the first 2 times</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fw-item">
+        <div class="fw-left"><div class="fw-num">4</div><div class="fw-line"></div></div>
+        <div class="fw-card">
+          <div class="fw-q">Has anything changed recently that the AI might not know about?</div>
+          <div class="fw-desc">This is the blind spot question — the one that catches the defects that ship. New materials. A different supplier batch. Settings adjusted last week. Equipment that was recently serviced with non-standard parts. Any process change that happened after the AI model was trained is a potential gap in its knowledge. If something changed and this is the first alert since, ask whether the alert might be a response to the change rather than a real failure. Also consider: could the change itself be causing a real problem the AI is correctly detecting?</div>
+          <div class="fw-signals">
+            <div class="fw-signal trust">✓ Trust signal: Nothing has changed — conditions are the same as always</div>
+            <div class="fw-signal trust">✓ Trust signal: A process change happened AND this alert makes sense in that context</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: New material batch arrived this week — alert might reflect unfamiliar readings</div>
+            <div class="fw-signal doubt">⚠ Doubt signal: Equipment was serviced yesterday — this could be a post-maintenance artifact</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fw-item">
+        <div class="fw-left"><div class="fw-num">5</div><div class="fw-line"></div></div>
+        <div class="fw-card">
+          <div class="fw-q">Who else should be in this decision — and what's the cost of waiting?</div>
+          <div class="fw-desc">Some alerts you can handle alone. Some require your supervisor. Some require a maintenance tech. Some require a full stop-and-escalate. The decision about who to loop in depends on two things: the severity of the potential consequence if the alert is right, and the cost of acting (or not acting) before you know. A low-severity alert on a non-critical machine can wait for a second opinion. A high-severity alert involving possible worker injury or major equipment damage should trigger escalation immediately — verify later, not before.</div>
+          <div class="fw-signals">
+            <div class="fw-signal trust">✓ Act alone: Low-severity, familiar alert type, observable confirmation, non-critical equipment</div>
+            <div class="fw-signal trust">✓ Loop in supervisor: Medium-severity, unclear data, or involves stopping production</div>
+            <div class="fw-signal doubt">⚠ Escalate immediately: Any safety-critical alert, or when uncertain and consequences are high</div>
+            <div class="fw-signal doubt">⚠ Document either way: Whatever you decide, note what the alert said and what you did</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive evaluator -->
+  <div class="section fade-in">
+    <h2>Practice: Evaluate These Real Alerts</h2>
+    <p>Use the five-question framework to evaluate the following AI alerts. For each one, answer the evaluation questions and see what confidence level the framework produces.</p>
+
+    <div class="evaluator">
+      <div class="ev-label">🎯 Alert Evaluation Practice</div>
+      <div class="ev-title">Apply the Framework</div>
+      <div class="ev-sub">Read the alert, answer the five evaluation questions based on the context provided, then see your confidence assessment.</div>
+      <div id="ev-alert-box" class="ev-alert-box">
+        <div class="ev-alert-header"><div class="ev-alert-dot"></div><div class="ev-alert-label">AI Alert</div><div class="ev-alert-num" id="ev-num">Alert 1 of 3</div></div>
+        <div class="ev-alert-text" id="ev-alert-text"></div>
+      </div>
+      <div class="ev-questions" id="ev-questions"></div>
+      <button class="ev-btn" onclick="scoreEval()">Evaluate This Alert</button>
+      <div class="ev-score-area" id="ev-score">
+        <div class="ev-score-label">Framework Assessment</div>
+        <div class="ev-score-verdict" id="ev-verdict"></div>
+        <div class="ev-score-text" id="ev-score-text"></div>
+      </div>
+      <button class="ev-next-btn" id="ev-next" onclick="nextAlert()">Next Alert →</button>
+    </div>
+  </div>
+
+  <!-- Urgency levels -->
+  <div class="section fade-in">
+    <h2>When to Act Alone, When to Loop In, When to Escalate</h2>
+    <p>The framework tells you how much to trust an alert. This tells you what to do with that assessment:</p>
+    <div class="urgency-grid">
+      <div class="ug high">
+        <div class="ug-icon">🚨</div>
+        <div class="ug-level">Escalate Immediately</div>
+        <div class="ug-desc">Any alert involving immediate safety risk, potential equipment damage, or that matches your observations. Act first, verify second. Loop in supervisor before or during, not after.</div>
+      </div>
+      <div class="ug med">
+        <div class="ug-icon">📞</div>
+        <div class="ug-level">Loop In Before Acting</div>
+        <div class="ug-desc">Alert is plausible but uncertain — mixed signals from your observations, process changes in play, or a decision that affects production. Get a second set of eyes before committing.</div>
+      </div>
+      <div class="ug low">
+        <div class="ug-icon">📋</div>
+        <div class="ug-level">Monitor and Document</div>
+        <div class="ug-desc">Alert is low-severity, historically noisy, and doesn't match observations. Continue monitoring, document that you evaluated it and why you didn't act, and watch for changes.</div>
+      </div>
+    </div>
+    <div class="pull-quote"><p>The worst outcome isn't acting on a false alert or ignoring a real one. It's doing either without thinking — because thinking is what the "humans make the decisions" rule actually means.</p></div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">An AI alert fires for a machine you've worked with for three years. The alert type has been accurate every previous time it fired on this machine. Your observations confirm something sounds different than usual. What does the framework suggest?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">Ignore it — AI alerts are usually wrong so wait for a second alert before acting</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Act with high confidence — the data is specific, observations match, historical reliability is high, and no unusual process changes are in play. Escalate or respond according to the severity level.</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Wait for supervisor approval before doing anything — all AI alerts require manager sign-off</button>
+        <button class="quiz-opt" onclick="doQ1(3)">The alert should be ignored until the machine actually fails — preventive action isn't worth the disruption</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. All five framework signals point the same direction: specific data, observational confirmation, historically reliable alert type, no unusual process changes. This is a high-confidence alert. The right response is to act according to the severity — which might mean escalating to supervisor immediately, calling maintenance, or initiating a controlled shutdown, depending on what the alert specifies and your facility's protocols.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not right. When all five evaluation signals point the same direction — specific data, your observations match, the alert type is historically reliable, no unusual changes in play — that's a high-confidence alert. Waiting for the machine to fail defeats the entire purpose of predictive monitoring. The framework gives you exactly the information you need to act with confidence here.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Evaluating an AI alert is a structured skill, not a gut reaction. The 5-question framework — data clarity, observational match, historical reliability, recent changes, and escalation need — takes under a minute and dramatically improves decision quality.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Your own senses are data. When observations match an alert, confidence increases. When they conflict, that discrepancy is worth investigating — not dismissing.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Alert track record matters. An alert type that fires rarely and is almost always right deserves faster action than one that's been noisy and unreliable — but neither should be ignored entirely.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Process changes are blind spots. Any recent change the AI wasn't trained on is a reason to apply extra scrutiny — in both directions: the alert might be a false reading, or it might be correctly detecting a real problem the change introduced.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Whatever you decide — act, loop in, or monitor — document it. The record of what the alert said and what you chose to do is your professional protection and the feedback that improves the system over time.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const alerts=[
+  {
+    num:'Alert 1 of 3',
+    text:'<strong>Motor 7-B — Predictive Maintenance Alert</strong><br>Vibration: 2.4 mm/s (Normal: 0–1.5). Temperature: 181°F (Normal: 110–160°F). Trend: Both readings elevated and increasing over past 8 hours. Confidence: 91%. Predicted bearing failure within 4–7 days.',
+    questions:[
+      {q:'Is the alert data specific — does it show actual sensor readings and trends?',yes:true},
+      {q:'Your observations: the machine sounds slightly different and the housing feels warmer than usual. Do observations match the alert?',yes:true},
+      {q:'This type of alert has been accurate 4 out of 5 times it fired in the past year. Is it historically reliable?',yes:true},
+      {q:'Has anything changed recently — new materials, settings, or servicing?',yes:false},
+      {q:'The alert involves multi-day lead time and no immediate safety risk. Can you involve maintenance without stopping production now?',yes:true}
+    ],
+    verdicts:{
+      high:{label:'High Confidence — Act Promptly',cls:'high',text:"All signals point toward a real issue: specific sensor data, observational confirmation, high historical accuracy, no process changes to explain it. This is exactly the kind of alert that predictive maintenance is built for. Schedule a bearing inspection within 24–48 hours and notify your maintenance team now."},
+      medium:{label:'Medium Confidence — Investigate Before Acting',cls:'medium',text:"Mixed signals. Some indicators support the alert, others create doubt. The right move is to loop in a maintenance tech for a quick assessment before scheduling a repair — don't dismiss it, but don't halt production without more information."},
+      low:{label:'Low Confidence — Monitor and Document',cls:'medium',text:"Several signals are raising doubt. Continue monitoring, note your evaluation, and watch whether readings continue to trend upward. If they do, the confidence level will increase. Don't dismiss it entirely."}
+    }
+  },
+  {
+    num:'Alert 2 of 3',
+    text:'<strong>Quality Control — Vision System Alert</strong><br>Anomaly detected on Line 2 parts. Detection type: surface variation. Parts flagged: 23 of last 500 inspected (4.6%). Alert confidence: 67%. No specific defect type identified.',
+    questions:[
+      {q:'Is the alert specific — does it show what type of defect was detected and what data triggered it?',yes:false},
+      {q:'You pull three flagged parts and visually inspect them. They look completely normal to you. Do observations match the alert?',yes:false},
+      {q:'This "surface variation" alert type fires regularly and has been a false alarm more often than not on Line 2. Is it historically reliable?',yes:false},
+      {q:'Your facility switched to a new paint formulation two weeks ago. Could that be appearing as "surface variation" to the AI?',yes:true},
+      {q:'Given the uncertainty, should you escalate this to a quality supervisor before deciding?',yes:true}
+    ],
+    verdicts:{
+      high:{label:'High Confidence — Act Promptly',cls:'high',text:'Interesting — you marked most signals as supporting action, but this alert has several red flags: vague detection type, low AI confidence, poor historical accuracy, and a known process change. Review your answers and consider the doubt signals more carefully.'},
+      medium:{label:'Medium Confidence — Investigate Before Acting',cls:'medium',text:"This is the right zone for this alert. The vague detection type, your own visual inspection finding nothing, and the process change all create reasonable doubt — but a 4.6% flagging rate is high enough to take seriously. Pull the quality supervisor. The new paint formulation may need to be added to the AI's training data."},
+      low:{label:'Low Confidence — Document and Flag the Paint Change',cls:'medium',text:"You're right to be skeptical. Low confidence alert type, vague data, observations don't match, historically unreliable — and the process change is almost certainly the explanation. Document your evaluation and notify the AI system team that the new paint formulation may need to be incorporated into model training. Don't just dismiss and move on."}
+    }
+  },
+  {
+    num:'Alert 3 of 3',
+    text:'<strong>Safety Alert — Zone Monitoring — URGENT</strong><br>Worker detected inside Robot Cell 4 exclusion zone during active cycle. Camera 22. Time: 14:32:18. Duration of entry: 4 seconds. Machine status: ACTIVE.',
+    questions:[
+      {q:'Is the data specific — camera number, timestamp, duration, machine status?',yes:true},
+      {q:'You\'re 20 feet away and can see the robot cell area. The cell appears clear now but someone was near it a moment ago. Does this seem plausible?',yes:true},
+      {q:'Safety zone alerts at this facility fire rarely — maybe twice in the past six months. Is this alert type historically reliable?',yes:true},
+      {q:'Has anything changed — new contractors, a visitor on the floor, unfamiliar workers today?',yes:true},
+      {q:'Given this is a safety-critical alert, do you need to escalate immediately rather than investigate slowly?',yes:true}
+    ],
+    verdicts:{
+      high:{label:'🚨 Respond Immediately — High Confidence Safety Alert',cls:'high',text:"This is a high-urgency safety alert with every signal pointing toward action: specific data, plausible observation, rare and historically accurate alert type. The duration was brief so immediate danger may have passed — but this still requires immediate supervisor notification, a check on who was near the cell, and documentation. If anyone is still in or near the zone, that takes priority over everything."},
+      medium:{label:'Still Act Immediately — Safety Alerts Don\'t Wait',cls:'high',text:"For safety-critical alerts, medium confidence isn't a reason to slow down — it's a reason to investigate while also escalating. Notify your supervisor now. Even if you're uncertain, a robot cell zone breach requires immediate human investigation. Do not wait for more certainty when the potential consequence is serious injury."},
+      low:{label:'Act Anyway — Safety Threshold Is Different',cls:'high',text:"Safety alerts operate under different rules. Even low-confidence safety alerts require immediate escalation — not because the AI is certainly right, but because the cost of being wrong (someone getting hurt) vastly outweighs the cost of a false alarm (a brief investigation). Notify your supervisor immediately and let the investigation determine whether it was real."}
+    }
+  }
+];
+let evIdx=0;const evAnswers=[];
+function renderAlert(){
+  const a=alerts[evIdx];
+  document.getElementById('ev-num').textContent=a.num;
+  document.getElementById('ev-alert-text').innerHTML=a.text;
+  const qc=document.getElementById('ev-questions');
+  qc.innerHTML='';
+  evAnswers.length=0;
+  a.questions.forEach((q,i)=>{
+    evAnswers.push(null);
+    const row=document.createElement('div');
+    row.className='ev-q-row';
+    row.innerHTML=`<div class="ev-q-text">${q.q}</div><div class="ev-q-btns"><button class="ev-q-btn yes" id="ev-yes-${i}" onclick="setEv(${i},true)">Yes</button><button class="ev-q-btn no" id="ev-no-${i}" onclick="setEv(${i},false)">No</button></div>`;
+    qc.appendChild(row);
+  });
+  document.getElementById('ev-score').classList.remove('show');
+  document.getElementById('ev-next').classList.remove('show');
+}
+function setEv(i,val){
+  evAnswers[i]=val;
+  document.getElementById('ev-yes-'+i).classList.toggle('selected',val===true);
+  document.getElementById('ev-no-'+i).classList.toggle('selected',val===false);
+}
+function scoreEval(){
+  const a=alerts[evIdx];
+  let yesCount=0;
+  a.questions.forEach((q,i)=>{
+    const ans=evAnswers[i];
+    if(ans===null)return;
+    if((q.yes && ans===true)||(!q.yes && ans===false))yesCount++;
+  });
+  const pct=yesCount/a.questions.length;
+  let key='low';
+  if(pct>=0.6)key='high';
+  else if(pct>=0.4)key='medium';
+  const v=a.verdicts[key];
+  const scoreEl=document.getElementById('ev-score');
+  document.getElementById('ev-verdict').textContent=v.label;
+  document.getElementById('ev-verdict').className='ev-score-verdict '+v.cls;
+  document.getElementById('ev-score-text').textContent=v.text;
+  scoreEl.classList.add('show');
+  if(evIdx<alerts.length-1)document.getElementById('ev-next').classList.add('show');
+}
+function nextAlert(){
+  evIdx++;
+  renderAlert();
+  document.getElementById('ev-score').classList.remove('show');
+  document.getElementById('ev-next').classList.remove('show');
+}
+renderAlert();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

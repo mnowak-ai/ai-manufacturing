@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Trades Are Not Being Replaced: What AI Actually Does to Skilled Trade Careers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Job outlook stats */
+.outlook-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.os-card{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:18px;padding:22px 18px;text-align:center;}
+.os-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple);line-height:1;margin-bottom:6px;}
+.os-label{font-size:12px;color:var(--gray-muted);line-height:1.5;}
+@media(max-width:560px){.outlook-stats{grid-template-columns:1fr;}}
+
+/* Task automation spectrum */
+.spectrum{margin:28px 0;}
+.spec-row{display:flex;gap:12px;margin-bottom:10px;align-items:stretch;}
+.spec-label{font-size:13px;font-weight:700;color:var(--gray-text);min-width:90px;padding-top:14px;flex-shrink:0;text-align:right;}
+.spec-bar-wrap{flex:1;}
+.spec-bar{border-radius:10px;padding:12px 16px;font-size:12px;line-height:1.6;color:var(--white);}
+.spec-bar.high{background:var(--red);}
+.spec-bar.medium{background:var(--orange);}
+.spec-bar.low{background:var(--green);}
+.spec-bar.very-low{background:#0E7490;}
+
+/* What's changing vs growing */
+.change-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.cg-col{border-radius:18px;padding:24px;}
+.cg-col.automated{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.cg-col.growing{background:var(--green-pale);border:1.5px solid #86EFAC;}
+.cg-header{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.cg-col.automated .cg-header{color:#92400E;}
+.cg-col.growing .cg-header{color:var(--green);}
+.cg-item{display:flex;gap:8px;margin-bottom:10px;font-size:13px;line-height:1.6;align-items:flex-start;}
+.cg-col.automated .cg-item::before{content:"→";color:var(--orange);font-weight:700;flex-shrink:0;}
+.cg-col.growing .cg-item::before{content:"↑";color:var(--green);font-weight:700;flex-shrink:0;}
+@media(max-width:520px){.change-grid{grid-template-columns:1fr;}}
+
+/* New roles created */
+.new-roles{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.nr{display:flex;gap:16px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;align-items:flex-start;}
+.nr-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+.nr-body{}
+.nr-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.nr-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.nr-pay{margin-top:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:100px;background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;display:inline-block;}
+
+/* Salary impact sim */
+.salary-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ss-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ss-trade-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.ss-trade-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.ss-trade-btn.active{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.ss-bars{display:flex;flex-direction:column;gap:14px;}
+.ss-bar-item{display:flex;flex-direction:column;gap:6px;}
+.ss-bar-label{display:flex;justify-content:space-between;font-size:13px;}
+.ss-bar-track{background:var(--purple-mid);border-radius:100px;height:18px;overflow:hidden;}
+.ss-bar-fill{height:100%;border-radius:100px;transition:width .8s ease;}
+.ss-bar-fill.base{background:var(--gray-muted);}
+.ss-bar-fill.ai{background:var(--purple);}
+.ss-note{margin-top:14px;font-size:13px;color:var(--gray-muted);font-style:italic;line-height:1.6;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.3 — Human vs. AI Roles</div>
+  <h1>The Trades Are Not Being Replaced: What AI Actually Does to Skilled Trade Careers</h1>
+  <p class="hero-sub">You've heard "AI is going to take your job." Here's what the data actually shows — which tasks are changing, which skills are growing in demand, and why workers who understand AI are the ones with the best career outlook.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>Let's address it directly: you've probably heard that AI is going to eliminate manufacturing jobs. If you're pursuing a trade career, it's a reasonable thing to wonder about.</p>
+    <p>Here's the honest answer: <mark>some tasks are being automated. The skilled trades themselves are not.</mark> In fact, for workers who understand AI tools, the job market looks better than it has in decades — not worse.</p>
+    <p>This article gives you the data and the nuance. Not reassurance for its own sake, but a clear-eyed look at what's actually changing, what's actually growing, and what it means for your career.</p>
+  </div>
+
+  <!-- Job outlook stats -->
+  <div class="section fade-in">
+    <h2>What the Numbers Actually Show</h2>
+    <p>Manufacturing employment has been declining in the U.S. for decades — but the reason is mostly productivity growth and supply chain shifts, not AI. And for skilled trades specifically, the outlook is the opposite of alarming:</p>
+
+    <div class="outlook-stats">
+      <div class="os-card">
+        <div class="os-num">600K+</div>
+        <div class="os-label">Skilled manufacturing jobs currently unfilled in the U.S. due to a shortage of qualified workers</div>
+      </div>
+      <div class="os-card">
+        <div class="os-num">3.8M</div>
+        <div class="os-label">Manufacturing jobs expected to need filling by 2033 — with 1.9M at risk of going unfilled due to skills shortages</div>
+      </div>
+      <div class="os-card">
+        <div class="os-num">+$9K</div>
+        <div class="os-label">Average salary premium for manufacturing workers with demonstrated AI skills, according to industry surveys</div>
+      </div>
+    </div>
+
+    <p>The skilled trades shortage is real and growing — not because the jobs are disappearing, but because the workforce that filled these roles is retiring faster than new workers are entering. <mark>The question isn't whether there will be jobs — it's whether there will be enough qualified workers to fill them.</mark></p>
+  </div>
+
+  <!-- What's actually changing -->
+  <div class="section fade-in">
+    <h2>What's Actually Changing — and What's Growing</h2>
+    <p>The honest picture is nuanced. AI and automation are changing what trade work looks like — but not by eliminating it. Specific tasks are shifting; the need for skilled judgment is increasing.</p>
+
+    <div class="change-grid">
+      <div class="cg-col automated">
+        <div class="cg-header">📉 Tasks Being Automated or Reduced</div>
+        <div class="cg-item">Simple, repetitive visual inspection of identical parts</div>
+        <div class="cg-item">Manual data entry into maintenance and quality logs</div>
+        <div class="cg-item">Routine scheduled maintenance performed regardless of machine condition</div>
+        <div class="cg-item">Basic machine monitoring that previously required constant human presence</div>
+        <div class="cg-item">Repetitive material handling on fully automated lines</div>
+        <div class="cg-item">Simple defect sorting based on single-variable rules</div>
+      </div>
+      <div class="cg-col growing">
+        <div class="cg-header">📈 Skills Growing in Demand</div>
+        <div class="cg-item">Evaluating and responding to AI alerts with judgment</div>
+        <div class="cg-item">Diagnosing complex failures that AI flags but can't diagnose</div>
+        <div class="cg-item">Programming and operating CNC, robotics, and automated systems</div>
+        <div class="cg-item">Maintaining and calibrating AI-integrated equipment</div>
+        <div class="cg-item">Interpreting data dashboards and production analytics</div>
+        <div class="cg-item">Training new workers on AI-assisted workflows</div>
+        <div class="cg-item">Applying physical skills in environments that automation can't access</div>
+      </div>
+    </div>
+
+    <p>Notice the pattern: AI automates the most repetitive, rules-based tasks. It creates demand for the most contextual, judgment-based ones. <mark>The work that requires a human mind and skilled hands is exactly the work that's growing.</mark></p>
+  </div>
+
+  <!-- Task automation spectrum -->
+  <div class="section fade-in">
+    <h2>Which Parts of Trade Jobs Are Actually at Risk?</h2>
+    <p>Researchers who study automation consistently find that jobs are not simply "replaced" — specific tasks within jobs change. Here's how common manufacturing tasks rank on the automation spectrum:</p>
+
+    <div class="spectrum">
+      <div class="spec-row">
+        <div class="spec-label">HIGH<br>automation</div>
+        <div class="spec-bar-wrap"><div class="spec-bar high">Pulling and logging standardized sensor data by hand • Sorting parts by a single visible criterion • Scheduling maintenance on a fixed calendar regardless of machine condition</div></div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">MEDIUM<br>automation</div>
+        <div class="spec-bar-wrap"><div class="spec-bar medium">Routine inspection of standard parts for known defect types • Basic machine monitoring during steady-state operation • Reordering standard consumable supplies based on usage rates</div></div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">LOW<br>automation</div>
+        <div class="spec-bar-wrap"><div class="spec-bar low">Diagnosing why a machine is behaving unexpectedly • Evaluating AI alerts against physical observations • Performing maintenance in tight, variable, or unusual physical spaces</div></div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">VERY LOW<br>automation</div>
+        <div class="spec-bar-wrap"><div class="spec-bar very-low">Complex fabrication and repair requiring manual dexterity and judgment • Mentoring and training other workers • Adapting to novel problems the AI has never encountered • Making decisions that carry accountability</div></div>
+      </div>
+    </div>
+    <p>The tasks at highest automation risk are the ones that most experienced tradespeople have always found least interesting — the repetitive, low-judgment work. The tasks AI struggles with most are the high-skill, high-judgment work that defines what it means to be good at a trade.</p>
+  </div>
+
+  <!-- New roles -->
+  <div class="section fade-in">
+    <h2>New Jobs AI Is Creating in Manufacturing</h2>
+    <p>Every technology wave that automates some work creates new work that didn't exist before. AI in manufacturing is no exception. These roles are emerging right now and paying well — because there aren't enough people qualified to fill them:</p>
+
+    <div class="new-roles">
+      <div class="nr">
+        <div class="nr-icon">🤖</div>
+        <div class="nr-body">
+          <div class="nr-title">Automation Technician / Robotics Maintenance Tech</div>
+          <div class="nr-desc">Maintains, calibrates, and repairs the robots and automated systems that AI coordinates. Requires the same mechanical and electrical skills as traditional maintenance — plus understanding of how AI-driven control systems work. One of the fastest-growing trades in manufacturing.</div>
+          <div class="nr-pay">📈 Avg. salary: $58,000–$82,000</div>
+        </div>
+      </div>
+      <div class="nr">
+        <div class="nr-icon">📊</div>
+        <div class="nr-body">
+          <div class="nr-title">Manufacturing Data Analyst / AI System Monitor</div>
+          <div class="nr-desc">Monitors AI system performance on the production floor, identifies when models are drifting or generating too many false alarms, and works with vendors on recalibration. Often filled by experienced floor workers who've developed data literacy — a natural career growth path.</div>
+          <div class="nr-pay">📈 Avg. salary: $62,000–$88,000</div>
+        </div>
+      </div>
+      <div class="nr">
+        <div class="nr-icon">⚙️</div>
+        <div class="nr-body">
+          <div class="nr-title">CNC Machinist / Advanced Manufacturing Technician</div>
+          <div class="nr-desc">CNC machinists are in critical shortage — and AI hasn't reduced that shortage. Operating and programming CNC equipment requires deep trade knowledge plus growing digital literacy. AI tools assist with optimization, but the machinist's judgment about setup, tooling, and material behavior remains essential.</div>
+          <div class="nr-pay">📈 Avg. salary: $52,000–$75,000</div>
+        </div>
+      </div>
+      <div class="nr">
+        <div class="nr-icon">🎓</div>
+        <div class="nr-body">
+          <div class="nr-title">AI-Integrated Process Trainer / Lead Operator</div>
+          <div class="nr-desc">Experienced operators who understand both the physical process and the AI tools are increasingly valuable as trainers and leads — helping new workers navigate AI-assisted workflows. This is a career advancement path that didn't exist five years ago.</div>
+          <div class="nr-pay">📈 Avg. salary: $55,000–$78,000 + leadership premium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary impact -->
+  <div class="section fade-in">
+    <h2>What AI Literacy Does to Your Earning Potential</h2>
+    <p>Across trade professions, workers who can demonstrate competency with AI tools — reading dashboards, evaluating alerts, working alongside automated systems — consistently earn more than peers without those skills. Select a trade to see the comparison:</p>
+
+    <div class="salary-sim">
+      <div class="ss-label">💰 Salary Impact by Trade</div>
+      <div class="ss-title">AI Literacy Premium in Manufacturing Trades</div>
+      <div class="ss-sub">Select your trade to see how AI skills affect earning potential based on industry salary data.</div>
+      <div class="ss-trade-btns">
+        <button class="ss-trade-btn active" onclick="showTrade(this,'maint')">Maintenance Tech</button>
+        <button class="ss-trade-btn" onclick="showTrade(this,'machinist')">CNC Machinist</button>
+        <button class="ss-trade-btn" onclick="showTrade(this,'quality')">Quality Inspector</button>
+        <button class="ss-trade-btn" onclick="showTrade(this,'welder')">Welder / Fabricator</button>
+      </div>
+      <div class="ss-bars" id="ss-bars"></div>
+      <div class="ss-note" id="ss-note"></div>
+    </div>
+  </div>
+
+  <!-- The real question -->
+  <div class="section fade-in">
+    <h2>The Real Question Isn't "Will AI Take My Job?" It's "Will I Know How to Work With It?"</h2>
+    <p>The workers facing the most pressure aren't skilled tradespeople — they're workers in purely repetitive, low-skill positions that AI can genuinely replicate. The workers with the most career security are skilled tradespeople who also understand AI tools.</p>
+
+    <div class="pull-quote"><p>The best position to be in is not "no AI in my work" — it's "I understand AI well enough to catch what it misses and use what it does well." That combination is what employers can't find enough of.</p></div>
+
+    <p>Every previous wave of automation in manufacturing created this same dynamic. Assembly line automation in the 1970s didn't eliminate manufacturing workers — it eliminated certain tasks and created demand for workers who could operate and maintain the new equipment. CNC machines in the 1990s didn't eliminate machinists — they made machinists who could program them dramatically more productive and valuable.</p>
+    <p>AI follows the same pattern. The workers who thrive aren't the ones who avoided it. They're the ones who understood it — well enough to work with it, evaluate it critically, and bring the judgment that no algorithm can supply.</p>
+    <p>That's what this certification is for.</p>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">According to this article, which manufacturing tasks are most at risk of automation — and which are growing in demand?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">All manufacturing tasks face equal automation risk; no category is safer than another</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Repetitive, rules-based tasks are at highest automation risk; complex diagnosis, physical dexterity, contextual judgment, and human-to-human training are growing in demand</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Supervisory and management roles are at highest risk; frontline trade work is completely safe</button>
+        <button class="quiz-opt" onclick="doQ1(3)">AI is primarily replacing quality inspection work; maintenance and machining are unaffected</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The automation spectrum is consistent across industries: the most repetitive, single-variable, rules-based tasks are most automatable. Complex diagnosis, physical work in variable environments, evaluating ambiguous situations with judgment, and training other humans are exactly the tasks AI handles worst — and they're the tasks growing most in demand. This is why skilled trade workers who build AI literacy are positioned well, not threatened.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. The pattern is specific: highly repetitive, rules-based tasks (standard inspection, manual data logging, calendar-based maintenance) are most automatable. Complex, judgment-based, physical, and interpersonal tasks — diagnosing novel problems, working in unusual physical environments, training coworkers — are growing in demand. Skilled trades sit heavily in the second category, which is why the outlook for trade workers who understand AI is positive.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">There are 600,000+ unfilled skilled manufacturing jobs in the U.S. right now — and the skills shortage is projected to grow. The problem isn't too many workers; it's not enough qualified ones.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI is automating specific tasks — repetitive, rules-based, single-variable work — not skilled trades as a whole. The tasks growing in demand are exactly the ones AI handles worst: complex judgment, physical dexterity, contextual problem-solving.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">New roles are emerging: automation technician, AI system monitor, advanced manufacturing tech, AI-integrated process trainer. These pay well and are filled by workers who combine trade skills with AI literacy.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Workers with demonstrated AI skills earn an average of $9,000 more per year than peers without those skills — across multiple trade professions.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every major automation wave created this same pattern: new equipment changed the tasks, workers who understood the new equipment became more valuable. AI follows the same pattern — understanding it is an advantage, not a threat.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const tradeData={
+  maint:{
+    note:'Maintenance technicians with AI/automation skills are among the most in-demand workers in manufacturing. The ability to diagnose both mechanical and AI-system issues commands a significant premium.',
+    bars:[
+      {label:'Entry-level (no AI skills)',pct:42,salary:'$42,000',cls:'base'},
+      {label:'Experienced (no AI skills)',pct:58,salary:'$58,000',cls:'base'},
+      {label:'Experienced + AI/automation literacy',pct:74,salary:'$74,000',cls:'ai'},
+      {label:'Automation tech / robotics specialist',pct:88,salary:'$88,000',cls:'ai'},
+    ]
+  },
+  machinist:{
+    note:'CNC machinist shortages are acute. Workers who can both operate machines and interpret AI optimization recommendations are extremely rare and highly compensated.',
+    bars:[
+      {label:'Entry-level machinist',pct:40,salary:'$40,000',cls:'base'},
+      {label:'Journeyman machinist',pct:56,salary:'$56,000',cls:'base'},
+      {label:'CNC programmer + AI tools',pct:71,salary:'$71,000',cls:'ai'},
+      {label:'Lead machinist / process optimizer',pct:82,salary:'$82,000',cls:'ai'},
+    ]
+  },
+  quality:{
+    note:'Quality roles are evolving fastest. Inspectors who can manage and evaluate AI vision systems are taking on more strategic responsibilities — and compensation reflects that.',
+    bars:[
+      {label:'Entry-level quality inspector',pct:38,salary:'$38,000',cls:'base'},
+      {label:'Experienced quality inspector',pct:52,salary:'$52,000',cls:'base'},
+      {label:'Quality tech + AI system literacy',pct:65,salary:'$65,000',cls:'ai'},
+      {label:'Quality engineer / AI system lead',pct:85,salary:'$85,000',cls:'ai'},
+    ]
+  },
+  welder:{
+    note:'Welding remains one of the hardest trades to automate. Welders who can also work alongside cobots and read AI weld quality systems are a combination facilities desperately need.',
+    bars:[
+      {label:'Entry-level welder',pct:38,salary:'$38,000',cls:'base'},
+      {label:'Certified welder (multiple processes)',pct:55,salary:'$55,000',cls:'base'},
+      {label:'Welder + cobot operation',pct:67,salary:'$67,000',cls:'ai'},
+      {label:'Welding supervisor / AI integration',pct:80,salary:'$80,000',cls:'ai'},
+    ]
+  }
+};
+function showTrade(btn,key){
+  document.querySelectorAll('.ss-trade-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d=tradeData[key];
+  document.getElementById('ss-note').textContent=d.note;
+  const c=document.getElementById('ss-bars');c.innerHTML='';
+  d.bars.forEach(b=>{
+    const row=document.createElement('div');row.className='ss-bar-item';
+    row.innerHTML=`<div class="ss-bar-label"><span>${b.label}</span><span style="font-weight:700;color:var(--purple-dark)">${b.salary}</span></div><div class="ss-bar-track"><div class="ss-bar-fill ${b.cls}" style="width:0%" data-w="${b.pct}%"></div></div>`;
+    c.appendChild(row);
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.ss-bar-fill').forEach(f=>{f.style.width=f.dataset.w;});
+  },50);
+}
+showTrade(document.querySelector('.ss-trade-btn'),'maint');
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

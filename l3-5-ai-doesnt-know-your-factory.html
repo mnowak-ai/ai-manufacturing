@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Doesn't Know Your Factory: Why Context Is Everything in Manufacturing AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* What AI knows vs doesn't */
+.knowledge-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0;}
+.kc-col{border-radius:20px;padding:26px;border:2px solid;}
+.kc-col.knows{background:var(--blue-pale);border-color:var(--blue-mid);}
+.kc-col.doesnt{background:var(--orange-pale);border-color:var(--orange);}
+.kc-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+.knows .kc-badge{color:var(--blue);}
+.doesnt .kc-badge{color:#92400E;}
+.kc-icon{font-size:36px;margin-bottom:8px;}
+.kc-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:12px;}
+.knows .kc-title{color:var(--blue);}
+.doesnt .kc-title{color:#92400E;}
+.kc-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.kc-list li{font-size:13px;line-height:1.6;color:var(--gray-text);padding-left:18px;position:relative;}
+.kc-list li::before{position:absolute;left:0;font-weight:700;}
+.knows .kc-list li::before{content:"✓";color:var(--blue);}
+.doesnt .kc-list li::before{content:"✗";color:var(--orange);}
+@media(max-width:520px){.knowledge-compare{grid-template-columns:1fr;}}
+
+/* Context examples */
+.context-examples{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.ce-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:22px 24px;}
+.ce-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ce-scenario{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.ce-ai-take{background:var(--blue-pale);border:1px solid var(--blue-mid);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+.ce-ai-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:5px;}
+.ce-ai-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ce-human-take{background:var(--green-pale);border:1px solid #86EFAC;border-radius:10px;padding:12px 16px;}
+.ce-human-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:5px;}
+.ce-human-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Together they're better */
+.together{background:linear-gradient(135deg,#0f172a,#1e1b4b);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.together-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.together-heading{font-family:"Fraunces",serif;font-size:22px;font-weight:700;margin-bottom:16px;line-height:1.3;}
+.together-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-bottom:16px;}
+.together-col{background:rgba(255,255,255,.07);border-radius:14px;padding:16px 18px;}
+.together-col-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.together-col-items{font-size:13px;line-height:1.8;color:rgba(255,255,255,.8);}
+.together-plus{font-size:28px;color:var(--purple-mid);text-align:center;}
+.together-result{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 18px;text-align:center;}
+.together-result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:6px;}
+.together-result-text{font-size:14px;color:rgba(255,255,255,.85);line-height:1.6;}
+@media(max-width:520px){.together-cols{grid-template-columns:1fr;}.together-plus{display:none;}}
+
+/* Interactive: what would you do? */
+.context-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.cs-context{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:16px;}
+.cs-context-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.cs-context-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.cs-alert{background:#1a1025;border-radius:12px;padding:16px 20px;margin-bottom:16px;}
+.cs-alert-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#F87171;margin-bottom:8px;}
+.cs-alert-text{font-size:13px;color:rgba(255,255,255,.85);line-height:1.7;}
+.cs-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:0 0 12px;}
+.cs-opts{display:flex;flex-direction:column;gap:9px;}
+.cs-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.cs-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.cs-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.cs-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.cs-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.cs-result.show{display:block;}
+.cs-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.cs-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.cs-next{margin-top:14px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.cs-next.show{display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.3 — Human vs. AI Roles</div>
+  <h1>AI Doesn't Know Your Factory: Why Context Is Everything in Manufacturing AI</h1>
+  <p class="hero-sub">AI systems are trained on general data. They don't know that Machine 7 always runs hot, or that Tuesday mornings are slow, or that the new material batch behaves differently. That gap is exactly where workers become irreplaceable.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>Here's something that surprises a lot of people when they first work alongside an AI system: the AI doesn't know your facility.</p>
+    <p>It doesn't know that Conveyor 4 has always vibrated slightly above the normal range since that big repair three years ago — and that it's been fine ever since. It doesn't know that Monday morning readings are always elevated because the building hasn't fully warmed up yet. It doesn't know that your facility recently switched material suppliers and the new batch runs about 8 degrees hotter in the oven.</p>
+    <p>The AI knows patterns from data. <mark>You know your factory.</mark> Those are different things — and understanding the difference is one of the most important ideas in this entire module.</p>
+  </div>
+
+  <!-- What AI knows vs doesn't -->
+  <div class="section fade-in">
+    <h2>What the AI Actually Knows — and What It Doesn't</h2>
+    <p>AI systems in manufacturing are trained on data — often enormous amounts of it. But that data has a specific character: it describes general patterns across many machines, many facilities, or many historical time periods. It almost never captures the specific, local, lived knowledge that an experienced worker holds about their particular floor.</p>
+
+    <div class="knowledge-compare">
+      <div class="kc-col knows">
+        <div class="kc-badge">🧠 What AI Knows</div>
+        <div class="kc-icon">💻</div>
+        <div class="kc-title">General Patterns from Data</div>
+        <ul class="kc-list">
+          <li>Industry-average temperature ranges for motor types</li>
+          <li>Statistical patterns that precede bearing failures in general</li>
+          <li>What defects look like across thousands of training images</li>
+          <li>Historical sensor readings from this facility's own past</li>
+          <li>When readings deviate from the model's expected baseline</li>
+          <li>Which combinations of sensor signals correlate with failures</li>
+        </ul>
+      </div>
+      <div class="kc-col doesnt">
+        <div class="kc-badge">❌ What AI Doesn't Know</div>
+        <div class="kc-icon">🏭</div>
+        <div class="kc-title">Your Specific Context</div>
+        <ul class="kc-list">
+          <li>That Machine 7 has always run 5°F above spec since a repair</li>
+          <li>That Tuesday mornings are slow because of the shift handoff</li>
+          <li>That a new material supplier's batch behaves differently</li>
+          <li>That a reading spike at 6am is always a warmup artifact</li>
+          <li>That this alert type on this machine is almost always wrong</li>
+          <li>That a recent maintenance visit changed how a sensor reads</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Concept</div>
+      <div class="vocab-def"><strong>Tacit knowledge:</strong> Knowledge that's difficult to write down or transfer — it exists in the experience and instincts of workers who've spent years doing a specific job in a specific place. "I just know that machine" is tacit knowledge. AI systems are trained on explicit data. Tacit knowledge lives in people.</div>
+    </div>
+
+    <p>This gap is not a temporary limitation that more data will eventually fill. Some of what experienced workers know is genuinely hard to capture in any dataset — because it's embedded in years of daily observation, accumulated pattern recognition, and the kind of intuition that only comes from being physically present on the floor.</p>
+  </div>
+
+  <!-- Context examples -->
+  <div class="section fade-in">
+    <h2>Four Real Examples of What Context Changes</h2>
+    <p>Here's what the AI sees versus what an experienced worker understands — for four situations you might recognize from any manufacturing floor:</p>
+
+    <div class="context-examples">
+      <div class="ce-card">
+        <div class="ce-tag">Example 1 — Temperature Reading</div>
+        <div class="ce-scenario">Motor 7-B reads 171°F. The AI's normal range for this motor type is 110–160°F.</div>
+        <div class="ce-ai-take">
+          <div class="ce-ai-label">🤖 What the AI sees</div>
+          <div class="ce-ai-text">Reading is 11°F above the upper threshold. This matches the pattern signature for early bearing wear. Alert: elevated temperature detected. Recommend inspection.</div>
+        </div>
+        <div class="ce-human-take">
+          <div class="ce-human-label">👤 What an experienced worker knows</div>
+          <div class="ce-human-text">Motor 7-B has read 168–172°F since it was rebuilt two years ago. The rebuild used a slightly different bearing housing that runs warmer. It's been inspected twice since and is fine. This reading is completely normal for this specific motor. The AI's baseline doesn't include this machine's individual history.</div>
+        </div>
+      </div>
+
+      <div class="ce-card">
+        <div class="ce-tag">Example 2 — Production Rate Drop</div>
+        <div class="ce-scenario">Line 2's output drops 22% between 5:45am and 6:30am every Monday.</div>
+        <div class="ce-ai-take">
+          <div class="ce-ai-label">🤖 What the AI sees</div>
+          <div class="ce-ai-text">Recurring Monday morning production anomaly detected. Output reduction of ~22% during morning window. Possible causes: equipment issue, material shortage, staffing gap. Flag for supervisor review.</div>
+        </div>
+        <div class="ce-human-take">
+          <div class="ce-human-label">👤 What an experienced worker knows</div>
+          <div class="ce-human-text">That's the shift handoff window. Night crew finishes cleanup and the day crew runs startup checks. Line 2 always dips during that 45-minute window. It's been happening for four years. The AI's training data includes the numbers but not the reason — so it keeps flagging a non-issue.</div>
+        </div>
+      </div>
+
+      <div class="ce-card">
+        <div class="ce-tag">Example 3 — New Material Batch</div>
+        <div class="ce-scenario">Reflow oven temperatures are running 9°F higher than usual across three product lines this week.</div>
+        <div class="ce-ai-take">
+          <div class="ce-ai-label">🤖 What the AI sees</div>
+          <div class="ce-ai-text">Oven temperature anomaly detected across multiple lines. Statistical deviation exceeds 2 standard deviations from historical baseline. Possible equipment malfunction. Alert sent to maintenance.</div>
+        </div>
+        <div class="ce-human-take">
+          <div class="ce-human-label">👤 What an experienced worker knows</div>
+          <div class="ce-human-text">The facility switched solder paste suppliers last week. The new paste has a slightly different reflow profile — it needs to run hotter to achieve the same solder quality. This was a planned process change. The AI sees an anomaly; the worker knows it's intentional. Without that context, maintenance might "fix" something that isn't broken.</div>
+        </div>
+      </div>
+
+      <div class="ce-card">
+        <div class="ce-tag">Example 4 — Quality Inspection Pattern</div>
+        <div class="ce-scenario">The AI quality system flags 3–4 times more parts on Fridays between 3pm and 5pm than any other time period.</div>
+        <div class="ce-ai-take">
+          <div class="ce-ai-label">🤖 What the AI sees</div>
+          <div class="ce-ai-text">Significant Friday afternoon quality anomaly. Defect rate elevated 3.2× compared to weekly baseline. Pattern has repeated for 11 consecutive weeks. Root cause unknown. Escalate to quality team.</div>
+        </div>
+        <div class="ce-human-take">
+          <div class="ce-human-label">👤 What an experienced worker knows</div>
+          <div class="ce-human-text">Friday afternoon is end-of-week cleanup and weekly maintenance. That's when workers are cleaning parts, reconfiguring machines, and running test sequences — a lot of what the AI sees during that window isn't regular production. The AI is counting maintenance runs and test parts as defects. It doesn't know that Friday afternoons look different by design.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Together they're better -->
+  <div class="section fade-in">
+    <h2>The Combination Is More Powerful Than Either Alone</h2>
+    <p>The point isn't that the AI is wrong and the worker is right. Sometimes the AI catches something the worker's experience has caused them to dismiss too quickly. Sometimes the worker's context explains away what looks like a real problem. The power is in combining both.</p>
+
+    <div class="together">
+      <div class="together-label">🤝 The Right Partnership</div>
+      <div class="together-heading">AI Data + Worker Context = Better Decisions Than Either Alone</div>
+      <div class="together-cols">
+        <div class="together-col">
+          <div class="together-col-label">AI Brings</div>
+          <div class="together-col-items">Continuous monitoring<br>Pattern recognition<br>Consistent measurement<br>No fatigue or distraction<br>Historical trend data<br>Simultaneous coverage</div>
+        </div>
+        <div class="together-plus">+</div>
+        <div class="together-col">
+          <div class="together-col-label">Worker Brings</div>
+          <div class="together-col-items">Machine-specific history<br>Facility-specific context<br>Recent process changes<br>Sensory observation<br>Judgment about anomalies<br>Accountability for action</div>
+        </div>
+      </div>
+      <div class="together-result">
+        <div class="together-result-label">The Result</div>
+        <div class="together-result-text">Fewer false alarms acted on. Fewer real problems missed. Faster, more accurate diagnoses. Decisions that reflect both what the data says and what the situation actually means.</div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>An AI system that knows everything about motor failure patterns in general, combined with a worker who knows everything about this motor in particular — that combination is better than any AI or any human working alone.</p></div>
+  </div>
+
+  <!-- Simulation -->
+  <div class="section fade-in">
+    <h2>Apply Your Context: What Would You Do?</h2>
+
+    <div class="context-sim">
+      <div class="cs-label">🏭 Context Matters Practice</div>
+      <div class="cs-title">Use What You Know</div>
+      <div class="cs-sub">In each scenario, you have context the AI doesn't. Use it to make a better decision than the AI's recommendation alone would suggest.</div>
+      <div class="cs-context">
+        <div class="cs-context-label" id="cs-context-label">Situation 1 of 3</div>
+        <div class="cs-context-text" id="cs-context-text"></div>
+      </div>
+      <div class="cs-alert">
+        <div class="cs-alert-header" id="cs-alert-header">⚠️ AI Alert</div>
+        <div class="cs-alert-text" id="cs-alert-text"></div>
+      </div>
+      <div class="cs-q" id="cs-q"></div>
+      <div class="cs-opts" id="cs-opts"></div>
+      <div class="cs-result good" id="cs-good"></div>
+      <div class="cs-result bad" id="cs-bad"></div>
+      <button class="cs-next" id="cs-next" onclick="nextCS()">Next Situation →</button>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why can't AI simply be given more data to eventually eliminate the need for worker context?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">It can — with enough data, AI will eventually know everything about a specific factory</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Some worker knowledge is tacit — embedded in years of physical presence and observation that's genuinely difficult to capture in any dataset. And context keeps changing: new materials, process tweaks, equipment repairs. Workers update their understanding continuously; AI models update only when deliberately retrained.</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Data storage is too expensive to capture all factory-specific information</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Workers deliberately keep their knowledge secret to protect their jobs</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. Tacit knowledge — the intuitive, experiential understanding that comes from years of physical presence — is genuinely difficult to capture in data. And even if you could capture it all at one moment, context keeps evolving: new materials arrive, settings get adjusted, equipment changes. Workers update continuously through daily experience. AI updates only through deliberate retraining. That gap never fully closes.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. The real barriers are more fundamental. Tacit knowledge — the "I just know this machine" understanding — is genuinely hard to express in data form. And context is always changing: new material batches, process tweaks, equipment repairs. Workers absorb these changes automatically through daily experience. AI models only update when someone deliberately retrains them. The gap is structural, not just a matter of collecting more data.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI systems are trained on general data — they don't know your facility's specific machines, schedules, quirks, or recent changes.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Tacit knowledge — the intuitive, experiential understanding of a specific floor — lives in workers and is genuinely difficult to capture in any dataset.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Context changes constantly: new materials, process tweaks, equipment repairs. Workers update continuously through daily experience; AI updates only when deliberately retrained.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The combination of AI data and worker context produces better decisions than either alone — fewer false alarms acted on, fewer real problems missed, faster and more accurate diagnoses.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Your knowledge of your factory is not a replacement for AI — and AI is not a replacement for your knowledge. They complement each other in ways that make the partnership more powerful than either alone.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const situations=[
+  {
+    label:'Situation 1 of 3',
+    context:"You've worked on Line 3's packaging machine for 5 years. Three weeks ago, maintenance replaced the main drive belt with a slightly different brand — the only one available at the time. Ever since, the vibration sensor has read about 0.4 mm/s higher than it used to. Maintenance knows about it and said to monitor it. Nothing else has changed.",
+    alertHeader:'⚠️ AI Alert — Vibration Anomaly',
+    alert:'Conveyor drive motor vibration: 1.9 mm/s. Historical baseline for this sensor: 1.5 mm/s. Deviation: +0.4 mm/s for 21 consecutive days. Trend: stable. Pattern matches early mechanical wear profile. Recommend inspection.',
+    q:"Given your context, what's the best response?",
+    opts:["Call for immediate maintenance — the AI says mechanical wear and you should trust it","Note that the elevated reading is a known artifact of the belt replacement, document that this is the new baseline, and confirm with maintenance that this is what they expected — then monitor for any further increase","Ignore the alert — you know it's wrong so there's no need to document anything","Shut down the line until the vibration drops back to the old baseline"],
+    correct:1,
+    good:"✅ Right. Your context explains the reading perfectly — the belt replacement changed the baseline. The right move is to confirm with maintenance that this is expected, document your understanding of why the reading is elevated, and watch for any further increase above the new baseline. The AI can't know about the belt change; you do. Together, you produce a better outcome than either would alone.",
+    bad:"❌ Not quite. Your knowledge of the belt replacement is exactly the context the AI doesn't have. The right response uses that context: confirm with maintenance that the reading matches their expectation post-replacement, document it as the new baseline, and continue monitoring for any increase beyond the current level. Ignoring without documentation leaves no record. Shutting down wastes production unnecessarily."
+  },
+  {
+    label:'Situation 2 of 3',
+    context:"You're a quality inspector. Your facility just started using a new adhesive from a different supplier — it arrived two days ago and production started using it yesterday. You know the old adhesive cured to a slightly matte finish; the new one cures slightly shinier.",
+    alertHeader:'⚠️ AI Alert — Surface Finish Anomaly',
+    alert:'Vision inspection system: Surface finish variation detected on 34% of units in last production hour. Deviation from trained baseline exceeds threshold. Defect classification: surface anomaly. Recommended action: Hold batch, escalate to quality team.',
+    q:"What should you do with this alert, given what you know?",
+    opts:["Accept the AI's defect classification and hold the batch — 34% is a lot","Recognize that the new adhesive's shinier finish may be appearing as 'surface anomaly' to the AI — pull sample units, physically inspect them, and check whether the 'defect' is actually the new adhesive's normal finish before holding the entire batch","Dismiss the alert entirely — you know the adhesive changed so any alert this week must be a false alarm","Ignore the alert until end of shift and then file a report"],
+    correct:1,
+    good:"✅ Correct. Your context about the new adhesive is critical. The AI was trained on the old adhesive's finish — the new one legitimately looks different to the camera. Before holding an entire batch, physically inspect sample units to determine whether the flagged 'surface anomaly' is actually a defect or just the new adhesive's normal appearance. This is your knowledge filling the AI's blind spot — and it could save the facility from holding perfectly good product.",
+    bad:"❌ Your context matters here. The AI's training data was built around the old adhesive's finish. The new adhesive looks different. Before holding the batch, physically inspect sample units to determine whether the AI is detecting a real defect or simply the new supplier's adhesive looking different than what it was trained on. Dismissing entirely is also wrong — it might be a real problem with the new adhesive. The right move is inspection first."
+  },
+  {
+    label:'Situation 3 of 3',
+    context:"You're a maintenance tech. It's 6:10am Monday. The facility runs at reduced capacity Monday mornings — about half the lines are active — because the weekend skeleton crew shuts equipment down for cleaning and it takes time to bring everything back online.",
+    alertHeader:'⚠️ AI Alert — Production Efficiency',
+    alert:'Overall Equipment Effectiveness (OEE) for facility: 41%. Normal OEE target: 85%+. Current OEE is 52% below target. Significant underperformance detected. Recommend immediate investigation of production bottlenecks.',
+    q:"How should you interpret this alert?",
+    opts:["Immediately call the plant manager — 41% OEE is a crisis requiring urgent action","Recognize this as the normal Monday morning startup pattern — most lines are intentionally offline during this window. Document that the low OEE is planned and expected, and note that OEE should return to normal as lines come online over the next 90 minutes","Dismiss the alert and don't document anything since it's a false alarm","Start an emergency investigation of all offline equipment immediately"],
+    correct:1,
+    good:"✅ Right. 41% OEE at 6:10am Monday is exactly what a facility running a planned partial-startup looks like. The AI sees a number far below target and correctly flags it — but it doesn't know Monday mornings are different by design. Your context tells you this is expected. Document it clearly: planned startup state, expected return to normal by 7:30am, no intervention required. This prevents an unnecessary investigation and creates a useful record for tracking when the pattern deviates from normal.",
+    bad:"❌ Your context is exactly what the AI needs here but doesn't have. Monday 6:10am during planned startup is supposed to look like this. The right move isn't emergency action — it's to document clearly that this is a planned state and note when OEE is expected to return to normal. That documentation is important: it creates a record that helps distinguish the expected pattern from a real Monday morning problem in the future."
+  }
+];
+let csIdx=0,csDone=false;
+function renderCS(){
+  const s=situations[csIdx];
+  document.getElementById('cs-context-label').textContent=s.label;
+  document.getElementById('cs-context-text').textContent=s.context;
+  document.getElementById('cs-alert-header').textContent=s.alertHeader;
+  document.getElementById('cs-alert-text').textContent=s.alert;
+  document.getElementById('cs-q').textContent=s.q;
+  const c=document.getElementById('cs-opts');c.innerHTML='';
+  s.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='cs-opt';b.textContent=o;b.onclick=()=>doCS(i);c.appendChild(b);});
+  document.getElementById('cs-good').className='cs-result good';
+  document.getElementById('cs-bad').className='cs-result bad';
+  document.getElementById('cs-next').classList.remove('show');
+  csDone=false;
+}
+function doCS(choice){
+  if(csDone)return;csDone=true;
+  const s=situations[csIdx];
+  const btns=document.querySelectorAll('#cs-opts .cs-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(choice===s.correct){btns[choice].classList.add('correct');document.getElementById('cs-good').textContent=s.good;document.getElementById('cs-good').classList.add('show');}
+  else{btns[choice].classList.add('wrong');document.getElementById('cs-bad').textContent=s.bad;document.getElementById('cs-bad').classList.add('show');}
+  if(csIdx<situations.length-1)document.getElementById('cs-next').classList.add('show');
+}
+function nextCS(){csIdx++;renderCS();}
+renderCS();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

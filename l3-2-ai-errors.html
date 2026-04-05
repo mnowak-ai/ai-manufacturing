@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When AI Gets It Wrong on the Shop Floor: Real Cases of AI Errors in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Case study cards */
+.case{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;margin-bottom:20px;overflow:hidden;}
+.case-header{padding:24px 28px 0;}
+.case-type{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:5px 12px;border-radius:100px;margin-bottom:12px;}
+.case-type.false-pos{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.case-type.false-neg{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.case-type.model-drift{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.case-type.overtrust{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.case-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;line-height:1.25;}
+.case-body{padding:0 28px 24px;}
+.case-what{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;}
+.case-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.case-tab-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1.5px solid var(--purple-mid);background:var(--white);cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.case-tab-btn.active{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.case-tab-panel{display:none;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.8;color:var(--gray-text);}
+.case-tab-panel.active{display:block;}
+.case-lesson{margin-top:12px;background:var(--purple-pale);border-radius:12px;padding:14px 18px;}
+.cl-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.cl-text{font-size:13px;line-height:1.7;color:var(--purple-dark);}
+
+/* Error type explainer */
+.error-types{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.et{border-radius:16px;padding:20px;border:2px solid;}
+.et.fp{background:var(--orange-pale);border-color:var(--orange);}
+.et.fn{background:var(--red-pale);border-color:var(--red);}
+.et-icon{font-size:28px;margin-bottom:8px;}
+.et-name{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.et.fp .et-name{color:#92400E;}
+.et.fn .et-name{color:var(--red);}
+.et-def{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.et-example{margin-top:8px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+@media(max-width:520px){.error-types{grid-template-columns:1fr;}}
+
+/* Habit builder */
+.habits{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.habit{display:flex;gap:14px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;align-items:flex-start;}
+.habit-num{width:28px;height:28px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px;}
+.habit-body{}
+.habit-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.habit-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.3 — Human vs. AI Roles</div>
+  <h1>When AI Gets It Wrong on the Shop Floor: Real Cases of AI Errors in Manufacturing</h1>
+  <p class="hero-sub">The video showed one illustration of an AI error. Reality has more — and studying what actually goes wrong builds the critical evaluation habit every worker needs.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>An AI system that is right 99% of the time sounds impressive — until you multiply it across millions of decisions per year at a large manufacturing facility. At that scale, the 1% represents thousands of errors. Some are caught. Some aren't. Some cost money. Some cost more.</p>
+    <p>This article is not about scaring you away from AI tools. It's about building the most important habit for anyone who works alongside them: <mark>critical evaluation.</mark> Understanding how AI actually fails — specifically, not abstractly — is what makes you the human layer that catches errors before they become problems.</p>
+  </div>
+
+  <!-- Error types -->
+  <div class="section fade-in">
+    <h2>Two Ways AI Gets It Wrong</h2>
+    <p>Before the case studies, the vocabulary. AI errors in manufacturing almost always fall into one of two categories:</p>
+    <div class="error-types">
+      <div class="et fp">
+        <div class="et-icon">🔔</div>
+        <div class="et-name">False Positive</div>
+        <div class="et-def">The AI flags something as a problem when it isn't actually a problem. It's too sensitive — seeing danger where there is none.</div>
+        <div class="et-example">Example: AI predicts a bearing failure that doesn't actually occur. Maintenance team does an unnecessary inspection.</div>
+      </div>
+      <div class="et fn">
+        <div class="et-icon">🔕</div>
+        <div class="et-name">False Negative</div>
+        <div class="et-def">The AI misses a real problem — it doesn't flag something that actually is dangerous or defective. It's not sensitive enough.</div>
+        <div class="et-example">Example: A defective part passes the AI quality inspection and ships to a customer. The defect was real; the AI didn't catch it.</div>
+      </div>
+    </div>
+    <p>Both types are costly — but in different ways. False positives create unnecessary disruption and erode trust in the system. False negatives let real problems pass undetected. <mark>Good AI systems try to minimize both, but can never eliminate either.</mark> That's why the human layer of review always matters.</p>
+  </div>
+
+  <!-- Case studies -->
+  <div class="section fade-in">
+    <h2>Case Studies: What Happened and What We Can Learn</h2>
+    <p>These cases are drawn from documented incidents and patterns in manufacturing AI deployments. They illustrate specific failure modes — and what made the difference between catching the error and missing it.</p>
+
+    <!-- Case 1 -->
+    <div class="case">
+      <div class="case-header">
+        <div class="case-type false-pos">⚠️ False Positive</div>
+        <div class="case-title">The Predictive Maintenance System That Cried Wolf — and Then Nobody Listened</div>
+      </div>
+      <div class="case-body">
+        <div class="case-what">A mid-sized automotive parts plant deployed a predictive maintenance AI across 40 CNC machines. In the first month, the system generated 312 maintenance alerts. Maintenance teams investigated and found that 71% were false positives — machines that were performing normally despite the alert. By month three, technicians had developed an informal policy: don't respond to alerts until you get a second one for the same machine within 48 hours. Then a real failure happened on a machine that had generated only one alert — the one the team had learned to ignore. The machine seized during a production run, causing $340,000 in downtime and part damage.</div>
+        <div class="case-tabs">
+          <button class="case-tab-btn active" onclick="showCaseTab(this,'c1-what')">What Went Wrong</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c1-caught')">What Should Have Happened</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c1-fix')">Root Cause</button>
+        </div>
+        <div class="case-tab-panel active" id="c1-what">The AI was not calibrated correctly for the specific machines in this facility — its sensitivity thresholds were too low, generating alerts at vibration levels that were normal for this equipment. Instead of reporting and fixing the calibration, the team adapted by ignoring alerts — which solved the annoyance problem but eliminated the safety net.</div>
+        <div class="case-tab-panel" id="c1-caught">When alert false-positive rates climb above 30-40%, facilities should escalate to their AI vendor for recalibration — not develop informal workarounds. Every workaround that bypasses the alert system increases the risk that a real alert will be treated the same way as false ones.</div>
+        <div class="case-tab-panel" id="c1-fix">The root cause was a miscalibrated model deployed without facility-specific tuning. The AI was trained on industry-average equipment behavior, not the specific machines in this plant. An experienced maintenance tech's knowledge of "what normal looks like here" was never incorporated into the AI's baseline.</div>
+        <div class="case-lesson">
+          <div class="cl-label">Worker Takeaway</div>
+          <div class="cl-text">When you notice that alerts are frequently wrong, report it formally — don't just stop responding to them. A high false-positive rate is a system problem that needs to be fixed at the source. Your informal workaround might feel reasonable but creates invisible risk.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="case">
+      <div class="case-header">
+        <div class="case-type false-neg">🚨 False Negative</div>
+        <div class="case-title">The Quality Inspection AI That Missed a Batch — Because It Hadn't Seen That Defect Before</div>
+      </div>
+      <div class="case-body">
+        <div class="case-what">A consumer electronics manufacturer deployed a computer vision quality inspection system to detect surface defects on circuit boards. The system was trained on 18 months of historical defect images — scratches, solder bridges, missing components. It achieved 99.2% detection accuracy in testing. Then a new type of defect appeared: hairline cracks from a slightly different reflow oven temperature profile introduced during a facility upgrade. The AI hadn't been trained on this defect type. It looked different enough from existing training examples that the model classified cracked boards as acceptable. 14,000 units shipped before the defect was discovered through customer returns.</div>
+        <div class="case-tabs">
+          <button class="case-tab-btn active" onclick="showCaseTab(this,'c2-what')">What Went Wrong</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c2-caught')">What Should Have Happened</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c2-fix')">Root Cause</button>
+        </div>
+        <div class="case-tab-panel active" id="c2-what">The AI could only detect defect types it had learned from training data. When a process change introduced a new defect type, the AI had no reference to compare it against — so it passed boards it couldn't classify as defective. The system was doing exactly what it was designed to do; it just hadn't been designed for this new situation.</div>
+        <div class="case-tab-panel" id="c2-caught">Any time a process changes — new equipment, new materials, new settings — the AI quality model should be retrained or supplemented with human inspection until new defect patterns can be characterized. A process change that the AI doesn't know about is a blind spot by definition.</div>
+        <div class="case-tab-panel" id="c2-fix">The root cause was a process change (oven temperature profile) that wasn't communicated to the team responsible for AI model maintenance. The AI model and the manufacturing process diverged — one updated, one didn't. Regular audits comparing AI performance against human spot-checks would have caught the divergence earlier.</div>
+        <div class="case-lesson">
+          <div class="cl-label">Worker Takeaway</div>
+          <div class="cl-text">When process parameters change — even small ones — flag it to whoever manages the AI system. A change in materials, settings, or equipment that the AI wasn't trained on is a potential blind spot. You may be the only person who knows both the process change and the AI's limitations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="case">
+      <div class="case-header">
+        <div class="case-type model-drift">📉 Model Drift</div>
+        <div class="case-title">The Predictive System That Got Gradually Worse — and Nobody Noticed Until It Was Very Wrong</div>
+      </div>
+      <div class="case-body">
+        <div class="case-what">A steel manufacturing plant deployed a predictive model to optimize furnace temperature settings for energy efficiency. At deployment, the model was highly accurate — it had been trained on 3 years of furnace data. Over the next 18 months, the furnaces underwent gradual wear, new alloys were introduced to the product mix, and seasonal operating patterns shifted. The model's recommendations became slowly less aligned with actual optimal settings — but slowly enough that no single recommendation seemed obviously wrong. Energy consumption crept up 11% over 18 months before an audit comparing AI recommendations against actual optimal settings revealed the divergence.</div>
+        <div class="case-tabs">
+          <button class="case-tab-btn active" onclick="showCaseTab(this,'c3-what')">What Went Wrong</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c3-caught')">What Should Have Happened</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c3-fix')">Root Cause</button>
+        </div>
+        <div class="case-tab-panel active" id="c3-what">Model drift — the gradual degradation of an AI model's accuracy as the real world it was trained on changes — went undetected because there was no systematic process for auditing AI recommendations against actual outcomes. The model kept producing confident-looking recommendations that were no longer optimal.</div>
+        <div class="case-tab-panel" id="c3-caught">AI models need regular performance audits — not just at deployment, but on an ongoing schedule. Comparing AI recommendations against actual outcomes quarterly can catch drift before it compounds. In this case, any furnace operator who noticed the recommendations "feeling off" against their own experience should have had a formal channel to escalate that concern.</div>
+        <div class="case-tab-panel" id="c3-fix">The root cause was treating AI model deployment as a one-time event rather than an ongoing maintenance responsibility. Like a machine that needs calibration, an AI model needs periodic retraining and performance validation. This was treated as a technology installation rather than an operational process.</div>
+        <div class="case-lesson">
+          <div class="cl-label">Worker Takeaway</div>
+          <div class="cl-text">If AI recommendations start feeling off compared to your experience — things that used to work well now seem slightly wrong — that's a signal worth reporting. Gradual drift is nearly invisible in any single recommendation but meaningful across time. Your experience is a calibration instrument the model doesn't have.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="case">
+      <div class="case-header">
+        <div class="case-type overtrust">💤 Overtrust</div>
+        <div class="case-title">The Robot That Workers Trusted Too Much — Until They Stopped Checking Its Work at All</div>
+      </div>
+      <div class="case-body">
+        <div class="case-what">An aerospace components manufacturer introduced a collaborative robot ("cobot") to perform precision torque application on fasteners. The cobot's AI system logged every torque value applied and flagged any application outside specification. Workers, seeing that the AI logged every application and flagged every anomaly, stopped performing the manual spot-check torque verification they'd previously done on 10% of fasteners. The AI system was performing correctly — but its torque sensor had a calibration drift issue that caused readings 3.2% below actual torque applied. Below-spec torque on aerospace fasteners is a structural safety issue. The calibration error went undetected for 4 months because the human spot-check layer had been removed.</div>
+        <div class="case-tabs">
+          <button class="case-tab-btn active" onclick="showCaseTab(this,'c4-what')">What Went Wrong</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c4-caught')">What Should Have Happened</button>
+          <button class="case-tab-btn" onclick="showCaseTab(this,'c4-fix')">Root Cause</button>
+        </div>
+        <div class="case-tab-panel active" id="c4-what">Workers correctly noticed that the AI was doing quality logging consistently — but incorrectly concluded that this meant their manual verification was redundant. The AI was logging what its (miscalibrated) sensors told it, not what was actually happening. Removing the human check removed the only layer that could have caught the sensor error.</div>
+        <div class="case-tab-panel" id="c4-caught">Human verification layers should not be removed just because an AI system is tracking the same process. The human check catches errors in the AI system itself — not just errors the AI is designed to catch in production. In safety-critical applications, redundant verification is specifically designed to catch the failure of any single system, including the AI.</div>
+        <div class="case-tab-panel" id="c4-fix">The root cause was conflating "AI is logging this process" with "AI is correctly logging this process." Logging and accuracy are different things. The human spot-check was catching errors in both the work and the measurement. When it was removed, only one remained.</div>
+        <div class="case-lesson">
+          <div class="cl-label">Worker Takeaway</div>
+          <div class="cl-text">Don't remove your own verification habits just because the AI is also tracking something. Your check catches AI errors. The AI can have sensor drift, calibration issues, or software bugs — and your independent check is what catches those. Redundancy is protection, not inefficiency.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habit builder -->
+  <div class="section fade-in">
+    <h2>The Critical Evaluation Habit: Five Questions to Ask Every Time</h2>
+    <p>These case studies all share something: a worker who noticed something off — or could have — but either didn't have a clear process for escalating, or had stopped paying attention because the AI seemed reliable. Here are five questions that build the critical evaluation habit:</p>
+    <div class="habits">
+      <div class="habit"><div class="habit-num">1</div><div class="habit-body"><div class="habit-title">Does this alert match what I'm seeing and hearing right now?</div><div class="habit-desc">AI reads sensors. You read the room. If the AI says a machine is failing but everything sounds, feels, and smells normal — that discrepancy is worth noting, not dismissing. And the reverse: if the machine seems off to you but the AI isn't alerting, that matters too.</div></div></div>
+      <div class="habit"><div class="habit-num">2</div><div class="habit-body"><div class="habit-title">Has anything changed recently that the AI might not know about?</div><div class="habit-desc">New materials. Different settings. A process tweak from last week. A recent equipment swap. Any change that happened after the AI model was trained is a potential blind spot. You may be the only person who knows both the change and the AI's limitations.</div></div></div>
+      <div class="habit"><div class="habit-num">3</div><div class="habit-body"><div class="habit-title">Is this alert type historically reliable — or has it been noisy?</div><div class="habit-desc">Track your own experience with alert types over time. If a certain alert fires frequently and is usually wrong, that's worth reporting — and worth being more skeptical about. If a certain alert rarely fires and is almost always right, treat it with more urgency.</div></div></div>
+      <div class="habit"><div class="habit-num">4</div><div class="habit-body"><div class="habit-title">Am I removing a human check because the AI covers it — or because I'm cutting corners?</div><div class="habit-desc">Be honest with yourself. If you've stopped doing a manual verification because "the AI does it," ask whether you're eliminating redundancy or eliminating the check that catches AI errors. In safety-critical processes, the answer is almost always: keep both.</div></div></div>
+      <div class="habit"><div class="habit-num">5</div><div class="habit-body"><div class="habit-title">Who should know about this besides me?</div><div class="habit-desc">An AI error you notice but keep to yourself helps no one. Your supervisor, the safety team, the AI system manager — someone in your facility is responsible for model performance. Feeding them your observations improves the system for everyone on your floor.</div></div></div>
+    </div>
+    <div class="pull-quote"><p>The workers who get the most out of AI aren't the ones who trust it most blindly. They're the ones who understand it well enough to know exactly where to look for its mistakes.</p></div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">In the aerospace cobot case, workers stopped doing manual torque spot-checks because the AI was logging every torque application. What was the fatal flaw in this reasoning?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">The workers should have been logging torque manually instead of relying on the cobot at all</button>
+        <button class="quiz-opt" onclick="doQ1(1)">The human spot-check was there to catch errors in the AI system itself — not just errors in the work. When the AI's sensor drifted, the human check was the only layer that would have detected it — and it had been removed.</button>
+        <button class="quiz-opt" onclick="doQ1(2)">The AI wasn't capable of logging torque applications accurately enough for aerospace work</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Aerospace work doesn't allow cobots — the problem was using one at all</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. This is the key distinction: "the AI is tracking this" and "the AI is accurately tracking this" are not the same statement. The human spot-check wasn't redundant with the AI's logging — it was a check on the AI's logging. When the sensor drifted, the AI continued logging confidently incorrect values. The manual check would have caught the divergence. Without it, there was nothing to catch errors in the system itself.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not the core issue. The cobot was appropriate for the work and was logging accurately — according to its own (drifted) sensors. The fatal flaw was removing the human check that would have caught the sensor drift. "The AI is logging this" doesn't mean "the AI is correctly logging this." The human layer catches AI errors; when it was removed, that catch disappeared.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI errors fall into two categories: false positives (flagging problems that don't exist) and false negatives (missing real problems). Both are costly in different ways.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Real failure patterns include miscalibrated models (crying wolf until ignored), out-of-distribution defects (missing new problem types), model drift (gradually wrong over time), and overtrust (removing human checks that catch AI errors).</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Process changes are AI blind spots by default — any change the model wasn't trained on is a potential gap that human awareness can cover.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Critical evaluation means asking five questions: Does this match what I observe? Has anything changed the AI doesn't know? Is this alert type historically reliable? Am I removing checks or cutting corners? Who else should know?</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The workers who get the most out of AI are the ones who understand it well enough to know exactly where to look for its mistakes.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+function showCaseTab(btn,panelId){
+  const caseEl=btn.closest('.case');
+  caseEl.querySelectorAll('.case-tab-btn').forEach(b=>b.classList.remove('active'));
+  caseEl.querySelectorAll('.case-tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>
