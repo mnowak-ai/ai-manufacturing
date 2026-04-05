@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Real Safety Incident Walk-Through: What Happens When the AI Alert Goes Off</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Narrative scene blocks */
+.scene{margin:28px 0;}
+.scene-timestamp{display:inline-flex;align-items:center;gap:8px;background:#1a1025;color:var(--purple-mid);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:8px;margin-bottom:16px;}
+.scene-timestamp::before{content:"⏱";font-size:14px;}
+.scene-body{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:26px 30px;}
+.scene-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:8px;}
+.scene-heading{font-family:"Fraunces",serif;font-size:19px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.scene-text{font-size:15px;line-height:1.85;color:var(--gray-text);}
+.scene-text p{margin-bottom:12px;font-size:15px;}
+.scene-text p:last-child{margin-bottom:0;}
+
+/* AI alert display */
+.ai-alert{background:#1a1025;border-radius:16px;padding:20px 24px;margin:16px 0;}
+.aa-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.aa-dot{width:10px;height:10px;border-radius:50%;background:#F87171;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.aa-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#F87171;}
+.aa-body{font-size:13px;line-height:1.8;color:rgba(255,255,255,.85);}
+.aa-body strong{color:var(--white);}
+.aa-meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;}
+.aa-chip{font-size:11px;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);}
+
+/* Decision moment */
+.decision-box{background:var(--orange-pale);border:2px solid var(--orange);border-radius:18px;padding:22px 26px;margin:20px 0;}
+.db-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#92400E;margin-bottom:8px;}
+.db-heading{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#92400E;margin-bottom:10px;}
+.db-options{display:flex;flex-direction:column;gap:7px;}
+.db-option{background:rgba(255,255,255,.7);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--gray-text);cursor:pointer;border:1.5px solid transparent;transition:all .2s;}
+.db-option:hover{border-color:var(--orange);background:rgba(255,255,255,.95);}
+.db-option.chosen-right{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.db-option.chosen-wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.db-result{margin-top:12px;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7;display:none;}
+.db-result.show{display:block;}
+.db-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.db-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Outcome */
+.outcome{background:linear-gradient(135deg,var(--green),#166534);border-radius:20px;padding:26px 30px;margin:20px 0;color:var(--white);}
+.outcome-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;opacity:.7;margin-bottom:8px;}
+.outcome-heading{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:10px;}
+.outcome-text{font-size:14px;line-height:1.8;opacity:.9;}
+
+/* Lessons learned */
+.lessons{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.lesson{display:flex;gap:16px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.lesson-num{width:30px;height:30px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;margin-top:2px;}
+.lesson-body{}
+.lesson-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.lesson-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.2 — Safety &amp; AI</div>
+  <h1>A Real Safety Incident Walk-Through: What Happens When the AI Alert Goes Off</h1>
+  <p class="hero-sub">AI detects the hazard. Then what? A step-by-step walkthrough of a realistic safety scenario — and every human decision that still has to happen after the alert fires.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>Everything you've read in this lesson so far has described AI safety tools in the abstract: what they detect, how they work, where they fail. This article is different.</p>
+    <p>This is a single scenario — a realistic safety incident at a food manufacturing facility — told moment by moment. You'll see exactly what the AI detects, what information goes to whom, and every human decision that follows.</p>
+    <p>Because here's the thing that's easy to forget when you're reading about AI safety statistics: <mark>the alert is the beginning, not the end.</mark> What happens next is entirely human.</p>
+  </div>
+
+  <!-- Setup -->
+  <div class="section fade-in">
+    <h2>The Setting</h2>
+    <div class="scene">
+      <div class="scene-body" style="background:var(--blue-pale);border-color:var(--blue-mid);">
+        <div class="scene-who">The Facility</div>
+        <div class="scene-heading">Hartwell Food Manufacturing — Packaging Line 4</div>
+        <div class="scene-text">
+          <p>A mid-sized food packaging facility in the Midwest. Line 4 processes and packages dry goods — cereal, granola, trail mix — at high speed. The line runs three shifts. This scenario takes place at 11:40pm, 20 minutes into the start of the night shift.</p>
+          <p>The facility has deployed an AI vision system — Intenseye — across the production floor and warehouse. Cameras cover all major work areas. The system is configured to detect PPE violations, restricted zone entries, ergonomic risks, and forklift-pedestrian conflicts.</p>
+          <p><strong>People in this scenario:</strong></p>
+          <p>• <strong>Darius</strong> — Line 4 operator, 4 years at Hartwell, experienced and efficient<br>
+          • <strong>Supervisor Kim</strong> — Night shift floor supervisor for Lines 3–5, responsible for 22 workers<br>
+          • <strong>Marcus</strong> — Maintenance technician on-call for nights<br>
+          • <strong>The AI system</strong> — monitoring all cameras, configured with Hartwell's safety zones</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 1: The hazard develops -->
+  <div class="section fade-in">
+    <h2>The Incident Unfolds</h2>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:41 PM — The hazard develops</div>
+      <div class="scene-body">
+        <div class="scene-who">The Situation</div>
+        <div class="scene-heading">Darius reaches into the conveyor housing</div>
+        <div class="scene-text">
+          <p>Line 4's packaging machine is jamming intermittently — a granola cluster is catching on a guide rail inside the conveyor housing. The machine isn't shutting down fully; it's running slowly with a minor jam.</p>
+          <p>Darius has dealt with this before. The fix takes 30 seconds: reach in, clear the cluster, the line resumes. He's done it dozens of times. On day shift, there are always other workers nearby. At 11:41pm on night shift, the area around Line 4 is quiet.</p>
+          <p>He doesn't initiate lockout/tagout — the full machine shutdown and energy control procedure required before reaching into moving equipment. He reasons it'll just take a second. He reaches in without going through the procedure.</p>
+          <p>The conveyor doesn't fully stop. His sleeve catches on the partially moving belt.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:41:08 PM — AI detects the event</div>
+      <div class="scene-body">
+        <div class="scene-who">The AI System</div>
+        <div class="scene-heading">Camera 14 flags an unsafe condition</div>
+        <div class="scene-text">
+          <p>The Intenseye system, monitoring Camera 14 which covers Line 4's conveyor area, detects a worker with an arm inside the conveyor housing while the machine registers as partially operational. The system identifies this as a caught-in/between risk — one of its highest-severity alert categories.</p>
+        </div>
+        <div class="ai-alert">
+          <div class="aa-header"><div class="aa-dot"></div><div class="aa-label">🚨 High Severity Alert</div></div>
+          <div class="aa-body"><strong>Camera 14 — Line 4 Conveyor</strong><br>Worker detected with limb inside conveyor housing while machine is in operational state. Possible caught-in/between hazard. Machine status: partially running (slow-jam mode).<br><br>Recommended immediate action: Supervisor response to Line 4 area. Verify worker safety. Initiate emergency stop if not already done.</div>
+          <div class="aa-meta">
+            <div class="aa-chip">📍 Line 4 — Station 3</div>
+            <div class="aa-chip">🕐 11:41:08 PM</div>
+            <div class="aa-chip">⚠️ Severity: HIGH</div>
+            <div class="aa-chip">📹 Clip saved</div>
+          </div>
+        </div>
+        <div class="scene-text">
+          <p>The alert fires to Supervisor Kim's tablet and to the main safety control room screen simultaneously. A camera clip of the 8 seconds preceding the alert is automatically saved to the incident log.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:41:12 PM — The alert reaches Kim</div>
+      <div class="scene-body">
+        <div class="scene-who">Supervisor Kim</div>
+        <div class="scene-heading">Four seconds after detection: a decision</div>
+        <div class="scene-text">
+          <p>Kim is at the Line 3 area when her tablet vibrates. She sees the alert: high severity, Camera 14, Line 4 conveyor. Caught-in/between risk.</p>
+          <p>In her first three seconds, she makes several rapid judgments:</p>
+        </div>
+        <div class="decision-box">
+          <div class="db-label">Decision Point 1</div>
+          <div class="db-heading">Kim gets the alert. What does she do first?</div>
+          <div class="db-options" id="db1">
+            <div class="db-option" onclick="doDecision(1,0)">Check the camera clip to see if the situation has already resolved before heading over</div>
+            <div class="db-option" onclick="doDecision(1,1)">Head directly to Line 4 immediately — with a caught-in/between alert, seconds matter more than review</div>
+            <div class="db-option" onclick="doDecision(1,2)">Radio Darius first to ask what's happening on Line 4</div>
+            <div class="db-option" onclick="doDecision(1,3)">Mark the alert as reviewed and continue her Line 3 walkthrough — Darius is experienced and probably handled it</div>
+          </div>
+          <div class="db-result good" id="db1-good">✅ Right call. High-severity caught-in/between alerts mean a person may be in contact with moving equipment right now. A four-second review of a clip is a four-second delay when someone might be getting hurt. Supervisors are trained to respond physically first for high-severity alerts and assess remotely only for lower-severity ones.</div>
+          <div class="db-result bad" id="db1-bad">❌ Not the best call here. For a high-severity alert involving possible contact with moving equipment, immediate physical response is the protocol. Camera reviews, radio checks, and assumptions about worker competence all introduce delay when the risk is active. The AI flagged something happening right now — respond to now.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:41:28 PM — Kim arrives at Line 4</div>
+      <div class="scene-body">
+        <div class="scene-who">Supervisor Kim + Darius</div>
+        <div class="scene-heading">16 seconds after the alert: eyes on the situation</div>
+        <div class="scene-text">
+          <p>Kim arrives at Line 4's Station 3. She finds Darius standing back from the conveyor, his sleeve pulled and slightly torn, his forearm red but not lacerated. The conveyor has stopped — Darius managed to pull free and hit the emergency stop before any serious injury occurred.</p>
+          <p>He's shaken but okay. The situation could have been significantly worse.</p>
+          <p>Now Kim faces her second major decision:</p>
+        </div>
+        <div class="decision-box">
+          <div class="db-label">Decision Point 2</div>
+          <div class="db-heading">Darius is okay. The line is stopped. What does Kim do?</div>
+          <div class="db-options" id="db2">
+            <div class="db-option" onclick="doDecision(2,0)">Confirm Darius is okay, restart the line, and document the incident in tomorrow's shift report</div>
+            <div class="db-option" onclick="doDecision(2,1)">Keep the line down, call Marcus for maintenance inspection, file an incident report immediately, and conduct a brief conversation with Darius about lockout/tagout procedure — tonight, before the line restarts</div>
+            <div class="db-option" onclick="doDecision(2,2)">Send Darius home and restart the line with a different operator</div>
+            <div class="db-option" onclick="doDecision(2,3)">Restart the line after clearing the jam — Darius didn't get seriously hurt so the incident doesn't require formal documentation</div>
+          </div>
+          <div class="db-result good" id="db2-good">✅ Correct on all counts. The line stays down until Marcus confirms the conveyor is safe. OSHA requires near-miss incidents to be documented — and near-misses are among the most valuable safety data points a facility has. The conversation with Darius happens now, respectfully and focused on the procedure (not blame), because the lesson is freshest and the risk is clearest in this moment.</div>
+          <div class="db-result bad" id="db2-bad">❌ Not the right protocol. A near-miss involving a caught-in/between event requires: (1) the machine to be inspected before restart, (2) immediate incident documentation — OSHA requires near-miss reporting and it's one of the most valuable safety data points a facility has, and (3) a procedure conversation with Darius now, while the event is fresh. Deferring any of these increases future risk significantly.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:43 PM — Marcus is called</div>
+      <div class="scene-body">
+        <div class="scene-who">Maintenance — Marcus</div>
+        <div class="scene-heading">The machine gets inspected before anything restarts</div>
+        <div class="scene-text">
+          <p>Marcus arrives six minutes later. He performs a proper lockout/tagout of Line 4's conveyor — verifying that all energy sources are de-energized and locked before reaching in to inspect the guide rail and belt condition.</p>
+          <p>He finds that the guide rail that caused the initial jam has a metal burr — a sharp edge that's been catching material. Left unaddressed, it would have kept causing jams, and Darius (or whoever worked the line) would have kept reaching in to clear them.</p>
+          <p>Marcus files the maintenance ticket, grinds the burr smooth, and clears the line for restart after inspection.</p>
+          <p>The jam is fixed. The root cause — the thing that created the hazardous situation in the first place — is eliminated. Not just managed. Eliminated.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-timestamp">11:58 PM — Incident documented</div>
+      <div class="scene-body">
+        <div class="scene-who">Supervisor Kim + The System</div>
+        <div class="scene-heading">The paper trail that protects everyone</div>
+        <div class="scene-text">
+          <p>Kim files the incident report while Line 4 restarts. The report includes: time, location, worker involved, description of event, AI alert details and timestamp, camera clip reference number, maintenance action taken, and conversation notes from the discussion with Darius.</p>
+          <p>The AI system has already automatically logged the alert, camera clip, and machine-state data at the time of the event. Kim's report connects that automated record to the human context: what actually happened, what was done, and what the root cause was.</p>
+          <p>This report goes to the safety manager in the morning. The camera clip, with the guide rail burr identified as the root cause, will be used in a brief safety training point shared with all Line 4 operators at the next shift briefing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="outcome">
+      <div class="outcome-label">✅ Outcome</div>
+      <div class="outcome-heading">A near-miss became a safety improvement, not a statistic</div>
+      <div class="outcome-text">Darius went home with a bruised forearm and a shaken feeling — but not a serious injury. The root cause was found and fixed. The incident is documented and will inform training. The next operator to work Line 4 won't face the same jam — because the burr that caused it is gone.<br><br>The AI alert fired at 11:41:08. By 11:41:28, a supervisor was on scene. The 20-second response window is what made the difference between "near-miss" and something much worse.</div>
+    </div>
+  </div>
+
+  <!-- Lessons -->
+  <div class="section fade-in">
+    <h2>What This Scenario Teaches</h2>
+    <p>Walk back through the timeline. At every moment after the AI alert fired, a human was making a decision. The AI provided the trigger — the human chain determined the outcome.</p>
+
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">1</div>
+        <div class="lesson-body">
+          <div class="lesson-title">The AI is the first warning, not the final word</div>
+          <div class="lesson-desc">Intenseye detected the hazard in seconds and got the right information to the right person. But every action that followed — the response speed, the decision to keep the line down, the maintenance call, the documentation — was human judgment. The AI opened the window; humans had to climb through it.</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">2</div>
+        <div class="lesson-body">
+          <div class="lesson-title">Response speed matters as much as detection</div>
+          <div class="lesson-desc">The AI detected the event at 11:41:08. Kim arrived at 11:41:28. Twenty seconds. That response speed is only possible because Kim treated the high-severity alert as an immediate physical response, not a paperwork event. The alert is worthless if it sits on a tablet for five minutes.</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">3</div>
+        <div class="lesson-body">
+          <div class="lesson-title">The root cause was a mechanical problem, not a person problem</div>
+          <div class="lesson-desc">Darius skipped lockout/tagout — that's a real problem. But he skipped it because a jammed machine kept creating a situation where someone would need to reach in. Marcus found and fixed the burr. Effective safety doesn't just address the behavior; it addresses why the behavior kept happening.</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">4</div>
+        <div class="lesson-body">
+          <div class="lesson-title">Near-miss documentation is safety's most underused tool</div>
+          <div class="lesson-desc">This incident was documented fully — not filed away and forgotten. The camera clip, the maintenance ticket, and the training point all came from treating this near-miss as the critical data point it was. Facilities that investigate near-misses seriously have dramatically fewer serious accidents. The AI makes this documentation automatic; humans have to act on it.</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">5</div>
+        <div class="lesson-body">
+          <div class="lesson-title">The 20-second response gap is also a human gap</div>
+          <div class="lesson-desc">The AI fired instantly. Kim responded in 20 seconds. During that window, Darius pulled free on his own. The AI cannot physically intervene. That's not a criticism — it's a design reality. Human responders are the intervention layer. Their speed, judgment, and presence are what the AI enables but cannot replace.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>AI safety tools extend what humans can perceive. They don't extend what humans can do. The response — every decision, every action, every conversation — still belongs to the people on the floor.</p></div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">In this scenario, the AI alert fired at 11:41:08pm. Kim arrived at Line 4 at 11:41:28pm. What made that 20-second response possible?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">The AI sent the alert to the right person with enough context to act immediately, and Kim treated it as a physical emergency rather than a paperwork review</button>
+        <button class="quiz-opt" onclick="doQ1(1)">The AI automatically slowed the conveyor when it detected the hazard, giving Kim more time</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Darius manually reported the incident over radio at the same time the AI alerted</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Kim happened to be walking through Line 4's area when the alert fired</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Exactly right. Two things made the 20-second response possible: first, the AI got the right information to the right person in seconds (not minutes); second, Kim's decision to respond physically and immediately — rather than review, radio, or wait — compressed the window between detection and response as much as possible. Both were necessary. The AI without Kim's judgment, or Kim without the AI's detection speed, would have produced a worse outcome.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. In this scenario, the AI was a vision-only system — it detected the hazard but didn't automatically control the machine. The 20-second response came from two things working together: the AI getting the right information to Kim's tablet almost instantly, and Kim's decision to treat the high-severity alert as a physical emergency requiring immediate presence. That combination of AI detection speed and human response judgment is what made the difference.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">When an AI safety alert fires, a chain of human decisions immediately follows — response speed, on-scene assessment, whether to keep equipment down, maintenance calls, documentation, and follow-up training.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The AI is the first warning, not the final word. Detection is only valuable if it triggers a fast, appropriate human response.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Near-miss incidents should be fully documented and investigated — the AI makes documentation automatic, but humans have to act on the findings to prevent recurrence.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Effective safety addresses root causes, not just behaviors. In this scenario, the guide rail burr was the root cause — fixing it eliminated the hazardous situation entirely, not just this one instance of it.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI cannot physically intervene — it can only detect and alert. Human responders are the intervention layer, and their speed and judgment determine the actual outcome of every safety event.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Decision boxes
+function doDecision(box, choice){
+  const opts=document.querySelectorAll('#db'+box+' .db-option');
+  if(opts[0].classList.contains('chosen-right')||opts[0].classList.contains('chosen-wrong'))return;
+  const correctMap={1:1,2:1};
+  opts.forEach(o=>o.style.pointerEvents='none');
+  if(choice===correctMap[box]){
+    opts[choice].classList.add('chosen-right');
+    document.getElementById('db'+box+'-good').classList.add('show');
+  } else {
+    opts[choice].classList.add('chosen-wrong');
+    document.getElementById('db'+box+'-bad').classList.add('show');
+  }
+}
+
+// Quiz
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===0){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

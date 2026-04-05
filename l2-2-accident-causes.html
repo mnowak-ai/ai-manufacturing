@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Most Common Causes of Workplace Accidents in Manufacturing — and How AI Addresses Each One</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,46px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0;}
+.stat-card{background:var(--red-pale);border:2px solid var(--red);border-radius:18px;padding:20px;text-align:center;}
+.stat-num{font-family:"Fraunces",serif;font-size:32px;font-weight:900;color:var(--red);line-height:1;margin-bottom:6px;}
+.stat-label{font-size:12px;color:var(--gray-text);line-height:1.5;}
+@media(max-width:580px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+
+/* Cause cards — accordion style */
+.cause{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;margin-bottom:14px;overflow:hidden;}
+.cause-header{display:flex;align-items:center;gap:16px;padding:22px 24px;cursor:pointer;user-select:none;}
+.cause-icon{font-size:28px;flex-shrink:0;}
+.cause-title-wrap{flex:1;}
+.cause-rank{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:3px;}
+.cause-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);}
+.cause-chevron{font-size:18px;color:var(--gray-muted);transition:transform .25s;flex-shrink:0;}
+.cause.open .cause-chevron{transform:rotate(180deg);}
+.cause-body{display:none;padding:0 24px 24px;}
+.cause.open .cause-body{display:block;}
+.cause-stat{background:var(--red-pale);border:1px solid var(--red);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);font-weight:600;margin-bottom:14px;display:inline-block;}
+.cause-desc{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;}
+.cause-example{background:var(--orange-pale);border:1px solid var(--orange);border-radius:12px;padding:14px 18px;margin-bottom:14px;}
+.ce-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#92400E;margin-bottom:5px;}
+.ce-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.cause-ai{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;}
+.ca-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ca-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Industry ranking */
+.industry-rank{display:flex;flex-direction:column;gap:8px;margin:24px 0;}
+.ir-item{display:flex;align-items:center;gap:12px;}
+.ir-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.ir-rank.r1{background:var(--red);color:var(--white);}
+.ir-rank.r2{background:var(--orange);color:var(--white);}
+.ir-rank.r3{background:#FCD34D;color:#92400E;}
+.ir-rank.r4{background:var(--purple-mid);color:var(--purple-dark);}
+.ir-rank.r5{background:var(--gray-soft);color:var(--gray-text);}
+.ir-bar-wrap{flex:1;}
+.ir-label{font-size:13px;color:var(--gray-text);margin-bottom:4px;}
+.ir-bar-track{background:var(--purple-mid);border-radius:100px;height:10px;overflow:hidden;}
+.ir-bar-fill{height:100%;border-radius:100px;transition:width 1s ease;width:0%;}
+.ir-count{font-size:12px;font-weight:700;color:var(--gray-muted);min-width:80px;text-align:right;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.2 — Safety &amp; AI</div>
+  <h1>The Most Common Causes of Workplace Accidents in Manufacturing — and How AI Addresses Each One</h1>
+  <p class="hero-sub">Manufacturing is one of the most dangerous industries in America. Understanding exactly why — and how AI targets those specific causes — makes the safety stakes real.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>People get hurt in manufacturing. Not because companies don't care, and not because workers are careless. It happens because the environment is genuinely dangerous — heavy machines, fast-moving lines, loud noise, extreme temperatures, chemical exposure, and relentless physical demand — all happening at once, every shift, every day.</p>
+    <p>The numbers tell a story that's easy to forget when you're focused on production targets:</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">5,283</div>
+        <div class="stat-label">U.S. workers killed on the job in one recent year — about 14 per day</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2.6M</div>
+        <div class="stat-label">Non-fatal workplace injuries and illnesses reported annually</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">$170B</div>
+        <div class="stat-label">Annual cost of workplace injuries in the U.S. — wages, medical, productivity</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">Top 5</div>
+        <div class="stat-label">Manufacturing consistently ranks among the top 5 most dangerous industries</div>
+      </div>
+    </div>
+    <p>These aren't abstract statistics. Behind every number is someone who didn't go home the same way they arrived — or didn't go home at all. <mark>Understanding what causes these accidents is the first step to preventing them.</mark></p>
+  </div>
+
+  <!-- Industry danger ranking -->
+  <div class="section fade-in">
+    <h2>How Dangerous Is Manufacturing, Compared to Other Industries?</h2>
+    <p>Not all industries carry the same risk. Here's how manufacturing compares on fatal injury rates — fatalities per 100,000 full-time workers:</p>
+    <div class="industry-rank" id="ir">
+      <div class="ir-item">
+        <div class="ir-rank r1">1</div>
+        <div class="ir-bar-wrap">
+          <div class="ir-label">Agriculture, Forestry & Fishing</div>
+          <div class="ir-bar-track"><div class="ir-bar-fill" style="background:var(--red);" data-w="100%"></div></div>
+        </div>
+        <div class="ir-count">~23.1 / 100K</div>
+      </div>
+      <div class="ir-item">
+        <div class="ir-rank r2">2</div>
+        <div class="ir-bar-wrap">
+          <div class="ir-label">Construction</div>
+          <div class="ir-bar-track"><div class="ir-bar-fill" style="background:var(--orange);" data-w="80%"></div></div>
+        </div>
+        <div class="ir-count">~9.6 / 100K</div>
+      </div>
+      <div class="ir-item">
+        <div class="ir-rank r3">3</div>
+        <div class="ir-bar-wrap">
+          <div class="ir-label">Transportation & Warehousing</div>
+          <div class="ir-bar-track"><div class="ir-bar-fill" style="background:#FCD34D;" data-w="62%"></div></div>
+        </div>
+        <div class="ir-count">~7.3 / 100K</div>
+      </div>
+      <div class="ir-item">
+        <div class="ir-rank r4">4</div>
+        <div class="ir-bar-wrap">
+          <div class="ir-label">Manufacturing</div>
+          <div class="ir-bar-track"><div class="ir-bar-fill" style="background:var(--purple);" data-w="33%"></div></div>
+        </div>
+        <div class="ir-count">~2.1 / 100K</div>
+      </div>
+      <div class="ir-item">
+        <div class="ir-rank r5">5</div>
+        <div class="ir-bar-wrap">
+          <div class="ir-label">Healthcare & Social Assistance</div>
+          <div class="ir-bar-track"><div class="ir-bar-fill" style="background:var(--gray-muted);" data-w="12%"></div></div>
+        </div>
+        <div class="ir-count">~0.8 / 100K</div>
+      </div>
+    </div>
+    <p>Manufacturing is safer than construction on a per-worker basis — but it employs millions more people. That means the total number of manufacturing injuries is enormous in absolute terms. And unlike many industries, manufacturing injuries often involve <mark>high-severity events</mark>: crush injuries, amputations, falls from height, chemical burns.</p>
+  </div>
+
+  <!-- The causes -->
+  <div class="section fade-in">
+    <h2>The 6 Most Common Causes — and What AI Does About Each One</h2>
+    <p>OSHA, the Bureau of Labor Statistics, and manufacturing safety researchers have spent decades analyzing what actually causes injuries on the shop floor. The causes fall into six main categories. Click each one to see the full picture — including how AI addresses it.</p>
+
+    <div id="causes">
+      <div class="cause open" id="c0">
+        <div class="cause-header" onclick="toggleCause(0)">
+          <div class="cause-icon">🤸</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #1 — Most Common Overall</div>
+            <div class="cause-title">Overexertion and Ergonomic Injuries</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ 33% of all manufacturing injuries — the single largest category</div>
+          <div class="cause-desc">Overexertion injuries happen when the physical demands of a task exceed what the human body can handle — either in a single moment (lifting too much) or cumulatively over time (repeating the same motion thousands of times per shift). These aren't dramatic accidents. They're quiet injuries that build up until a worker suddenly can't move their shoulder, or shows up with a herniated disc after years of repetitive bending.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">A line worker at an auto parts plant lifts boxes of fasteners from a low pallet to a conveyor belt 400 times per shift — bending slightly at the waist each time. After 18 months, she develops a lumbar strain that requires surgery. At no point did anyone recognize it as a safety issue — it looked like ordinary work.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">Wearable sensors and AI camera systems can detect high-risk postures in real time — flagging when a worker bends at the waist instead of bending at the knees, or when their arm reaches above shoulder height repeatedly. AI systems like Intenseye track these ergonomic risk behaviors across shifts and generate reports showing which stations and roles carry the highest cumulative risk. Safety teams can then redesign tasks, adjust station heights, or rotate workers before injuries develop.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cause" id="c1">
+        <div class="cause-header" onclick="toggleCause(1)">
+          <div class="cause-icon">🤕</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #2</div>
+            <div class="cause-title">Slips, Trips, and Falls</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ ~25% of manufacturing injuries — leads to serious fractures and head injuries</div>
+          <div class="cause-desc">Wet floors from spills and cleaning, uneven surfaces, cluttered aisles, poor lighting, and cables running across walkways all contribute to slips, trips, and falls. Falls from elevated surfaces — platforms, loading docks, ladders — are especially dangerous and frequently fatal.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">A maintenance tech is called to fix a machine on a mezzanine level. In a hurry, he climbs a ladder with a tool bag in one hand. He slips on the third rung and falls 8 feet, fracturing his wrist and elbow. The ladder wasn't secured at the base — something a spotter worker would have caught, but no one was assigned.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">Computer vision AI can detect floor hazards — spills, obstructions, debris in walkways — and alert housekeeping or supervisors before someone encounters them. AI systems can also detect when ladders aren't properly secured or when workers are climbing without three-point contact. For wet floor detection specifically, some facilities use AI thermal cameras that identify temperature differences indicating a spill even before it's visible to the human eye.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cause" id="c2">
+        <div class="cause-header" onclick="toggleCause(2)">
+          <div class="cause-icon">⚙️</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #3</div>
+            <div class="cause-title">Contact with Objects and Equipment</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ ~20% of injuries — includes caught-in/between, struck-by, and crushing events</div>
+          <div class="cause-desc">This category covers a wide range of traumatic accidents: being struck by a moving object (a swinging crane load, a falling box), being caught between two objects (crushed by a machine moving toward a fixed surface), or contacting a moving machine part. These are often the most severe and disfiguring injuries in manufacturing — crush injuries and amputations are disproportionately common in this category.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">A press operator at a stamping plant reaches into the die area to clear a misplaced blank while the machine is in a low-energy state. The press cycles unexpectedly — a common cause of what OSHA calls "caught-in" injuries. He loses two fingers. The machine guard had been removed earlier in the shift to speed up a material change and not replaced.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">AI-powered machine guarding systems can detect human presence in a machine's danger zone and automatically stop the machine before contact — faster than any human emergency stop. Computer vision monitors for removed or bypassed guards and alerts supervisors immediately. For struck-by hazards, AI tracks moving equipment (cranes, forklifts) and flags when their paths intersect with worker locations.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cause" id="c3">
+        <div class="cause-header" onclick="toggleCause(3)">
+          <div class="cause-icon">🚜</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #4</div>
+            <div class="cause-title">Forklift and Powered Industrial Vehicle Accidents</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ ~85 forklift fatalities per year in the U.S. — disproportionately severe outcomes</div>
+          <div class="cause-desc">Forklifts are essential in almost every manufacturing and warehouse operation — and one of the leading sources of fatal injuries. The hazards are numerous: forklifts tipping over, workers being struck by a moving forklift, loads falling from elevated forks, and pedestrian workers being pinned between a forklift and a fixed surface. Forklifts move in spaces that also have foot traffic, often with limited sightlines.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">A forklift operator is backing out of a storage aisle with a tall load blocking his forward view. A worker crossing the aisle on foot — wearing headphones to block machine noise — doesn't hear the forklift. The forklift's reverse alarm isn't loud enough to penetrate the ambient noise. The worker is struck and pinned against a shelving unit. He survives with a broken pelvis.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">AI pedestrian detection systems on forklifts use cameras and sensors to detect human presence and automatically slow or stop the vehicle before impact. Fixed AI cameras at intersections and aisle entries detect converging pedestrian and forklift traffic, triggering lights or alarms before anyone enters the danger zone. Intenseye specifically targets forklift-pedestrian proximity as one of its highest-severity alert categories.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cause" id="c4">
+        <div class="cause-header" onclick="toggleCause(4)">
+          <div class="cause-icon">💊</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #5</div>
+            <div class="cause-title">Hazardous Substance Exposure</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ A major source of long-term occupational illness — effects may not appear for years</div>
+          <div class="cause-desc">Manufacturing uses a wide variety of chemicals — solvents, lubricants, adhesives, cleaning agents, metal dust, welding fumes. Exposure can be acute (a chemical spill causing immediate burns or respiratory damage) or chronic (daily low-level exposure to solvents or heavy metals causing organ damage over years). This is a particularly insidious category because workers often don't feel the effects until significant damage has already occurred.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">Workers at a painting facility spend years spraying isocyanate-based coatings without consistent respirator use — sometimes because masks are uncomfortable during long shifts, sometimes because respirator enforcement is lax. Over years, several workers develop occupational asthma. The connection to their work isn't made until a health survey, long after damage is done.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">AI-connected chemical sensors can monitor air quality in real time and alert supervisors when hazardous substance levels approach dangerous thresholds — before workers are exposed at harmful levels. Computer vision detects when workers are in chemical handling areas without proper respiratory protection. Smart personal monitors worn by workers can track individual exposure levels over a shift and alert when cumulative limits are approaching.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cause" id="c5">
+        <div class="cause-header" onclick="toggleCause(5)">
+          <div class="cause-icon">😴</div>
+          <div class="cause-title-wrap">
+            <div class="cause-rank">Cause #6</div>
+            <div class="cause-title">Human Factors: Fatigue, Distraction, and Rushing</div>
+          </div>
+          <div class="cause-chevron">▼</div>
+        </div>
+        <div class="cause-body">
+          <div class="cause-stat">⚠️ Underlies nearly all accident categories — rarely a direct cause, always a contributing one</div>
+          <div class="cause-desc">Human factors aren't a separate accident type — they're a multiplier that makes every other category more dangerous. A fatigued worker is more likely to slip, less likely to notice a machine behaving oddly, slower to respond to a hazard, and more likely to skip a safety step because they're rushing to finish before shift end. End-of-shift accidents spike because of fatigue. Night-shift accidents spike even more. "Rushing" culture — pressure to keep production numbers up — is one of the most documented causes of safety shortcuts.</div>
+          <div class="cause-example">
+            <div class="ce-label">Real Example</div>
+            <div class="ce-text">A packaging line is running behind target on a Friday afternoon. The supervisor is pushing for output to meet the week's numbers. A worker skips the lockout/tagout procedure — which requires shutting down a machine before reaching into it — because "it'll just take a second." It doesn't take a second. The machine cycles. She loses the tip of her index finger.</div>
+          </div>
+          <div class="cause-ai">
+            <div class="ca-label">🤖 How AI Addresses This</div>
+            <div class="ca-text">Fatigue detection AI uses computer vision to analyze facial cues — eye closure rate, head nodding, gaze patterns — in workers operating heavy machinery or in high-hazard zones, and alerts supervisors when fatigue indicators reach concerning levels. AI systems can also detect when safety procedures are being skipped — like a worker approaching a machine without performing lockout steps — and flag the skip in real time. Production dashboards can surface fatigue-risk data (hours since last break, shift length) alongside safety alerts.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">A worker has been doing the same assembly task for three years. She hasn't had any accidents. But she bends at the waist instead of her knees when picking up parts, about 300 times per shift. According to this article, what type of injury risk is she facing?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">None — if she hasn't been hurt in three years, her technique is probably fine</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Overexertion / ergonomic injury — cumulative strain that builds up over time, often showing no symptoms until it becomes serious</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Chemical exposure — repeated bending can cause blood pressure issues</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Slip and fall — bending forward shifts her center of gravity</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. This is a textbook ergonomic injury scenario. Three years without incident doesn't mean the technique is safe — it means the damage hasn't accumulated enough to surface yet. Repetitive improper posture causes cumulative musculoskeletal strain that often appears suddenly as a major injury after years of subclinical damage. This is exactly the type of risk AI wearable and camera systems are designed to catch before a worker is seriously hurt.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. Cumulative ergonomic injury is the risk here. Three years without a visible accident doesn't mean the technique is safe — musculoskeletal damage accumulates silently. The worker's body is being stressed 300 times per shift. Eventually that adds up to a significant injury, often appearing "suddenly" after years of building. This is exactly what the overexertion category covers.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="pull-quote"><p>AI doesn't eliminate the underlying dangers of manufacturing. It makes the invisible visible — turning risks that used to go unnoticed into data points that can be measured, tracked, and acted on before they hurt someone.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Manufacturing is one of the five most dangerous industries in the U.S. — with thousands of fatalities and millions of injuries per year generating $170 billion in annual costs.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The six main accident causes are: overexertion/ergonomic injury, slips/trips/falls, contact with equipment, forklift accidents, hazardous substance exposure, and human factors like fatigue and rushing.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI addresses each cause differently — wearable sensors for ergonomics, computer vision for PPE and zone violations, machine-integrated sensors for contact hazards, air quality monitors for chemical exposure, and fatigue detection for human factors.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The most dangerous accidents often don't announce themselves — cumulative injuries, creeping chemical exposure, and fatigue-driven shortcuts build up quietly. AI's value is detecting those patterns before they become injuries.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Accordion
+function toggleCause(i){
+  const c=document.getElementById('c'+i);
+  c.classList.toggle('open');
+}
+
+// Animate bars
+const irObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.ir-bar-fill').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w;},150);});
+      irObs.unobserve(e.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.industry-rank').forEach(el=>irObs.observe(el));
+
+// Quiz
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>
