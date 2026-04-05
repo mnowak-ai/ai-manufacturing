@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Assisted Diagnostics: How Machines Tell Workers Something Is Wrong Before It Breaks</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Full diagnostic loop */
+.diag-loop{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.dl-step{display:flex;gap:0;align-items:stretch;}
+.dl-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0;}
+.dl-num{width:38px;height:38px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0;margin-top:16px;}
+.dl-line{width:2px;background:var(--purple-mid);flex:1;}
+.dl-step:last-child .dl-line{display:none;}
+.dl-card{flex:1;border-radius:16px;padding:18px 22px;margin:8px 0 8px 10px;border:1.5px solid;}
+.dl-card.sensor{background:#FFF7ED;border-color:#FB923C;}
+.dl-card.ai{background:var(--blue-pale);border-color:var(--blue-mid);}
+.dl-card.alert{background:var(--red-pale);border-color:var(--red);}
+.dl-card.human{background:var(--purple-pale);border-color:var(--purple-mid);}
+.dl-card.decision{background:var(--green-pale);border-color:#86EFAC;}
+.dl-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.sensor .dl-who{color:#EA580C;}
+.ai .dl-who{color:var(--blue);}
+.alert .dl-who{color:var(--red);}
+.human .dl-who{color:var(--purple);}
+.decision .dl-who{color:var(--green);}
+.dl-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--gray-text);margin-bottom:6px;}
+.dl-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.dl-detail{margin-top:8px;font-size:12px;padding:7px 12px;border-radius:8px;}
+.sensor .dl-detail{background:#FFF7ED;color:#92400E;border:1px solid #FB923C;}
+.ai .dl-detail{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.alert .dl-detail{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.human .dl-detail{background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid);}
+.decision .dl-detail{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+
+/* Vibration explainer */
+.vib-visual{background:#1a1025;border-radius:22px;padding:28px;margin:28px 0;}
+.vv-title{font-family:"Fraunces",serif;font-size:18px;color:var(--white);font-weight:700;margin-bottom:6px;}
+.vv-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;}
+.vv-chart{display:flex;flex-direction:column;gap:14px;}
+.vv-row{display:flex;align-items:center;gap:14px;}
+.vv-label{font-size:12px;color:rgba(255,255,255,.6);min-width:90px;flex-shrink:0;text-align:right;}
+.vv-wave{flex:1;height:40px;border-radius:8px;display:flex;align-items:center;padding:0 12px;position:relative;overflow:hidden;}
+.vv-wave.normal{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);}
+.vv-wave.warning{background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.3);}
+.vv-wave.critical{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);}
+.vv-wave-svg{width:100%;height:30px;}
+.vv-val{font-size:12px;font-weight:700;min-width:60px;text-align:right;}
+.normal .vv-val{color:#4ADE80;}
+.warning .vv-val{color:#FACC15;}
+.critical .vv-val{color:#F87171;}
+.vv-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;margin-left:8px;flex-shrink:0;}
+.normal .vv-status{background:rgba(74,222,128,.2);color:#4ADE80;}
+.warning .vv-status{background:rgba(250,204,21,.2);color:#FACC15;}
+.critical .vv-status{background:rgba(248,113,113,.2);color:#F87171;}
+
+/* Causes of vibration */
+.causes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0;}
+.cg{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.cg-icon{font-size:26px;margin-bottom:8px;}
+.cg-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:5px;}
+.cg-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.cg-severity{margin-top:7px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;display:inline-block;}
+.cg-severity.high{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.cg-severity.med{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.cg-severity.low{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+@media(max-width:520px){.causes-grid{grid-template-columns:1fr;}}
+
+/* Decision sim */
+.decision-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ds-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ds-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ds-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ds-alert{background:#1a1025;border-radius:14px;padding:18px 22px;margin-bottom:18px;}
+.ds-alert-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#F87171;margin-bottom:8px;}
+.ds-alert-body{font-size:13px;line-height:1.75;color:rgba(255,255,255,.85);}
+.ds-alert-body strong{color:var(--white);}
+.ds-scene{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:16px 20px;margin-bottom:16px;font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ds-scene-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:7px;}
+.ds-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.ds-opts{display:flex;flex-direction:column;gap:9px;}
+.ds-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.ds-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.ds-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.ds-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.ds-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.ds-result.show{display:block;}
+.ds-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.ds-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.ds-next{margin-top:12px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.ds-next.show{display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>AI-Assisted Diagnostics: How Machines Tell Workers Something Is Wrong Before It Breaks</h1>
+  <p class="hero-sub">The video showed an abnormal vibration alert. This article explains the complete system behind it — from the sensor reading to the human decision — so you understand not just what happens, but why.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>A machine doesn't fail all at once. Long before a bearing seizes, a motor burns out, or a gear shears — the machine is sending signals. Small ones. Changes in vibration frequency. Slight temperature creep. A subtle shift in how much power the motor draws. For most of manufacturing history, those signals went unheard — until the failure arrived.</p>
+    <p>AI-assisted diagnostics change that equation. They give machines a way to communicate distress before the distress becomes damage. Understanding how that communication system works — end to end — is what this article is about.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Full Diagnostic Loop: Five Steps</h2>
+    <p>Every AI diagnostic alert in manufacturing follows the same five-step process. The video showed you step 3 — the alert. Here's the complete loop:</p>
+
+    <div class="diag-loop">
+      <div class="dl-step">
+        <div class="dl-left"><div class="dl-num">1</div><div class="dl-line"></div></div>
+        <div class="dl-card sensor">
+          <div class="dl-who">Sensors</div>
+          <div class="dl-title">Collect Raw Data — Continuously</div>
+          <div class="dl-desc">Sensors attached to the machine measure physical variables — vibration, temperature, current draw, pressure, speed — many times per second. They don't analyze. They measure. That data streams to the AI system in real time.</div>
+          <div class="dl-detail">On a CNC machine: an accelerometer mounted to the spindle housing measures vibration in three axes. A thermocouple on the motor housing reads temperature. A current transducer monitors motor amperage draw. All three update multiple times per second.</div>
+        </div>
+      </div>
+      <div class="dl-step">
+        <div class="dl-left"><div class="dl-num">2</div><div class="dl-line"></div></div>
+        <div class="dl-card ai">
+          <div class="dl-who">AI System</div>
+          <div class="dl-title">Compare to Baseline — Detect Deviation</div>
+          <div class="dl-desc">The AI compares incoming sensor readings to a trained baseline — what this machine's readings normally look like at this load, this speed, this temperature. When readings deviate from baseline beyond a threshold, the system flags it as potentially significant.</div>
+          <div class="dl-detail">Key concept: the AI isn't comparing to an industry standard. It's comparing to this machine's own historical pattern. A machine that always runs slightly warm has a higher baseline — the AI learns that and doesn't flag it as anomalous.</div>
+        </div>
+      </div>
+      <div class="dl-step">
+        <div class="dl-left"><div class="dl-num">3</div><div class="dl-line"></div></div>
+        <div class="dl-card alert">
+          <div class="dl-who">Alert System</div>
+          <div class="dl-title">Generate and Route the Alert</div>
+          <div class="dl-desc">When deviation exceeds the threshold, the system generates an alert — with severity level, the specific sensor(s) involved, the magnitude of deviation, and trend data showing how long it's been developing. The alert goes to the right person: operator, maintenance tech, or supervisor depending on severity.</div>
+          <div class="dl-detail">The alert the video showed: "Abnormal vibration detected — CNC Machine 4, spindle axis, 2.3mm/s above baseline for 4 hours, trending upward." That's not a raw reading — it's the AI's interpretation of what the sensors are saying.</div>
+        </div>
+      </div>
+      <div class="dl-step">
+        <div class="dl-left"><div class="dl-num">4</div><div class="dl-line"></div></div>
+        <div class="dl-card human">
+          <div class="dl-who">Worker</div>
+          <div class="dl-title">Investigate — Apply Context and Senses</div>
+          <div class="dl-desc">A human goes to the machine. They listen for unusual sounds. They touch the housing to feel for heat. They watch the cutting operation for visual clues. They check whether anything changed recently — tool change, material batch, settings adjustment. They bring everything the sensor can't measure.</div>
+          <div class="dl-detail">This is where the loop is most human. The worker's experience, their knowledge of this machine's history, and their physical presence provide data the sensor system can't generate. A vibration alert on a machine that was just serviced means something different than the same alert on a machine that hasn't been touched in months.</div>
+        </div>
+      </div>
+      <div class="dl-step">
+        <div class="dl-left"><div class="dl-num">5</div><div class="dl-line"></div></div>
+        <div class="dl-card decision">
+          <div class="dl-who">Human Decision</div>
+          <div class="dl-title">Act — and Own the Outcome</div>
+          <div class="dl-desc">The worker decides: keep running and monitor, schedule maintenance, halt now, or dismiss as a false alarm. That decision belongs to the human. The AI provided the trigger; the human provides the judgment, the context, and the accountability for what happens next.</div>
+          <div class="dl-detail">Every decision also feeds back into the system: if the worker investigates and finds nothing, that's data. If they find a real problem, the repair details go into the maintenance log. Over time, this feedback improves the AI's model for this specific machine.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What "Abnormal Vibration" Actually Means on a CNC Machine</h2>
+    <p>Vibration is one of the most information-rich signals a machine produces. Understanding what it means requires understanding what causes it — because different causes require completely different responses.</p>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Vibration (mm/s):</strong> Measured in millimeters per second — how fast a surface is moving back and forth. Every rotating machine produces some vibration. The question isn't whether vibration exists, but whether its amplitude (size) and frequency (speed of oscillation) have changed in ways that indicate something developing.</div>
+    </div>
+
+    <div class="vib-visual">
+      <div class="vv-title">Spindle Vibration Readings — CNC Machine 4</div>
+      <div class="vv-sub">Three days of readings. Each row shows a different severity level.</div>
+      <div class="vv-chart">
+        <div class="vv-row">
+          <div class="vv-label">Day 1</div>
+          <div class="vv-wave normal">
+            <svg class="vv-wave-svg" viewBox="0 0 300 30" preserveAspectRatio="none"><polyline points="0,15 20,13 40,17 60,14 80,16 100,13 120,15 140,14 160,16 180,13 200,15 220,14 240,16 260,14 280,15 300,14" fill="none" stroke="#4ADE80" stroke-width="2"/></svg>
+            <div class="vv-val">0.8 mm/s</div>
+            <div class="vv-status">Normal</div>
+          </div>
+        </div>
+        <div class="vv-row">
+          <div class="vv-label">Day 2</div>
+          <div class="vv-wave warning">
+            <svg class="vv-wave-svg" viewBox="0 0 300 30" preserveAspectRatio="none"><polyline points="0,15 15,8 30,22 45,6 60,20 75,10 90,18 105,7 120,21 135,9 150,19 165,8 180,20 195,10 210,18 225,7 240,21 255,9 270,17 285,8 300,20" fill="none" stroke="#FACC15" stroke-width="2"/></svg>
+            <div class="vv-val">2.1 mm/s</div>
+            <div class="vv-status">Warning</div>
+          </div>
+        </div>
+        <div class="vv-row">
+          <div class="vv-label">Day 3</div>
+          <div class="vv-wave critical">
+            <svg class="vv-wave-svg" viewBox="0 0 300 30" preserveAspectRatio="none"><polyline points="0,15 10,4 20,26 30,2 40,28 50,3 60,27 70,2 80,26 90,4 100,25 110,3 120,27 130,2 140,26 150,4 160,25 170,3 180,27 190,2 200,26 210,4 220,24 230,5 240,26 250,3 260,25 270,4 280,26 290,3 300,25" fill="none" stroke="#F87171" stroke-width="2"/></svg>
+            <div class="vv-val">4.6 mm/s</div>
+            <div class="vv-status">Critical</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>Notice the progression: normal readings are small, consistent waves. Warning readings are larger and more irregular. Critical readings are chaotic — the machine is fighting something. The AI saw this trend develop over 48 hours and alerted on Day 2. By Day 3, the problem had worsened significantly. That two-day window was the intervention opportunity.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Causes Abnormal Vibration — and Why It Matters</h2>
+    <p>Not all vibration alerts mean the same thing. Different causes produce different vibration signatures — and a skilled maintenance tech can often narrow down the cause from the pattern before opening the machine.</p>
+
+    <div class="causes-grid">
+      <div class="cg">
+        <div class="cg-icon">⚙️</div>
+        <div class="cg-title">Bearing Wear</div>
+        <div class="cg-desc">The most common cause. Worn bearing races create irregular contact between rolling elements, producing vibration at characteristic frequencies. Develops slowly — AI catches it early. Usually a scheduled repair.</div>
+        <div class="cg-severity med">⚠ Medium urgency — days to weeks</div>
+      </div>
+      <div class="cg">
+        <div class="cg-icon">⚖️</div>
+        <div class="cg-title">Imbalance</div>
+        <div class="cg-desc">A rotating component (tool, chuck, spindle) that's heavier on one side than the other causes rhythmic vibration at the rotation frequency. Often caused by an improper tool installation or accumulated debris.</div>
+        <div class="cg-severity low">✓ Often fixable immediately</div>
+      </div>
+      <div class="cg">
+        <div class="cg-icon">🔩</div>
+        <div class="cg-title">Loose Fasteners</div>
+        <div class="cg-desc">A loose bolt, mount, or fixture allows a component to vibrate freely instead of being damped by the structure. Creates sharp, irregular vibration. Common and usually a quick fix.</div>
+        <div class="cg-severity low">✓ Usually immediate fix</div>
+      </div>
+      <div class="cg">
+        <div class="cg-icon">🦷</div>
+        <div class="cg-title">Gear Damage</div>
+        <div class="cg-desc">Chipped, worn, or misaligned gear teeth create a distinctive vibration pattern tied to gear mesh frequency. More serious — usually requires a maintenance window and parts.</div>
+        <div class="cg-severity high">🚨 High urgency — schedule soon</div>
+      </div>
+      <div class="cg">
+        <div class="cg-icon">🌀</div>
+        <div class="cg-title">Resonance</div>
+        <div class="cg-desc">When a machine's operating speed hits a natural frequency of the structure, small vibrations amplify dramatically. Usually triggered by a speed change. Fix is often adjusting operating parameters.</div>
+        <div class="cg-severity med">⚠ Medium — adjust or isolate</div>
+      </div>
+      <div class="cg">
+        <div class="cg-icon">💀</div>
+        <div class="cg-title">Spindle or Shaft Damage</div>
+        <div class="cg-desc">Bent or cracked rotating components create severe, chaotic vibration. Rare but serious — continuing to run risks catastrophic failure and potential safety incident. Halt now.</div>
+        <div class="cg-severity high">🚨 High urgency — halt immediately</div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>The AI doesn't diagnose which of these is happening. It says: something changed. The worker — with their knowledge of the machine, their ears, and their hands — is the diagnostic instrument.</p></div>
+  </div>
+
+  <!-- Decision sim -->
+  <div class="section fade-in">
+    <div class="decision-sim">
+      <div class="ds-label">🎯 Diagnostic Decision Practice</div>
+      <div class="ds-title">What Would You Do With This Alert?</div>
+      <div class="ds-sub">Use the five-step loop and the vibration knowledge you just learned to make the right call.</div>
+      <div class="ds-alert">
+        <div class="ds-alert-hdr">⚠️ Predictive Maintenance Alert — Machine 4</div>
+        <div class="ds-alert-body"><strong>Spindle vibration: 2.4 mm/s</strong> (baseline: 0.9 mm/s) | Temperature: normal | Current draw: slightly elevated | Trend: gradual increase over 36 hours | AI confidence: 88% | Predicted failure window: 3–8 days</div>
+      </div>
+      <div class="ds-scene">
+        <div class="ds-scene-label" id="ds-scene-label">Situation 1 of 3</div>
+        <div id="ds-scene-text"></div>
+      </div>
+      <div class="ds-q" id="ds-q"></div>
+      <div class="ds-opts" id="ds-opts"></div>
+      <div class="ds-result good" id="ds-good"></div>
+      <div class="ds-result bad" id="ds-bad"></div>
+      <button class="ds-next" id="ds-next" onclick="nextDS()">Next Situation →</button>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">In the diagnostic loop, what does the AI actually do — and what does it leave for the human?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">The AI diagnoses the specific cause and recommends the exact repair; the human just approves it</button>
+        <button class="quiz-opt" onclick="doQ1(1)">The AI detects that a reading has deviated from baseline and generates an alert; the human investigates, applies contextual knowledge, determines the cause, and decides what to do</button>
+        <button class="quiz-opt" onclick="doQ1(2)">The AI makes the decision and the human executes it mechanically</button>
+        <button class="quiz-opt" onclick="doQ1(3)">The human reads the raw sensor data and the AI helps them schedule the repair</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Exactly right. The AI is a deviation detector — it compares incoming readings to baseline and flags when something has changed. What it doesn't do is tell you why, or what to do about it, or whether it's actually a problem in this specific context. Those are the human contributions: physical investigation, contextual knowledge, judgment, and accountability for the decision that follows.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. AI diagnostic systems are deviation detectors, not diagnosis engines. They compare sensor readings to baseline and flag when something is outside the expected pattern. The diagnosis — what's causing the deviation, whether it's serious, and what to do — happens in steps 4 and 5 of the loop, which belong entirely to the human. The AI opens the door; the worker walks through it.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI diagnostics follow a five-step loop: sensors collect → AI compares to baseline → alert generated → human investigates → human decides. The alert is step 3 — not the end of the process.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Vibration is one of the most information-rich signals a machine produces. Different causes — bearing wear, imbalance, loose fasteners, gear damage — produce different patterns with different urgency levels.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The AI detects deviation from baseline. It doesn't diagnose the cause. Diagnosis requires the human's physical presence, sensory observations, machine history knowledge, and contextual judgment.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The AI compares each machine to its own historical baseline — not an industry standard. A machine that's always run slightly warm has a higher baseline, and the AI learns that.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every investigation and repair feeds back into the system. Over time, this feedback improves the AI's model for that specific machine — making the human-AI partnership smarter together.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const dsSituations=[
+  {
+    label:'Situation 1 of 3',
+    scene:"You go to Machine 4 and listen. There's a subtle change in sound — a very slight roughness in the spindle noise that wasn't there last week. The housing feels about 5°F warmer than usual but not hot. The machine just had a routine oil change 4 days ago.",
+    q:"What's the most appropriate response?",
+    opts:["Shut the machine down immediately — any vibration alert means stop now","Keep running normally and check again in a week — the alert might be wrong","Schedule a bearing inspection during the next planned maintenance window, noting the sound change and temperature increase in the work order. Monitor temperature and vibration closely until then.","Ignore it — the oil change might just be causing temporary elevated readings"],
+    correct:2,
+    good:"✅ Right call. The trend is gradual, the AI gives a 3–8 day window, and your physical observations (slight sound change, modest warmth) are consistent with early bearing wear — not imminent catastrophic failure. Scheduling for the next maintenance window with close monitoring balances safety against unnecessary production disruption. The oil change shouldn't affect vibration readings at this sensor location.",
+    bad:"❌ Not the best response here. The 36-hour trend, 88% confidence, and your physical observations suggest a developing bearing issue — not an emergency and not something to dismiss. The right balance is scheduling a bearing inspection at the next maintenance window while monitoring closely. Shutting down immediately would be warranted if readings were critical; dismissing entirely risks letting a real problem worsen."
+  },
+  {
+    label:'Situation 2 of 3',
+    scene:"Same machine, same alert. But this time: you investigate and find that the spindle tool holder was not fully seated after last night's tool change. The tool is slightly loose in the holder.",
+    q:"What's the most likely cause of the vibration alert — and what do you do?",
+    opts:["Imbalance from the improperly seated tool holder — reseat the tool properly, verify the vibration reading, and document the finding","Bearing wear — schedule a full bearing replacement","Resonance — adjust the machine's operating speed","Gear damage — halt the machine immediately"],
+    correct:0,
+    good:"✅ Correct diagnosis. An improperly seated tool creates imbalance — the tool isn't rotating on its true center, generating vibration at the rotation frequency. Reseating the tool properly eliminates the imbalance and should immediately reduce the vibration reading. Verify after reseating that readings return to baseline, and document the root cause. This is a satisfying case where investigation leads to an immediate fix.",
+    bad:"❌ Think about what an improperly seated tool actually does: it creates imbalance — the rotating component is heavier on one side. That produces vibration at the rotation frequency. Reseating the tool eliminates the imbalance. This is a quick fix, not a major repair — and it perfectly illustrates why physical investigation matters. The AI saw a vibration anomaly; only the human inspection found the cause."
+  },
+  {
+    label:'Situation 3 of 3',
+    scene:"The vibration alert has now escalated to 4.8 mm/s — critical level. When you go to the machine, the spindle housing is noticeably hot to the touch and you can hear a grinding noise. This is the same machine that had a similar alert on Machine 11 last year, which failed catastrophically during a production run.",
+    q:"What do you do?",
+    opts:["Monitor for another 24 hours before deciding — the AI might still be wrong","Schedule a repair for next week's planned maintenance window","Halt the machine immediately, notify your supervisor, and keep workers clear until maintenance can assess — the combination of critical vibration, excessive heat, and grinding noise indicates imminent failure risk","Continue the current production run to completion, then stop"],
+    correct:2,
+    good:"✅ Correct. Critical vibration (4.8 mm/s), heat, and audible grinding are three converging signals pointing to imminent failure — exactly the signature that preceded the catastrophic failure on Machine 11 last year. Continuing to operate risks both equipment damage and worker safety. Halt now, notify supervisor, keep the area clear. Your experience with Machine 11 is contextual knowledge that makes this decision clear — the AI's alert plus your memory equals a decision no algorithm could make alone.",
+    bad:"❌ This is a halt-immediately situation. Critical vibration level, excessive heat, audible grinding, and historical precedent from Machine 11 are four converging signals. Running to end of shift or waiting another 24 hours risks catastrophic failure while the machine is operating — a serious safety and equipment damage risk. When multiple physical signals align with a critical AI alert, the right call is to stop and get eyes on it before anything else moves."
+  }
+];
+let dsIdx=0,dsDone=false;
+function renderDS(){
+  const s=dsSituations[dsIdx];
+  document.getElementById('ds-scene-label').textContent=s.label;
+  document.getElementById('ds-scene-text').textContent=s.scene;
+  document.getElementById('ds-q').textContent=s.q;
+  const c=document.getElementById('ds-opts');c.innerHTML='';
+  s.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='ds-opt';b.textContent=o;b.onclick=()=>doDS(i);c.appendChild(b);});
+  document.getElementById('ds-good').className='ds-result good';
+  document.getElementById('ds-bad').className='ds-result bad';
+  document.getElementById('ds-next').classList.remove('show');
+  dsDone=false;
+}
+function doDS(choice){
+  if(dsDone)return;dsDone=true;
+  const s=dsSituations[dsIdx];
+  const btns=document.querySelectorAll('#ds-opts .ds-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(choice===s.correct){btns[choice].classList.add('correct');document.getElementById('ds-good').textContent=s.good;document.getElementById('ds-good').classList.add('show');}
+  else{btns[choice].classList.add('wrong');document.getElementById('ds-bad').textContent=s.bad;document.getElementById('ds-bad').classList.add('show');}
+  if(dsIdx<dsSituations.length-1)document.getElementById('ds-next').classList.add('show');
+}
+function nextDS(){dsIdx++;renderDS();}
+renderDS();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

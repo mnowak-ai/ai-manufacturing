@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI in Manufacturing Is Creating Jobs That Didn't Exist 10 Years Ago</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Historical parallels */
+.parallels{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.parallel{display:flex;gap:16px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;align-items:flex-start;}
+.par-era{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:var(--purple-pale);color:var(--purple);padding:4px 10px;border-radius:100px;white-space:nowrap;flex-shrink:0;}
+.par-body{}
+.par-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* New role cards */
+.role-cards{display:flex;flex-direction:column;gap:20px;margin:24px 0;}
+.role-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;overflow:hidden;}
+.rc-header{padding:24px 26px 0;}
+.rc-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:100px;margin-bottom:12px;}
+.rc-badge.new{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.rc-badge.evolved{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.rc-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.rc-salary{font-size:13px;font-weight:600;color:var(--green);margin-bottom:14px;}
+.rc-body{padding:0 26px 24px;}
+.rc-desc{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;}
+.rc-details{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.rc-detail{border-radius:12px;padding:12px 16px;}
+.rc-detail.skills{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.rc-detail.path{background:var(--purple-pale);border:1px solid var(--purple-mid);}
+.rc-detail-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.skills .rc-detail-label{color:var(--blue);}
+.path .rc-detail-label{color:var(--purple);}
+.rc-detail-text{font-size:12px;line-height:1.65;color:var(--gray-text);}
+@media(max-width:520px){.rc-details{grid-template-columns:1fr;}}
+
+/* Career path selector */
+.path-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ps-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ps-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ps-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.ps-start-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.ps-start-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.ps-start-btn.active{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.ps-path-display{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:20px 24px;display:none;}
+.ps-path-display.show{display:block;}
+.ps-path-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:14px;}
+.ps-steps{display:flex;flex-direction:column;gap:8px;}
+.ps-step{display:flex;gap:12px;align-items:center;}
+.ps-step-num{width:28px;height:28px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.ps-step-card{flex:1;background:var(--gray-soft);border-radius:10px;padding:10px 14px;}
+.ps-step-role{font-weight:700;font-size:13px;color:var(--purple-dark);}
+.ps-step-salary{font-size:12px;color:var(--green);font-weight:600;}
+.ps-step-detail{font-size:11px;color:var(--gray-muted);margin-top:2px;}
+.ps-arrow{text-align:center;color:var(--purple-mid);font-size:16px;padding-left:14px;}
+
+/* What you need to get there */
+.skills-needed{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.sn-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.sn-icon{font-size:24px;margin-bottom:8px;}
+.sn-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.sn-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:520px){.skills-needed{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>How AI in Manufacturing Is Creating Jobs That Didn't Exist 10 Years Ago</h1>
+  <p class="hero-sub">The technology wave you're learning in this course is also creating entirely new career paths. Here's what those roles look like — and why the workers who understand both the trade and the technology will define the next decade of manufacturing.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>In 2014, there were no "Manufacturing Data Analysts" working on production floors. There were no "AI Systems Technicians" maintaining predictive maintenance platforms. The title "Quality Vision Engineer" didn't exist at most manufacturers. These weren't jobs anyone was hiring for.</p>
+    <p>By 2024, all of them were in high demand — and the shortage of qualified candidates was acute. By the time you're reading this, that demand has only grown.</p>
+    <p>This is how technology waves work. They don't just change existing jobs — they create entirely new categories of work that require combinations of skills nobody needed before. <mark>The workers positioned best are the ones who developed those skill combinations early.</mark> That's what this certification is helping you do.</p>
+  </div>
+
+  <!-- Historical context -->
+  <div class="section fade-in">
+    <h2>This Has Happened Before — Every Time</h2>
+    <p>Before looking at AI-created roles, it helps to see the pattern. Every major technology adoption in manufacturing history created jobs that were inconceivable before the technology arrived:</p>
+
+    <div class="parallels">
+      <div class="parallel">
+        <div class="par-era">1910s–1930s</div>
+        <div class="par-body"><div class="par-text">The assembly line created: Industrial engineers (didn't exist before), time-and-motion study analysts, factory safety inspectors, production schedulers. Henry Ford's Highland Park plant in 1914 employed job titles that had never appeared on a factory floor before.</div></div>
+      </div>
+      <div class="parallel">
+        <div class="par-era">1970s–1980s</div>
+        <div class="par-body"><div class="par-text">CNC machines created: CNC programmers, machining center operators, tool and die CAD specialists. None of these roles existed before computer-controlled machines arrived. Workers who understood both machining and the new software became among the most valuable in any facility.</div></div>
+      </div>
+      <div class="parallel">
+        <div class="par-era">1990s–2000s</div>
+        <div class="par-body"><div class="par-text">Industrial robotics created: Robot programmers, systems integrators, automation specialists, cobot technicians. The "robot programmer" wasn't a job in 1985 — by 2000, facilities were struggling to find enough of them.</div></div>
+      </div>
+      <div class="parallel">
+        <div class="par-era">2015–Present</div>
+        <div class="par-body"><div class="par-text">AI and connected manufacturing is creating: Manufacturing Data Analysts, Predictive Maintenance Specialists, Quality Vision Engineers, AI Systems Technicians, Digital Twin Operators. Most of these roles were either rare or nonexistent a decade ago. Today they're in critical shortage.</div></div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>The pattern is always the same: new technology creates a gap between the skills that exist and the skills that are suddenly needed. Workers who close that gap first earn the highest premium — and the most job security.</p></div>
+  </div>
+
+  <!-- The new roles -->
+  <div class="section fade-in">
+    <h2>Four Roles That AI in Manufacturing Is Creating Right Now</h2>
+
+    <div class="role-cards">
+      <div class="role-card">
+        <div class="rc-header">
+          <div class="rc-badge new">🆕 Largely New Role</div>
+          <div class="rc-title">Predictive Maintenance Specialist</div>
+          <div class="rc-salary">💰 Salary range: $58,000 – $85,000 | Growth: Very High</div>
+        </div>
+        <div class="rc-body">
+          <div class="rc-desc">This role bridges traditional maintenance and AI systems. A Predictive Maintenance Specialist manages the AI sensor platforms — ensuring sensors are properly installed and calibrated, monitoring model performance, investigating which alerts turn out to be accurate and which are false positives, and working with vendors to retrain models when accuracy degrades. They're the person who knows both what's inside the bearing housing and what the vibration data should look like when it's healthy.</div>
+          <div class="rc-details">
+            <div class="rc-detail skills">
+              <div class="rc-detail-label">🔧 Skills Required</div>
+              <div class="rc-detail-text">Mechanical systems knowledge (bearings, motors, hydraulics) + sensor hardware + data interpretation + maintenance scheduling + AI platform operation</div>
+            </div>
+            <div class="rc-detail path">
+              <div class="rc-detail-label">📈 Typical Path</div>
+              <div class="rc-detail-text">Experienced maintenance tech → takes AI/data training → becomes predictive maintenance lead → specializes as sensor systems grow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="rc-header">
+          <div class="rc-badge new">🆕 Largely New Role</div>
+          <div class="rc-title">Quality Vision Engineer / AI Quality Systems Technician</div>
+          <div class="rc-salary">💰 Salary range: $62,000 – $92,000 | Growth: Very High</div>
+        </div>
+        <div class="rc-body">
+          <div class="rc-desc">Computer vision quality systems need people who can maintain them, tune them, and improve them — and that requires someone who understands both the quality standards and the AI platform. A Quality Vision Engineer sets up camera systems, works with vendors to train new defect models, monitors false positive and false negative rates, and investigates when model performance degrades. They also train quality inspectors on how to use the system and document their reviews effectively — because inspector feedback is training data.</div>
+          <div class="rc-details">
+            <div class="rc-detail skills">
+              <div class="rc-detail-label">🔧 Skills Required</div>
+              <div class="rc-detail-text">Quality inspection experience + understanding of defect types + camera/lighting systems + AI model operation + data analysis + training facilitation</div>
+            </div>
+            <div class="rc-detail path">
+              <div class="rc-detail-label">📈 Typical Path</div>
+              <div class="rc-detail-text">Quality inspector or quality engineer → gains AI platform experience → becomes quality systems lead → specializes as AI inspection grows</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="rc-header">
+          <div class="rc-badge new">🆕 Largely New Role</div>
+          <div class="rc-title">Manufacturing Data Analyst</div>
+          <div class="rc-salary">💰 Salary range: $60,000 – $88,000 | Growth: High</div>
+        </div>
+        <div class="rc-body">
+          <div class="rc-desc">As factories generate terabytes of sensor and quality data, someone has to turn it into decisions. Manufacturing Data Analysts interpret production dashboards, identify performance trends, correlate quality patterns with machine behavior, and present findings to operations and engineering leadership. Critically, they need manufacturing context — a pure data scientist without floor experience often misinterprets what the data is actually showing. The best candidates combine shop floor knowledge with data literacy.</div>
+          <div class="rc-details">
+            <div class="rc-detail skills">
+              <div class="rc-detail-label">🔧 Skills Required</div>
+              <div class="rc-detail-text">Manufacturing process knowledge + data interpretation + dashboard tools (PowerBI, Tableau, or similar) + statistical thinking + presentation skills</div>
+            </div>
+            <div class="rc-detail path">
+              <div class="rc-detail-label">📈 Typical Path</div>
+              <div class="rc-detail-text">Experienced operator or supervisor with production familiarity → develops data skills → moves into analytics role → often doesn't require a four-year degree if manufacturing experience is strong</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="role-card">
+        <div class="rc-header">
+          <div class="rc-badge evolved">🔄 Evolved Existing Role</div>
+          <div class="rc-title">AI-Integrated Process Engineer</div>
+          <div class="rc-salary">💰 Salary range: $72,000 – $105,000 | Growth: High</div>
+        </div>
+        <div class="rc-body">
+          <div class="rc-desc">Process engineers existed before AI — but the role has been transformed. Traditional process engineers worked from historical data and periodic sampling. AI-integrated process engineers work from real-time data streams, using AI analytics to identify process drift before it becomes defects, simulate process changes in digital twins before implementing them, and optimize parameters based on continuous production feedback. The core skill set is similar; the tools and the speed of insight are completely different.</div>
+          <div class="rc-details">
+            <div class="rc-detail skills">
+              <div class="rc-detail-label">🔧 Skills Required</div>
+              <div class="rc-detail-text">Manufacturing process engineering + statistical process control + AI platform operation + digital twin tools + change management</div>
+            </div>
+            <div class="rc-detail path">
+              <div class="rc-detail-label">📈 Typical Path</div>
+              <div class="rc-detail-text">Traditional process engineer → adds AI tool literacy → becomes more productive and more valuable as AI data sources multiply → often promoted to process improvement lead</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Career path simulator -->
+  <div class="section fade-in">
+    <h2>Where Could This Lead? Your Career Path</h2>
+    <p>Select the trade or entry point closest to your background, and see one realistic career progression that builds toward AI-integrated roles:</p>
+
+    <div class="path-sim">
+      <div class="ps-label">🚀 Career Path Explorer</div>
+      <div class="ps-title">From Your Starting Point to AI-Era Roles</div>
+      <div class="ps-sub">These are realistic progressions based on how workers in each trade are actually advancing into AI-integrated roles today.</div>
+      <div class="ps-start-btns">
+        <button class="ps-start-btn" onclick="showPath(this,'maint')">🔧 Maintenance</button>
+        <button class="ps-start-btn" onclick="showPath(this,'machinist')">⚙️ Machinist</button>
+        <button class="ps-start-btn" onclick="showPath(this,'quality')">🔎 Quality</button>
+        <button class="ps-start-btn" onclick="showPath(this,'operator')">🏭 Line Operator</button>
+      </div>
+      <div class="ps-path-display" id="ps-display">
+        <div class="ps-path-title" id="ps-path-title"></div>
+        <div class="ps-steps" id="ps-steps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What you need -->
+  <div class="section fade-in">
+    <h2>What You Need to Get There</h2>
+    <p>The common thread across all these roles is the combination of trade knowledge and AI literacy. Neither alone is sufficient. Here's what matters most:</p>
+
+    <div class="skills-needed">
+      <div class="sn-card">
+        <div class="sn-icon">🏭</div>
+        <div class="sn-title">Deep Trade Knowledge</div>
+        <div class="sn-desc">You can't manage a predictive maintenance AI for bearings if you don't know how a bearing actually fails. Trade knowledge gives AI data its meaning — and it's the thing most data scientists don't have when they enter manufacturing environments.</div>
+      </div>
+      <div class="sn-card">
+        <div class="sn-icon">📊</div>
+        <div class="sn-title">Data Literacy — Not Data Science</div>
+        <div class="sn-desc">You don't need to build AI models. You need to read the outputs intelligently, know when the data is telling you something real vs. when the model is misfiring, and communicate findings to both technical and non-technical audiences.</div>
+      </div>
+      <div class="sn-card">
+        <div class="sn-icon">🔗</div>
+        <div class="sn-title">System Thinking</div>
+        <div class="sn-desc">Understanding how AI tools fit into the larger production system — not just how to use one tool, but how diagnostics, quality control, safety monitoring, and production scheduling all connect. That's the perspective the most valuable workers bring.</div>
+      </div>
+      <div class="sn-card">
+        <div class="sn-icon">📝</div>
+        <div class="sn-title">Documentation Discipline</div>
+        <div class="sn-desc">As you've seen throughout this module, good documentation is what makes AI systems improve. Workers who document carefully and completely are actively contributing to the technology that makes the facility better — and that gets noticed.</div>
+      </div>
+      <div class="sn-card">
+        <div class="sn-icon">🤝</div>
+        <div class="sn-title">Collaboration Across Functions</div>
+        <div class="sn-desc">AI-era manufacturing roles constantly cross traditional department boundaries — maintenance and quality, operations and engineering, floor workers and data teams. Workers who communicate effectively across these boundaries are rare and valuable.</div>
+      </div>
+      <div class="sn-card">
+        <div class="sn-icon">🎓</div>
+        <div class="sn-title">Willingness to Keep Learning</div>
+        <div class="sn-desc">The specific tools will keep changing. The workers who stay current aren't the ones who resist — they're the ones who approach each new system with the same curiosity they brought to learning their trade. That posture is what this certification is building.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="section fade-in">
+    <div class="pull-quote"><p>The workers who will define manufacturing in 2035 are learning their trades right now. The ones who add AI literacy to that foundation will be the ones facilities fight to hire, retain, and promote. That's the opportunity this moment represents.</p></div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why is "trade knowledge + AI literacy" more valuable than either alone — and who is most naturally positioned to develop that combination?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">AI literacy alone is sufficient — trade knowledge can be learned on the job later</button>
+        <button class="quiz-opt" onclick="doQ1(1)">The combination is more valuable because AI tools in manufacturing require someone who understands what the data means in physical terms — and experienced trade workers are uniquely positioned to develop AI literacy because they already have the manufacturing context that data scientists lack</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Trade knowledge alone is sufficient — experienced workers can always get by without learning AI tools</button>
+        <button class="quiz-opt" onclick="doQ1(3)">The combination doesn't matter — facilities hire separate people for trade work and data work</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. A data scientist without manufacturing context will misread what sensor patterns mean in practice. A skilled trade worker without AI literacy won't be able to operate, evaluate, or improve the systems now running in their facility. The combination is what makes someone truly irreplaceable — and workers who are already deep in a trade are actually the best-positioned to add AI literacy, because they have the manufacturing foundation that's hardest for a data scientist to acquire from the outside.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ The combination is genuinely more powerful than either alone. A data analyst who doesn't know what a bearing failure sounds like will misinterpret vibration data. A skilled machinist who doesn't understand how to read a model performance dashboard can't manage an AI quality system. Experienced trade workers are actually the best-positioned to add AI literacy — because manufacturing context is the piece most data professionals lack and can't easily acquire. That's the gap this certification addresses.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every major technology wave in manufacturing history created new job categories that didn't exist before — from assembly line industrial engineers to CNC programmers to robot technicians. AI is following the same pattern.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Four high-growth AI-created roles: Predictive Maintenance Specialist, Quality Vision Engineer/AI Quality Systems Technician, Manufacturing Data Analyst, and AI-Integrated Process Engineer. All are in critical shortage.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">These roles don't necessarily require four-year degrees — they require trade experience combined with AI literacy. Workers already in the trades are the best-positioned to develop this combination.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The skills that matter most: deep trade knowledge, data literacy (not data science), system thinking, documentation discipline, cross-functional collaboration, and willingness to keep learning.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The workers who define manufacturing in the next decade are learning their trades right now. Adding AI literacy to that foundation early is the highest-leverage career investment available in manufacturing today.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const paths={
+  maint:{
+    title:'🔧 Starting Point: Maintenance Technician',
+    steps:[
+      {role:'Entry Maintenance Tech',salary:'$38,000–$48,000',detail:'Reactive repairs, scheduled PM, basic documentation'},
+      {role:'Experienced Maintenance Tech (3–5 yrs)',salary:'$50,000–$62,000',detail:'Diagnostic skills, machine-specific expertise, mentors junior techs'},
+      {role:'AI-Assisted Maintenance Tech',salary:'$58,000–$72,000',detail:'+ Manages predictive maintenance dashboard, interprets sensor alerts, documents findings for model improvement'},
+      {role:'Predictive Maintenance Specialist',salary:'$68,000–$85,000',detail:'+ Manages the AI sensor platform, works with vendors on model accuracy, trains other techs'},
+      {role:'Maintenance Engineering Lead',salary:'$82,000–$105,000',detail:'+ Designs predictive programs for new equipment, reports on AI system ROI, leads facility-wide PM strategy'}
+    ]
+  },
+  machinist:{
+    title:'⚙️ Starting Point: CNC Machinist',
+    steps:[
+      {role:'Entry CNC Operator',salary:'$38,000–$46,000',detail:'Setup and operation of CNC equipment, basic quality checks'},
+      {role:'Journeyman Machinist (3–6 yrs)',salary:'$50,000–$65,000',detail:'Programming, tooling selection, complex setups, process troubleshooting'},
+      {role:'AI-Tool Machinist',salary:'$60,000–$75,000',detail:'+ Interprets AI process optimization recommendations, manages digital twin inputs, trains newer operators on AI tools'},
+      {role:'Advanced Manufacturing Technician',salary:'$68,000–$85,000',detail:'+ Manages AI-assisted process improvement, works with engineers on digital twin scenarios, quality system integration'},
+      {role:'Process Engineer / Manufacturing Engineer',salary:'$80,000–$110,000',detail:'+ Leads process design using AI data, manages new product introduction with AI quality integration'}
+    ]
+  },
+  quality:{
+    title:'🔎 Starting Point: Quality Inspector',
+    steps:[
+      {role:'Entry Quality Inspector',salary:'$36,000–$45,000',detail:'Manual inspection, sampling, defect documentation'},
+      {role:'Experienced Quality Inspector',salary:'$46,000–$58,000',detail:'Complex inspection, supplier quality, CAPA participation, team training'},
+      {role:'AI Quality Inspector',salary:'$54,000–$68,000',detail:'+ Manages AI vision system reviews, documents false positives to improve model, identifies patterns in flagged parts'},
+      {role:'Quality Vision Systems Technician',salary:'$64,000–$82,000',detail:'+ Maintains camera/lighting systems, works with vendor on model retraining, manages quality AI platform performance'},
+      {role:'Quality Vision Engineer',salary:'$80,000–$105,000',detail:'+ Designs AI inspection programs for new parts, leads quality system integration across facilities'}
+    ]
+  },
+  operator:{
+    title:'🏭 Starting Point: Production Line Operator',
+    steps:[
+      {role:'Entry Line Operator',salary:'$34,000–$42,000',detail:'Station operation, basic quality checks, safety compliance'},
+      {role:'Lead Operator / Senior Operator',salary:'$42,000–$54,000',detail:'Trains new operators, manages shift output, interfaces with maintenance and quality teams'},
+      {role:'AI-Integrated Lead Operator',salary:'$50,000–$64,000',detail:'+ Manages production dashboard, responds to AI alerts, documents process observations, feeds back to quality and maintenance systems'},
+      {role:'Manufacturing Data Analyst',salary:'$60,000–$80,000',detail:'+ Interprets production data across multiple lines, identifies improvement opportunities, presents findings to management'},
+      {role:'Operations Improvement Specialist',salary:'$72,000–$95,000',detail:'+ Leads continuous improvement projects using AI data, coordinates cross-functional teams, manages AI system rollouts'}
+    ]
+  }
+};
+function showPath(btn,key){
+  document.querySelectorAll('.ps-start-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p=paths[key];
+  document.getElementById('ps-path-title').textContent=p.title;
+  const stepsEl=document.getElementById('ps-steps');stepsEl.innerHTML='';
+  p.steps.forEach((s,i)=>{
+    if(i>0){const a=document.createElement('div');a.className='ps-arrow';a.textContent='↓';stepsEl.appendChild(a);}
+    const row=document.createElement('div');row.className='ps-step';
+    row.innerHTML=`<div class="ps-step-num">${i+1}</div><div class="ps-step-card"><div class="ps-step-role">${s.role}</div><div class="ps-step-salary">${s.salary}</div><div class="ps-step-detail">${s.detail}</div></div>`;
+    stepsEl.appendChild(row);
+  });
+  document.getElementById('ps-display').classList.add('show');
+}
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

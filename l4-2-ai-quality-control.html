@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI for Quality Control: How Computer Vision Catches Defects Faster Than the Human Eye</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* How training works */
+.training-flow{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.tf-step{display:flex;gap:0;align-items:stretch;}
+.tf-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.tf-num{width:34px;height:34px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;margin-top:18px;}
+.tf-line{width:2px;background:var(--purple-mid);flex:1;}
+.tf-step:last-child .tf-line{display:none;}
+.tf-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0 8px 10px;}
+.tf-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.tf-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.tf-note{margin-top:7px;font-size:12px;padding:7px 12px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+
+/* Can / Can't grid */
+.can-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.can-col{border-radius:18px;padding:24px;border:1.5px solid;}
+.can-col.can{background:var(--green-pale);border-color:#86EFAC;}
+.can-col.cant{background:var(--red-pale);border-color:var(--red);}
+.can-header{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.can .can-header{color:var(--green);}
+.cant .can-header{color:var(--red);}
+.can-item{display:flex;gap:8px;margin-bottom:9px;font-size:13px;line-height:1.6;align-items:flex-start;}
+.can .can-item::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0;}
+.cant .can-item::before{content:"✗";color:var(--red);font-weight:700;flex-shrink:0;}
+@media(max-width:520px){.can-grid{grid-template-columns:1fr;}}
+
+/* Inspection pipeline */
+.pipeline{display:flex;align-items:stretch;gap:0;margin:28px 0;overflow-x:auto;}
+.pp-stage{display:flex;flex-direction:column;align-items:center;min-width:130px;flex:1;}
+.pp-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px;text-align:center;width:100%;}
+.pp-icon{font-size:26px;margin-bottom:6px;}
+.pp-label{font-size:11px;font-weight:700;color:var(--purple-dark);text-align:center;line-height:1.3;}
+.pp-sub{font-size:10px;color:var(--gray-muted);margin-top:4px;line-height:1.4;}
+.pp-arrow{display:flex;align-items:center;padding:0 6px;color:var(--purple-mid);font-size:20px;flex-shrink:0;}
+
+/* Defect type tabs */
+.defect-tabs{margin:24px 0;}
+.dt-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.dt-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.dt-btn.active{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.dt-panel{display:none;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:22px;}
+.dt-panel.active{display:block;}
+.dt-name{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.dt-what{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.dt-ai{background:var(--purple-pale);border:1px solid var(--purple-mid);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+.dt-ai-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:5px;}
+.dt-ai-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.dt-human{background:var(--green-pale);border:1px solid #86EFAC;border-radius:10px;padding:12px 16px;}
+.dt-human-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:5px;}
+.dt-human-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Inspect sim */
+.inspect-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.is-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.is-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.is-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.is-part{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:16px;}
+.is-part-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.is-part-desc{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.is-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:14px 0 12px;}
+.is-opts{display:flex;flex-direction:column;gap:9px;}
+.is-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.is-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.is-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.is-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.is-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.is-result.show{display:block;}
+.is-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.is-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.is-next{margin-top:12px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.is-next.show{display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>AI for Quality Control: How Computer Vision Catches Defects Faster Than the Human Eye</h1>
+  <p class="hero-sub">The video showed a quality control scenario. This article explains the full system: how camera inspection works, how the AI is trained, what it can and can't catch, and why the human inspector is still the final word.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>A human quality inspector, working carefully, can examine a part every few seconds. An AI vision system can inspect the same part in milliseconds — and do it 100,000 times per shift without fatigue, distraction, or variation in attention.</p>
+    <p>That's not a comparison designed to make you feel replaceable. It's a description of why these two capabilities complement each other so well. <mark>The AI handles the volume; the human handles the judgment.</mark> Together, they catch more defects than either could alone.</p>
+    <p>Here's exactly how the system works.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How a Computer Vision Inspection System Works</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Computer vision:</strong> An AI technique that enables computers to interpret and make decisions based on images and video. In manufacturing quality control, computer vision systems use cameras to capture images of parts, then analyze those images against a trained model to detect defects. The system doesn't "see" the way humans do — it compares pixel patterns to learned patterns at very high speed.</div>
+    </div>
+
+    <p>The inspection pipeline in a modern manufacturing facility has five stages. Parts move through each one as they come off the production line:</p>
+
+    <div class="pipeline">
+      <div class="pp-stage">
+        <div class="pp-box"><div class="pp-icon">📷</div><div class="pp-label">Image Capture</div><div class="pp-sub">High-res cameras photograph each part under controlled lighting</div></div>
+      </div>
+      <div class="pp-arrow">→</div>
+      <div class="pp-stage">
+        <div class="pp-box"><div class="pp-icon">🔬</div><div class="pp-label">Preprocessing</div><div class="pp-sub">Image normalized for lighting, angle, and resolution consistency</div></div>
+      </div>
+      <div class="pp-arrow">→</div>
+      <div class="pp-stage">
+        <div class="pp-box"><div class="pp-icon">🧠</div><div class="pp-label">AI Analysis</div><div class="pp-sub">Model compares to trained patterns — flags any deviation</div></div>
+      </div>
+      <div class="pp-arrow">→</div>
+      <div class="pp-stage">
+        <div class="pp-box"><div class="pp-icon">⚖️</div><div class="pp-label">Scoring</div><div class="pp-sub">Each flagged part gets a confidence score and defect classification</div></div>
+      </div>
+      <div class="pp-arrow">→</div>
+      <div class="pp-stage">
+        <div class="pp-box"><div class="pp-icon">👤</div><div class="pp-label">Human Review</div><div class="pp-sub">Inspector reviews flagged parts and makes final pass/fail call</div></div>
+      </div>
+    </div>
+
+    <p>Notice that the human inspector is at the end — not replaced, but positioned where their judgment is most valuable: reviewing the cases the AI flagged as uncertain or problematic, and making the final disposition call.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How the AI Is Trained to Know Good from Bad</h2>
+    <p>AI vision systems don't come pre-loaded with knowledge of your parts. They have to be taught — through a training process that typically takes weeks and requires real collaboration between quality engineers and AI specialists.</p>
+
+    <div class="training-flow">
+      <div class="tf-step">
+        <div class="tf-left"><div class="tf-num">1</div><div class="tf-line"></div></div>
+        <div class="tf-card">
+          <div class="tf-title">Collect Labeled Examples</div>
+          <div class="tf-desc">Thousands of images of good parts and defective parts are collected and labeled by human quality experts. "This scratch is a reject. This surface variation is acceptable. This crack is a critical defect." The AI learns from these labels — it doesn't decide quality standards, humans do.</div>
+          <div class="tf-note">Typical training set: 10,000–50,000+ labeled images for a reliable model. This is why new product lines require significant lead time before AI inspection is reliable.</div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-left"><div class="tf-num">2</div><div class="tf-line"></div></div>
+        <div class="tf-card">
+          <div class="tf-title">Train the Model to Recognize Patterns</div>
+          <div class="tf-desc">The AI system learns the visual patterns that distinguish good parts from defective ones — not by memorizing individual images, but by learning the underlying features: edge sharpness, surface texture, color uniformity, geometric conformance. It learns to generalize from examples.</div>
+          <div class="tf-note">The model doesn't know what a "scratch" is conceptually. It knows that a certain type of pixel pattern in a certain region of the image correlates with what quality engineers labeled as "scratch." The knowledge is learned, not understood.</div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-left"><div class="tf-num">3</div><div class="tf-line"></div></div>
+        <div class="tf-card">
+          <div class="tf-title">Test and Calibrate Sensitivity</div>
+          <div class="tf-desc">The trained model is tested against a separate set of parts with known quality status. Engineers adjust sensitivity thresholds: how strict should the AI be? Too strict = too many false positives (good parts flagged as defective). Too lenient = false negatives (defective parts pass). The right threshold depends on the part's application and the cost of each error type.</div>
+          <div class="tf-note">For safety-critical aerospace parts, you might accept a 30% false positive rate to ensure near-zero false negatives. For consumer packaging, you might accept more false negatives to avoid disrupting production flow. Human engineers set these thresholds based on business and safety priorities.</div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-left"><div class="tf-num">4</div><div class="tf-line"></div></div>
+        <div class="tf-card">
+          <div class="tf-title">Deploy and Continuously Improve</div>
+          <div class="tf-desc">The model goes live. Every inspection generates new data — and human inspector review of flagged parts provides ongoing feedback. Parts the AI flagged that were actually good (false positives) and parts the AI passed that turned out defective (false negatives, discovered through downstream testing or customer returns) become new training data that improves the model over time.</div>
+          <div class="tf-note">This is why human inspector feedback isn't just quality control — it's training data for the next version of the model. The inspector who carefully notes why a flagged part is actually acceptable is improving the AI system for every future inspector.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What AI Vision Can and Can't Catch</h2>
+    <p>AI vision systems are extraordinarily capable within their training domain. Outside it, they're blind. Understanding the boundaries is essential for any worker using or working alongside these systems.</p>
+
+    <div class="can-grid">
+      <div class="can-col can">
+        <div class="can-header">✓ What AI Vision Does Well</div>
+        <div class="can-item">Surface scratches, gouges, and cosmetic damage — consistently, across every part</div>
+        <div class="can-item">Dimensional variation — detecting parts outside spec geometry</div>
+        <div class="can-item">Missing components or features — a hole that should be there but isn't</div>
+        <div class="can-item">Color and finish variation — detecting coating or paint defects</div>
+        <div class="can-item">Solder quality on circuit boards — bridges, cold joints, voids</div>
+        <div class="can-item">Label placement and print quality — verifying packaging</div>
+        <div class="can-item">Detecting defects too small for the human eye to reliably see</div>
+        <div class="can-item">Inspecting every single part — not just a sample</div>
+      </div>
+      <div class="can-col cant">
+        <div class="can-header">✗ What AI Vision Struggles With</div>
+        <div class="can-item">Defect types not in training data — never-before-seen failure modes</div>
+        <div class="can-item">Internal defects — cracks or voids inside a part not visible on the surface</div>
+        <div class="can-item">Functional testing — a part can look perfect but not work correctly</div>
+        <div class="can-item">Tactile properties — surface roughness the camera can't feel</div>
+        <div class="can-item">Novel process changes — if the process shifts, the model may be wrong</div>
+        <div class="can-item">Highly reflective or transparent materials — optical challenges</div>
+        <div class="can-item">Understanding why a defect exists — that diagnosis is human work</div>
+        <div class="can-item">Making accountability decisions — pass/fail with real consequences</div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>AI vision catches what it was trained to catch. Human inspectors catch everything else — and they're the ones who can explain why something is wrong, not just that it is.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Common Defect Types — What the AI Sees, What the Human Adds</h2>
+    <p>Select a defect type to see how AI and human inspection work together on each one:</p>
+
+    <div class="defect-tabs">
+      <div class="dt-btns">
+        <button class="dt-btn active" onclick="showDT(this,'scratch')">Surface Scratch</button>
+        <button class="dt-btn" onclick="showDT(this,'crack')">Hairline Crack</button>
+        <button class="dt-btn" onclick="showDT(this,'dim')">Dimensional Error</button>
+        <button class="dt-btn" onclick="showDT(this,'solder')">Solder Defect</button>
+      </div>
+      <div class="dt-panel active" id="dt-scratch">
+        <div class="dt-name">Surface Scratch</div>
+        <div class="dt-what">A mark on the part's surface where material has been displaced or removed — from handling, tooling contact, or packaging friction. May be cosmetic or structural depending on depth and location.</div>
+        <div class="dt-ai"><div class="dt-ai-label">🤖 What AI Does</div><div class="dt-ai-text">Detects scratches reliably across millions of parts using pixel-level analysis. Can classify by length, depth estimate, and location relative to critical surfaces. Flags any scratch exceeding defined parameters instantly — far more consistently than a tired human inspector at hour 7 of a shift.</div></div>
+        <div class="dt-human"><div class="dt-human-label">👤 What Human Adds</div><div class="dt-human-text">Judges whether a scratch the AI flagged is actually in a functional area (reject) or in a non-critical cosmetic area within tolerance (pass). Understands that a new material batch has a slightly different surface finish that the AI is reading as scratches. Makes the call when the AI's confidence is borderline.</div></div>
+      </div>
+      <div class="dt-panel" id="dt-crack">
+        <div class="dt-name">Hairline Crack</div>
+        <div class="dt-what">A fracture in the part's structure, often less than 0.1mm wide — invisible to the naked eye under normal lighting. Catastrophic failure risk in structural components. The hardest defect type to catch reliably.</div>
+        <div class="dt-ai"><div class="dt-ai-label">🤖 What AI Does</div><div class="dt-ai-text">With specialized high-resolution cameras and controlled lighting (often raking light that makes surface cracks visible as shadows), AI can detect cracks as small as 20-50 microns. Far more consistent than human visual inspection — human eyes miss hairline cracks at alarming rates, especially when fatigued.</div></div>
+        <div class="dt-human"><div class="dt-human-label">👤 What Human Adds</div><div class="dt-human-text">Confirms crack presence using tactile inspection or magnification when AI confidence is below threshold. Determines whether a flagged line is a genuine crack or a surface mark (different appearance under different lighting angles). Escalates to engineering when a new crack type appears — potential process problem, not just a defective part.</div></div>
+      </div>
+      <div class="dt-panel" id="dt-dim">
+        <div class="dt-name">Dimensional Error</div>
+        <div class="dt-what">A part that's the wrong size — outside the specified tolerance on a dimension. May be a diameter that's 0.02mm too large, a hole position that's off by 0.05mm, or a feature depth that's too shallow. Often invisible visually but functionally critical.</div>
+        <div class="dt-ai"><div class="dt-ai-label">🤖 What AI Does</div><div class="dt-ai-text">Using calibrated cameras and structured light or laser measurement systems, AI can measure dimensions to sub-millimeter accuracy at production speed. It compares each measurement to the CAD specification and flags parts outside tolerance automatically — catching far more than periodic manual CMM sampling.</div></div>
+        <div class="dt-human"><div class="dt-human-label">👤 What Human Adds</div><div class="dt-human-text">Investigates dimensional drift — when multiple parts are all slightly off in the same direction, that's a process problem (tool wear, machine drift), not just individual part defects. The human reads the pattern and adjusts the process, not just sorts the parts. The AI catches the symptoms; the engineer finds the cause.</div></div>
+      </div>
+      <div class="dt-panel" id="dt-solder">
+        <div class="dt-name">Solder Defect</div>
+        <div class="dt-what">On circuit boards: solder bridges (two contacts accidentally connected), cold joints (inadequate bonding), insufficient solder, or excess solder. Any of these can cause electronic failure — often intermittently, making them especially dangerous in end-use devices.</div>
+        <div class="dt-ai"><div class="dt-ai-label">🤖 What AI Does</div><div class="dt-ai-text">Automated Optical Inspection (AOI) systems inspect every solder joint on every board at the speed of production — typically checking 1,000+ solder connections per board in under a second. Can reliably detect bridges, cold joints, and missing solder using trained models from thousands of labeled examples.</div></div>
+        <div class="dt-human"><div class="dt-human-label">👤 What Human Adds</div><div class="dt-human-text">Reviews borderline cases where the AI's confidence score is in the uncertain range. Also investigates when defect rates suddenly increase — usually means a process problem in the reflow oven or paste application that the AI can detect the consequences of but not the cause. Humans trace the process; AI detects the product.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspection sim -->
+  <div class="section fade-in">
+    <div class="inspect-sim">
+      <div class="is-label">🔎 Quality Decision Practice</div>
+      <div class="is-title">The AI Flagged It — Now What?</div>
+      <div class="is-sub">The AI system flagged these parts. Use your judgment to make the final call — and understand why the human is still in the loop.</div>
+      <div class="is-part">
+        <div class="is-part-label" id="is-part-label">Part 1 of 3</div>
+        <div class="is-part-desc" id="is-part-desc"></div>
+      </div>
+      <div class="is-q" id="is-q"></div>
+      <div class="is-opts" id="is-opts"></div>
+      <div class="is-result good" id="is-good"></div>
+      <div class="is-result bad" id="is-bad"></div>
+      <button class="is-next" id="is-next" onclick="nextIS()">Next Part →</button>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why is the human inspector still needed even when AI vision catches defects more consistently than humans can?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">Because regulations require a human signature on quality records</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Because the AI can only detect defect types it was trained on, makes borderline calls that require judgment, can't explain why defects are occurring, and cannot make accountable final decisions — all of which require a human</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Because AI vision systems aren't accurate enough yet to be trusted without human oversight</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Because AI can't inspect parts that are moving on a conveyor</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The human inspector's role has four irreplaceable dimensions: catching new defect types the AI was never trained on, making judgment calls on borderline confidence scores, diagnosing why defects are occurring (a process problem, not just sorting individual parts), and taking accountable responsibility for the final pass/fail decision. Better AI makes the inspector more effective — it doesn't make the inspector unnecessary.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Not quite. The human inspector's value isn't primarily about regulations or AI accuracy limitations — it's about what AI structurally cannot do: catch genuinely novel defect types, exercise judgment on borderline cases, diagnose root causes (not just symptoms), and take accountability for consequential decisions. These aren't temporary limitations — they reflect the fundamental difference between pattern detection and judgment.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Computer vision quality systems work through a five-stage pipeline: image capture → preprocessing → AI analysis → scoring → human review. The human is at the end for judgment, not removed from the process.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI vision models are trained on thousands of labeled examples of good and defective parts — and their knowledge is limited to what they were trained on. New defect types are blind spots.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI vision excels at surface defects, dimensional errors, and known defect patterns — consistently, on every part, without fatigue. It struggles with internal defects, functional testing, novel failure modes, and root cause analysis.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Human inspector feedback is training data — carefully noting why a flagged part is actually acceptable or why a passing part is actually defective improves the AI model for everyone.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI detects product symptoms. Humans find process causes. That distinction defines the partnership: the AI handles the volume, the human handles the meaning.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+function showDT(btn,id){
+  document.querySelectorAll('.dt-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.dt-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dt-'+id).classList.add('active');
+}
+
+const isParts=[
+  {
+    label:'Part 1 of 3',
+    desc:"AI flag: Surface variation detected, confidence 91%. The part is an automotive brake caliper housing. The AI flagged a 12mm region on the exterior surface. When you examine it under magnification, you find a shallow surface scratch — approximately 0.3mm deep, located on the non-sealing exterior face of the housing. Your quality spec allows scratches up to 0.5mm deep on non-sealing exterior surfaces.",
+    q:"What's the correct disposition?",
+    opts:["Reject — the AI flagged it and that should be the final word","Pass — the scratch is within specification for this location and depth. Document the disposition and the reasoning.","Hold for engineering review — any flagged part requires engineering sign-off","Reject to be safe — scratches always compromise structural integrity"],
+    correct:1,
+    good:"✅ Right. The AI correctly identified a real surface variation — the scratch is real. But the quality specification allows scratches of this depth on this surface location, and the inspector's job is to apply that specification to the AI's finding. The part passes. This is exactly the judgment call the human inspector is in the loop for: AI detects the presence of a feature, human determines whether that feature constitutes a defect given the spec and the location.",
+    bad:"❌ The human inspector's job isn't to rubber-stamp the AI's flags — it's to apply the quality specification to the AI's finding. The AI detected a real surface variation, but the spec allows scratches up to 0.5mm deep on non-sealing exterior surfaces. This part is within spec. Rejecting it wastes a good part. The AI opens the question; the inspector answers it."
+  },
+  {
+    label:'Part 2 of 3',
+    desc:"AI flag: No defect detected. Confidence 96% — PASS. The part is a stainless steel food processing component. While reviewing parts that passed inspection, you notice one with a faint discoloration pattern near the welded seam — a bluish tint you haven't seen before on this part type. The AI did not flag it.",
+    q:"What should you do?",
+    opts:["Accept it — the AI passed it at 96% confidence and that's reliable","Set it aside and investigate. The discoloration near a weld seam could indicate heat damage or incomplete cleaning — a new type of defect the AI wasn't trained on. Escalate to engineering.","Accept it but note the observation in your log","Reject the entire batch — if one part has this issue, they all might"],
+    correct:1,
+    good:"✅ Correct. The AI passed this part confidently — but it was trained on known defect types. A never-before-seen discoloration near a weld seam is exactly the kind of thing AI vision can miss. In food processing equipment, weld quality is critical for hygiene — discoloration can indicate heat damage, incomplete passivation, or contamination. Setting it aside and escalating to engineering is the right call. The AI's 96% confidence is for defects it knows about — not for defects it's never seen.",
+    bad:"❌ A 96% AI confidence score means the part doesn't match known defect patterns — not that it's definitely good. A new discoloration type near a weld seam in a food processing component is exactly the kind of novel defect that falls outside the AI's training. Your observation is the quality net that catches what the AI can't see. Set it aside and escalate."
+  },
+  {
+    label:'Part 3 of 3',
+    desc:"AI flag: Dimensional deviation detected, confidence 87%. Over the past 2 hours, the AI has flagged 34 consecutive parts for the same dimensional error: a bore diameter that's 0.04mm too large — just outside the 0.03mm tolerance. Each part is flagged individually. You're reviewing the trend data.",
+    q:"What does this pattern tell you, and what's the right response?",
+    opts:["Sort and reject the 34 individual parts — each one failed spec individually","This is a process drift problem, not just 34 bad parts. The consistent direction and magnitude of the error indicates tool wear or machine drift. Stop the line, notify the process engineer, adjust the tooling or machine, verify correction, then resume. The rejected parts are the evidence, not the problem.","Adjust the quality specification to accept 0.04mm deviation — the tolerance seems too tight","Keep running and see if it corrects itself"],
+    correct:1,
+    good:"✅ Exactly right. When 34 consecutive parts all fail in the same direction by the same magnitude, that's not random defects — it's a systematic process drift. The AI detected the symptoms perfectly: every part flagged, correct classification. But the response isn't just sorting 34 parts — it's stopping the line and correcting the process that's producing them. If you just sort and continue, parts 35–100 will also be defective. The AI reads the product; the engineer reads the process pattern.",
+    bad:"❌ Think about the pattern: 34 consecutive parts, same error, same direction, same magnitude. That's not 34 individual defects — that's a process drift. Sorting the 34 parts fixes nothing; the next 34 will also be defective. The right response is to stop, find the process cause (tool wear, machine drift, thermal expansion), correct it, verify, then resume. The AI gave you the signal; the pattern tells you what it means."
+  }
+];
+let isIdx=0,isDone=false;
+function renderIS(){
+  const p=isParts[isIdx];
+  document.getElementById('is-part-label').textContent=p.label;
+  document.getElementById('is-part-desc').textContent=p.desc;
+  document.getElementById('is-q').textContent=p.q;
+  const c=document.getElementById('is-opts');c.innerHTML='';
+  p.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='is-opt';b.textContent=o;b.onclick=()=>doIS(i);c.appendChild(b);});
+  document.getElementById('is-good').className='is-result good';
+  document.getElementById('is-bad').className='is-result bad';
+  document.getElementById('is-next').classList.remove('show');
+  isDone=false;
+}
+function doIS(choice){
+  if(isDone)return;isDone=true;
+  const p=isParts[isIdx];
+  const btns=document.querySelectorAll('#is-opts .is-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(choice===p.correct){btns[choice].classList.add('correct');document.getElementById('is-good').textContent=p.good;document.getElementById('is-good').classList.add('show');}
+  else{btns[choice].classList.add('wrong');document.getElementById('is-bad').textContent=p.bad;document.getElementById('is-bad').classList.add('show');}
+  if(isIdx<isParts.length-1)document.getElementById('is-next').classList.add('show');
+}
+function nextIS(){isIdx++;renderIS();}
+renderIS();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

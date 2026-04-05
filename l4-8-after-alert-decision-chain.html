@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Happens After the AI Catches a Problem? The Human Decision Chain in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Narrative scenes */
+.scene{margin:20px 0;}
+.scene-time{display:inline-flex;align-items:center;gap:8px;background:#1a1025;color:var(--purple-mid);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:8px;margin-bottom:14px;}
+.scene-time::before{content:"⏱";}
+.scene-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:22px 26px;}
+.scene-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:6px;}
+.scene-heading{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.scene-body{font-size:14px;line-height:1.85;color:var(--gray-text);}
+.scene-body p{font-size:14px;margin-bottom:10px;}
+.scene-body p:last-child{margin-bottom:0;}
+
+/* AI alert display */
+.ai-alert{background:#1a1025;border-radius:14px;padding:18px 22px;margin:12px 0;}
+.aa-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.aa-dot{width:8px;height:8px;border-radius:50%;background:#F87171;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.2;}}
+.aa-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#F87171;}
+.aa-body{font-size:13px;line-height:1.75;color:rgba(255,255,255,.85);}
+.aa-body strong{color:var(--white);}
+
+/* Decision nodes */
+.decision-node{background:var(--orange-pale);border:2px solid var(--orange);border-radius:16px;padding:20px 24px;margin:12px 0;}
+.dn-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#92400E;margin-bottom:8px;}
+.dn-question{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:#92400E;margin-bottom:10px;}
+.dn-options{display:flex;flex-direction:column;gap:7px;}
+.dn-option{display:flex;gap:10px;background:rgba(255,255,255,.7);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--gray-text);}
+.dn-arrow{font-weight:700;color:var(--orange);flex-shrink:0;}
+
+/* Documentation box */
+.doc-box{background:var(--green-pale);border:1.5px solid #86EFAC;border-radius:16px;padding:20px 24px;margin:12px 0;}
+.db-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:8px;}
+.db-heading{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--green);margin-bottom:10px;}
+.db-items{display:flex;flex-direction:column;gap:6px;}
+.db-item{display:flex;gap:8px;font-size:13px;color:var(--gray-text);}
+.db-item::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0;}
+
+/* Feedback loop visual */
+.feedback-loop{background:linear-gradient(135deg,#1a0533,var(--purple-dark));border-radius:22px;padding:28px 32px;margin:28px 0;color:var(--white);}
+.fl-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.fl-heading{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:16px;}
+.fl-steps{display:flex;flex-direction:column;gap:10px;}
+.fl-step{display:flex;align-items:center;gap:14px;}
+.fl-step-num{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.fl-step-text{font-size:13px;line-height:1.65;color:rgba(255,255,255,.85);}
+.fl-arrow{text-align:center;color:rgba(255,255,255,.3);font-size:18px;padding:2px 0 2px 46px;}
+
+/* Escalation levels */
+.escalation{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.esc-item{display:flex;gap:0;align-items:stretch;}
+.esc-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.esc-dot{width:20px;height:20px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:20px;}
+.esc-line{width:2px;background:var(--purple-mid);flex:1;}
+.esc-item:last-child .esc-line{display:none;}
+.esc-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:8px 0 8px 10px;}
+.esc-level{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:3px;}
+.esc-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.esc-when{font-size:13px;color:var(--gray-text);margin-bottom:6px;}
+.esc-who{font-size:12px;padding:5px 10px;background:var(--purple-pale);border-radius:7px;color:var(--purple-dark);display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>What Happens After the AI Catches a Problem? The Human Decision Chain in Manufacturing</h1>
+  <p class="hero-sub">The alert fired. Now what? A complete walkthrough of everything that happens between an AI flag and a resolved problem — and how that resolution makes the AI smarter over time.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>Most of what you've read in this module has focused on the AI part — how it detects, what it monitors, what it catches and misses. But the moment an alert fires, the AI's role is essentially over. Everything that follows is human.</p>
+    <p>This article closes the loop. From the alert to the investigation to the decision to the documentation to the feedback — here is the full chain, played out in real time through a single realistic scenario.</p>
+  </div>
+
+  <!-- The scenario -->
+  <div class="section fade-in">
+    <h2>The Scenario: A Predictive Maintenance Alert at 2:14 PM</h2>
+    <p>We'll follow a single alert from the moment it fires to the moment the AI model is improved by what was learned. Every step has a human making a decision.</p>
+
+    <div class="scene">
+      <div class="scene-time">2:14 PM — Alert fires</div>
+      <div class="scene-card">
+        <div class="scene-who">The AI System</div>
+        <div class="scene-heading">Predictive Maintenance Alert Generated</div>
+        <div class="ai-alert">
+          <div class="aa-hdr"><div class="aa-dot"></div><div class="aa-label">⚠️ Maintenance Alert — Medium Severity</div></div>
+          <div class="aa-body"><strong>Machine: CNC Mill 6 — Spindle Assembly</strong><br>Vibration: 2.7 mm/s (baseline: 1.1 mm/s) | Temperature: 164°F (baseline: 148°F) | Current draw: +12% above normal | Trend: gradual increase over 54 hours<br><br>Predicted failure window: 5–9 days | Confidence: 84%<br>Recommended action: Supervisor notification + maintenance inspection within 48 hours</div>
+        </div>
+        <div class="scene-body">
+          <p>The alert fires to two places simultaneously: the floor supervisor's tablet and the maintenance team lead's work order queue. It includes a timestamp, the specific sensor readings, the deviation magnitude, the trend duration, and the estimated failure window. The AI's job is done at this moment — it has done everything it can do.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-time">2:15 PM — First human response</div>
+      <div class="scene-card">
+        <div class="scene-who">Floor Supervisor — Yolanda</div>
+        <div class="scene-heading">First Decision: How Urgent Is This?</div>
+        <div class="scene-body">
+          <p>Yolanda sees the alert on her tablet. She applies the evaluation framework she's developed over years of working with this system: specific sensor data (✓), medium severity (✓), 84% confidence (✓), 5–9 day window (✓ — not immediate). Before deciding on a response, she walks to CNC Mill 6.</p>
+          <p>She puts her hand on the spindle housing. Warm — noticeably so. She listens. There's a very slight roughness in the spindle sound she wasn't hearing last week. She checks the production schedule on her tablet: Mill 6 is running a critical batch for a customer order that ships Friday — 3 days from now.</p>
+        </div>
+        <div class="decision-node">
+          <div class="dn-label">Decision Point 1: Urgency Assessment</div>
+          <div class="dn-question">Does this need to stop now, or can it run until scheduled maintenance?</div>
+          <div class="dn-options">
+            <div class="dn-option"><div class="dn-arrow">→</div>Her call: AI gives 5–9 days, physical check confirms developing but not critical issue, Friday order is 3 days away. She'll let it run but add monitoring. Notifies maintenance lead with "inspect within 24 hours."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-time">2:20 PM — Maintenance notification</div>
+      <div class="scene-card">
+        <div class="scene-who">Maintenance Team Lead — Riko</div>
+        <div class="scene-heading">Work Order Created, Technician Assigned</div>
+        <div class="scene-body">
+          <p>Riko receives Yolanda's notification and the original AI alert. He reviews both — the AI data and Yolanda's physical observation notes. He agrees with the urgency assessment: real developing issue, not immediate halt. He creates a formal maintenance work order and assigns it to his most experienced spindle tech, DeShawn, for a next-morning inspection.</p>
+          <p>He also adds a flag in the monitoring system: "Increase sensor polling frequency for Mill 6 spindle from 5-minute to 1-minute intervals until resolved." If the readings accelerate overnight, they'll know immediately.</p>
+        </div>
+        <div class="decision-node">
+          <div class="dn-label">Decision Point 2: Who and When</div>
+          <div class="dn-question">Which technician, what time, what additional monitoring?</div>
+          <div class="dn-options">
+            <div class="dn-option"><div class="dn-arrow">→</div>DeShawn — most spindle experience. 7am tomorrow, before production starts. Increased polling frequency overnight as an early warning backstop.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-time">Next morning, 7:05 AM — Investigation</div>
+      <div class="scene-card">
+        <div class="scene-who">Maintenance Tech — DeShawn</div>
+        <div class="scene-heading">Diagnosis: What Is Actually Causing the Alert?</div>
+        <div class="scene-body">
+          <p>DeShawn arrives at Mill 6 before the shift starts. He performs lockout/tagout — verifying all energy sources are de-energized before opening anything. He checks the spindle lubrication system first: oil level normal, viscosity looks fine. He removes the spindle access panel and inspects the bearings with a stethoscope.</p>
+          <p>He hears it immediately: the classic irregular rolling sound of bearing wear — not catastrophic, but clearly developing. He checks the bearing date code: these bearings are 18 months old. Industry guidance for this machine class recommends replacement at 12–18 months under heavy use. Mill 6 has been running heavy-gauge steel for the last 4 months.</p>
+          <p>He has his diagnosis: upper spindle bearing wear. The AI predicted a failure in 5–9 days; DeShawn's assessment is that the outer race is showing early fatigue and could fail sooner under heavy load. The Friday customer order runs light-gauge aluminum — lower stress. He thinks they can finish the Friday order and replace bearings over the weekend.</p>
+        </div>
+        <div class="decision-node">
+          <div class="dn-label">Decision Point 3: Diagnosis and Recommendation</div>
+          <div class="dn-question">What's actually wrong, and what should happen next?</div>
+          <div class="dn-options">
+            <div class="dn-option"><div class="dn-arrow">→</div>Upper spindle bearing wear. Recommendation to Riko and Yolanda: complete Friday's aluminum order (lower load), bearing replacement Saturday morning during planned downtime. Parts need to be ordered today.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-time">8:30 AM — Decision meeting</div>
+      <div class="scene-card">
+        <div class="scene-who">Yolanda + Riko + DeShawn</div>
+        <div class="scene-heading">The Three-Way Decision</div>
+        <div class="scene-body">
+          <p>The three meet briefly at Riko's desk. DeShawn presents his diagnosis. Yolanda confirms the Friday order is aluminum, not the heavy steel that accelerated the wear. Riko checks parts availability — bearings are in stock. All three agree: complete Friday, repair Saturday.</p>
+          <p>Yolanda's caveat: "If the vibration readings go above 3.5 mm/s at any point before Friday, we halt immediately regardless of the order." She sets a manual alert threshold at 3.5 mm/s in the monitoring system. Riko approves the Saturday overtime for DeShawn's crew.</p>
+        </div>
+        <div class="decision-node">
+          <div class="dn-label">Decision Point 4: Final Authorization</div>
+          <div class="dn-question">Does everyone agree on the plan, and are there clear abort conditions?</div>
+          <div class="dn-options">
+            <div class="dn-option"><div class="dn-arrow">→</div>Plan approved. Continue on Friday order. Saturday bearing replacement. Hard stop condition: if vibration exceeds 3.5 mm/s at any time, halt immediately. All three signatories understand the condition.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-time">Saturday, 8:00 AM — Resolution</div>
+      <div class="scene-card">
+        <div class="scene-who">DeShawn + Crew</div>
+        <div class="scene-heading">Repair Executed and Verified</div>
+        <div class="scene-body">
+          <p>DeShawn and his crew replace the upper spindle bearing during Saturday's planned downtime window. After reassembly, they run a 30-minute break-in cycle at progressively increasing speeds. Vibration readings: 0.9 mm/s. Temperature: 144°F. Both back to baseline. The machine is clear.</p>
+          <p>DeShawn runs the first 10 parts of Monday's production as a quality verification — all parts within spec. He gives the machine back to operations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documentation -->
+  <div class="section fade-in">
+    <h2>Step 5: Documentation — Where the Loop Closes</h2>
+    <p>The repair is done. The machine is running. Many people would consider the incident closed. But the most important step for the AI system hasn't happened yet: <mark>the documentation that turns this experience into improved future predictions.</mark></p>
+
+    <div class="doc-box">
+      <div class="db-label">📋 What Gets Documented</div>
+      <div class="db-heading">The Maintenance Record That Improves the Model</div>
+      <div class="db-items">
+        <div class="db-item">Alert details: timestamp, sensor readings at alert time, confidence score, predicted failure window</div>
+        <div class="db-item">Physical inspection findings: DeShawn's notes on bearing condition, date code, sound signature</div>
+        <div class="db-item">Root cause: upper spindle bearing wear accelerated by 4 months of heavy-gauge steel production</div>
+        <div class="db-item">Decision rationale: why they ran through Friday (aluminum order, lower stress) and what abort condition was set</div>
+        <div class="db-item">Repair performed: bearing replacement, break-in cycle, post-repair readings</div>
+        <div class="db-item">Timeline: alert fired at T+0, diagnosis at T+17hrs, repair at T+3 days — well within the predicted 5–9 day window</div>
+        <div class="db-item">Outcome: successful planned repair, no unplanned downtime, no defective parts produced</div>
+      </div>
+    </div>
+
+    <p>That documentation goes into three places: the maintenance log (DeShawn's work record), the machine history file (Mill 6's service record), and — critically — the AI system's feedback queue, where it becomes training data for the next version of the predictive model.</p>
+  </div>
+
+  <!-- The feedback loop -->
+  <div class="section fade-in">
+    <h2>The Feedback Loop: How Resolution Improves the AI</h2>
+
+    <div class="feedback-loop">
+      <div class="fl-label">🔄 The Full Improvement Loop</div>
+      <div class="fl-heading">Every Resolved Incident Makes the System Smarter</div>
+      <div class="fl-steps">
+        <div class="fl-step"><div class="fl-step-num">1</div><div class="fl-step-text">AI detects a developing anomaly and generates an alert with predicted failure window</div></div>
+        <div class="fl-arrow">↓</div>
+        <div class="fl-step"><div class="fl-step-num">2</div><div class="fl-step-text">Human investigates, diagnoses root cause, and makes an evidence-based decision</div></div>
+        <div class="fl-arrow">↓</div>
+        <div class="fl-step"><div class="fl-step-num">3</div><div class="fl-step-text">Resolution is executed and documented — what the problem was, when it was repaired, what the sensor readings were at each stage</div></div>
+        <div class="fl-arrow">↓</div>
+        <div class="fl-step"><div class="fl-step-num">4</div><div class="fl-step-text">Documentation feeds into the AI system's training data — the model learns what the full sensor pattern before a bearing failure actually looks like on this specific machine</div></div>
+        <div class="fl-arrow">↓</div>
+        <div class="fl-step"><div class="fl-step-num">5</div><div class="fl-step-text">Next time a similar pattern develops on this machine, the model's prediction is more accurate — better failure window estimate, higher confidence score, fewer false alarms</div></div>
+        <div class="fl-arrow">↓</div>
+        <div class="fl-step"><div class="fl-step-num">→</div><div class="fl-step-text" style="font-style:italic;opacity:.7;">Back to step 1 — the cycle continues, and the model improves with every incident that gets properly documented</div></div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>Proper documentation isn't paperwork for its own sake. It's training data. Every incident that gets documented well teaches the AI to be more accurate for every worker who uses it after you.</p></div>
+  </div>
+
+  <!-- Escalation levels -->
+  <div class="section fade-in">
+    <h2>The Escalation Ladder: Who Decides What at Each Level</h2>
+    <p>Not every alert follows the same escalation path. The level of severity determines who needs to be involved and how fast. Here's the general structure:</p>
+
+    <div class="escalation">
+      <div class="esc-item">
+        <div class="esc-left"><div class="esc-dot"></div><div class="esc-line"></div></div>
+        <div class="esc-card">
+          <div class="esc-level">Level 1 — Operator or Inspector</div>
+          <div class="esc-title">Low Severity, Clear Response</div>
+          <div class="esc-when">When: Alert is low-severity, the response is established by protocol, and the worker can handle it within their scope — adjusting a parameter, diverting a part for review, adding a lubrication check to the next PM cycle.</div>
+          <div class="esc-who">Who: The individual who received the alert handles it and documents the response.</div>
+        </div>
+      </div>
+      <div class="esc-item">
+        <div class="esc-left"><div class="esc-dot"></div><div class="esc-line"></div></div>
+        <div class="esc-card">
+          <div class="esc-level">Level 2 — Supervisor Involved</div>
+          <div class="esc-title">Medium Severity or Production Impact</div>
+          <div class="esc-when">When: The response involves stopping production, reallocating work orders, or making a decision that affects more than one person's work. The supervisor coordinates the response and ensures it aligns with production priorities.</div>
+          <div class="esc-who">Who: Supervisor takes point. Operator, maintenance, or quality tech provides input. Supervisor documents the decision rationale.</div>
+        </div>
+      </div>
+      <div class="esc-item">
+        <div class="esc-left"><div class="esc-dot"></div><div class="esc-line"></div></div>
+        <div class="esc-card">
+          <div class="esc-level">Level 3 — Management and Engineering</div>
+          <div class="esc-title">High Severity, Safety Risk, or Significant Cost</div>
+          <div class="esc-when">When: A potential major failure, safety incident, large quality escape, or decision that could affect customer commitments. Management authorizes the response; engineering investigates root cause; safety team may conduct a formal review.</div>
+          <div class="esc-who">Who: Plant manager or operations director takes point. Full investigation team assembled. Formal CAPA (Corrective and Preventive Action) report required.</div>
+        </div>
+      </div>
+      <div class="esc-item">
+        <div class="esc-left"><div class="esc-dot"></div><div class="esc-line"></div></div>
+        <div class="esc-card">
+          <div class="esc-level">Level 4 — External Escalation</div>
+          <div class="esc-title">Regulatory, Customer Impact, or Recall Scenario</div>
+          <div class="esc-when">When: A quality escape has reached a customer, a safety incident has occurred, or a regulatory agency (OSHA, FDA, etc.) needs to be notified. Legal, quality leadership, and executives are involved.</div>
+          <div class="esc-who">Who: Company leadership and legal. CAPA report becomes formal and externally auditable. Root cause must be demonstrated to external parties.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why does thorough documentation of a resolved maintenance incident matter beyond just keeping records?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">It's required by OSHA regulations for all maintenance activities</button>
+        <button class="quiz-opt" onclick="doQ1(1)">Documentation of what actually happened — sensor readings, root cause, repair timeline — becomes training data that improves the AI model's accuracy for future predictions on the same machine</button>
+        <button class="quiz-opt" onclick="doQ1(2)">It protects individual workers from liability if something goes wrong later</button>
+        <button class="quiz-opt" onclick="doQ1(3)">Documentation is primarily for audits — it doesn't affect the AI system directly</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The documentation loop is what turns a one-time incident into a permanent improvement in the system. When the AI model receives data confirming what the sensor pattern actually looked like before this bearing failure — and how the failure window compared to its prediction — it can calibrate more accurately for next time. Every well-documented incident makes the prediction better for every worker who uses the system after you.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ The most important reason goes beyond compliance and liability. Thorough documentation — sensor readings at each stage, root cause, repair timeline, outcome — feeds back into the AI model as training data. The model learns what a real bearing failure pattern actually looks like on this machine, and calibrates its future predictions accordingly. Good documentation is one of the most direct ways workers contribute to improving the AI tools they work with.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">When an AI alert fires, the AI's role is essentially over. The entire response chain — urgency assessment, investigation, diagnosis, decision, repair, documentation — is human.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The human decision chain involves multiple roles: the supervisor who assesses urgency and context, the maintenance lead who assigns and plans, the technician who physically diagnoses, and all three who align on the plan.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every resolution needs documented rationale: what was the problem, what was the decision, why was that decision made, what was the outcome. This isn't bureaucracy — it's training data for the AI model.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Escalation level should match severity: low-severity alerts stay at the operator level; medium severity involves supervisors; high severity involves management and engineering; external impact involves leadership and regulators.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The feedback loop is what makes AI systems get better over time. Every incident that gets properly documented improves the model's accuracy — making the next prediction better for every worker who uses it.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

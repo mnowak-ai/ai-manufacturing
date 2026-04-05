@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMW's AI Quality System: A Full Look at the Factory That Reduced Defects by 30%</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* BMW stat hero */
+.bmw-hero{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);border-radius:24px;padding:36px 40px;margin:28px 0;color:var(--white);}
+.bmw-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.4);margin-bottom:16px;}
+.bmw-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.bmw-stat{text-align:center;}
+.bmw-num{font-family:"Fraunces",serif;font-size:44px;font-weight:900;color:var(--white);line-height:1;margin-bottom:6px;}
+.bmw-label{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5;}
+@media(max-width:540px){.bmw-stats{grid-template-columns:1fr;}}
+
+/* The challenge section */
+.challenge-box{background:var(--orange-pale);border:2px solid var(--orange);border-radius:20px;padding:26px 30px;margin:24px 0;}
+.ch-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#92400E;margin-bottom:10px;}
+.ch-heading{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:#92400E;margin-bottom:12px;}
+.ch-body{font-size:14px;line-height:1.8;color:var(--gray-text);}
+
+/* Solution steps */
+.solution-steps{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.sol-step{display:flex;gap:18px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;padding:22px 24px;align-items:flex-start;}
+.sol-icon{font-size:30px;flex-shrink:0;margin-top:2px;}
+.sol-body{}
+.sol-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.sol-desc{font-size:14px;line-height:1.75;color:var(--gray-text);}
+.sol-worker{margin-top:9px;font-size:13px;padding:9px 13px;background:var(--purple-pale);border-radius:9px;color:var(--purple-dark);}
+.sol-worker-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+
+/* Metric explanations */
+.metrics{display:flex;flex-direction:column;gap:16px;margin:24px 0;}
+.metric{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;overflow:hidden;}
+.metric-header{display:flex;align-items:center;gap:20px;padding:20px 24px;cursor:pointer;}
+.metric-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple);min-width:80px;}
+.metric-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);}
+.metric-chevron{margin-left:auto;font-size:16px;color:var(--gray-muted);transition:transform .25s;}
+.metric.open .metric-chevron{transform:rotate(180deg);}
+.metric-body{display:none;padding:0 24px 22px;}
+.metric.open .metric-body{display:block;}
+.metric-what{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.metric-worker{background:var(--purple-pale);border-radius:10px;padding:14px 18px;}
+.metric-worker-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:5px;}
+.metric-worker-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Lessons learned */
+.lessons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0;}
+.lesson-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px;}
+.lc-icon{font-size:26px;margin-bottom:8px;}
+.lc-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.lc-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:520px){.lessons-grid{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>BMW's AI Quality System: A Full Look at the Factory That Reduced Defects by 30%</h1>
+  <p class="hero-sub">The video gave this case study one slide. It deserves a full article. Here's the complete story: the problem BMW was trying to solve, how the AI system works, and what every number means for a worker on the line.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <div class="bmw-hero">
+      <div class="bmw-eyebrow">🏭 BMW Group — AI Quality Implementation</div>
+      <div class="bmw-stats">
+        <div class="bmw-stat"><div class="bmw-num">30%</div><div class="bmw-label">reduction in defects reaching downstream assembly</div></div>
+        <div class="bmw-stat"><div class="bmw-num">100%</div><div class="bmw-label">of production parts inspected — not just sampled</div></div>
+        <div class="bmw-stat"><div class="bmw-num">milliseconds</div><div class="bmw-label">per part — inspection at full production speed</div></div>
+      </div>
+    </div>
+    <p>Those numbers from the video are real. But numbers without context don't teach you anything transferable. This article explains what BMW was actually trying to solve, how they solved it, and what each outcome means in practice — for the workers on the line and for quality programs everywhere.</p>
+  </div>
+
+  <!-- The challenge -->
+  <div class="section fade-in">
+    <h2>The Problem BMW Was Actually Trying to Solve</h2>
+
+    <div class="challenge-box">
+      <div class="ch-label">The Core Challenge</div>
+      <div class="ch-heading">Human Inspection Can't Keep Up With Production Volume — and the Eye Can't See Everything</div>
+      <div class="ch-body">BMW's production lines move fast. At volume manufacturing speeds, a human inspector examining painted body panels, pressed parts, or assembled components simply cannot keep pace with production — not while maintaining consistent inspection quality. Beyond speed, there's a second problem: some defects are genuinely invisible to the human eye under normal lighting conditions. Hairline surface scratches. Micro-bubbles in paint. Weld porosity at sub-millimeter scale. These defects might look fine under the lighting conditions of the inspection station, only to become visible under direct sunlight or interior lighting when the customer takes delivery. BMW needed a system that was faster, more consistent, and capable of detecting what humans couldn't see — without replacing the skilled quality workforce that understands what to do with the findings.</div>
+    </div>
+
+    <p>BMW's challenge is shared by almost every high-volume manufacturer. It's not unique to automotive. The same tension between production speed and inspection thoroughness exists in electronics, pharmaceuticals, food processing, aerospace components, and consumer goods. <mark>What BMW figured out is what everyone else is trying to apply.</mark></p>
+  </div>
+
+  <!-- The solution -->
+  <div class="section fade-in">
+    <h2>How BMW's AI Quality System Actually Works</h2>
+    <p>BMW deployed AI-powered visual inspection at multiple points in their production process — not as a replacement for quality engineers and inspectors, but as an upgrade to what the quality team could see and respond to.</p>
+
+    <div class="solution-steps">
+      <div class="sol-step">
+        <div class="sol-icon">📷</div>
+        <div class="sol-body">
+          <div class="sol-title">High-Resolution Cameras at Production Speed</div>
+          <div class="sol-desc">Multi-megapixel cameras capture detailed images of each part as it moves through the production line — at full conveyor speed. The key innovation: specialized lighting rigs that illuminate parts from multiple angles simultaneously, making surface defects visible that would be invisible under standard lighting. A scratch that reflects light away in one direction becomes clearly visible as a shadow in another.</div>
+          <div class="sol-worker">
+            <div class="sol-worker-label">👤 Worker impact</div>
+            Floor workers no longer need to hold parts under specialized lighting to check for hairline surface defects. The inspection station does this automatically for every part.
+          </div>
+        </div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-icon">🧠</div>
+        <div class="sol-body">
+          <div class="sol-title">Deep Learning Models Trained on BMW's Actual Defects</div>
+          <div class="sol-desc">BMW trained their AI models on years of quality data — thousands of examples of defects that actually occurred in their specific manufacturing processes, with their specific materials and equipment. The models know what a BMW press line's typical surface scratch looks like versus an acceptable surface variation, because they were trained on BMW's specific quality history — not generic data.</div>
+          <div class="sol-worker">
+            <div class="sol-worker-label">👤 Worker impact</div>
+            Quality inspectors contributed their expertise to label training data — explaining which surface variations are acceptable, which are defects, and why. Their knowledge went into the model.
+          </div>
+        </div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-icon">⚡</div>
+        <div class="sol-body">
+          <div class="sol-title">Real-Time Analysis and Immediate Feedback</div>
+          <div class="sol-desc">The system analyzes each image and returns a result within milliseconds — fast enough to flag a defective part before it moves to the next production stage. Flagged parts are automatically diverted or marked for human review without stopping the production line. Quality data feeds back to production control in real time, allowing operators to see defect trends as they develop.</div>
+          <div class="sol-worker">
+            <div class="sol-worker-label">👤 Worker impact</div>
+            Operators see a live quality dashboard during their shift. If defect rates start climbing, they know immediately — not at end-of-shift review. This is the feedback speed change that matters most on the floor.
+          </div>
+        </div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-icon">👤</div>
+        <div class="sol-body">
+          <div class="sol-title">Human Quality Engineers Review and Respond</div>
+          <div class="sol-desc">Every flagged part gets human review before final disposition. Quality engineers investigate defect clusters — when multiple parts from the same production window show the same defect type, that's a process signal, not just a product signal. The engineers' job shifted from inspecting individual parts to investigating process trends and making consequential decisions about what to do about them.</div>
+          <div class="sol-worker">
+            <div class="sol-worker-label">👤 Worker impact</div>
+            Quality engineers spend less time on routine inspection and more time on root cause analysis — the higher-skill, higher-impact work. Their jobs got more interesting, not less important.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The numbers -->
+  <div class="section fade-in">
+    <h2>What Each Number Means — In Plain Language</h2>
+    <p>The video mentioned "30% defect reduction." Let's unpack all three key metrics in terms that mean something to someone on the production floor. Click each one to see the full explanation:</p>
+
+    <div class="metrics">
+      <div class="metric open" id="m0">
+        <div class="metric-header" onclick="toggleMetric(0)">
+          <div class="metric-num">30%</div>
+          <div>
+            <div class="metric-title">Reduction in Defects Reaching Downstream Assembly</div>
+          </div>
+          <div class="metric-chevron">▼</div>
+        </div>
+        <div class="metric-body">
+          <div class="metric-what">This doesn't mean BMW makes 30% fewer defective parts — it means 30% fewer defective parts make it to the next stage of production before being caught. The distinction matters enormously. A defect caught at the paint inspection station costs almost nothing to fix — maybe a rework or scrap of a single panel. The same defect caught during final assembly inspection might require disassembling a partially built vehicle. The same defect caught by a customer requires a warranty repair, a service appointment, and potential reputation damage. The earlier you catch a defect, the cheaper and simpler the fix. A 30% reduction in defects reaching downstream means 30% less costly, complex, downstream rework — not just better parts.</div>
+          <div class="metric-worker">
+            <div class="metric-worker-label">What this means on your floor</div>
+            <div class="metric-worker-text">When an AI quality system catches a defect at your station instead of the next one down the line — or at shipping instead of the customer — it's saving the facility real money and you real headaches. The earlier the catch, the smaller the problem.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric" id="m1">
+        <div class="metric-header" onclick="toggleMetric(1)">
+          <div class="metric-num">100%</div>
+          <div>
+            <div class="metric-title">Of Parts Inspected — Not Just a Sample</div>
+          </div>
+          <div class="metric-chevron">▼</div>
+        </div>
+        <div class="metric-body">
+          <div class="metric-what">Before AI inspection, BMW (like all manufacturers) used statistical sampling — inspecting a percentage of parts and using those results to infer the quality of the whole batch. If you inspected 5% of parts and found 0 defects, you shipped the other 95% with reasonable confidence they were good. The problem: a batch that's 0.1% defective might show 0 defects in a small sample — and still ship several hundred defective parts. 100% inspection means every single part gets checked. There's no statistical inference, no sampling risk. If it's defective, it gets caught. Period.</div>
+          <div class="metric-worker">
+            <div class="metric-worker-label">What this means on your floor</div>
+            <div class="metric-worker-text">When AI handles volume inspection, you stop worrying about "did this batch get sampled?" Every part has been checked. Your job is no longer about catching what sampling missed — it's about investigating what the AI found and understanding why.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric" id="m2">
+        <div class="metric-header" onclick="toggleMetric(2)">
+          <div class="metric-num">ms</div>
+          <div>
+            <div class="metric-title">Per-Part Inspection — At Full Production Speed</div>
+          </div>
+          <div class="metric-chevron">▼</div>
+        </div>
+        <div class="metric-body">
+          <div class="metric-what">A human inspector examining a part carefully might take 15–30 seconds for a thorough visual check. An AI vision system performs the equivalent inspection in under 100 milliseconds — 150× to 300× faster. At BMW's production volumes, that speed difference is the entire game: it's what makes 100% inspection possible without slowing the line. But speed alone isn't the benefit — consistency is. A human inspector at second 15 of a 30-second inspection is as good as at second 1. A human inspector at part 500 of a shift is measurably less consistent than at part 50, no matter how skilled or motivated. The AI is equally consistent at part 500,000 as at part 1.</div>
+          <div class="metric-worker">
+            <div class="metric-worker-label">What this means on your floor</div>
+            <div class="metric-worker-text">AI inspection doesn't get tired. It doesn't have a 2pm attention dip or a Friday afternoon accuracy drop. For workers, that consistency means the quality data you see from the AI at the end of a shift is as reliable as the data from the start — which makes trend analysis meaningful.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lessons that transfer -->
+  <div class="section fade-in">
+    <h2>Four Lessons From BMW That Apply Anywhere</h2>
+    <p>BMW is a global automaker with resources most facilities don't have. But the principles behind their AI quality program apply to any manufacturing environment — including ones you'll work in:</p>
+
+    <div class="lessons-grid">
+      <div class="lesson-card">
+        <div class="lc-icon">🏃</div>
+        <div class="lc-title">Catch It Early or Pay More Later</div>
+        <div class="lc-desc">The cost of a defect multiplies at every downstream stage. A bad weld caught at the weld station costs almost nothing. The same weld caught at final assembly costs hours of disassembly. Caught by a customer: warranty, reputation, relationship. The earlier the detection system, the lower the cost. AI moves detection upstream.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-icon">📊</div>
+        <div class="lc-title">The Data Feeds the Process, Not Just the Parts</div>
+        <div class="lc-desc">BMW's biggest gain wasn't sorting more defective parts — it was seeing defect trends in real time and correcting the process that produced them. When AI quality data flows back to production operators immediately, the facility stops fixing problems after the fact and starts preventing them. That's the real value.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-icon">🤝</div>
+        <div class="lc-title">Quality Engineers Trained the AI</div>
+        <div class="lc-desc">BMW's model works because expert quality engineers spent months labeling data — explaining what's acceptable and what isn't, and why. The AI's knowledge is human knowledge, encoded in machine form. Without the experts, there's no model. That expertise doesn't disappear when AI arrives — it becomes the foundation the AI runs on.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-icon">🔍</div>
+        <div class="lc-title">Humans Still Investigate, Engineers Still Decide</div>
+        <div class="lc-desc">30% better defect detection didn't mean 30% fewer quality engineers. It meant engineers spent 30% less time on routine inspection and 30% more time on root cause investigation, process improvement, and supplier quality management — the work that actually makes the facility permanently better.</div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>BMW's AI quality system didn't reduce the number of people thinking about quality. It made the thinking they were already doing far more effective — by giving them better information, faster, on every part.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">BMW's AI system reduced defects reaching downstream assembly by 30%. Why is "downstream" the important word in that outcome?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">It's not important — a 30% defect reduction is impressive regardless of where defects are caught</button>
+        <button class="quiz-opt" onclick="doQ1(1)">A defect caught earlier in production costs much less to fix than one caught later. "Downstream" reduction means defects are being caught at earlier, cheaper stages — before they become embedded in assembled vehicles or reach customers where the cost is highest.</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Downstream means the defects that previously required machine repairs — those are the most expensive</button>
+        <button class="quiz-opt" onclick="doQ1(3)">It means the defects were reduced after the vehicle left the factory — customer complaints dropped by 30%</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The cost of fixing a defect increases dramatically at every downstream stage. A defect caught at the inspection station right after it's made costs almost nothing — rework or scrap one part. The same defect caught during final assembly might require disassembling a partially built vehicle. Caught by a customer: warranty repair, service appointments, and reputational damage. "Downstream" reduction means the AI is catching defects at earlier, cheaper stages — which is why the economic impact of 30% is much larger than the number alone suggests.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Location matters enormously. A defect caught at the inspection station right after production costs nearly nothing. The same defect caught at final assembly might require hours of disassembly. Caught by a customer: warranty costs, service time, and reputation damage. "Downstream" defect reduction means the AI is catching problems at cheaper, earlier stages — which multiplies the economic value of that 30% figure significantly.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">BMW's challenge was shared by all high-volume manufacturers: human inspection can't keep pace with production speed, and human eyes can't detect all defect types — especially sub-millimeter surface anomalies under normal lighting.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Their system combines specialized multi-angle lighting (making invisible defects visible), deep learning models trained on BMW's own defect history, real-time analysis at production speed, and human quality engineers who review findings and investigate process causes.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">30% fewer defects reaching downstream means far lower repair costs — defects caught early cost almost nothing to fix; defects caught by customers cost the most. The economic impact is much larger than the percentage alone suggests.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">100% inspection eliminates sampling risk entirely. Millisecond-speed inspection enables this at production line speed without slowing output.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">BMW's quality engineers trained the AI — their expertise is encoded in the model. And they spend their time on root cause analysis and process improvement, not routine inspection. Better data made their work more effective, not redundant.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+function toggleMetric(i){document.getElementById('m'+i).classList.toggle('open');}
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

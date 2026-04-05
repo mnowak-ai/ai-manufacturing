@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Defect Rate and Why Does It Matter More Than You Think?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Scale calculator */
+.scale-calc{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.sc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sc-sub{font-size:14px;color:var(--gray-muted);margin-bottom:24px;line-height:1.6;}
+.sc-controls{display:flex;flex-direction:column;gap:16px;margin-bottom:24px;}
+.sc-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.sc-row label{font-size:14px;font-weight:600;color:var(--gray-text);min-width:150px;}
+.sc-row input[type=range]{width:180px;accent-color:var(--purple);}
+.sc-row select{font-family:"DM Sans",sans-serif;font-size:14px;border:1.5px solid var(--purple-mid);border-radius:8px;padding:7px 10px;background:var(--white);color:var(--gray-text);}
+.sc-val{font-size:15px;font-weight:700;color:var(--purple);min-width:60px;}
+.sc-results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+.sc-result-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px;text-align:center;}
+.sc-result-num{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--purple);line-height:1;margin-bottom:4px;}
+.sc-result-num.good{color:var(--green);}
+.sc-result-num.bad{color:var(--red);}
+.sc-result-label{font-size:11px;color:var(--gray-muted);line-height:1.5;}
+.sc-insight{background:var(--purple-pale);border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.7;color:var(--purple-dark);}
+@media(max-width:560px){.sc-results{grid-template-columns:1fr;}}
+
+/* Cost breakdown */
+.cost-layers{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.cost-layer{display:flex;gap:16px;border-radius:16px;padding:18px 20px;border:1.5px solid;align-items:flex-start;}
+.cost-layer.l1{background:#FEF2F2;border-color:#FCA5A5;}
+.cost-layer.l2{background:var(--orange-pale);border-color:var(--orange);}
+.cost-layer.l3{background:var(--red-pale);border-color:var(--red);}
+.cost-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+.cost-body{}
+.cost-stage{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.l1 .cost-stage{color:#EF4444;}
+.l2 .cost-stage{color:#92400E;}
+.l3 .cost-stage{color:var(--red);}
+.cost-title{font-weight:700;font-size:15px;color:var(--gray-text);margin-bottom:5px;}
+.cost-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.cost-multiplier{margin-top:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:100px;display:inline-block;}
+.l1 .cost-multiplier{background:#FEF2F2;color:#EF4444;border:1px solid #FCA5A5;}
+.l2 .cost-multiplier{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.l3 .cost-multiplier{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* DPMO explainer */
+.dpmo-box{background:linear-gradient(135deg,#1a0533,var(--purple-dark));border-radius:20px;padding:28px 32px;margin:28px 0;color:var(--white);}
+.dpmo-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:12px;}
+.dpmo-heading{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:14px;}
+.dpmo-levels{display:flex;flex-direction:column;gap:8px;}
+.dpmo-row{display:flex;align-items:center;gap:12px;}
+.dpmo-label-text{font-size:12px;color:rgba(255,255,255,.6);min-width:110px;flex-shrink:0;}
+.dpmo-bar-wrap{flex:1;}
+.dpmo-bar{height:20px;border-radius:6px;display:flex;align-items:center;padding:0 10px;transition:width .8s ease;}
+.dpmo-bar-text{font-size:11px;font-weight:700;color:var(--white);white-space:nowrap;}
+.dpmo-val{font-size:11px;color:rgba(255,255,255,.5);min-width:100px;text-align:right;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>What Is a Defect Rate and Why Does It Matter More Than You Think?</h1>
+  <p class="hero-sub">One number. Tiny changes in it — fractions of a percent — can mean millions of dollars and thousands of unhappy customers. Here's the math that makes quality improvement one of the most impactful things a factory can do.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>When BMW reduced its defect rate by 30%, the headline sounds impressive but abstract. How many parts is that, really? What does it actually cost when a defect reaches a customer? And why does a reduction from 1% to 0.7% — a change of three-tenths of one percent — matter so much that companies invest millions of dollars to achieve it?</p>
+    <p>This article answers all of that. The math isn't complicated. But once you see it play out at scale, you'll never look at quality numbers the same way.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Is a Defect Rate?</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Defect rate:</strong> The percentage of produced units that fail to meet quality specifications. If a factory produces 1,000 parts and 10 are defective, the defect rate is 1% (10 ÷ 1,000). Also expressed as <strong>parts per million (PPM)</strong> or <strong>defects per million opportunities (DPMO)</strong> when talking about very low defect rates at high-volume facilities.</div>
+    </div>
+    <p>Defect rates are usually expressed as a percentage for everyday conversation, but manufacturers tracking very high-quality processes often shift to PPM — parts per million — because once you get below 0.1%, the percentage notation becomes hard to work with. A 0.001% defect rate is 10 PPM. Both mean the same thing: 10 defective parts out of every million produced.</p>
+    <p>The formula is simple: <mark>Defect Rate = (Number of Defective Parts ÷ Total Parts Produced) × 100</mark></p>
+  </div>
+
+  <!-- Interactive calculator -->
+  <div class="section fade-in">
+    <h2>The Scale Problem: See the Math for Yourself</h2>
+    <p>Here's the insight most people miss: <mark>defect rates that look tiny become enormous problems at production scale.</mark> Use the calculator below to see what different defect rates actually mean for a real facility:</p>
+
+    <div class="scale-calc">
+      <div class="sc-label">📊 Defect Rate Scale Calculator</div>
+      <div class="sc-title">From Percentages to Real Parts</div>
+      <div class="sc-sub">Adjust the sliders to see what defect rates mean at production volume — and how much improvement matters.</div>
+      <div class="sc-controls">
+        <div class="sc-row">
+          <label>Daily production volume:</label>
+          <input type="range" id="sc-volume" min="1000" max="100000" step="1000" value="10000" oninput="calcScale()">
+          <span class="sc-val" id="sc-vol-val">10,000</span>
+        </div>
+        <div class="sc-row">
+          <label>Current defect rate:</label>
+          <input type="range" id="sc-current" min="0.1" max="5" step="0.1" value="1.0" oninput="calcScale()">
+          <span class="sc-val" id="sc-curr-val">1.0%</span>
+        </div>
+        <div class="sc-row">
+          <label>Improved defect rate:</label>
+          <input type="range" id="sc-improved" min="0.1" max="5" step="0.1" value="0.7" oninput="calcScale()">
+          <span class="sc-val" id="sc-impr-val">0.7%</span>
+        </div>
+        <div class="sc-row">
+          <label>Cost per defect:</label>
+          <select id="sc-cost" onchange="calcScale()">
+            <option value="50">$50 — caught on the line (rework/scrap)</option>
+            <option value="500" selected>$500 — caught at final inspection</option>
+            <option value="2500">$2,500 — caught by customer (warranty)</option>
+            <option value="10000">$10,000 — product recall or liability</option>
+          </select>
+        </div>
+      </div>
+      <div class="sc-results">
+        <div class="sc-result-card">
+          <div class="sc-result-num bad" id="sc-defects-before">—</div>
+          <div class="sc-result-label">Defective parts per day (before)</div>
+        </div>
+        <div class="sc-result-card">
+          <div class="sc-result-num good" id="sc-defects-after">—</div>
+          <div class="sc-result-label">Defective parts per day (after)</div>
+        </div>
+        <div class="sc-result-card">
+          <div class="sc-result-num" id="sc-saved-parts">—</div>
+          <div class="sc-result-label">Defective parts prevented daily</div>
+        </div>
+      </div>
+      <div class="sc-insight" id="sc-insight">Adjust the sliders to see results.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why "Where You Catch It" Changes Everything</h2>
+    <p>The defect rate is only half the story. The other half is where in the production process the defect is caught. The same defect, caught at different stages, creates radically different costs:</p>
+
+    <div class="cost-layers">
+      <div class="cost-layer l1">
+        <div class="cost-icon">🔧</div>
+        <div class="cost-body">
+          <div class="cost-stage">Stage 1 — Best Case</div>
+          <div class="cost-title">Caught During Production — At the Machine</div>
+          <div class="cost-desc">AI quality inspection or an alert operator catches the defect immediately. The part is diverted before any additional work is done on it. Cost is the material and the production time — nothing else. This is AI's primary value: moving detection as early as possible.</div>
+          <div class="cost-multiplier">💚 1× cost — cheapest possible outcome</div>
+        </div>
+      </div>
+      <div class="cost-layer l2">
+        <div class="cost-icon">🔬</div>
+        <div class="cost-body">
+          <div class="cost-stage">Stage 2 — Recoverable</div>
+          <div class="cost-title">Caught at Final Inspection or End of Line</div>
+          <div class="cost-desc">The part has gone through multiple additional production stages before the defect is found. All that downstream work is wasted. Rework may be possible but expensive. If the defect was in a component, the entire assembly it was built into may need to be disassembled.</div>
+          <div class="cost-multiplier">🟡 5–20× cost of catching it early</div>
+        </div>
+      </div>
+      <div class="cost-layer l3">
+        <div class="cost-icon">😤</div>
+        <div class="cost-body">
+          <div class="cost-stage">Stage 3 — Worst Case</div>
+          <div class="cost-title">Caught by the Customer — or in a Recall</div>
+          <div class="cost-desc">The defective part shipped. The customer experiences a failure. Now add: warranty repair labor, shipping, replacement part cost, customer service time, potential liability, and reputational damage. If a recall is required, multiply by the number of affected units across all customers.</div>
+          <div class="cost-multiplier">🔴 50–1,000× cost — catastrophic multiplier</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>Improving a defect rate by 0.3% doesn't just prevent 0.3% of your costs. It prevents the most expensive costs — the ones that happen when defects escape the facility entirely.</p></div>
+  </div>
+
+  <!-- DPMO / Six Sigma -->
+  <div class="section fade-in">
+    <h2>Six Sigma: The Gold Standard for Defect Rate Measurement</h2>
+    <p>If you've ever heard the term "Six Sigma" in a manufacturing context, this is what it means — a statistical framework for measuring and improving process quality, expressed in terms of defects per million opportunities.</p>
+
+    <div class="dpmo-box">
+      <div class="dpmo-label">📐 Sigma Levels Explained</div>
+      <div class="dpmo-heading">What Each Quality Level Means in PPM</div>
+      <div class="dpmo-levels" id="dpmo-levels">
+        <div class="dpmo-row">
+          <div class="dpmo-label-text">2 Sigma</div>
+          <div class="dpmo-bar-wrap"><div class="dpmo-bar" style="width:100%;background:#EF4444;"><span class="dpmo-bar-text">308,537 defects per million</span></div></div>
+          <div class="dpmo-val">30.8% defect rate</div>
+        </div>
+        <div class="dpmo-row">
+          <div class="dpmo-label-text">3 Sigma</div>
+          <div class="dpmo-bar-wrap"><div class="dpmo-bar" style="width:68%;background:#F97316;"><span class="dpmo-bar-text">66,807 per million</span></div></div>
+          <div class="dpmo-val">6.7% defect rate</div>
+        </div>
+        <div class="dpmo-row">
+          <div class="dpmo-label-text">4 Sigma</div>
+          <div class="dpmo-bar-wrap"><div class="dpmo-bar" style="width:25%;background:#EAB308;"><span class="dpmo-bar-text">6,210 per million</span></div></div>
+          <div class="dpmo-val">0.62% defect rate</div>
+        </div>
+        <div class="dpmo-row">
+          <div class="dpmo-label-text">5 Sigma</div>
+          <div class="dpmo-bar-wrap"><div class="dpmo-bar" style="width:8%;background:#22C55E;"><span class="dpmo-bar-text">233 per million</span></div></div>
+          <div class="dpmo-val">0.023% defect rate</div>
+        </div>
+        <div class="dpmo-row">
+          <div class="dpmo-label-text">6 Sigma ★</div>
+          <div class="dpmo-bar-wrap"><div class="dpmo-bar" style="width:2%;background:#7C3AED;min-width:80px;"><span class="dpmo-bar-text">3.4 per million</span></div></div>
+          <div class="dpmo-val">0.00034% defect rate</div>
+        </div>
+      </div>
+    </div>
+
+    <p>Six Sigma — 3.4 defects per million — is the quality target of aerospace, medical devices, and semiconductor manufacturing. Getting from 4 Sigma to 5 Sigma requires reducing defects by 97%. Getting from 5 to 6 requires reducing them by 99% again. Each step is exponentially harder — which is why <mark>AI quality systems are so valuable at high Sigma levels</mark>, where the remaining defects are so rare that human-only inspection simply can't catch them consistently.</p>
+    <p>Siemens Amberg's 99.9988% quality rate — from the case study earlier in this module — translates to 120 PPM. That's between 5 and 6 Sigma. It's extraordinarily hard to achieve without AI-assisted inspection.</p>
+  </div>
+
+  <!-- Quiz -->
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">A factory produces 50,000 parts per day. Its defect rate drops from 0.8% to 0.5% after deploying an AI quality system. How many fewer defective parts are produced each day — and why does where those defects are caught matter as much as how many there are?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">150 fewer defects per day. Where they're caught doesn't matter — a defect is a defect.</button>
+        <button class="quiz-opt" onclick="doQ1(1)">150 fewer defective parts per day (0.3% × 50,000). Where they're caught matters enormously — a defect caught on the line costs a fraction of what a defect caught by the customer costs, sometimes 50–1,000× less. Catching more defects earlier is often as important as producing fewer defects overall.</button>
+        <button class="quiz-opt" onclick="doQ1(2)">300 fewer defects per day. Where they're caught is a supply chain issue, not a quality issue.</button>
+        <button class="quiz-opt" onclick="doQ1(3)">150 fewer defects per day. The only cost that matters is the scrap cost of the defective part itself.</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct on both counts. 0.3% of 50,000 = 150 fewer defective parts per day. Over a year, that's 54,750 fewer defective parts — each one a potential warranty claim, recall unit, or unhappy customer avoided. And the cost multiplier is real: a defect caught by AI inspection at the machine might cost $50 to scrap. The same defect discovered by a customer during the first month of ownership might cost $2,500 in warranty repair, service time, and goodwill. AI moves detection earlier — which is worth far more than the defect count alone suggests.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Let's check the math: 0.3% × 50,000 = 150 fewer defective parts per day. And where they're caught is enormously important. A defect caught by AI inspection at the production line might cost $50 to address. The same defect that ships and is discovered by a customer can cost $2,500 or more — in warranty repair, service calls, and reputation damage. AI quality systems improve defect rates AND move detection earlier, both of which reduce total cost.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Defect rate is the percentage of produced units that fail quality specifications. It's calculated as (defective parts ÷ total parts) × 100, and expressed in PPM for very high-quality processes.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Small percentage improvements generate large absolute numbers at production scale. A 0.3% improvement at a 50,000-part-per-day facility prevents 150 defective parts every day — 54,750 per year.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Where a defect is caught multiplies its cost dramatically — from 1× (caught on the line) to 5–20× (caught at final inspection) to 50–1,000× (caught by a customer or in a recall).</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Six Sigma (3.4 PPM) is the quality gold standard. AI quality systems are what make very high Sigma levels achievable — human-only inspection cannot consistently catch defects at sub-100 PPM rates.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Siemens Amberg's 99.9988% quality rate is approximately 120 PPM — between 5 and 6 Sigma. That level of quality is only achievable through continuous AI-assisted inspection of every part.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+function fmt(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':'$'+n.toLocaleString();}
+function fmtN(n){return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?(n/1000).toFixed(0)+'K':n.toLocaleString();}
+
+function calcScale(){
+  const vol=parseInt(document.getElementById('sc-volume').value);
+  const curr=parseFloat(document.getElementById('sc-current').value);
+  const impr=parseFloat(document.getElementById('sc-improved').value);
+  const cost=parseInt(document.getElementById('sc-cost').value);
+  document.getElementById('sc-vol-val').textContent=fmtN(vol);
+  document.getElementById('sc-curr-val').textContent=curr.toFixed(1)+'%';
+  document.getElementById('sc-impr-val').textContent=impr.toFixed(1)+'%';
+  const dBefore=Math.round(vol*curr/100);
+  const dAfter=Math.round(vol*impr/100);
+  const dSaved=dBefore-dAfter;
+  document.getElementById('sc-defects-before').textContent=dBefore.toLocaleString();
+  document.getElementById('sc-defects-after').textContent=dAfter.toLocaleString();
+  document.getElementById('sc-saved-parts').textContent=dSaved>=0?'+'+dSaved.toLocaleString():dSaved.toLocaleString();
+  const annualSavings=dSaved*cost*365;
+  const annualLabel=annualSavings>=0?'saved':'in additional cost';
+  document.getElementById('sc-insight').textContent=`At ${cost>=1000?'$'+(cost/1000).toFixed(1)+'K':'$'+cost} per defect, preventing ${dSaved.toLocaleString()} defective parts per day means approximately ${fmt(Math.abs(annualSavings))} ${annualLabel} per year. ${impr<curr?'That\'s the scale impact of what looks like a small percentage improvement.':impr===curr?'Change the sliders to see the impact.':'Increasing the defect rate shows the cost of quality degradation.'}`;
+}
+calcScale();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Production Line and How Does AI Fit Into It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Generic production line visual */
+.line-visual{background:#1a1025;border-radius:22px;padding:28px;margin:28px 0;overflow-x:auto;}
+.lv-title{font-family:"Fraunces",serif;font-size:17px;color:var(--white);font-weight:700;margin-bottom:6px;}
+.lv-sub{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px;}
+.lv-stages{display:flex;align-items:stretch;gap:0;min-width:500px;}
+.lv-stage{display:flex;flex-direction:column;align-items:center;flex:1;}
+.lv-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 10px;text-align:center;width:100%;margin:0 4px;}
+.lv-box-icon{font-size:22px;margin-bottom:6px;}
+.lv-box-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);line-height:1.3;}
+.lv-arrow{display:flex;align-items:center;color:rgba(255,255,255,.2);font-size:18px;flex-shrink:0;padding:0 2px;}
+.lv-ai-tag{margin-top:8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:100px;text-align:center;}
+.lv-ai-tag.active{background:rgba(123,47,190,.4);color:#C4B5FD;border:1px solid rgba(123,47,190,.4);}
+.lv-ai-tag.none{color:rgba(255,255,255,.2);font-size:9px;}
+
+/* Stage deep dives */
+.stage-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.stage-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;overflow:hidden;}
+.sc-header{display:flex;align-items:center;gap:16px;padding:18px 22px;cursor:pointer;}
+.sc-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--purple);min-width:36px;}
+.sc-title-wrap{flex:1;}
+.sc-stage{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:2px;}
+.sc-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.sc-ai-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;flex-shrink:0;}
+.sc-ai-badge.yes{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.sc-ai-badge.partial{background:var(--orange-pale);color:#92400E;border:1px solid var(--orange);}
+.sc-chevron{color:var(--gray-muted);font-size:16px;transition:transform .25s;}
+.stage-card.open .sc-chevron{transform:rotate(180deg);}
+.sc-body{display:none;padding:0 22px 20px;}
+.stage-card.open .sc-body{display:block;}
+.sc-what{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.sc-ai-section{background:var(--purple-pale);border-radius:12px;padding:14px 18px;margin-bottom:10px;}
+.sc-ai-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.sc-ai-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.sc-human-section{background:var(--green-pale);border-radius:12px;padding:14px 18px;}
+.sc-human-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px;}
+.sc-human-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Bottleneck sim */
+.bottle-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.bs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.bs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.bs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.bs-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:16px;font-size:14px;line-height:1.8;color:var(--gray-text);}
+.bs-scenario-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:7px;}
+.bs-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin:0 0 12px;}
+.bs-opts{display:flex;flex-direction:column;gap:9px;}
+.bs-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;width:100%;transition:all .2s;}
+.bs-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.bs-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.bs-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.bs-result{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.bs-result.show{display:block;}
+.bs-result.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.bs-result.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.bs-next{margin-top:12px;background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.bs-next.show{display:inline-block;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;width:100%;}
+.quiz-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{border-color:var(--red);background:var(--red-pale);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+.summary-box{background:linear-gradient(135deg,var(--purple-dark),var(--purple));border-radius:24px;padding:36px 40px;margin:40px 0 0;color:var(--white);}
+.summary-box h2{color:var(--white);font-size:24px;margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-check{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;opacity:.92;}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Lesson 1.4 — Shop Floor Examples</div>
+  <h1>What Is a Production Line and How Does AI Fit Into It?</h1>
+  <p class="hero-sub">Every article in this lesson assumes you know what a production line is. This one explains it — step by step — and then shows exactly where AI enters the picture at each stage.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <p>A production line is exactly what it sounds like: a sequence of operations arranged in a line, where a product gets built step by step as it moves from one station to the next. Raw materials go in at one end. Finished products come out the other.</p>
+    <p>The concept is simple. The execution is complex — and AI is now integrated into more stages of that execution than most people realize. <mark>Understanding the production line is understanding the context that makes AI in manufacturing meaningful.</mark></p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Basic Concept: Work Moves, Not Workers</h2>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Production line:</strong> A sequence of manufacturing workstations arranged so that a product or component moves from one station to the next, with each station performing a specific operation. Work comes to the worker, not the other way around. This allows workers to specialize, speeds up production, and makes quality control and scheduling far more systematic.</div>
+    </div>
+    <p>Before production lines existed, a single craftsperson built an entire product from start to finish. They were skilled at everything — but slow, and their output was limited by what one person could do. The production line traded generalist craft for specialist efficiency: each worker does one thing, repeatedly, at the level of mastery that comes from doing just that one thing all day.</p>
+    <p>This isn't a degradation of skill — it's a different kind of skill. And it's exactly the structure that makes AI integration possible: when each station has a defined, repeatable function, AI tools can be targeted at the specific data and decisions at that station.</p>
+
+    <div class="line-visual">
+      <div class="lv-title">Generic Manufacturing Production Line</div>
+      <div class="lv-sub">Tap/hover any stage to see where AI fits</div>
+      <div class="lv-stages">
+        <div class="lv-stage">
+          <div class="lv-box"><div class="lv-box-icon">📦</div><div class="lv-box-name">Receiving & Raw Materials</div></div>
+          <div class="lv-ai-tag active">AI: supplier QC</div>
+        </div>
+        <div class="lv-arrow">→</div>
+        <div class="lv-stage">
+          <div class="lv-box"><div class="lv-box-icon">🔨</div><div class="lv-box-name">Fabrication / Forming</div></div>
+          <div class="lv-ai-tag active">AI: process monitoring</div>
+        </div>
+        <div class="lv-arrow">→</div>
+        <div class="lv-stage">
+          <div class="lv-box"><div class="lv-box-icon">🔧</div><div class="lv-box-name">Assembly</div></div>
+          <div class="lv-ai-tag active">AI: guided assembly</div>
+        </div>
+        <div class="lv-arrow">→</div>
+        <div class="lv-stage">
+          <div class="lv-box"><div class="lv-box-icon">🔬</div><div class="lv-box-name">Quality Inspection</div></div>
+          <div class="lv-ai-tag active">AI: vision inspection</div>
+        </div>
+        <div class="lv-arrow">→</div>
+        <div class="lv-stage">
+          <div class="lv-box"><div class="lv-box-icon">📤</div><div class="lv-box-name">Packaging & Shipping</div></div>
+          <div class="lv-ai-tag active">AI: logistics scheduling</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Each Stage — What Happens and How AI Fits</h2>
+    <p>Let's walk through each stage in detail. Click any stage to expand it:</p>
+
+    <div class="stage-cards">
+      <div class="stage-card open" id="sc0">
+        <div class="sc-header" onclick="toggleSC(0)">
+          <div class="sc-num">1</div>
+          <div class="sc-title-wrap">
+            <div class="sc-stage">Stage 1</div>
+            <div class="sc-title">Receiving and Raw Materials</div>
+          </div>
+          <div class="sc-ai-badge yes">AI Active</div>
+          <div class="sc-chevron">▼</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-what">Raw materials, components, and sub-assemblies arrive from suppliers. Workers receive the delivery, verify quantities, inspect incoming quality, and store materials for production. Every production run depends on the quality of what comes in — defective materials at the start become defective products at the end, and the later you discover the problem, the more expensive it is.</div>
+          <div class="sc-ai-section">
+            <div class="sc-ai-label">🤖 AI at this stage</div>
+            <div class="sc-ai-text">AI systems analyze incoming material quality documentation and cross-reference it against specification requirements. Computer vision can inspect incoming parts for obvious defects before they enter production. AI also manages inventory optimization — predicting when materials will run low and triggering reorders before production is disrupted.</div>
+          </div>
+          <div class="sc-human-section">
+            <div class="sc-human-label">👤 Human role</div>
+            <div class="sc-human-text">Receiving workers physically handle materials and apply judgment: does this batch look different from previous ones? Is the packaging showing damage that might indicate rough transit? The AI flags what data says is wrong; the human notices what looks wrong before the data does.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card" id="sc1">
+        <div class="sc-header" onclick="toggleSC(1)">
+          <div class="sc-num">2</div>
+          <div class="sc-title-wrap">
+            <div class="sc-stage">Stage 2</div>
+            <div class="sc-title">Fabrication and Forming</div>
+          </div>
+          <div class="sc-ai-badge yes">AI Active</div>
+          <div class="sc-chevron">▼</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-what">Raw materials are shaped into components: cutting, stamping, molding, welding, machining, casting. This is where the basic physical form of a product's parts is established. It's also where the most equipment-intensive work happens — large, powerful machines operating at high forces and temperatures. Machine health, process parameters, and output quality are all critical variables at this stage.</div>
+          <div class="sc-ai-section">
+            <div class="sc-ai-label">🤖 AI at this stage</div>
+            <div class="sc-ai-text">This is where predictive maintenance AI is most valuable — monitoring sensors on CNC machines, presses, welders, and forming equipment. AI also monitors process parameters in real time: is the stamping pressure consistent? Is the weld temperature within specification? Is the cutting tool producing the expected surface finish? Deviations from expected parameters are flagged before they become defective parts.</div>
+          </div>
+          <div class="sc-human-section">
+            <div class="sc-human-label">👤 Human role</div>
+            <div class="sc-human-text">Machine operators monitor the AI dashboard and their own physical observations. They investigate AI alerts, make process adjustments, perform tool changes, and apply the contextual knowledge of how this specific machine behaves. When the AI flags a deviation, the operator determines the cause and the appropriate response.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card" id="sc2">
+        <div class="sc-header" onclick="toggleSC(2)">
+          <div class="sc-num">3</div>
+          <div class="sc-title-wrap">
+            <div class="sc-stage">Stage 3</div>
+            <div class="sc-title">Assembly</div>
+          </div>
+          <div class="sc-ai-badge partial">AI Partial</div>
+          <div class="sc-chevron">▼</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-what">Components made in fabrication are joined together into subassemblies and final assemblies. Depending on the product, this might be manual assembly (workers hand-fitting parts), automated assembly (robots performing repetitive joining operations), or a combination. Assembly requires precise sequencing — every step must happen in the right order, or upstream errors compound into larger downstream failures.</div>
+          <div class="sc-ai-section">
+            <div class="sc-ai-label">🤖 AI at this stage</div>
+            <div class="sc-ai-text">AI-guided assembly systems project instructions onto work surfaces or display step-by-step guidance on screens, reducing errors from incorrect assembly sequences. Collaborative robots (cobots) handle specific joining operations. AI tracks assembly progress and can detect when a step was missed or completed out of order. Torque verification AI ensures fasteners are tightened to specification.</div>
+          </div>
+          <div class="sc-human-section">
+            <div class="sc-human-label">👤 Human role</div>
+            <div class="sc-human-text">Assembly remains the most human-intensive stage for most manufacturers — the physical dexterity, visual judgment, and adaptive problem-solving required to fit complex components in variable conditions resist full automation. Workers interact with AI guidance systems, verify AI-recommended steps against physical reality, and handle the exceptions and edge cases that automated systems can't adapt to.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card" id="sc3">
+        <div class="sc-header" onclick="toggleSC(3)">
+          <div class="sc-num">4</div>
+          <div class="sc-title-wrap">
+            <div class="sc-stage">Stage 4</div>
+            <div class="sc-title">Quality Inspection</div>
+          </div>
+          <div class="sc-ai-badge yes">AI Active</div>
+          <div class="sc-chevron">▼</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-what">Completed parts or assemblies are inspected against quality specifications before moving to the next stage or shipping. This happens at multiple points in a production line — not just at the end. Inspection at each stage catches defects before they get built into subsequent operations, which would make them more expensive to fix.</div>
+          <div class="sc-ai-section">
+            <div class="sc-ai-label">🤖 AI at this stage</div>
+            <div class="sc-ai-text">Computer vision AI is the primary tool — inspecting every part at production speed against trained defect models. Dimensional measurement AI (using structured light or laser scanning) checks geometric conformance. Statistical process control AI tracks defect trends across production and alerts when rates deviate from expected ranges. This is the stage covered in depth in the previous article and the BMW case study.</div>
+          </div>
+          <div class="sc-human-section">
+            <div class="sc-human-label">👤 Human role</div>
+            <div class="sc-human-text">Quality inspectors review AI-flagged parts and make final disposition decisions. They also investigate process causes when defect rates spike — the AI tells you what is happening; the inspector figures out why. Their feedback on AI flags (this was actually acceptable; this passed but shouldn't have) is what improves the model over time.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card" id="sc4">
+        <div class="sc-header" onclick="toggleSC(4)">
+          <div class="sc-num">5</div>
+          <div class="sc-title-wrap">
+            <div class="sc-stage">Stage 5</div>
+            <div class="sc-title">Packaging and Shipping</div>
+          </div>
+          <div class="sc-ai-badge yes">AI Active</div>
+          <div class="sc-chevron">▼</div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-what">Finished products are packaged for transit and scheduled for shipment to customers, distribution centers, or next-stage manufacturing facilities. Packaging must protect the product, meet labeling requirements, and be matched to the correct shipping destination. Logistics scheduling determines when and how products move through the supply chain.</div>
+          <div class="sc-ai-section">
+            <div class="sc-ai-label">🤖 AI at this stage</div>
+            <div class="sc-ai-text">AI checks label accuracy and placement on packages (vision inspection). Routing AI optimizes how products move through the warehouse and onto outbound shipments. Demand forecasting AI predicts what needs to ship where and when, reducing both overstock (waste) and stockouts (disruption). RFID and IoT tracking systems monitor shipment location in real time.</div>
+          </div>
+          <div class="sc-human-section">
+            <div class="sc-human-label">👤 Human role</div>
+            <div class="sc-human-text">Packaging workers handle the physical operations AI can't fully automate — placing products in varied containers, managing edge cases, dealing with shipments that don't conform to the standard patterns AI was optimized for. Logistics supervisors manage exceptions, handle customer requirements that fall outside normal parameters, and make judgment calls on priorities when capacity is constrained.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why bottlenecks matter -->
+  <div class="section fade-in">
+    <h2>The Critical Concept: Bottlenecks</h2>
+    <p>Understanding production lines means understanding bottlenecks — because AI is often used specifically to find and manage them.</p>
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Bottleneck:</strong> The slowest stage in a production line — the one that limits how fast the entire line can produce output. If a 5-stage line can each produce 100 units per hour except stage 3, which can only produce 60 units per hour, then the entire line produces 60 units per hour. The output of any production line is limited by its slowest stage.</div>
+    </div>
+    <p>This matters for AI because: <mark>AI doesn't improve overall output just by being fast at one stage. It creates value by identifying and removing bottlenecks.</mark> A predictive maintenance system that prevents unplanned downtime at the bottleneck stage is worth far more than the same system applied to a non-bottleneck stage. An AI quality inspection system that speeds up quality checks at the stage causing backup is more valuable than faster inspection at a stage that was already fast enough.</p>
+
+    <div class="bottle-sim">
+      <div class="bs-label">⚙️ Production Line Thinking</div>
+      <div class="bs-title">Where Would You Deploy AI?</div>
+      <div class="bs-sub">Apply what you know about bottlenecks and AI capabilities to these production decisions.</div>
+      <div class="bs-scenario">
+        <div class="bs-scenario-label" id="bs-label">Situation 1 of 2</div>
+        <div id="bs-text"></div>
+      </div>
+      <div class="bs-q" id="bs-q"></div>
+      <div class="bs-opts" id="bs-opts"></div>
+      <div class="bs-result good" id="bs-good"></div>
+      <div class="bs-result bad" id="bs-bad"></div>
+      <button class="bs-next" id="bs-next" onclick="nextBS()">Next Situation →</button>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz-box">
+      <div class="quiz-label">🧠 Check Your Understanding</div>
+      <div class="quiz-q">Why does the concept of "work moves, not workers" matter for AI integration in manufacturing?</div>
+      <div class="quiz-opts" id="q1">
+        <button class="quiz-opt" onclick="doQ1(0)">It doesn't — AI would work the same way whether work or workers move</button>
+        <button class="quiz-opt" onclick="doQ1(1)">When each workstation has a defined, repeatable function, AI can be precisely targeted at the specific data and decisions at that station — making the integration much more effective than trying to support a generalist who does everything</button>
+        <button class="quiz-opt" onclick="doQ1(2)">Moving workers instead of work would make AI integration easier</button>
+        <button class="quiz-opt" onclick="doQ1(3)">This concept only matters for robotics, not AI software tools</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. Specialization is what makes AI integration tractable. A station that always does the same operation generates consistent, analyzable data. The sensors measure the same variables in the same conditions every cycle. The quality inspection looks for the same defect types on the same part. AI tools can be precisely trained and calibrated for that specific, repeated function. A generalist worker doing something different every hour would require a much more general (and much less accurate) AI system to support them.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Actually, the specialization created by production lines is exactly what makes AI integration effective. When a station always does the same operation on the same part type, AI can be precisely trained for that specific function — monitoring the exact variables that matter, detecting the exact defect types relevant to that part, predicting the exact failures relevant to that equipment. Generalist workflows require generalist AI; specialized workflows enable precise, accurate AI tools.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A production line is a sequence of workstations where work moves from station to station, with each station performing a specialized operation. Raw materials enter one end; finished products exit the other.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The five main stages are: receiving/raw materials, fabrication/forming, assembly, quality inspection, and packaging/shipping. AI tools are active at every one of these stages — though in different ways.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Assembly remains the most human-intensive stage — physical dexterity, adaptive judgment, and handling of exceptions resist full automation most strongly here.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Bottlenecks determine overall output — the entire line runs at the speed of its slowest stage. AI creates the most value when deployed at or near the bottleneck, not just wherever it's technically easy to add.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Specialization is what makes AI integration effective. When a station always performs the same function on the same part type, AI can be precisely trained and calibrated for that exact context — which is far more accurate than general-purpose AI trying to support variable work.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+function toggleSC(i){document.getElementById('sc'+i).classList.toggle('open');}
+
+const bsSituations=[
+  {
+    label:'Situation 1 of 2',
+    text:"A packaging facility has a 5-stage line. Stages 1, 2, 4, and 5 each run at 120 units per hour. Stage 3 — manual assembly — runs at 70 units per hour because it requires a complex fitting step that takes time. The facility is considering deploying AI-guided assembly tools at Stage 3.",
+    q:"Why does deploying AI support at Stage 3 (the slowest stage) create more value than deploying it at Stage 1 (which is already fast)?",
+    opts:["It doesn't — improving any stage improves overall output equally","Because Stage 3 is the bottleneck — the entire line runs at 70 units/hr because of it. Any improvement at Stage 3 directly improves total output. Improving Stage 1 from 120 to 130 units/hr changes nothing — it's still not the bottleneck.","Because Stage 1 has more workers who can use the AI tools","Because AI tools are only effective at assembly stages, not other types of operations"],
+    correct:1,
+    good:"✅ Right. This is the bottleneck principle. When Stage 3 limits the whole line to 70 units/hr, improving Stage 1 from 120 to 130 doesn't change total output — Stage 3 is still the constraint. But if AI-guided assembly tools help Stage 3 reach 90 units/hr, the entire line's output increases. Target AI at the constraint, not just wherever it's convenient.",
+    bad:"❌ Think about the bottleneck. The line runs at 70 units/hr because that's all Stage 3 can do — regardless of how fast the other stages run. Making Stage 1 faster changes nothing about total output. Making Stage 3 faster changes everything. This is why deploying AI at the bottleneck creates far more value than deploying it anywhere else."
+  },
+  {
+    label:'Situation 2 of 2',
+    text:"A metal fabrication facility is deciding where to deploy predictive maintenance AI first. They have budget for sensors on 10 of their 40 machines. The plant manager wants to put sensors on the 10 newest machines — reasoning they're most expensive to repair. The maintenance supervisor suggests putting them on the 10 machines that are in the bottleneck stage of production.",
+    q:"Who has the better argument — and why?",
+    opts:["The plant manager — more expensive machines justify more monitoring investment","The maintenance supervisor — sensors at the bottleneck stage have the highest impact because unplanned downtime there stops the entire line. A failure at a non-bottleneck machine can sometimes be absorbed; a failure at the bottleneck halts everything.","Neither — they should randomize sensor placement for the best statistical coverage","The plant manager, because newer machines generate more useful AI training data"],
+    correct:1,
+    good:"✅ The maintenance supervisor is right. Expensive machines are worth protecting, but the right measure of sensor placement value isn't repair cost — it's production impact. An unplanned failure at the bottleneck stage halts the entire line. The same failure at a non-bottleneck stage might be absorbed by buffer inventory or parallel machines. Predictive maintenance at the bottleneck prevents the most expensive outcome: a line stop during production.",
+    bad:"❌ Machine repair cost is the wrong metric for sensor placement. The right metric is production impact. A $200,000 machine in a non-bottleneck stage that fails during planned maintenance costs much less than a $50,000 machine in the bottleneck stage that fails unexpectedly and halts the entire line for 4 hours. The maintenance supervisor's reasoning is strategically correct."
+  }
+];
+let bsIdx=0,bsDone=false;
+function renderBS(){
+  const s=bsSituations[bsIdx];
+  document.getElementById('bs-label').textContent=s.label;
+  document.getElementById('bs-text').textContent=s.text;
+  document.getElementById('bs-q').textContent=s.q;
+  const c=document.getElementById('bs-opts');c.innerHTML='';
+  s.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='bs-opt';b.textContent=o;b.onclick=()=>doBS(i);c.appendChild(b);});
+  document.getElementById('bs-good').className='bs-result good';
+  document.getElementById('bs-bad').className='bs-result bad';
+  document.getElementById('bs-next').classList.remove('show');
+  bsDone=false;
+}
+function doBS(choice){
+  if(bsDone)return;bsDone=true;
+  const s=bsSituations[bsIdx];
+  const btns=document.querySelectorAll('#bs-opts .bs-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(choice===s.correct){btns[choice].classList.add('correct');document.getElementById('bs-good').textContent=s.good;document.getElementById('bs-good').classList.add('show');}
+  else{btns[choice].classList.add('wrong');document.getElementById('bs-bad').textContent=s.bad;document.getElementById('bs-bad').classList.add('show');}
+  if(bsIdx<bsSituations.length-1)document.getElementById('bs-next').classList.add('show');
+}
+function nextBS(){bsIdx++;renderBS();}
+renderBS();
+
+let q1d=false;
+function doQ1(i){if(q1d)return;q1d=true;const o=document.querySelectorAll('#q1 .quiz-opt');o.forEach(x=>x.disabled=true);if(i===1){o[i].classList.add('correct');document.getElementById('q1-good').classList.add('show');}else{o[i].classList.add('wrong');document.getElementById('q1-bad').classList.add('show');}}
+</script>
+</body>
+</html>
