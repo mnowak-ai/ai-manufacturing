@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Difference Between an AI Alert and an AI Diagnosis</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* The core split */
+.split-box{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:28px 0;border-radius:20px;overflow:hidden;border:2px solid var(--purple-mid);}
+.split-half{padding:28px;}
+.split-half.alert-side{background:var(--orange-pale);}
+.split-half.diag-side{background:var(--purple-pale);}
+.sh-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;}
+.alert-side .sh-label{color:var(--orange);}
+.diag-side .sh-label{color:var(--purple);}
+.sh-icon{font-size:36px;margin-bottom:10px;}
+.sh-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.2;}
+.alert-side .sh-title{color:#92400E;}
+.diag-side .sh-title{color:var(--purple-dark);}
+.sh-def{font-size:14px;line-height:1.75;color:var(--gray-text);margin-bottom:14px;}
+.sh-who{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:100px;display:inline-block;}
+.alert-side .sh-who{background:var(--orange-pale);border:1.5px solid var(--orange);color:#92400E;}
+.diag-side .sh-who{background:var(--purple-pale);border:1.5px solid var(--purple);color:var(--purple-dark);}
+@media(max-width:560px){.split-box{grid-template-columns:1fr;}}
+
+/* Alert anatomy */
+.alert-anatomy{background:#1A0A25;border-radius:20px;padding:28px;margin:24px 0;}
+.aa-title{font-family:"Fraunces",serif;font-size:18px;color:var(--white);font-weight:700;margin-bottom:18px;}
+.alert-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:20px;}
+.alert-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.alert-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.alert-title-text{font-family:"Fraunces",serif;font-size:16px;color:var(--white);font-weight:700;}
+.alert-fields{display:flex;flex-direction:column;gap:10px;}
+.alert-field{display:flex;gap:10px;align-items:flex-start;}
+.af-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#8B7FA0;min-width:100px;flex-shrink:0;padding-top:2px;}
+.af-val{font-size:13px;line-height:1.6;color:#E2D9F3;}
+.af-val .highlight{color:#A78BFA;font-weight:600;}
+.af-val .good{color:#4ADE80;}
+.af-val .warn{color:#FBBF24;}
+.aa-callout{margin-top:16px;padding:14px 16px;background:rgba(123,47,190,.2);border-radius:12px;border:1px solid rgba(123,47,190,.4);font-size:13px;line-height:1.65;color:#D8B4FE;}
+.aa-callout strong{color:var(--white);}
+
+/* What comes after */
+.after-alert{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.aa-step{display:flex;gap:16px;align-items:flex-start;border-radius:16px;padding:18px 20px;border:1.5px solid;}
+.aa-step.human{background:var(--green-pale);border-color:#86EFAC;}
+.aa-step.either{background:var(--blue-pale);border-color:var(--blue-mid);}
+.aa-step.never{background:var(--red-pale);border-color:#FECACA;}
+.aa-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;padding:4px 10px;border-radius:100px;flex-shrink:0;margin-top:2px;}
+.human .aa-badge{background:var(--green-pale);border:1.5px solid var(--green);color:var(--green);}
+.either .aa-badge{background:var(--blue-pale);border:1.5px solid var(--blue);color:var(--blue);}
+.never .aa-badge{background:var(--red-pale);border:1.5px solid var(--red);color:var(--red);}
+.aa-step-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;margin-bottom:4px;}
+.human .aa-step-title{color:var(--green);}
+.either .aa-step-title{color:var(--blue);}
+.never .aa-step-title{color:var(--red);}
+.aa-step-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* Two failure modes */
+.failure-modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.fm-card{border-radius:20px;padding:24px;border:1.5px solid;}
+.fm-card.over{background:var(--red-pale);border-color:var(--red);}
+.fm-card.under{background:var(--orange-pale);border-color:var(--orange);}
+.fm-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.over .fm-label{color:var(--red);}
+.under .fm-label{color:var(--orange);}
+.fm-card h3{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:10px;}
+.over h3{color:var(--red);}
+.under h3{color:#92400E;}
+.fm-card p{font-size:13px;line-height:1.7;color:var(--gray-text);margin-bottom:10px;}
+.fm-example{font-size:12px;padding:8px 12px;border-radius:8px;font-style:italic;line-height:1.6;}
+.over .fm-example{background:#FFF1F1;color:var(--red);}
+.under .fm-example{background:#FEF3C7;color:#92400E;}
+@media(max-width:560px){.failure-modes{grid-template-columns:1fr;}}
+
+/* Confidence spectrum */
+.confidence-spectrum{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs2-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs2-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.spectrum-items{display:flex;flex-direction:column;gap:12px;}
+.spectrum-item{display:flex;gap:14px;align-items:center;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px;}
+.si-conf{font-family:"Fraunces",serif;font-size:22px;font-weight:900;min-width:60px;text-align:center;}
+.si-conf.high{color:var(--green);}
+.si-conf.med{color:var(--orange);}
+.si-conf.low{color:var(--red);}
+.si-bar-wrap{width:80px;flex-shrink:0;}
+.si-bar-bg{height:8px;background:var(--purple-mid);border-radius:4px;overflow:hidden;}
+.si-bar-fill{height:100%;border-radius:4px;}
+.si-bar-fill.high{background:var(--green);width:87%;}
+.si-bar-fill.med{background:var(--orange);width:54%;}
+.si-bar-fill.low{background:var(--red);width:28%;}
+.si-content{}
+.si-alert{font-size:13px;font-style:italic;color:var(--gray-muted);margin-bottom:4px;}
+.si-action{font-size:13px;font-weight:600;color:var(--gray-text);}
+
+/* The TRACE principle */
+.trace-frame{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:24px 0;}
+.tf-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.tf-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.trace-steps{display:flex;flex-direction:column;gap:10px;}
+.trace-step{display:flex;gap:14px;align-items:flex-start;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;}
+.ts-letter{width:40px;height:40px;border-radius:10px;background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ts-word{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:3px;}
+.ts-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.1 · Critical Concept</div>
+  <h1>The Difference Between an AI Alert and an AI Diagnosis</h1>
+  <p class="hero-sub">This is one of the most important distinctions in all of AI-assisted manufacturing. Get it wrong and you'll either blindly follow AI into bad decisions, or dismiss AI signals that could have saved a machine. Here's the line.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Smoke Alarm vs. the Fire Inspector</h2>
+    <p>A smoke alarm does one thing: it detects smoke and makes noise. It doesn't tell you where the fire is, how serious it is, whether the toast just burned in the kitchen, or whether the whole building is on fire. It tells you: something is wrong — go check.</p>
+    <p>A fire inspector does something different entirely. They arrive, examine the scene, consider the evidence, and determine the actual cause, extent, and recommended response. Their conclusion is a diagnosis, backed by expertise and direct observation.</p>
+    <p>This is exactly the relationship between an AI alert and an AI diagnosis — and <mark>confusing the two is one of the most common and dangerous mistakes workers make with manufacturing AI systems.</mark></p>
+
+    <div class="split-box fade-in">
+      <div class="split-half alert-side">
+        <div class="sh-label">⚠️ AI Alert</div>
+        <div class="sh-icon">🔔</div>
+        <div class="sh-title">Something has deviated from normal. You should look at this.</div>
+        <div class="sh-def">An alert is a flag. It says: "Based on sensor data, something is outside expected parameters. The pattern I'm seeing matches conditions that have preceded problems before." It does not say what is wrong, what caused it, or what to do.</div>
+        <div class="sh-who">Generated by AI automatically</div>
+      </div>
+      <div class="split-half diag-side">
+        <div class="sh-label">🔍 Diagnosis</div>
+        <div class="sh-icon">🧠</div>
+        <div class="sh-title">Here is specifically what is wrong, why, and what should be done.</div>
+        <div class="sh-def">A diagnosis is a conclusion reached after investigation. It incorporates the AI alert, additional sensor data, physical inspection, operational context, and the technician's own expertise. Diagnosis is a human responsibility — always.</div>
+        <div class="sh-who">Reached by a human technician</div>
+      </div>
+    </div>
+
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 The Key Distinction</div>
+      <div class="vocab-def"><strong>Alert</strong> — An automated signal that a threshold was crossed or an anomalous pattern was detected. Requires human follow-up. <strong>Diagnosis</strong> — A specific conclusion about the cause of a problem and the appropriate response, reached by a human after investigating the alert and gathering additional context. Some AI systems offer <strong>suggested probable causes</strong> — but these are starting points for investigation, not diagnoses.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What an AI Alert Actually Contains</h2>
+    <p>A well-designed AI alert gives you more than just a warning beep. It packages the relevant data to help you investigate. But notice what it doesn't give you — a definitive answer.</p>
+
+    <div class="alert-anatomy fade-in">
+      <div class="aa-title">📋 Anatomy of a Real AI Alert</div>
+      <div class="alert-card">
+        <div class="alert-header">
+          <div class="alert-dot"></div>
+          <div class="alert-title-text">⚠ PREDICTIVE ALERT — Machine 12 — Priority: HIGH</div>
+        </div>
+        <div class="alert-fields">
+          <div class="alert-field">
+            <div class="af-label">Asset</div>
+            <div class="af-val">Machine 12 — CNC Machining Center, Bay 4</div>
+          </div>
+          <div class="alert-field">
+            <div class="af-label">Triggered by</div>
+            <div class="af-val"><span class="warn">Temperature: 82°C (above 80°C baseline)</span> + <span class="warn">Pressure: 168 PSI (below 180 PSI baseline)</span></div>
+          </div>
+          <div class="alert-field">
+            <div class="af-label">Trend (72hr)</div>
+            <div class="af-val">Pressure declining 4 PSI/day · Temperature rising 2°C/day · Vibration: <span class="good">stable</span></div>
+          </div>
+          <div class="alert-field">
+            <div class="af-label">Pattern match</div>
+            <div class="af-val"><span class="highlight">Coolant restriction signature — 78% confidence</span></div>
+          </div>
+          <div class="alert-field">
+            <div class="af-label">Suggested checks</div>
+            <div class="af-val">1) Coolant filter condition · 2) Coolant line restriction · 3) Coolant pump operation · 4) Fluid level</div>
+          </div>
+          <div class="alert-field">
+            <div class="af-label">Est. time window</div>
+            <div class="af-val">At current trend rate: estimated 18–36 hours before threshold breach</div>
+          </div>
+        </div>
+      </div>
+      <div class="aa-callout">
+        <strong>Notice what this alert gives you:</strong> which machine, which sensors are deviating, the trend over 72 hours, a probable cause with a confidence percentage, and suggested checks to start with. <strong>Notice what it doesn't give you:</strong> a confirmed cause. The 78% confidence means the AI thinks it's likely a coolant restriction — but it hasn't looked inside the machine. You have to do that.
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Happens After the Alert</h2>
+    <p>The alert is the starting gun. Here's what should — and shouldn't — follow:</p>
+
+    <div class="after-alert fade-in">
+      <div class="aa-step human">
+        <div class="aa-badge">Human step</div>
+        <div>
+          <div class="aa-step-title">Review the alert and consider context</div>
+          <div class="aa-step-desc">Read the alert data. Think about what you know that the AI doesn't: Was there maintenance work done on this machine recently? Did the shift change a parameter? Is there construction nearby causing vibration? Has this machine had coolant issues before? Context the AI can't see often changes everything.</div>
+        </div>
+      </div>
+      <div class="aa-step either">
+        <div class="aa-badge">Data step</div>
+        <div>
+          <div class="aa-step-title">Cross-reference with the full sensor history</div>
+          <div class="aa-step-desc">Open the performance log. Look at the trend the AI described. Does the data support the alert? Is the decline consistent, or did it happen in a single jump? Sudden changes suggest different causes than gradual ones. The AI showed you the summary — the raw data shows you more.</div>
+        </div>
+      </div>
+      <div class="aa-step human">
+        <div class="aa-badge">Human step</div>
+        <div>
+          <div class="aa-step-title">Physically inspect the machine</div>
+          <div class="aa-step-desc">Go to the machine. Check what the AI suggested first — in this case, the coolant filter. Use your senses. Does anything smell off? Does the coolant look discolored? Is flow reduced when you open the inspection port? The AI gave you a starting point. The physical world gives you confirmation.</div>
+        </div>
+      </div>
+      <div class="aa-step human">
+        <div class="aa-badge">Human step</div>
+        <div>
+          <div class="aa-step-title">Form your own diagnosis</div>
+          <div class="aa-step-desc">Based on everything — the alert, the data, the physical inspection, your experience — what do you actually conclude? This is the diagnosis. It belongs to you, not to the AI. You might confirm the AI's suggestion, find something different, or determine it was a false alarm. All three are valid outcomes.</div>
+        </div>
+      </div>
+      <div class="aa-step never">
+        <div class="aa-badge">Never do this</div>
+        <div>
+          <div class="aa-step-title">Act on the alert without investigation</div>
+          <div class="aa-step-desc">Don't replace parts based solely on what the alert says. Don't assume the AI's "78% confidence — probable coolant restriction" means "definitely replace the coolant filter." Investigate first. The AI is giving you a strong lead, not a work order. A technician who replaces parts based on AI suggestions alone, without verification, will sometimes fix things that weren't broken — and miss things the AI couldn't see.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>The alert says: look here. The diagnosis says: here's what I found and what we're going to do about it. One is AI. One is you. Don't mix them up.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Two Ways to Get This Wrong</h2>
+    <p>Workers who confuse alerts with diagnoses tend to fail in one of two directions. Both cause real problems.</p>
+
+    <div class="failure-modes fade-in">
+      <div class="fm-card over">
+        <div class="fm-label">❌ Failure Mode 1</div>
+        <h3>Over-Trust: Treating Alerts as Instructions</h3>
+        <p>Some workers, especially those new to manufacturing AI, treat every alert as a definitive finding. If the AI says "probable bearing failure," they order a bearing before inspecting anything. If the AI says "coolant system," they replace the coolant pump without checking the filter first.</p>
+        <p>This leads to expensive unnecessary repairs, replacement of components that weren't actually failing, and growing overconfidence in AI outputs that may be wrong up to 20–30% of the time.</p>
+        <div class="fm-example">Real cost: Replacing a $4,000 coolant pump when a $12 filter needed cleaning. Happens regularly in facilities that over-trust AI alerts.</div>
+      </div>
+      <div class="fm-card under">
+        <div class="fm-label">❌ Failure Mode 2</div>
+        <h3>Under-Trust: Dismissing Alerts Without Looking</h3>
+        <p>Experienced workers sometimes dismiss AI alerts because their instincts tell them the machine is fine. "I walked past that machine an hour ago, it sounded normal." This is the opposite error — letting experience override a data signal without investigation.</p>
+        <p>This leads to the AI being right and humans ignoring it. Machine failures that could have been prevented. Reduced confidence in a system that was actually working. And gradually, alert fatigue — where alerts are routinely dismissed and the system becomes worthless.</p>
+        <div class="fm-example">Real cost: Dismissing a temperature+pressure alert because "the machine sounds fine" — then watching it shut down 8 hours later with $90,000 in damages. The alert was right.</div>
+      </div>
+    </div>
+
+    <p>The right relationship is neither of these. It's treating every alert as a credible signal that warrants investigation — not automatic action, and not automatic dismissal. <mark>The alert earns a look. What you find during that look earns an action.</mark></p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Understanding Confidence Scores</h2>
+    <p>Many AI systems attach a confidence percentage to their probable cause suggestions. "78% confidence — coolant restriction." What does that actually mean — and how should you use it?</p>
+
+    <div class="confidence-spectrum fade-in">
+      <div class="cs2-label">📊 Confidence Score Guide</div>
+      <div class="cs2-title">How to Interpret AI Confidence Percentages</div>
+      <div class="spectrum-items">
+        <div class="spectrum-item">
+          <div class="si-conf high">87%</div>
+          <div class="si-bar-wrap"><div class="si-bar-bg"><div class="si-bar-fill high"></div></div></div>
+          <div class="si-content">
+            <div class="si-alert">"Pattern matches inner race bearing failure at 87% confidence."</div>
+            <div class="si-action">Strong lead — inspect the bearing first. But still inspect. 13% of the time it's something else.</div>
+          </div>
+        </div>
+        <div class="spectrum-item">
+          <div class="si-conf med">54%</div>
+          <div class="si-bar-wrap"><div class="si-bar-bg"><div class="si-bar-fill med"></div></div></div>
+          <div class="si-content">
+            <div class="si-alert">"Possible lubrication issue — 54% confidence."</div>
+            <div class="si-action">Moderate lead — check lubrication, but keep your investigation open. The AI isn't sure. Neither should you be.</div>
+          </div>
+        </div>
+        <div class="spectrum-item">
+          <div class="si-conf low">28%</div>
+          <div class="si-bar-wrap"><div class="si-bar-bg"><div class="si-bar-fill low"></div></div></div>
+          <div class="si-content">
+            <div class="si-alert">"Possible electrical fault — 28% confidence."</div>
+            <div class="si-action">Low confidence — the AI noticed something abnormal but doesn't have a strong pattern match. Investigate broadly. Don't skip the inspection just because AI isn't sure.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>The key insight: <mark>even a high confidence score is a suggestion, not a conclusion.</mark> 87% confident means the AI would be wrong roughly 1 in 8 times. In a facility that generates 50 alerts per week, that's 6–7 cases per week where the "high confidence" suggestion is pointing at the wrong cause. Investigation always comes before action.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>A Framework for Responding to Alerts: TRACE</h2>
+    <p>When you receive an AI alert, use this five-step process to move from alert to diagnosis responsibly. You'll encounter the TRACE framework again in Module 2.2 when we look at evaluating AI output quality.</p>
+
+    <div class="trace-frame fade-in">
+      <div class="tf-label">🔁 Response Framework</div>
+      <div class="tf-title">TRACE — From Alert to Action</div>
+      <div class="trace-steps">
+        <div class="trace-step">
+          <div class="ts-letter">T</div>
+          <div>
+            <div class="ts-word">Trigger — What set off the alert?</div>
+            <div class="ts-desc">Read the alert. Which sensors? What values? What trend? Understand exactly what the AI detected before you do anything else. Don't react to the alarm — react to the data behind it.</div>
+          </div>
+        </div>
+        <div class="trace-step">
+          <div class="ts-letter">R</div>
+          <div>
+            <div class="ts-word">Review — Does the data support the alert?</div>
+            <div class="ts-desc">Pull up the sensor history. Is the trend real and sustained, or was it a single spike? Does the pattern match what the AI described? Cross-reference multiple sensors. Confirm the anomaly exists before investigating the cause.</div>
+          </div>
+        </div>
+        <div class="trace-step">
+          <div class="ts-letter">A</div>
+          <div>
+            <div class="ts-word">Add Context — What does the AI not know?</div>
+            <div class="ts-desc">Apply your knowledge. Was there a recent repair on this machine? A material or parameter change? Unusual operating conditions? Any factor the sensors can't capture — and the AI doesn't know — belongs here. Context often explains what looks like an anomaly.</div>
+          </div>
+        </div>
+        <div class="trace-step">
+          <div class="ts-letter">C</div>
+          <div>
+            <div class="ts-word">Check — Physically inspect based on what you've learned</div>
+            <div class="ts-desc">Go to the machine. Start where the data and AI suggestion point. Inspect, measure, test. Your direct observation is the final and most reliable input. The AI gave you a starting point — your hands and eyes give you the answer.</div>
+          </div>
+        </div>
+        <div class="trace-step">
+          <div class="ts-letter">E</div>
+          <div>
+            <div class="ts-word">Execute — Act on YOUR diagnosis, not the alert</div>
+            <div class="ts-desc">Based on what you found, decide what to do. Your action should be driven by your diagnosis — confirmed or corrected by physical inspection — not by the alert alone. Document what you found, what you did, and whether the AI suggestion was accurate. That feedback loop improves the AI over time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">An AI system alerts you to a "probable bearing failure — 82% confidence" on a motor. Before you've inspected anything, your supervisor asks: "What's wrong with the motor?" What is the most accurate response?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Stating this as fact is treating the AI alert as a diagnosis. 82% confidence is a strong lead — but it\'s still a probability, not a confirmed finding. 18% of the time it would be wrong. Until you\'ve inspected the bearing, you don\'t have a diagnosis.')">The bearing is failing and needs to be replaced — the AI is 82% sure</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is the honest and professional answer. The AI has flagged a strong anomaly pattern that often precedes bearing failure — that\'s meaningful information worth acting on. But until physical inspection confirms it, you have an alert, not a diagnosis. Saying "the AI flagged a pattern that could indicate bearing wear, I\'m going to inspect it now" accurately represents what you know and sets the right expectation.')">The AI has flagged a pattern consistent with bearing wear — I need to inspect the bearing before I can confirm what\'s actually wrong</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ An 82% confidence alert on a bearing is a strong signal that warrants immediate investigation. Dismissing it to wait for more data risks the bearing failing completely in the meantime. The right response isn\'t to ignore it — it\'s to investigate it before drawing conclusions.')">I don\'t know yet — the AI alert could easily be a false alarm so I\'ll wait to see if anything else shows up</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A maintenance technician inspects a machine after an AI alert and finds no obvious problem. They conclude the alert was a false alarm and close it without further action. What important step did they potentially skip?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ The AI alert was based on real sensor data showing an anomalous pattern. The right response isn\'t to doubt the AI — it\'s to investigate further. "No obvious problem" from a visual inspection doesn\'t mean the sensor data was wrong.')">They should have questioned whether the AI system is working correctly</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. An AI alert is triggered by sensor data showing an anomalous pattern — that data was real, even if the visual inspection didn\'t find anything obvious. The next step is to dig deeper: check the specific readings that triggered the alert, inspect the exact component the AI flagged (not just the general area), and consider whether context explains the anomaly (maintenance done recently, new material, temperature change). "I looked and it seemed fine" is not a diagnosis. The sensor data said something changed — the investigation needs to explain what.')">They should have specifically investigated the sensor readings that triggered the alert — "no obvious problem" from a general inspection doesn\'t explain why sensors showed an anomalous pattern</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Escalating every unexplained alert to engineering would create an unsustainable workload and slow down responses. The technician\'s job is to investigate first, then escalate if the investigation reveals something they can\'t handle. The problem here isn\'t lack of escalation — it\'s insufficient investigation before closing the alert.')">They should have immediately escalated to the engineering team for a detailed machine analysis</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>An AI alert is a signal: something deviated from normal and warrants investigation. A diagnosis is a conclusion: here is specifically what is wrong and what should be done. AI generates alerts. Humans reach diagnoses. These are two different things, and mixing them up leads to costly mistakes.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>There are two ways to fail: over-trust (acting on the alert without investigation, replacing parts the AI suggested without confirming) and under-trust (dismissing alerts because your instinct says the machine is fine). Both cause expensive problems. The right path is treating every alert as a credible signal that earns an investigation.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Confidence scores tell you how certain the AI is about its probable cause suggestion — not whether it's right. An 87% confidence alert is wrong roughly 1 in 8 times. High confidence means inspect there first; it does not mean skip the inspection.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Use the TRACE framework: Trigger (what set it off), Review (does data support it), Add Context (what AI doesn't know), Check (physical inspection), Execute (act on YOUR diagnosis). Your physical inspection and judgment — not the alert — should drive the final action.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
