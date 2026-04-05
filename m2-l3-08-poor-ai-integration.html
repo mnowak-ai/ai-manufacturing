@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poor AI Integration: Real Stories of When Adding AI Made Things Worse</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--red-pale);color:var(--red);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FECACA;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--red);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* Case study story cards */
+.story-card{background:var(--gray-soft);border:2px solid var(--red);border-radius:20px;padding:28px;margin:20px 0;}
+.story-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.story-icon{font-size:36px;flex-shrink:0;}
+.story-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:4px;}
+.story-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);line-height:1.2;}
+.story-body p{font-size:15px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.story-body p:last-child{margin-bottom:0;}
+.story-problem{background:var(--red-pale);border-radius:14px;padding:14px 16px;margin:12px 0;}
+.sp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:5px;}
+.sp-items{display:flex;flex-direction:column;gap:5px;}
+.sp-item{font-size:13px;line-height:1.6;display:flex;gap:7px;}
+.sp-item::before{content:"✗";color:var(--red);font-weight:700;flex-shrink:0;}
+.story-lesson{background:var(--green-pale);border-radius:14px;padding:14px 16px;margin:12px 0;}
+.sl-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:5px;}
+.sl-content{font-size:14px;line-height:1.7;color:var(--gray-text);}
+.sl-content::before{content:"✓  ";font-weight:700;color:var(--green);}
+
+/* Warning signs */
+.warning-signs{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.ws-item{display:flex;gap:14px;align-items:flex-start;background:var(--orange-pale);border:1.5px solid var(--orange);border-radius:14px;padding:14px 16px;}
+.ws-icon{font-size:20px;flex-shrink:0;}
+.ws-title{font-size:14px;font-weight:700;color:#92400E;margin-bottom:3px;}
+.ws-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+/* Right vs wrong checklist */
+.integration-checklist{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.ic-col{border-radius:18px;padding:20px;border:1.5px solid;}
+.ic-col.wrong{background:var(--red-pale);border-color:var(--red);}
+.ic-col.right{background:var(--green-pale);border-color:var(--green);}
+.ic-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.wrong .ic-label{color:var(--red);}
+.right .ic-label{color:var(--green);}
+.ic-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;margin-bottom:10px;}
+.wrong .ic-title{color:var(--red);}
+.right .ic-title{color:var(--green);}
+.ic-items{display:flex;flex-direction:column;gap:6px;}
+.ic-item{font-size:13px;line-height:1.6;display:flex;gap:7px;}
+@media(max-width:560px){.integration-checklist{grid-template-columns:1fr;}}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.3 · Warning</div>
+  <h1>Poor AI Integration: Real Stories of When Adding AI Made Things Worse</h1>
+  <p class="hero-sub">The slide mentions confused workers, missed safety checks, and workflow bottlenecks. This article makes those consequences real — what actually happened when facilities added AI without planning for the human side of the integration.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Installation Isn't the Integration</h2>
+    <p>There's a common mistake in AI deployment: <mark>treating software installation as the finish line rather than the starting line.</mark> A facility buys an AI monitoring platform, installs sensors, connects it to the CMMS, and considers the project done. But the technology is only half the integration. The other half — training workers, redesigning workflows, managing the change — often gets underfunded or skipped entirely. When it does, the AI creates new problems on top of old ones.</p>
+    <p>These are composite stories drawn from real patterns in manufacturing AI deployments. The details are illustrative — but the failure modes they represent are documented and recurring.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Story 1: Alert Overload at the Steel Mill</h2>
+    <div class="story-card fade-in">
+      <div class="story-header"><div class="story-icon">⚠️</div><div><div class="story-eyebrow">Failure Mode: Alert Fatigue</div><div class="story-title">A steel mill installs AI monitoring across 200 machines. Within 60 days, the maintenance team has mentally checked out.</div></div></div>
+      <div class="story-body">
+        <p>A mid-size steel processing facility deployed an AI monitoring platform across their entire operation — 200 machines in one go. The system was configured with alert thresholds set to the manufacturer's defaults: any reading more than 10% outside the normal range would trigger a warning.</p>
+        <p>In the first week, the maintenance team received 847 alerts. By week three, technicians had started ignoring alert notifications entirely. "We couldn't tell which ones were real," a technician said. "Everything was flagged. The machine that would actually fail looked the same as the machine that was just running a little warm."</p>
+        <p>In week six, a cooling pump failed. There had been 12 alerts for that pump over the previous 14 days. All had been dismissed in the sea of unreviewed notifications. The failure caused $89,000 in damage and 31 hours of downtime.</p>
+        <div class="story-problem">
+          <div class="sp-label">What went wrong</div>
+          <div class="sp-items">
+            <div class="sp-item">Alert thresholds set too sensitive — minor normal variations triggered constant warnings</div>
+            <div class="sp-item">No alert prioritization system in place — all 847 alerts appeared equally urgent</div>
+            <div class="sp-item">Workers received no training on what alerts actually meant or how to triage them</div>
+            <div class="sp-item">Management measured AI success by "number of alerts generated" not "accurate alerts acted on"</div>
+          </div>
+        </div>
+        <div class="story-lesson"><div class="sl-label">The Lesson</div><div class="sl-content">More alerts is not better AI. The goal is fewer, higher-quality alerts that workers trust. Threshold tuning, alert prioritization, and worker training on triage are not optional add-ons — they determine whether the AI creates value or noise.</div></div>
+      </div>
+    </div>
+
+    <h2>Story 2: The Safety Check That Stopped Being Done</h2>
+    <div class="story-card fade-in">
+      <div class="story-header"><div class="story-icon">🚨</div><div><div class="story-eyebrow">Failure Mode: Safety Bypass</div><div class="story-title">An automotive plant adds AI to speed up pre-shift machine inspections. Three months later, a technician is injured.</div></div></div>
+      <div class="story-body">
+        <p>An automotive stamping plant introduced an AI monitoring system that included a "digital pre-shift check" — the AI would review overnight sensor data and generate a "machine status summary" each morning, showing which machines were within normal parameters. The idea was to supplement the manual pre-shift walk with AI data.</p>
+        <p>Within weeks, supervisors informally started treating the AI summary as a replacement for the manual walk, not a supplement. "If the AI says it's green, we're good." The manual pre-shift inspection — which had been required by the facility's safety procedures — began to be skipped on days when the AI showed all-clear.</p>
+        <p>The AI's sensors monitored vibration, temperature, and pressure. They did not monitor whether machine guards were properly installed, whether lockout hardware was correctly applied from the previous shift, or whether foreign objects were in the machine's path. On a morning when the AI showed all-clear, a technician began work on a press that had a guard removed for the previous shift's maintenance and never replaced. The injury was serious but not fatal. The investigation found the AI system had never been designed to assess physical safety conditions — only sensor readings.</p>
+        <div class="story-problem">
+          <div class="sp-label">What went wrong</div>
+          <div class="sp-items">
+            <div class="sp-item">AI "all-clear" was treated as a safety certification it was never designed to provide</div>
+            <div class="sp-item">Safety procedure (manual pre-shift walk) was abandoned without formal policy change</div>
+            <div class="sp-item">No one defined what the AI status summary did and did NOT cover</div>
+            <div class="sp-item">Supervisors weren't trained on the AI's limitations — only its features</div>
+          </div>
+        </div>
+        <div class="story-lesson"><div class="sl-label">The Lesson</div><div class="sl-content">AI sensor monitoring and physical safety inspection are different things. AI can check sensor readings. It cannot verify guard installation, lockout compliance, or physical equipment condition. Every AI deployment must explicitly define what the system does NOT cover — and existing safety procedures must remain in place unless formally reviewed and modified by safety professionals.</div></div>
+      </div>
+    </div>
+
+    <h2>Story 3: The Bottleneck That Replaced the Bottleneck</h2>
+    <div class="story-card fade-in">
+      <div class="story-header"><div class="story-icon">⏳</div><div><div class="story-eyebrow">Failure Mode: Workflow Mismatch</div><div class="story-title">A food processing plant adds AI work order automation. Maintenance response time gets worse, not better.</div></div></div>
+      <div class="story-body">
+        <p>A food processing facility was frustrated that maintenance requests often took 2–3 days to be addressed. They implemented an AI system that would automatically generate and assign work orders from sensor alerts, hoping to remove the scheduling bottleneck. The coordinator would no longer need to manually create and route every work order.</p>
+        <p>The result: response time increased to 4–5 days for most alerts. Investigation revealed what had happened. The AI was generating 60–80 work order drafts per day — far more than the 15–20 the coordinator had been managing manually. Now instead of creating work orders, the coordinator spent all day reviewing and approving AI-generated ones, most of which were for low-priority issues the coordinator would previously have batched or deferred. High-priority issues were buried in the queue. Technicians received work orders for tasks that required parts not in stock — because the AI didn't check inventory before assigning.</p>
+        <p>The AI had replaced one bottleneck (coordinator creating WOs) with a worse one (coordinator reviewing 80 AI drafts while juggling real-time priority changes). The coordinator, who previously had discretion over what to work on when, now felt like a rubber stamp on a system they didn't control.</p>
+        <div class="story-problem">
+          <div class="sp-label">What went wrong</div>
+          <div class="sp-items">
+            <div class="sp-item">AI was configured to generate drafts for every alert — no severity filtering before creating WOs</div>
+            <div class="sp-item">Workflow designed around the AI's output, not the team's actual capacity</div>
+            <div class="sp-item">Coordinator's judgment and prioritization experience was replaced, not augmented</div>
+            <div class="sp-item">AI work order drafts didn't integrate with parts inventory to check feasibility</div>
+          </div>
+        </div>
+        <div class="story-lesson"><div class="sl-label">The Lesson</div><div class="sl-content">AI should reduce human cognitive load, not multiply it. When configuring AI-generated work orders, filter by severity before creating drafts. Ensure AI integrates with inventory before assigning. Preserve human prioritization judgment as a review function, not as an override burden on everything the AI suggests.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Warning Signs of Poor AI Integration</h2>
+    <div class="warning-signs fade-in">
+      <div class="ws-item"><div class="ws-icon">🔔</div><div><div class="ws-title">Workers stop looking at alerts</div><div class="ws-desc">Alert fatigue is the single most common sign of poor AI integration. If technicians have learned that most alerts don't matter, the AI has lost its purpose — and the real alerts are buried in the noise.</div></div></div>
+      <div class="ws-item"><div class="ws-icon">🤷</div><div><div class="ws-title">Workers don't know why the AI flagged something</div><div class="ws-desc">If workers can't explain what an AI alert means, they can't assess whether it's worth acting on. AI tools without explanation produce outputs that get ignored or blindly followed — both are dangerous.</div></div></div>
+      <div class="ws-item"><div class="ws-icon">📋</div><div><div class="ws-title">Previous safety procedures have quietly disappeared</div><div class="ws-desc">Any existing safety procedure that has been informally replaced by an AI output — without a formal safety review and policy update — is a liability waiting to surface.</div></div></div>
+      <div class="ws-item"><div class="ws-icon">😤</div><div><div class="ws-title">Experienced workers feel like they're working for the AI</div><div class="ws-desc">If skilled workers feel their expertise is being bypassed rather than augmented — if they're just approving whatever the AI says — integration has degraded their role, not enhanced it. Resentment and workarounds follow.</div></div></div>
+      <div class="ws-item"><div class="ws-icon">📊</div><div><div class="ws-title">Success is measured by AI metrics, not maintenance outcomes</div><div class="ws-desc">"The AI generated 2,000 alerts last month" is a technology metric. "Unplanned downtime decreased 20%" is a maintenance outcome. Facilities that optimize for the former at the expense of the latter have the wrong dashboard.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How to Get Integration Right</h2>
+    <div class="integration-checklist fade-in">
+      <div class="ic-col wrong">
+        <div class="ic-label">❌ Poor Integration</div>
+        <div class="ic-title">What Not to Do</div>
+        <div class="ic-items">
+          <div class="ic-item"><span>→</span> Deploy across all machines at once with factory-default settings</div>
+          <div class="ic-item"><span>→</span> Treat software installation as project completion</div>
+          <div class="ic-item"><span>→</span> Replace existing workflows without redesigning them</div>
+          <div class="ic-item"><span>→</span> Skip training on AI limitations — only train on features</div>
+          <div class="ic-item"><span>→</span> Allow AI "all-clear" to informally replace safety checks</div>
+          <div class="ic-item"><span>→</span> Measure success by AI activity (alerts, WOs created)</div>
+          <div class="ic-item"><span>→</span> Configure AI without input from the workers who will use it</div>
+        </div>
+      </div>
+      <div class="ic-col right">
+        <div class="ic-label">✅ Responsible Integration</div>
+        <div class="ic-title">What Works</div>
+        <div class="ic-items">
+          <div class="ic-item"><span>→</span> Start with highest-priority machines; expand after validation</div>
+          <div class="ic-item"><span>→</span> Plan a training and validation period of weeks before full deployment</div>
+          <div class="ic-item"><span>→</span> Redesign workflows with worker input before deploying AI into them</div>
+          <div class="ic-item"><span>→</span> Train extensively on limitations, failure modes, and when not to trust AI</div>
+          <div class="ic-item"><span>→</span> Formally review every safety procedure AI will affect — don't leave it informal</div>
+          <div class="ic-item"><span>→</span> Measure success by maintenance outcomes: downtime, failure rates, response time</div>
+          <div class="ic-item"><span>→</span> Involve experienced technicians in threshold-setting and alert configuration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">In the steel mill story, the maintenance team started ignoring all alerts after receiving 847 in the first week. What's the most accurate description of what went wrong with the AI system?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The AI platform wasn\'t fundamentally broken — it was generating alerts as designed, based on its configured thresholds. The problem was how it was configured and deployed, not the underlying technology.')">The AI platform was defective — a properly functioning AI system would have learned to reduce false alerts automatically</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The steel mill\'s problem was a deployment failure, not a technology failure. The AI was doing exactly what it was configured to do — flagging anything 10% outside normal range. The failure points were: alert thresholds set too sensitive, no prioritization system, no worker training on triage, and a metric (alerts generated) that rewarded quantity over quality. These are integration and change management decisions, not software defects. The technology worked; the deployment didn\'t.')">The AI was configured poorly and deployed without worker training — it was a deployment failure, not a technology failure</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The steel mill deployed all 200 machines simultaneously, which was part of the problem — but phased rollout alone wouldn\'t fix alert fatigue if thresholds, training, and prioritization weren\'t addressed. The core issues were configuration and change management, not just rollout scale.')">The facility should have deployed to fewer machines — 200 machines is too many for any AI system to monitor accurately</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI installation is not AI integration. The technology is only half the project. Training workers, redesigning workflows, managing the transition, and validating the system in operation are equally important — and more commonly skipped.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The three most dangerous failure modes: alert fatigue (so many alerts workers stop responding to any), safety bypass (AI "all-clear" informally replacing physical safety checks), and workflow bottleneck (AI adds more review burden than it removes).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI limitations training is as important as AI features training. Workers who don't know what an AI system cannot see are more dangerous than workers who don't know how to use it at all. The automotive stamping plant injury happened because nobody trained supervisors on what the "all-clear" didn't cover.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Responsible integration means: start small, involve workers in configuration, measure outcomes not activity, formally review every safety procedure the AI will affect, and preserve human judgment as a genuine decision-making role — not a rubber stamp.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

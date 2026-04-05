@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Manufacturing Workflow? A Step-by-Step Guide to How Work Gets Done on the Factory Floor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Walkthrough steps */
+.walkthrough{margin:28px 0;}
+.wt-step{display:flex;gap:0;margin-bottom:4px;cursor:pointer;}
+.wt-step:last-child .wt-connector{display:none;}
+.wt-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.wt-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2.5px solid var(--purple-mid);background:var(--white);transition:all .25s;flex-shrink:0;}
+.wt-step.active .wt-circle{background:var(--purple-dark);border-color:var(--purple-dark);}
+.wt-connector{width:2px;background:var(--purple-mid);flex:1;min-height:16px;margin:0 auto;}
+.wt-right{flex:1;padding:0 0 20px 16px;}
+.wt-step-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.wt-step.active .wt-step-label{color:var(--purple-dark);}
+.wt-step-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:0;line-height:1.3;transition:color .2s;}
+.wt-step-body{max-height:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease;opacity:0;}
+.wt-step.active .wt-step-body{max-height:600px;opacity:1;}
+.wt-step-desc{font-size:15px;line-height:1.8;color:var(--gray-text);margin-top:10px;margin-bottom:10px;}
+.wt-details{display:flex;flex-direction:column;gap:7px;margin-top:10px;}
+.wt-detail{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.6;color:var(--gray-text);}
+.wt-bullet{color:var(--purple);font-weight:700;flex-shrink:0;margin-top:1px;}
+.wt-doc{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 14px;margin-top:10px;}
+.wt-doc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:4px;}
+.wt-doc-content{font-size:13px;line-height:1.6;color:var(--gray-text);}
+.wt-next{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:var(--purple-dark);color:var(--white);border:none;padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;}
+
+/* Roles grid */
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0;}
+.role-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.role-icon{font-size:28px;margin-bottom:8px;}
+.role-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.role-desc{font-size:12px;line-height:1.65;color:var(--gray-text);}
+@media(max-width:560px){.roles-grid{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.3</div>
+  <h1>What Is a Manufacturing Workflow? A Step-by-Step Guide to How Work Gets Done on the Factory Floor</h1>
+  <p class="hero-sub">Before you can understand where AI fits in manufacturing, you need to understand the workflow it fits into. This article walks through exactly how work moves — from a machine alert to a completed repair — step by step.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why Workflow Matters Before AI</h2>
+    <p>The Lesson 2.3 video covers how AI integrates into manufacturing workflows without replacing them. But before that makes sense, you need to understand what a workflow actually is — and how it works without AI.</p>
+    <p>A workflow is the sequence of steps that turns a task from "identified" to "done." In manufacturing, workflows govern everything: how raw materials become finished products, how machines get maintained, how quality gets checked. <mark>Every AI tool in a factory plugs into one of these workflows — it doesn't create a new one, it improves a step in an existing one.</mark></p>
+
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term</div>
+      <div class="vocab-def"><strong>Workflow</strong> — A defined sequence of steps that transforms an input (like a maintenance alert or raw material) into an output (like a repaired machine or finished product). Good workflows are documented, repeatable, and clear about who does what at each step. Bad workflows are informal, inconsistent, and dependent on whoever happens to be available.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The People Behind Every Workflow</h2>
+    <p>Manufacturing workflows involve several roles working together. Understanding who does what helps you see where AI can — and can't — help.</p>
+    <div class="roles-grid fade-in">
+      <div class="role-card"><div class="role-icon">🔭</div><div class="role-title">Production Operator</div><div class="role-desc">Runs the equipment. First to notice something unusual — a noise, a vibration, a product defect. Often the one who initiates a maintenance request.</div></div>
+      <div class="role-card"><div class="role-icon">🔧</div><div class="role-title">Maintenance Technician</div><div class="role-desc">Diagnoses and repairs equipment problems. Receives work orders, performs the physical work, and documents what was done.</div></div>
+      <div class="role-card"><div class="role-icon">📋</div><div class="role-title">Maintenance Planner / Scheduler</div><div class="role-desc">Coordinates who does what and when. Balances urgency against available technician time, parts availability, and production schedules.</div></div>
+      <div class="role-card"><div class="role-icon">🏭</div><div class="role-title">Production Manager</div><div class="role-desc">Responsible for meeting production targets. Has to be notified of planned downtime and approves maintenance windows that affect the production schedule.</div></div>
+      <div class="role-card"><div class="role-icon">📦</div><div class="role-title">Parts / Inventory Team</div><div class="role-desc">Manages spare parts, tools, and supplies needed for maintenance. A maintenance task can't start if the parts aren't available.</div></div>
+      <div class="role-card"><div class="role-icon">✅</div><div class="role-title">Quality Inspector</div><div class="role-desc">Verifies that repaired equipment is producing output within spec before production resumes. Last check before the machine goes back on line.</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Walk Through a Real Maintenance Workflow</h2>
+    <p>Let's trace the full sequence of a maintenance event — from the moment an alert fires to the moment the machine is back on line. Click each step to expand it.</p>
+
+    <div class="walkthrough fade-in" id="walkthrough">
+
+      <div class="wt-step active" onclick="activateStep(this,0)">
+        <div class="wt-left"><div class="wt-circle">🔔</div><div class="wt-connector"></div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 1</div>
+          <div class="wt-step-title">Alert Generated</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">Something signals that a machine needs attention. This could be an AI sensor alert, an operator noticing an unusual noise, a scheduled maintenance date arriving, or a quality defect traced back to a specific machine. The workflow begins the moment the problem is identified — not when someone decides to act on it.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>AI monitoring: system detects vibration outside normal range and generates priority-medium alert</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Operator report: worker notices grinding noise and reports to supervisor</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Scheduled PM: preventive maintenance date arrives on the calendar</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">📄 What Gets Created</div><div class="wt-doc-content">Alert record in the monitoring system — machine ID, timestamp, sensor readings, alert type. This is the starting point of the paper trail that follows the entire workflow.</div></div>
+            <button class="wt-next" onclick="event.stopPropagation();activateStep(document.querySelector('.wt-step:nth-child(2)'),1)">Next: Work Order Created →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wt-step" onclick="activateStep(this,1)">
+        <div class="wt-left"><div class="wt-circle">📋</div><div class="wt-connector"></div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 2</div>
+          <div class="wt-step-title">Work Order Created</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">A maintenance planner converts the alert into a formal work order — a document that authorizes and tracks the maintenance task. The work order captures what needs to be done, the priority level, which machine is involved, and what parts and skills are likely needed. Without a work order, the task has no official existence in the system.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>Priority is assigned: Emergency (line down), Urgent (risk of failure), Routine (scheduled)</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Estimated labor hours and required skill set are noted</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Required parts are identified and their availability is checked</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">📄 The Work Order Contains</div><div class="wt-doc-content">WO number · Machine ID · Problem description · Priority · Assigned technician · Required parts list · Estimated hours · Scheduled date/time</div></div>
+            <button class="wt-next" onclick="event.stopPropagation();activateStep(document.querySelector('.wt-step:nth-child(3)'),2)">Next: Planning & Scheduling →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wt-step" onclick="activateStep(this,2)">
+        <div class="wt-left"><div class="wt-circle">🗓️</div><div class="wt-connector"></div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 3</div>
+          <div class="wt-step-title">Planning & Scheduling</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">The planner figures out the logistics: which technician is available and has the right skills, when can production be interrupted (or can it run concurrently with maintenance), are the required parts in stock, and do any permits need to be obtained? This step is often the bottleneck — great maintenance teams do it fast, weak teams lose hours here.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>Check technician availability and match skills to task requirements</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Confirm parts are in stock — or order them if not (which delays the work)</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Coordinate with production to find a maintenance window</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Obtain any required safety permits (lockout/tagout, confined space, hot work)</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">🤖 Where AI Can Help Here</div><div class="wt-doc-content">Scheduling AI (like the PrecisionTech case study) can automatically match open work orders against technician availability, parts inventory, and production schedules — reducing planning time from hours to minutes.</div></div>
+            <button class="wt-next" onclick="event.stopPropagation();activateStep(document.querySelector('.wt-step:nth-child(4)'),3)">Next: Execution →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wt-step" onclick="activateStep(this,3)">
+        <div class="wt-left"><div class="wt-circle">🔧</div><div class="wt-connector"></div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 4</div>
+          <div class="wt-step-title">Execution: The Technician Does the Work</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">The assigned technician receives the work order, gathers required tools and parts, performs any required safety lockouts, and carries out the maintenance task. During execution, they may consult technical manuals, use diagnostic equipment, and make judgment calls about what they find versus what was expected. This is the step no AI can automate — it requires physical presence and skilled hands.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>Technician reviews work order and gathers parts and tools</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Safety lockout/tagout is completed before touching the machine</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Physical inspection often reveals information not in the AI alert</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Technician notes actual findings — which may differ from the expected cause</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">📄 What Gets Documented</div><div class="wt-doc-content">Time in / time out · Actual problem found · Parts used (vs. parts estimated) · Work performed · Any additional issues discovered · Safety steps completed</div></div>
+            <button class="wt-next" onclick="event.stopPropagation();activateStep(document.querySelector('.wt-step:nth-child(5)'),4)">Next: Verification →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wt-step" onclick="activateStep(this,4)">
+        <div class="wt-left"><div class="wt-circle">✅</div><div class="wt-connector"></div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 5</div>
+          <div class="wt-step-title">Verification & Return to Production</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">The repaired machine isn't immediately returned to full production. A functional test verifies the repair worked, sensor readings are checked against expected normal ranges, and a quality check confirms output is within spec. Only then does the machine formally return to production status. Skipping verification is how repaired machines fail again within hours.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>Machine is powered back up in a controlled test sequence</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Sensor readings are monitored for the first 15–30 minutes</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>First production output is inspected for quality</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Technician formally closes the work order in the system</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">🤖 Where AI Helps Here</div><div class="wt-doc-content">AI monitoring systems watch the machine's sensor readings during the return-to-production period and alert if readings don't normalize as expected — catching incomplete repairs before they fail in production.</div></div>
+            <button class="wt-next" onclick="event.stopPropagation();activateStep(document.querySelector('.wt-step:nth-child(6)'),5)">Next: Documentation & Closeout →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wt-step" onclick="activateStep(this,5)">
+        <div class="wt-left"><div class="wt-circle">📁</div></div>
+        <div class="wt-right">
+          <div class="wt-step-label">Step 6</div>
+          <div class="wt-step-title">Documentation & Closeout</div>
+          <div class="wt-step-body">
+            <div class="wt-step-desc">The work order is formally closed in the system with complete documentation of what was found and what was done. This step is often rushed or skipped — but it's one of the most important. Every entry becomes historical data that AI systems use to improve future predictions. Incomplete documentation means the AI learns less. Complete documentation means the AI gets smarter with every repair.</div>
+            <div class="wt-details">
+              <div class="wt-detail"><span class="wt-bullet">→</span>Actual root cause is documented (not just "fixed" — but what was actually wrong)</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Parts used are entered and inventory is updated</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Total labor time is logged for cost tracking</div>
+              <div class="wt-detail"><span class="wt-bullet">→</span>Any recommended follow-up is noted</div>
+            </div>
+            <div class="wt-doc"><div class="wt-doc-label">🤖 Why This Step Feeds AI</div><div class="wt-doc-content">Every completed work order becomes training data. When a technician documents "actual cause: clogged coolant filter — AI suggested pump wear," that correction teaches the AI to better distinguish those two patterns in the future. Documentation quality directly affects AI quality.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="pull-quote fade-in">
+      <p>Every AI tool in manufacturing plugs into one of these six steps. It doesn't replace the workflow — it makes specific steps faster, more accurate, or less dependent on a single person's availability.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A maintenance technician completes a repair, verifies the machine is working, and heads to the next job without closing out the work order in the system. Why does this matter beyond just the paperwork?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While a missing work order closeout can create financial tracking problems, the deeper issue is the loss of data that powers future AI and maintenance decisions. This affects the entire facility\'s future maintenance quality, not just one budget line.')">It creates an accounting problem — parts usage can\'t be tracked for cost reporting</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Every completed work order is a data point that the AI (and the maintenance team) learn from. When root cause, parts used, and actual findings go undocumented, that knowledge is lost. The AI can\'t improve its diagnosis patterns. The maintenance team can\'t spot recurring failure modes. Future technicians have no reference for what was found or done. Documentation closeout isn\'t paperwork — it\'s knowledge management.')">The AI system loses a training data point — undocumented repairs mean the system can\'t learn what actually caused the problem, making future predictions less accurate</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While having a supervisor check is good practice, the bigger issue isn\'t the approval step — it\'s that the knowledge from this repair (root cause, parts used, actual findings) is never captured for future use. The data loss affects future AI predictions and maintenance decisions across the entire team.')">The supervisor needs to approve every repair before the technician moves on</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">In the 6-step maintenance workflow, which step is the one that NO AI can currently automate — and why?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Work order creation is increasingly handled by AI in modern CMMS platforms — some systems automatically generate draft work orders from sensor alerts, requiring only human review and approval. This step can be substantially automated.')">Step 2: Work Order Creation — AI can\'t generate the document</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ Planning and scheduling is one of AI\'s strongest contributions in manufacturing maintenance. Scheduling AI can automatically match work orders to technician availability, parts inventory, and production windows. The PrecisionTech case study is built around this exact capability.')">Step 3: Planning and Scheduling — AI can\'t coordinate the logistics</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. Step 4 — physical execution — requires a human with skilled hands at the actual machine location. No current AI can physically open an enclosure, replace a bearing, clean a clogged filter, or perform a safety lockout procedure. AI can tell you what to do, guide you through the steps, and monitor the results — but the physical act of maintenance requires human presence. This is the clearest boundary between AI capability and human necessity in manufacturing maintenance today.')">Step 4: Execution — the physical work of repairing a machine requires a human with skilled hands at the machine itself</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A manufacturing workflow is a defined sequence of steps that turns an identified problem into a resolved one. In maintenance, the six steps are: alert → work order → planning → execution → verification → closeout. AI improves specific steps — it doesn't replace the sequence.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Multiple roles contribute to every maintenance workflow: operators notice problems, planners coordinate resources, technicians do the work, and quality inspectors verify the result. AI tools improve what each role can accomplish — they don't eliminate any of these roles.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Documentation at Step 6 isn't just paperwork — it's the data that makes AI smarter over time. Every completed work order with accurate root cause documentation is a training data point for future AI predictions. Poor documentation directly degrades AI quality.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Physical execution (Step 4) is the step AI cannot automate. It requires a skilled human with physical access to the machine. This is the clearest boundary between what AI can and cannot do in manufacturing maintenance today.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function activateStep(el,idx){document.querySelectorAll(".wt-step").forEach(s=>s.classList.remove("active"));el.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

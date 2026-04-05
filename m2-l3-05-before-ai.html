@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before AI: What Traditional Manufacturing Maintenance Actually Looked Like</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+.day-timeline{display:flex;flex-direction:column;gap:8px;margin:24px 0;}
+.dt-item{display:flex;gap:16px;align-items:flex-start;}
+.dt-time{font-weight:700;font-size:14px;color:var(--purple-dark);min-width:52px;flex-shrink:0;padding-top:2px;}
+.dt-content{flex:1;background:var(--gray-soft);border-radius:12px;padding:12px 16px;border-left:3px solid var(--purple-mid);}
+.dt-content.problem{border-left-color:var(--red);}
+.dt-content.waste{border-left-color:var(--orange);}
+.dt-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.dt-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.dt-note{font-size:12px;color:var(--gray-muted);margin-top:4px;font-style:italic;}
+
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.ba-col{border-radius:18px;padding:22px;}
+.ba-col.before{background:#F8F4FF;border:1.5px solid var(--purple-mid);}
+.ba-col.after{background:var(--green-pale);border:1.5px solid #86EFAC;}
+.ba-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.before .ba-label{color:var(--purple-dark);}
+.after .ba-label{color:var(--green);}
+.ba-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:10px;}
+.before .ba-title{color:var(--purple-dark);}
+.after .ba-title{color:var(--green);}
+.ba-items{display:flex;flex-direction:column;gap:7px;}
+.ba-item{font-size:13px;line-height:1.6;color:var(--gray-text);display:flex;gap:8px;}
+@media(max-width:560px){.before-after{grid-template-columns:1fr;}}
+
+.cost-box{background:var(--red-pale);border:2px solid var(--red);border-radius:18px;padding:22px;margin:24px 0;}
+.cb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:8px;}
+.cb-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--red);margin-bottom:10px;}
+.cb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.cb-stat{background:rgba(220,38,38,.07);border-radius:12px;padding:12px;text-align:center;}
+.cb-stat-num{font-family:"Fraunces",serif;font-size:24px;font-weight:900;color:var(--red);line-height:1;margin-bottom:3px;}
+.cb-stat-label{font-size:11px;color:var(--gray-text);line-height:1.5;}
+@media(max-width:540px){.cb-stats{grid-template-columns:1fr 1fr;}}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.3</div>
+  <h1>Before AI: What Traditional Manufacturing Maintenance Actually Looked Like</h1>
+  <p class="hero-sub">To appreciate what AI changes, you need to understand what it replaced. This is a day in the life of a maintenance team before predictive AI — and why reactive firefighting became the norm everywhere it was tried.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Slide's "Traditional Workflow" — Made Real</h2>
+    <p>The Lesson 2.3 slide shows a "Before AI" workflow. But a slide can't show what it actually felt like to run a maintenance operation before digital tools and predictive analytics. This article makes it real — a day in the life of a maintenance coordinator in a mid-sized manufacturing plant in the early 2010s.</p>
+    <p>This isn't ancient history. Many facilities still operate this way today. Understanding it helps you see exactly what problems AI is solving — and why the improvement is so significant.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>A Day in the Life: Traditional Maintenance Coordinator</h2>
+    <p>Walk through a realistic Tuesday at a plastics manufacturing plant with 60 machines and a maintenance team of 8 technicians. No AI monitoring. No automated alerts. No scheduling system. Just experience, clipboards, and radios.</p>
+
+    <div class="day-timeline fade-in">
+      <div class="dt-item"><div class="dt-time">6:00 AM</div><div class="dt-content"><div class="dt-title">Morning Walkthrough</div><div class="dt-desc">Maintenance coordinator Dave arrives and does a physical walkthrough of the production floor. He checks each machine visually and listens for unusual sounds. He has 60 machines to check and 30 minutes before production starts. That's 30 seconds per machine — not enough time to notice subtle developing issues.</div><div class="dt-note">What AI does instead: monitors all 60 machines simultaneously, every second, all night while Dave was home sleeping.</div></div></div>
+      <div class="dt-item"><div class="dt-time">6:28 AM</div><div class="dt-content problem"><div class="dt-title">Problem: Line C Injector Making a New Noise</div><div class="dt-desc">An operator flags Dave — Machine 34 is making a grinding noise she's never heard before. Dave listens, can't immediately identify the source. He calls his most experienced technician, Frank, who won't arrive until 7 AM. Production starts in 2 minutes. Dave tells the operator to "keep an eye on it and tell me if it gets worse."</div><div class="dt-note">What AI does instead: detected the developing bearing vibration signature 11 days ago and generated an alert with a work order recommendation.</div></div></div>
+      <div class="dt-item"><div class="dt-time">7:15 AM</div><div class="dt-content"><div class="dt-title">Scheduling the Day — Manual</div><div class="dt-desc">Dave has a clipboard with the week's work orders — 14 open items. He manually calls each technician to find who's available. He checks the parts room for the parts needed on each job. He calls the production supervisor to ask which lines have downtime windows today. This process takes until 8:30 AM most days.</div><div class="dt-note">What AI does instead: scheduling AI matches all 14 work orders to technician availability, skill sets, and production windows overnight — ready for Dave's approval at 6 AM.</div></div></div>
+      <div class="dt-item"><div class="dt-time">8:47 AM</div><div class="dt-content problem"><div class="dt-title">Machine 34 Stops — Emergency</div><div class="dt-desc">The bearing fails. Machine 34 shuts down in the middle of a production run. 140 unfinished parts are scrapped. The line goes cold. Dave radios all available technicians. Frank diagnoses the failed bearing in 25 minutes — but then finds the parts room doesn't have the right bearing in stock. The last one was used 3 weeks ago and not reordered.</div><div class="dt-note">Cost so far: ~$4,200 in lost production time, $380 in scrapped parts, and counting. Repair won't start until the part arrives — 4 hours via emergency delivery.</div></div></div>
+      <div class="dt-item"><div class="dt-time">10:00 AM</div><div class="dt-content waste"><div class="dt-title">Paper Trail Management</div><div class="dt-desc">Dave spends 45 minutes on paperwork from yesterday's completed work orders — writing up what was done, what parts were used, what the technicians found. This is done from memory, because notes weren't taken in real time. Some details are already fuzzy. The forms are filed in a binder that will be referenced maybe twice a year.</div><div class="dt-note">What AI does instead: technicians document findings in real time from a mobile app at the machine — integrated directly into the CMMS and immediately available for analysis.</div></div></div>
+      <div class="dt-item"><div class="dt-time">12:30 PM</div><div class="dt-content problem"><div class="dt-title">Second Emergency: Hydraulic Press Pressure Drop</div><div class="dt-desc">Production supervisor calls Dave — Hydraulic Press 7 is running at low pressure and output quality is declining. Dave pulls the maintenance history binder. The last pressure check was 6 weeks ago. Notes are sparse. Dave has to start from scratch diagnosing the cause — a fresh investigation with no trend data to guide him.</div><div class="dt-note">What AI does instead: has 6 weeks of continuous pressure readings, would have flagged the gradual 5-day decline 3 days ago before quality was affected.</div></div></div>
+      <div class="dt-item"><div class="dt-time">3:30 PM</div><div class="dt-content"><div class="dt-title">End of Day: What Got Left Undone</div><div class="dt-desc">Of the 14 work orders Dave started the day with, 6 were completed. 3 were started but not finished. 5 didn't get touched because the two emergency responses consumed the team's day. Two of those 5 are preventive maintenance tasks that were already 2 weeks overdue. Dave reschedules them — again.</div><div class="dt-note">The pattern: reactive emergencies always consume the time intended for preventive maintenance. Which creates more future emergencies. A cycle that's very hard to break without predictive tools.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Real Costs of Reactive Maintenance</h2>
+    <div class="cost-box fade-in">
+      <div class="cb-label">📊 Industry Research — Traditional vs. Predictive Maintenance</div>
+      <div class="cb-title">What Reactive Firefighting Actually Costs</div>
+      <div class="cb-stats">
+        <div class="cb-stat"><div class="cb-stat-num">3–10×</div><div class="cb-stat-label">Higher cost of emergency vs. planned repair labor</div></div>
+        <div class="cb-stat"><div class="cb-stat-num">30–40%</div><div class="cb-stat-label">Of unplanned failures involve secondary damage from delayed response</div></div>
+        <div class="cb-stat"><div class="cb-stat-num">$260K</div><div class="cb-stat-label">Average annual cost per machine for reactive-only maintenance approach</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Before vs. After: The Same Day with AI</h2>
+    <div class="before-after fade-in">
+      <div class="ba-col before">
+        <div class="ba-label">⏮ Traditional Workflow</div>
+        <div class="ba-title">Dave's Tuesday Without AI</div>
+        <div class="ba-items">
+          <div class="ba-item"><span>→</span>30-second machine checks catch nothing subtle</div>
+          <div class="ba-item"><span>→</span>2.5 hours spent manually scheduling 14 work orders</div>
+          <div class="ba-item"><span>→</span>Machine 34 fails during production — $4,600+ in losses</div>
+          <div class="ba-item"><span>→</span>No bearing in stock — 4 hour emergency delivery wait</div>
+          <div class="ba-item"><span>→</span>Hydraulic press problem found by operator, not maintenance</div>
+          <div class="ba-item"><span>→</span>5 of 14 work orders untouched due to emergency responses</div>
+          <div class="ba-item"><span>→</span>45 min writing yesterday's reports from memory</div>
+        </div>
+      </div>
+      <div class="ba-col after">
+        <div class="ba-label">⏩ With AI-Assisted Workflow</div>
+        <div class="ba-title">Dave's Tuesday With AI</div>
+        <div class="ba-items">
+          <div class="ba-item"><span>✓</span>AI flagged Machine 34's bearing trend 11 days ago</div>
+          <div class="ba-item"><span>✓</span>Work order pre-scheduled, bearing already ordered and received</div>
+          <div class="ba-item"><span>✓</span>Bearing replaced last Friday — no production interruption</div>
+          <div class="ba-item"><span>✓</span>Scheduling AI prepared the week's optimized plan overnight</div>
+          <div class="ba-item"><span>✓</span>Hydraulic press pressure decline flagged 3 days ago — already in the schedule</div>
+          <div class="ba-item"><span>✓</span>Dave reviews AI-prepared schedule, approves and adjusts: 20 minutes</div>
+          <div class="ba-item"><span>✓</span>Technicians document in real time — no end-of-day paperwork</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>The difference isn't that AI does Dave's job. The difference is that AI gives Dave the information he needs, when he needs it — so he stops fighting fires and starts preventing them.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">In the "day in the life" story, Dave's reactive emergency responses prevented him from completing 5 preventive maintenance work orders. Why is this pattern so hard to break without AI?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While hiring more technicians would give more capacity, it doesn\'t address the root problem: without visibility into which machines are developing problems, emergencies will still dominate the schedule. More capacity in a reactive system just means more people fighting fires.')">Dave needs more technicians — the problem is purely a staffing shortage</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is a self-reinforcing failure cycle: reactive emergencies consume the time scheduled for preventive maintenance → unmaintained machines develop more problems → more emergencies consume more planned maintenance time → more machines fail. Without AI visibility into developing problems, Dave has no way to predict which machines need attention before they become emergencies. He can\'t prioritize preventive work because he can\'t tell which machines are at risk. AI breaks this cycle by surfacing developing problems weeks before they become emergencies — giving Dave the ability to plan instead of react.')">Reactive emergencies will always crowd out preventive work without predictive visibility — without AI flagging developing problems in advance, Dave can\'t know which preventive tasks are truly urgent until machines fail</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While better scheduling tools help, the root problem isn\'t the scheduling system — it\'s that Dave has no information about which machines are developing problems before they fail. Even a perfect scheduling system can\'t prevent emergencies it doesn\'t know are coming.')">Dave needs better scheduling software — the problem is that he\'s using a clipboard instead of a digital system</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Traditional maintenance was reactive by necessity — without continuous monitoring, problems were only discovered when machines showed symptoms or failed. This created a cycle where emergencies consumed the time needed for preventive work, which caused more emergencies.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Manual scheduling was a significant time drain — hours per day matching work orders to technicians, parts, and production windows. Scheduling AI compresses this to minutes, freeing maintenance coordinators for judgment work that requires experience and context.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Reactive maintenance is 3–10× more expensive than planned maintenance for the same repair — because of emergency labor rates, secondary damage, lost production time, and expedited parts delivery. The financial case for predictive AI is compelling.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI doesn't replace the maintenance coordinator — it gives them the information they needed but couldn't access: what's developing, what the trend rate is, and how much time they have to respond. The human judgment and coordination work remain essential.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

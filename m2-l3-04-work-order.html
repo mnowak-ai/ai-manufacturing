@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Work Order? The Document That Drives Almost Every Maintenance Task</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+/* Annotated work order mock */
+.wo-mock{background:#1A0A25;border-radius:20px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.wo-top{border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.wo-title-block{}
+.wo-id{font-family:var(--mono);font-size:22px;font-weight:700;color:#A78BFA;}
+.wo-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8B7FA0;margin-top:2px;}
+.wo-priority{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:700;font-family:var(--mono);}
+.wo-priority.urgent{background:rgba(220,38,38,.2);color:#F87171;border:1px solid rgba(220,38,38,.4);}
+.wo-priority.routine{background:rgba(39,103,73,.2);color:#4ADE80;border:1px solid rgba(39,103,73,.4);}
+.wo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.wo-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;}
+.wo-field-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#8B7FA0;margin-bottom:4px;}
+.wo-field-val{font-size:14px;color:#E2D9F3;line-height:1.5;}
+.wo-field-val.mono{font-family:var(--mono);font-size:12px;}
+.wo-field.full{grid-column:span 2;}
+.wo-parts{margin-bottom:16px;}
+.wo-section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#A78BFA;margin-bottom:8px;}
+.wo-parts-row{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:#E2D9F3;}
+.wo-parts-qty{font-family:var(--mono);font-weight:700;color:#A78BFA;min-width:30px;}
+.wo-parts-status{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-left:auto;}
+.in-stock{background:rgba(39,103,73,.2);color:#4ADE80;}
+.wo-status-bar{display:flex;gap:8px;align-items:center;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);}
+.wo-status-chip{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:700;font-family:var(--mono);}
+.chip-open{background:rgba(123,47,190,.3);color:#A78BFA;border:1px solid rgba(123,47,190,.4);}
+.chip-assigned{background:rgba(29,78,216,.3);color:#93C5FD;border:1px solid rgba(29,78,216,.4);}
+.chip-done{background:rgba(39,103,73,.3);color:#4ADE80;border:1px solid rgba(39,103,73,.4);}
+.wo-status-label{font-size:12px;color:#8B7FA0;margin-left:4px;}
+@media(max-width:540px){.wo-grid{grid-template-columns:1fr;}.wo-field.full{grid-column:span 1;}}
+
+/* Annotation callouts */
+.annotations{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.ann{display:flex;gap:14px;align-items:flex-start;background:var(--gray-soft);border-radius:14px;padding:14px 16px;border:1.5px solid var(--purple-mid);cursor:pointer;transition:all .2s;}
+.ann:hover{border-color:var(--purple);background:var(--purple-pale);}
+.ann-num{width:28px;height:28px;border-radius:50%;background:var(--purple-dark);color:var(--white);font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ann-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:3px;}
+.ann-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.ann-ai{margin-top:6px;font-size:12px;padding:4px 10px;background:var(--purple-pale);border-radius:8px;color:var(--purple-dark);}
+.ann-ai strong{color:var(--purple);}
+
+/* WO types */
+.wo-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:24px 0;}
+.wot{border-radius:16px;padding:18px;border:1.5px solid;}
+.wot.reactive{background:var(--red-pale);border-color:var(--red);}
+.wot.preventive{background:var(--blue-pale);border-color:var(--blue-mid);}
+.wot.predictive{background:var(--purple-pale);border-color:var(--purple-mid);}
+.wot-icon{font-size:26px;margin-bottom:6px;}
+.wot-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;margin-bottom:5px;}
+.reactive .wot-title{color:var(--red);}
+.preventive .wot-title{color:var(--blue);}
+.predictive .wot-title{color:var(--purple-dark);}
+.wot-desc{font-size:12px;line-height:1.65;color:var(--gray-text);}
+@media(max-width:560px){.wo-types{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.3</div>
+  <h1>What Is a Work Order? The Document That Drives Almost Every Maintenance Task</h1>
+  <p class="hero-sub">On your first day in manufacturing maintenance, someone will hand you a work order. This article explains exactly what it is, every field it contains, and how AI is transforming the way work orders are created, scheduled, and closed out.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Most Important Document You'll Work With</h2>
+    <p>A work order is the official document that authorizes, assigns, and tracks a maintenance task. If someone notices a machine problem, there's no official response until a work order exists. If a work order isn't closed out, the repair has no documented existence in the system. <mark>The work order is the paper trail that connects an alert to a completed repair — and everything in between.</mark></p>
+    <p>In older facilities, work orders were paper forms in a binder. In modern facilities with AI-enabled maintenance systems, they're digital records that integrate with sensor data, inventory systems, and scheduling AI in real time. Either way, the fundamental concept is the same.</p>
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Term</div>
+      <div class="vocab-def"><strong>Work Order (WO)</strong> — A document that formally authorizes a specific maintenance task, assigns it to a technician, specifies required parts and estimated labor, tracks its progress, and records the outcome. Work orders are managed in a CMMS (Computerized Maintenance Management System) in most modern facilities.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Anatomy of a Real Work Order</h2>
+    <p>This is what a digital work order looks like in a modern maintenance system. Click the annotation numbers below to understand what each section means and how AI interacts with it.</p>
+
+    <div class="wo-mock fade-in">
+      <div class="wo-top">
+        <div class="wo-title-block">
+          <div class="wo-id">WO-2024-11847</div>
+          <div class="wo-type">Predictive Maintenance · AI-Generated Alert</div>
+        </div>
+        <div class="wo-priority urgent">🔴 URGENT — Priority 2</div>
+      </div>
+      <div class="wo-grid">
+        <div class="wo-field"><div class="wo-field-label">Machine ID</div><div class="wo-field-val mono">PKG-LINE-B · Conveyor Drive Motor · Building 4</div></div>
+        <div class="wo-field"><div class="wo-field-label">Assigned Technician</div><div class="wo-field-val">Marcus Okonkwo · Electrical — Level 3</div></div>
+        <div class="wo-field"><div class="wo-field-label">Scheduled Date / Time</div><div class="wo-field-val">Wed Apr 10 · 06:00–08:00 (pre-shift window)</div></div>
+        <div class="wo-field"><div class="wo-field-label">Estimated Labor</div><div class="wo-field-val">2.0 hrs · Actual: ___</div></div>
+        <div class="wo-field full"><div class="wo-field-label">Problem Description</div><div class="wo-field-val">AI Alert: Vibration trending upward over 18 days (1.1 → 2.4 mm/s). Temperature correlated rise (+6°C). Pattern matches bearing wear — 79% confidence. Action: inspect drive end bearing, replace if wear confirmed. Manual inspection required before parts order.</div></div>
+        <div class="wo-field full"><div class="wo-field-label">Actual Findings (completed by technician)</div><div class="wo-field-val" style="color:#8B7FA0;font-style:italic;">[ To be completed during repair ]</div></div>
+      </div>
+      <div class="wo-parts">
+        <div class="wo-section-head">Required Parts</div>
+        <div class="wo-parts-row"><span class="wo-parts-qty">×2</span><span>SKF 6205-2RS Deep Groove Ball Bearing</span><span class="wo-parts-status in-stock">IN STOCK</span></div>
+        <div class="wo-parts-row"><span class="wo-parts-qty">×1</span><span>Bearing Grease — 400g cartridge</span><span class="wo-parts-status in-stock">IN STOCK</span></div>
+        <div class="wo-parts-row"><span class="wo-parts-qty">×1</span><span>Motor shaft seal kit — PKG-LINE-B spec</span><span class="wo-parts-status in-stock">IN STOCK</span></div>
+      </div>
+      <div class="wo-status-bar">
+        <div class="wo-status-chip chip-assigned">ASSIGNED</div>
+        <div class="wo-status-label">→ Created by AI alert integration · Approved by: J. Washington · Apr 8 14:22</div>
+      </div>
+    </div>
+
+    <div class="annotations fade-in">
+      <div class="ann"><div class="ann-num">1</div><div><div class="ann-title">Work Order Number (WO-2024-11847)</div><div class="ann-desc">Every work order gets a unique identifier. This is how the task is tracked across all systems — from the initial alert, through scheduling, parts procurement, and final closeout. If someone asks "what's the status of WO-11847?" the system shows exactly where it is in the workflow.</div><div class="ann-ai"><strong>AI role:</strong> Modern CMMS systems can auto-generate WO numbers and link them to the sensor alert that triggered the work, creating an automatic chain of evidence.</div></div></div>
+      <div class="ann"><div class="ann-num">2</div><div><div class="ann-title">Priority Level</div><div class="ann-desc">Priority tells the planner and technician how urgently this task needs attention. Facilities typically use 3–4 priority levels: Emergency (machine down NOW), Urgent (failure likely within 1–3 days), Routine (can be scheduled in the next 1–2 weeks), and Preventive (planned maintenance due). Priority drives the scheduling decision.</div><div class="ann-ai"><strong>AI role:</strong> Predictive maintenance AI can suggest priority levels based on trend rate — "vibration rising 0.06 mm/s per day means failure in approximately 12–18 days" — helping planners allocate urgency accurately.</div></div></div>
+      <div class="ann"><div class="ann-num">3</div><div><div class="ann-title">Problem Description</div><div class="ann-desc">The description connects the symptom to the action. A well-written description includes what was observed (vibration trend), what the AI suggested (bearing wear — 79%), and what action is required (inspect before ordering parts). A poorly written description just says "motor issue" — which forces the technician to investigate from scratch.</div><div class="ann-ai"><strong>AI role:</strong> AI-integrated CMMS systems can auto-populate the problem description with sensor data context — trend duration, confidence score, and recommended first action — saving time and improving information quality.</div></div></div>
+      <div class="ann"><div class="ann-num">4</div><div><div class="ann-title">Assigned Technician + Skills</div><div class="ann-desc">Not every technician can handle every task. The assigned technician's skill level matters — replacing a motor bearing in an electrical enclosure requires electrical qualification (lockout/tagout, working safely with electrical equipment). Assigning the wrong skill set to a task is a safety risk.</div><div class="ann-ai"><strong>AI role:</strong> Scheduling AI automatically matches work order requirements to technician skill sets — ensuring the right person is assigned without a planner having to manually check credentials for each task.</div></div></div>
+      <div class="ann"><div class="ann-num">5</div><div><div class="ann-title">Actual Findings (Closeout)</div><div class="ann-desc">This field is filled in by the technician after completing the repair. It's the most important field for AI improvement — and the most commonly neglected. "Actual findings" captures what was really wrong, what was done, and any other discoveries. This is the feedback loop that teaches AI what its predictions actually matched.</div><div class="ann-ai"><strong>AI role:</strong> Mobile apps let technicians enter findings directly from the machine floor — with photo capture — so closeout happens in real time rather than hours later from memory (which degrades data quality).</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Three Types of Work Orders</h2>
+    <p>Not all maintenance work orders are created equal. The three types reflect fundamentally different approaches to maintenance — and AI has transformed the balance between them in modern facilities.</p>
+    <div class="wo-types fade-in">
+      <div class="wot reactive"><div class="wot-icon">🔥</div><div class="wot-title">Reactive (Corrective)</div><div class="wot-desc">Machine already failed. Respond and repair. No warning, no planning time. Highest cost because of emergency labor rates, production loss, and potential secondary damage. The default mode before AI. Also called "run-to-failure."</div></div>
+      <div class="wot preventive"><div class="wot-icon">📅</div><div class="wot-title">Preventive (Scheduled)</div><div class="wot-desc">Replace or service components on a calendar schedule — every 3 months, every 10,000 hours, etc. Regardless of actual condition. Better than reactive but often replaces parts that still had useful life, or misses problems between scheduled intervals.</div></div>
+      <div class="wot predictive"><div class="wot-icon">🤖</div><div class="wot-title">Predictive (AI-Driven)</div><div class="wot-desc">Perform maintenance when sensor data predicts a developing problem — not on a calendar, not after failure. This is what AI monitoring enables. Work orders are created based on real condition data, not time intervals. The goal: fix it just before it fails.</div></div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>Facilities that move from reactive to predictive maintenance typically see 25–45% reductions in unplanned downtime. The work order is the same document — but AI changes how and when it's created.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A technician completes a repair but writes "replaced bearing — machine running fine" in the Actual Findings field. What's the problem with this closeout?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The repair is complete, so there\'s no safety issue here. The problem is in the quality of the information captured — not the safety of the repair itself.')">The technician failed to perform a safety check before closing the work order</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. "Replaced bearing — machine running fine" tells us almost nothing useful: Was the bearing actually worn, or was the AI wrong and something else was the real cause? What was the actual condition of the removed bearing — minor wear, severe spalling, or perfect condition? Were there any other findings? Did the bearing match the AI\'s diagnosis? Without this information, the AI learns nothing from this repair cycle. It can\'t tell if its 79% confidence bearing wear prediction was correct, wrong, or partially right. This is a common documentation failure that compounds over thousands of work orders into genuinely degraded AI performance.')">The finding is too vague — it doesn\'t document what was actually found (bearing condition, whether AI diagnosis was correct) which means the AI can\'t learn from this repair cycle</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Parts documentation is in the work order\'s parts section (which records what was pulled from inventory). The bigger problem with this closeout is the loss of actual findings data — whether the AI\'s diagnosis was correct and what was actually observed during the repair.')">The technician forgot to document which parts were used in the repair</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A facility generates 400 work orders per month. Before AI-enabled scheduling, a planner spent 3 hours per day manually matching work orders to technicians, parts, and production windows. After implementing scheduling AI, this takes 20 minutes per day. What has actually changed?</div>
+      <div class="qopts" id="q2opts">
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ The work order process itself — creation, execution, closeout — hasn\'t changed. The technician still performs the same tasks, the parts are still the same, and the documentation requirements are the same. What changed is the speed and accuracy of the coordination between them.')">The work orders themselves have changed — AI creates better work orders with more detail</button>
+        <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. The work orders are the same documents — same fields, same requirements. What changed is the logistics coordination that happens between work order creation and assignment. The scheduling AI handles the matching process (which technician has this skill and is available at this time, are parts in stock, does production allow a maintenance window) in seconds instead of hours. This doesn\'t replace the planner — it frees the planner from data-matching busywork to focus on judgment calls that require experience and context. This is AI working as a productivity multiplier, not a replacement.')">The scheduling coordination process — AI now handles the matching of work orders to technicians, parts, and production windows in seconds instead of hours. The work order itself is unchanged.</button>
+        <button class="qopt" onclick="doQ('q2',this,false,'❌ The planner\'s role has changed, but eliminating it entirely would be premature. Scheduling AI still requires human review and approval, handles exceptions poorly without human judgment, and can\'t navigate the political and contextual factors that experienced planners manage daily. The planner shifts from data-matching to exception-handling and oversight.')">The planner\'s job has been eliminated — the AI does everything automatically now</button>
+      </div>
+      <div class="qfb" id="q2fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A work order is the official document that authorizes, assigns, and tracks a maintenance task. Nothing officially exists in the maintenance system without a work order — not the problem, not the repair, not the outcome.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The Actual Findings field at closeout is the most important field for AI improvement — and the most neglected. Vague closeouts ("replaced bearing — machine fine") strip the system of the feedback data that makes AI predictions more accurate over time.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>There are three types of work orders: reactive (respond to failure), preventive (scheduled intervals), and predictive (AI-driven, based on condition data). Facilities that shift from reactive to predictive typically see 25–45% reductions in unplanned downtime.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI integrates with work orders at multiple points: auto-generating WOs from sensor alerts, suggesting priority levels based on trend rates, matching WOs to technician skills via scheduling AI, and updating training data from closeout findings. The work order is the central document that ties all of this together.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

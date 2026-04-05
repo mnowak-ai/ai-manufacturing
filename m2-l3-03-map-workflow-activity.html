@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Deep Dive: Map the Workflow — Where Should AI Assist?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--orange-pale);color:var(--orange);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FDE68A;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--orange);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--orange);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* Activity container */
+.activity{background:var(--gray-soft);border:2px solid var(--orange);border-radius:24px;padding:32px;margin:28px 0;}
+.act-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+.act-title{font-family:"Fraunces",serif;font-size:22px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.act-sub{font-size:14px;color:var(--gray-muted);margin-bottom:24px;line-height:1.6;}
+
+/* Info cards to read */
+.info-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.info-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 16px;}
+.ic-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:5px;}
+.ic-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.ic-desc{font-size:12px;line-height:1.65;color:var(--gray-text);}
+@media(max-width:560px){.info-cards{grid-template-columns:1fr;}}
+
+/* Workflow stages with drop zones */
+.wf-stages{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+.wf-stage{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:18px;padding:18px 20px;}
+.wf-stage-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.wf-stage-icon{font-size:24px;}
+.wf-stage-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.wf-stage-desc{font-size:12px;color:var(--gray-muted);}
+.drop-zone{border:2px dashed var(--purple-mid);border-radius:12px;padding:10px 14px;min-height:44px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;transition:all .2s;}
+.drop-zone.hover{border-color:var(--purple);background:var(--purple-pale);}
+.drop-zone.correct{border-color:var(--green);background:var(--green-pale);}
+.drop-zone.wrong{border-color:var(--red);background:var(--red-pale);}
+.drop-zone-hint{font-size:12px;color:var(--gray-muted);font-style:italic;}
+
+/* Tool chips */
+.tool-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.tool-chip{background:var(--purple-dark);color:var(--white);padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:grab;user-select:none;border:none;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.tool-chip:hover{background:var(--purple);transform:scale(1.04);}
+.tool-chip:active{cursor:grabbing;}
+.tool-chip.placed{background:var(--gray-muted);cursor:default;transform:none;}
+
+/* Check button and results */
+.check-btn{background:var(--purple-dark);color:var(--white);border:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;}
+.check-btn:hover{background:var(--purple);}
+.reset-btn{background:var(--white);color:var(--purple-dark);border:2px solid var(--purple-mid);padding:10px 22px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-left:12px;}
+.result-panel{margin-top:20px;padding:18px 20px;border-radius:16px;display:none;}
+.result-panel.show{display:block;}
+.result-panel.good{background:var(--green-pale);border:1.5px solid #86EFAC;color:var(--green);}
+.result-panel.partial{background:var(--orange-pale);border:1.5px solid #FDE68A;color:#92400E;}
+.result-score{font-family:"Fraunces",serif;font-size:24px;font-weight:700;margin-bottom:6px;}
+.result-detail{font-size:14px;line-height:1.7;}
+
+/* Explanation section */
+.explanation{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.exp-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.exp-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.exp-items{display:flex;flex-direction:column;gap:14px;}
+.exp-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.exp-stage{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.exp-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.exp-chip{background:var(--purple-pale);color:var(--purple-dark);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;}
+.exp-why{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.3 · Activity</div>
+  <h1>Activity Deep Dive: Map the Workflow — Where Should AI Assist?</h1>
+  <p class="hero-sub">The slide is flagged for more detail. Here's the full activity: a 5-step workflow, 10 AI tools described on information cards, and an interactive exercise to place each tool at the right stage — with explanations for every answer.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>How This Activity Works</h2>
+    <p>A steel fabrication plant is deploying 10 AI-powered tools across its maintenance operation. Your job is to read each tool's description and decide which stage of the workflow it belongs in. Then use the interactive exercise to test your placements — and read the detailed explanations for every tool.</p>
+    <p>The five stages are: <mark>Data Collection → Analysis → Decision-Making → Execution → Feedback</mark>. Some tools clearly belong to one stage. Others might feel like they could go in multiple places — the explanations will show you why one stage is the primary fit.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Step 1: Read the Tool Descriptions</h2>
+    <div class="info-cards fade-in">
+      <div class="info-card"><div class="ic-label">Tool A</div><div class="ic-title">Vibration Sensor Network</div><div class="ic-desc">300 wireless vibration sensors installed on rotating equipment throughout the plant, streaming readings every 500ms to the central monitoring platform.</div></div>
+      <div class="info-card"><div class="ic-label">Tool B</div><div class="ic-title">Root Cause Recommender</div><div class="ic-desc">AI system that analyzes multi-sensor patterns and generates a ranked list of probable causes with confidence scores for any flagged anomaly.</div></div>
+      <div class="info-card"><div class="ic-label">Tool C</div><div class="ic-title">Digital SOP Library</div><div class="ic-desc">Tablet-accessible database of step-by-step repair procedures for every machine in the facility, with embedded safety checklists and torque specifications.</div></div>
+      <div class="info-card"><div class="ic-label">Tool D</div><div class="ic-title">Work Order Learning Engine</div><div class="ic-desc">AI that analyzes all closed work orders to identify which AI diagnoses were confirmed vs. overridden, and updates the recommender's confidence models accordingly.</div></div>
+      <div class="info-card"><div class="ic-label">Tool E</div><div class="ic-title">Thermal Imaging System</div><div class="ic-desc">Infrared cameras mounted at key locations that continuously capture thermal images of electrical panels and motor housings, flagging hot spots above set thresholds.</div></div>
+      <div class="info-card"><div class="ic-label">Tool F</div><div class="ic-title">Maintenance Schedule Optimizer</div><div class="ic-desc">AI that analyzes machine health scores, production schedules, and technician availability to suggest the optimal timing and sequence for upcoming maintenance tasks.</div></div>
+      <div class="info-card"><div class="ic-label">Tool G</div><div class="ic-title">Alert Priority Ranker</div><div class="ic-desc">AI that receives all active alerts across the plant and ranks them by urgency based on machine criticality, failure probability, and production impact — updated every 15 minutes.</div></div>
+      <div class="info-card"><div class="ic-label">Tool H</div><div class="ic-title">Parts Usage Predictor</div><div class="ic-desc">AI that analyzes historical repair data and current machine health trends to forecast which replacement parts will be needed over the next 90 days, triggering inventory orders automatically.</div></div>
+      <div class="info-card"><div class="ic-label">Tool I</div><div class="ic-title">Recurring Failure Detector</div><div class="ic-desc">AI that scans completed work orders looking for patterns — machines with the same failure appearing more than twice in 6 months, or the same technician consistently overriding the AI's diagnosis for a specific machine type.</div></div>
+      <div class="info-card"><div class="ic-label">Tool J</div><div class="ic-title">Repair Time Tracker</div><div class="ic-desc">Mobile app that technicians use to log work order progress in real time — what steps have been completed, what parts were used, and how long each task took.</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Step 2: Place Each Tool in the Right Stage</h2>
+    <p>Click a tool chip, then click the workflow stage where it belongs. Place all 10 tools, then click Check Answers.</p>
+
+    <div class="activity fade-in">
+      <div class="act-label">🗺️ Workflow Mapping Activity</div>
+      <div class="act-title">Place Each AI Tool in Its Primary Workflow Stage</div>
+      <div class="act-sub">Click a tool (it will highlight), then click the stage box where it belongs. You can click a placed tool to pick it back up.</div>
+
+      <div class="tool-bank" id="tool-bank">
+        <button class="tool-chip" id="chip-A" onclick="selectChip('A')">Tool A</button>
+        <button class="tool-chip" id="chip-B" onclick="selectChip('B')">Tool B</button>
+        <button class="tool-chip" id="chip-C" onclick="selectChip('C')">Tool C</button>
+        <button class="tool-chip" id="chip-D" onclick="selectChip('D')">Tool D</button>
+        <button class="tool-chip" id="chip-E" onclick="selectChip('E')">Tool E</button>
+        <button class="tool-chip" id="chip-F" onclick="selectChip('F')">Tool F</button>
+        <button class="tool-chip" id="chip-G" onclick="selectChip('G')">Tool G</button>
+        <button class="tool-chip" id="chip-H" onclick="selectChip('H')">Tool H</button>
+        <button class="tool-chip" id="chip-I" onclick="selectChip('I')">Tool I</button>
+        <button class="tool-chip" id="chip-J" onclick="selectChip('J')">Tool J</button>
+      </div>
+
+      <div class="wf-stages">
+        <div class="wf-stage">
+          <div class="wf-stage-header"><div class="wf-stage-icon">📡</div><div><div class="wf-stage-title">Data Collection</div><div class="wf-stage-desc">Gathering raw information from machines and the environment</div></div></div>
+          <div class="drop-zone" id="zone-collect" onclick="dropInZone('collect')"><span class="drop-zone-hint">Click here to place a tool</span></div>
+        </div>
+        <div class="wf-stage">
+          <div class="wf-stage-header"><div class="wf-stage-icon">🧠</div><div><div class="wf-stage-title">Analysis</div><div class="wf-stage-desc">Making sense of the data — detecting patterns and anomalies</div></div></div>
+          <div class="drop-zone" id="zone-analysis" onclick="dropInZone('analysis')"><span class="drop-zone-hint">Click here to place a tool</span></div>
+        </div>
+        <div class="wf-stage">
+          <div class="wf-stage-header"><div class="wf-stage-icon">🤔</div><div><div class="wf-stage-title">Decision-Making</div><div class="wf-stage-desc">Prioritizing, scheduling, and choosing what to do</div></div></div>
+          <div class="drop-zone" id="zone-decision" onclick="dropInZone('decision')"><span class="drop-zone-hint">Click here to place a tool</span></div>
+        </div>
+        <div class="wf-stage">
+          <div class="wf-stage-header"><div class="wf-stage-icon">🔧</div><div><div class="wf-stage-title">Execution</div><div class="wf-stage-desc">Performing the actual maintenance work</div></div></div>
+          <div class="drop-zone" id="zone-execution" onclick="dropInZone('execution')"><span class="drop-zone-hint">Click here to place a tool</span></div>
+        </div>
+        <div class="wf-stage">
+          <div class="wf-stage-header"><div class="wf-stage-icon">🔄</div><div><div class="wf-stage-title">Feedback</div><div class="wf-stage-desc">Learning from what happened to improve future performance</div></div></div>
+          <div class="drop-zone" id="zone-feedback" onclick="dropInZone('feedback')"><span class="drop-zone-hint">Click here to place a tool</span></div>
+        </div>
+      </div>
+
+      <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      <button class="reset-btn" onclick="resetActivity()">↺ Reset</button>
+      <div class="result-panel" id="result-panel"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Step 3: Full Explanations for Every Tool</h2>
+
+    <div class="explanation fade-in">
+      <div class="exp-label">✅ Answer Key with Explanations</div>
+      <div class="exp-title">Why Each Tool Belongs Where It Does</div>
+      <div class="exp-items">
+        <div class="exp-item">
+          <div class="exp-stage">Data Collection</div>
+          <div class="exp-tools"><span class="exp-chip">Tool A — Vibration Sensor Network</span><span class="exp-chip">Tool E — Thermal Imaging System</span></div>
+          <div class="exp-why"><strong>Tool A</strong> is a classic data collection tool — sensors that physically measure and stream raw readings. They generate data; they don't interpret it. The 300-sensor network covering the whole plant is only possible because sensors are cheap and AI can monitor all 300 simultaneously. <strong>Tool E</strong> (thermal cameras) also belongs here — it's another type of sensor, just capturing thermal images rather than numeric readings. Both tools gather raw environmental data without making any interpretation about what it means.</div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-stage">Analysis</div>
+          <div class="exp-tools"><span class="exp-chip">Tool B — Root Cause Recommender</span><span class="exp-chip">Tool G — Alert Priority Ranker</span></div>
+          <div class="exp-why"><strong>Tool B</strong> takes raw sensor data and interprets it — pattern-matching against historical failure signatures to generate probable causes with confidence scores. This is analysis: turning numbers into meaning. <strong>Tool G</strong> might seem like Decision-Making since it ranks alerts, but its primary function is analytical — it processes incoming alert data and applies priority logic to rank them. The output of Tool G is information (a prioritized list) not a decision. A human still decides what to do with that ranked list.</div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-stage">Decision-Making</div>
+          <div class="exp-tools"><span class="exp-chip">Tool F — Maintenance Schedule Optimizer</span><span class="exp-chip">Tool H — Parts Usage Predictor</span></div>
+          <div class="exp-why"><strong>Tool F</strong> goes beyond analysis into recommendation — it generates an optimal maintenance schedule (a course of action) rather than just interpreting data. This is the border between Analysis and Decision-Making: the optimizer is proposing what to do and when. A human reviews and approves the schedule before it becomes official. <strong>Tool H</strong> (parts predictor) triggers inventory orders — that's a recommended action, not just analysis. It sits in Decision-Making because its output influences procurement decisions, even if those decisions are reviewed by a human buyer.</div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-stage">Execution</div>
+          <div class="exp-tools"><span class="exp-chip">Tool C — Digital SOP Library</span><span class="exp-chip">Tool J — Repair Time Tracker</span></div>
+          <div class="exp-why"><strong>Tool C</strong> is used during the physical repair process — the technician references it at the machine while doing the work. It's an execution support tool, not an analysis or planning tool. It doesn't collect data or make decisions; it supports the human performing the task. <strong>Tool J</strong> (repair time tracker) is also active during execution — technicians use it in real time as they work to log progress and parts usage. Both tools are embedded in the execution stage, not before or after it.</div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-stage">Feedback</div>
+          <div class="exp-tools"><span class="exp-chip">Tool D — Work Order Learning Engine</span><span class="exp-chip">Tool I — Recurring Failure Detector</span></div>
+          <div class="exp-why"><strong>Tool D</strong> is the purest feedback tool — its entire purpose is to analyze completed work orders and use that data to improve the AI's future recommendations. It closes the loop. <strong>Tool I</strong> (recurring failure detector) also belongs in Feedback — it scans historical data to find patterns across many events over time. Its outputs don't influence a single repair; they improve the system's understanding of recurring problems. Both tools are backward-looking (what happened) in service of forward improvement (what to do differently).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">Tool G (Alert Priority Ranker) ranks all active alerts by urgency. Why does it belong in Analysis rather than Decision-Making?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The Alert Priority Ranker does use machine criticality data — but the distinction between Analysis and Decision-Making isn\'t about the data used. It\'s about what the tool\'s output is: information or action.')">Because it doesn\'t use machine criticality data — it only looks at sensor readings</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Tool G produces a ranked list — that\'s information, not a decision. A human maintenance coordinator still looks at the ranked list and decides: which alert to assign to which technician, whether to pull someone off one job to handle a higher-priority one, whether an alert is worth immediate response or can wait for the next available technician. The ranker organizes the information for human decision-making — it doesn\'t make the decision itself. This is the key distinction: Analysis produces interpreted information. Decision-Making produces courses of action.')">Because its output is information (a ranked list) rather than a decision — a human still decides what action to take based on the ranking</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The Alert Priority Ranker does recommend which alerts to address first, but the recommendation is implicit in the ranking rather than explicit in a work order or repair instruction. The tool organizes information; a human turns that organized information into an actual decision about resource allocation and response timing.')">It should actually be in Decision-Making — ranking alerts is effectively deciding which ones matter</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Activity Summary</div>
+    <h2>What This Activity Teaches</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI tools cluster in the Data Collection and Analysis stages — where the advantage of processing speed and scale makes AI uniquely powerful. Monitoring 300 sensors simultaneously or pattern-matching across thousands of historical failures are tasks no human team can replicate at that scale.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The border between Analysis and Decision-Making is "does the output recommend an action?" Analysis produces information. Decision-Making produces courses of action — and those must always be reviewed by humans before becoming actual decisions.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Execution stage AI tools support humans doing physical work — they don't replace it. Digital SOPs and time trackers make technicians more efficient, not unnecessary. All physical maintenance work remains human work.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Feedback stage tools are how the whole system improves over time. They work backward from completed events to improve future performance. Without thorough documentation from humans in the Execution stage, Feedback tools have nothing to learn from.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const correct={A:"collect",E:"collect",B:"analysis",G:"analysis",F:"decision",H:"decision",C:"execution",J:"execution",D:"feedback",I:"feedback"};
+let selected=null;
+const placements={};
+
+function selectChip(id){
+  if(document.querySelector(".result-panel.show"))return;
+  document.querySelectorAll(".tool-chip").forEach(c=>c.style.outline="");
+  if(selected===id){selected=null;return;}
+  selected=id;
+  document.getElementById("chip-"+id).style.outline="3px solid #FFB347";
+}
+function dropInZone(zone){
+  if(!selected||document.querySelector(".result-panel.show"))return;
+  const chip=document.getElementById("chip-"+selected);
+  // remove from previous zone
+  const prev=placements[selected];
+  if(prev){
+    const oldZone=document.getElementById("zone-"+prev);
+    const existing=oldZone.querySelector("[data-tool='"+selected+"']");
+    if(existing)existing.remove();
+    updateHint(prev);
+  }
+  placements[selected]=zone;
+  chip.style.opacity=".4";
+  chip.style.outline="";
+  // add tag to zone
+  const zoneEl=document.getElementById("zone-"+zone);
+  const tag=document.createElement("span");
+  tag.setAttribute("data-tool",selected);
+  tag.style.cssText="background:var(--purple-dark);color:white;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;";
+  tag.textContent="Tool "+selected;
+  tag.onclick=function(e){e.stopPropagation();pickUp(selected);};
+  zoneEl.appendChild(tag);
+  updateHint(zone);
+  selected=null;
+}
+function pickUp(id){
+  if(document.querySelector(".result-panel.show"))return;
+  const zone=placements[id];
+  if(!zone)return;
+  const zoneEl=document.getElementById("zone-"+zone);
+  const tag=zoneEl.querySelector("[data-tool='"+id+"']");
+  if(tag)tag.remove();
+  updateHint(zone);
+  delete placements[id];
+  document.getElementById("chip-"+id).style.opacity="1";
+  selectChip(id);
+}
+function updateHint(zone){
+  const zoneEl=document.getElementById("zone-"+zone);
+  const hasItems=zoneEl.querySelector("[data-tool]");
+  const hint=zoneEl.querySelector(".drop-zone-hint");
+  if(hint)hint.style.display=hasItems?"none":"inline";
+}
+function checkAnswers(){
+  if(Object.keys(placements).length<10){alert("Place all 10 tools before checking!");return;}
+  let score=0;
+  Object.entries(placements).forEach(([tool,zone])=>{
+    const zoneEl=document.getElementById("zone-"+zone);
+    const tag=zoneEl.querySelector("[data-tool='"+tool+"']");
+    if(correct[tool]===zone){score++;if(tag)tag.style.background="#276749";}
+    else{if(tag)tag.style.background="#DC2626";}
+  });
+  const panel=document.getElementById("result-panel");
+  panel.className="result-panel show "+(score>=8?"good":"partial");
+  panel.innerHTML=`<div class="result-score">${score}/10 correct</div><div class="result-detail">${score===10?"Perfect! You correctly mapped all 10 tools to their primary workflow stages. Read the explanations above to see the reasoning behind each placement.":score>=7?"Great work — "+score+" out of 10 correct. Review the explanations for the tools you missed.":"Keep going — "+score+" correct. Review the explanations for each tool above, then try again."}</div>`;
+}
+function resetActivity(){
+  Object.keys(placements).forEach(id=>{
+    const zone=placements[id];
+    const tag=document.getElementById("zone-"+zone)?.querySelector("[data-tool='"+id+"']");
+    if(tag)tag.remove();
+    const chip=document.getElementById("chip-"+id);
+    if(chip){chip.style.opacity="1";chip.style.outline="";}
+  });
+  Object.keys(placements).forEach(k=>delete placements[k]);
+  document.querySelectorAll(".drop-zone").forEach(z=>{const h=z.querySelector(".drop-zone-hint");if(h)h.style.display="inline";});
+  document.getElementById("result-panel").className="result-panel";
+  selected=null;
+}
+function doQ(id,btn,correct2,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct2?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct2?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
