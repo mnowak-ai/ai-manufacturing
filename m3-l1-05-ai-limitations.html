@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Is an Assistant, Not a Security Guard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Can / Can't grid */
+.can-cant{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.cc-col h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid;}
+.cc-col.can h3{color:var(--green);border-color:var(--green);}
+.cc-col.cant h3{color:var(--red);border-color:var(--red);}
+.cc-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+.cc-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:2px;}
+.can .cc-dot{background:var(--green-pale);color:var(--green);}
+.cant .cc-dot{background:var(--red-pale);color:var(--red);}
+.cc-item p{font-size:14px;line-height:1.6;margin:0;}
+@media(max-width:560px){.can-cant{grid-template-columns:1fr;}}
+
+/* Limitation cards */
+.limit-section{display:flex;flex-direction:column;gap:0;}
+.limit-card{border-radius:0;border:none;border-bottom:1px solid var(--purple-mid);padding:20px 0;}
+.limit-card:first-child{border-top:1px solid var(--purple-mid);}
+.limit-header{display:flex;align-items:center;gap:14px;cursor:pointer;}
+.limit-icon-wrap{width:44px;height:44px;background:var(--orange-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.limit-title-wrap h3{font-size:16px;font-weight:700;color:var(--purple-dark);}
+.limit-title-wrap .limit-sub{font-size:13px;color:var(--gray-muted);margin-top:2px;}
+.limit-arrow{margin-left:auto;font-size:18px;color:var(--purple);transition:transform .2s;}
+.limit-arrow.open{transform:rotate(180deg);}
+.limit-body{display:none;padding-top:14px;}
+.limit-body.show{display:block;}
+.limit-body p{font-size:15px;line-height:1.75;color:var(--gray-text);margin-bottom:10px;}
+.limit-body p:last-child{margin-bottom:0;}
+.limit-implication{background:var(--purple-pale);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--purple-dark);font-weight:500;}
+
+/* Myth vs Reality */
+.myth-cards{display:flex;flex-direction:column;gap:14px;margin:28px 0;}
+.myth-card{border-radius:16px;overflow:hidden;border:1.5px solid var(--purple-mid);}
+.myth-row{padding:14px 20px;display:flex;gap:12px;align-items:flex-start;}
+.myth-row.myth-part{background:#FFF7ED;border-bottom:1px solid #FDE68A;}
+.myth-row.reality-part{background:var(--green-pale);}
+.myth-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;flex-shrink:0;padding-top:2px;width:60px;}
+.myth-row.myth-part .myth-badge{color:#D97706;}
+.myth-row.reality-part .myth-badge{color:var(--green);}
+.myth-text{font-size:14px;line-height:1.65;color:var(--gray-text);}
+.myth-row.myth-part .myth-text{font-style:italic;}
+
+/* Scenario sim */
+.scenario-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.ss-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:16px;}
+.ss-scenario{background:white;border-radius:14px;padding:20px;margin-bottom:16px;border-left:3px solid var(--orange);}
+.ss-scenario p{font-size:15px;line-height:1.7;margin-bottom:12px;}
+.ss-scenario p:last-child{margin:0;}
+.ss-q{font-weight:700;color:var(--purple-dark);}
+.ss-choices{display:flex;flex-direction:column;gap:8px;}
+.ss-choice{padding:12px 16px;border-radius:10px;border:1.5px solid var(--purple-mid);background:white;font-size:14px;cursor:pointer;text-align:left;transition:all .15s;font-family:"DM Sans",sans-serif;}
+.ss-choice:hover{background:var(--purple-pale);border-color:var(--purple);}
+.ss-choice.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.ss-choice.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ss-feedback{margin-top:12px;padding:14px;border-radius:10px;font-size:14px;line-height:1.65;display:none;}
+.ss-feedback.show{display:block;}
+.ss-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.ss-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>AI Is an Assistant, Not a Security Guard</h1>
+  <p class="hero-sub">Understanding what AI safety monitoring systems cannot do is just as important as knowing what they can. This article covers the real limitations of this technology — so you can use it confidently without depending on it for things it was never designed to handle.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>A Dangerous Misconception</h2>
+    <p>When a factory installs an AI safety monitoring system, there's a temptation — completely understandable — to think: "Great. The cameras are watching. We're covered." This feeling of coverage can actually make a workplace <em>less</em> safe, not more. It's called the <mark>automation bias</mark> trap, and it happens when people over-trust a system's ability to catch everything.</p>
+    <p>AI safety monitoring is genuinely powerful. It can watch more cameras simultaneously than any team of humans. It never gets distracted. It doesn't take breaks. But it has real, significant limitations that every person working alongside these systems needs to understand — not to dismiss the technology, but to stay aware of what humans still need to do.</p>
+
+    <div class="pull-quote"><p>A camera that's not monitored by a human who understands its limitations is not a safety net. It's a false sense of security.</p></div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Automation Bias:</strong> The tendency to over-rely on automated systems — to trust them too much and reduce human vigilance because "the machine is watching." This is one of the most documented risks of AI in safety-critical environments. The AI's limitations don't disappear just because humans stop compensating for them.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What AI Safety Systems Can and Cannot Do</h2>
+
+    <div class="can-cant">
+      <div class="cc-col can">
+        <h3>✅ What AI Can Do</h3>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Monitor all camera feeds simultaneously, 24 hours a day, without getting tired</p></div>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Detect specific visual patterns (missing PPE, blocked exits, spills) within seconds of them appearing</p></div>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Generate and route alerts to the right people without needing a supervisor to be looking at every camera</p></div>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Log every detection with a timestamp, location, and image — creating a searchable record</p></div>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Identify patterns across time (e.g., Zone C has more violations on night shifts)</p></div>
+        <div class="cc-item"><div class="cc-dot">✓</div><p>Process sensor data (gas levels, noise decibels) and combine it with visual data for more complete monitoring</p></div>
+      </div>
+      <div class="cc-col cant">
+        <h3>❌ What AI Cannot Do</h3>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>Physically intervene — it cannot stop a forklift, hand a worker their hard hat, or clean up a spill</p></div>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>Understand context — it cannot know if a worker briefly removed their goggles to wipe sweat vs. left them off entirely</p></div>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>See around corners, through obstructions, or in areas not covered by cameras</p></div>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>Detect hazards it wasn't trained on — a new type of chemical container or an unusual equipment failure may go completely undetected</p></div>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>Make judgment calls — it cannot decide how serious a situation is or what the appropriate response should be</p></div>
+        <div class="cc-item"><div class="cc-dot">✗</div><p>Guarantee 100% detection — even excellent systems miss violations due to poor lighting, angles, or training gaps</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Seven Real Limitations — Click to Expand</h2>
+    <p>Every limitation below has practical implications for how you should work alongside AI safety systems. Click each one to see the full explanation.</p>
+
+    <div class="limit-section">
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">🎯</div>
+          <div class="limit-title-wrap"><h3>It Only Detects What It Was Trained to Detect</h3><div class="limit-sub">Training data boundaries</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>An AI safety model is trained on specific examples of specific violations. If your facility introduces a new type of hazard — a different chemical storage process, a new machine with new proximity risks, a new lifting task with ergonomic risks — the AI may have no ability to detect violations related to it. It's not being lazy. It was never shown what to look for.</p>
+          <p>This means every time operations change in a meaningful way, the AI system needs to be reviewed — and potentially retrained — to cover the new risks.</p>
+          <div class="limit-implication">💡 Implication: Never assume the AI can detect every hazard in your facility. Ask: "What was this system specifically trained to find?" Anything outside that list is your responsibility to monitor manually.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">📷</div>
+          <div class="limit-title-wrap"><h3>Cameras Have Blind Spots</h3><div class="limit-sub">Coverage gaps and fixed angles</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>No camera system covers 100% of a facility floor. There are dead zones — areas behind equipment, around corners, in stairwells, in areas that were deemed low-risk during installation but weren't. A hazard that develops in a blind spot is invisible to the AI.</p>
+          <p>Additionally, fixed cameras can't follow moving people through the facility the way a human supervisor walking the floor can. If a worker moves from a monitored zone into an unmonitored area, the AI loses track of them entirely.</p>
+          <div class="limit-implication">💡 Implication: Know where your camera coverage ends. Supervisors should physically walk areas that cameras don't cover. Camera placement should be reviewed when facility layout changes.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">🌑</div>
+          <div class="limit-title-wrap"><h3>Lighting and Visual Conditions Affect Accuracy</h3><div class="limit-sub">Environmental interference</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>AI cameras analyze pixel data. Anything that distorts the image — poor lighting, direct sunlight glare, steam or dust in the air, water on the lens, reflective surfaces — can dramatically reduce detection accuracy. A facility that performs well in daytime might have significant blind periods during nighttime operations if the AI wasn't trained on low-light footage.</p>
+          <p>Seasonal changes can also cause issues. A facility that gets afternoon sunlight through skylights might have detection failures during specific hours as lighting conditions change.</p>
+          <div class="limit-implication">💡 Implication: AI system performance should be tested under the actual lighting conditions of every shift. Don't assume daytime performance equals nighttime performance.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">🧠</div>
+          <div class="limit-title-wrap"><h3>The AI Has No Context or Common Sense</h3><div class="limit-sub">Judgment gaps</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>An AI sees pixels. It doesn't know that the worker who briefly removed their goggles is the most safety-conscious person on the floor, or that the person in the restricted area is actually the safety officer conducting an inspection, or that the machine that looks like it's running unguarded is actually in a locked-out maintenance state.</p>
+          <p>Context is everything in safety — and AI has none. It applies rules mechanically, without the situational awareness that experienced humans develop over years on the floor. This is why every alert still needs a human to evaluate it before any corrective action is taken.</p>
+          <div class="limit-implication">💡 Implication: Never take action on an AI alert without reviewing the situation. The AI's job is to flag, not to judge. Judging is yours.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">⚡</div>
+          <div class="limit-title-wrap"><h3>It Cannot Physically Intervene</h3><div class="limit-sub">Response is always human</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>This limitation seems obvious, but its implications are significant. A hazard that is detected by AI still requires a human to physically respond. If an alert fires and no human sees it, notices it, or acts on it in time — the AI's detection accomplished nothing. The speed of human response to alerts is the variable that determines whether the technology actually prevents injuries.</p>
+          <p>In some advanced systems, AI can trigger automatic machine stops or zone alarms as a first response. But even those systems require human follow-through to investigate, resolve, and document the incident.</p>
+          <div class="limit-implication">💡 Implication: The effectiveness of AI safety monitoring is directly tied to how quickly and consistently humans respond to alerts. A great AI system with a slow or disengaged human response team is not a safe system.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">😴</div>
+          <div class="limit-title-wrap"><h3>Alert Fatigue Can Disable the System In Practice</h3><div class="limit-sub">Human attention limits</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>If an AI safety system generates too many false alerts — flagging things that aren't violations, or repeatedly alerting on the same recurring non-issue — supervisors and safety officers start tuning them out. They stop checking each alert carefully. They start dismissing alerts without reviewing them. Eventually, a real violation fires an alert that gets ignored because everyone has learned to assume they're false alarms.</p>
+          <p>This is called alert fatigue, and it is well-documented in both manufacturing and healthcare. A poorly tuned AI safety system can actually be more dangerous than no system at all, because it provides false assurance while humans disengage from active monitoring.</p>
+          <div class="limit-implication">💡 Implication: Alert fatigue is a system quality problem, not a laziness problem. If your team is ignoring alerts, the threshold and detection accuracy need to be recalibrated — not the team's attitude.</div>
+        </div>
+      </div>
+
+      <div class="limit-card">
+        <div class="limit-header" onclick="toggleLimit(this)">
+          <div class="limit-icon-wrap">🔄</div>
+          <div class="limit-title-wrap"><h3>It Needs Ongoing Maintenance and Updates</h3><div class="limit-sub">AI drift and operational changes</div></div>
+          <div class="limit-arrow">▼</div>
+        </div>
+        <div class="limit-body">
+          <p>AI models don't improve themselves automatically once deployed. Over time, conditions change — new equipment is installed, the workforce changes, PPE styles are updated, layouts are reorganized. Each of these changes can degrade the system's accuracy if the model isn't updated to reflect the new conditions. This gradual decline in performance is sometimes called model drift.</p>
+          <p>A safety monitoring system that worked well at installation needs regular review — at minimum, periodically testing its detection accuracy and reviewing whether the types of violations it's trained on still match the current hazard landscape of the facility.</p>
+          <div class="limit-implication">💡 Implication: AI safety systems require ongoing investment in maintenance, testing, and updates. "Set it and forget it" is not a safety strategy.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Common Myths About AI Safety Monitoring</h2>
+
+    <div class="myth-cards">
+      <div class="myth-card">
+        <div class="myth-row myth-part"><div class="myth-badge">MYTH</div><div class="myth-text">"If the AI didn't flag it, it's safe."</div></div>
+        <div class="myth-row reality-part"><div class="myth-badge">REALITY</div><div class="myth-text">The AI only detects what it was trained to detect, in areas where cameras can see, under conditions it was designed for. A hazard the AI missed is still a hazard. Human observation, safety walkthroughs, and worker reports remain essential.</div></div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row myth-part"><div class="myth-badge">MYTH</div><div class="myth-text">"We can reduce our safety staff now that we have AI monitoring."</div></div>
+        <div class="myth-row reality-part"><div class="myth-badge">REALITY</div><div class="myth-text">AI monitoring requires human review of every alert, human response to every violation, and ongoing system management. Reducing safety staff after AI installation often decreases overall safety — the AI creates more alert data, not less human work.</div></div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row myth-part"><div class="myth-badge">MYTH</div><div class="myth-text">"The AI is always watching, so workers don't need to look out for each other."</div></div>
+        <div class="myth-row reality-part"><div class="myth-badge">REALITY</div><div class="myth-text">AI cameras have blind spots, lighting limitations, and training gaps. A culture where workers watch out for each other is the most reliable safety layer of all — and it's one that works even when cameras fail, alerts aren't noticed, or systems go down.</div></div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row myth-part"><div class="myth-badge">MYTH</div><div class="myth-text">"A high-accuracy AI system is a solved safety problem."</div></div>
+        <div class="myth-row reality-part"><div class="myth-badge">REALITY</div><div class="myth-text">Accuracy is one factor. An AI that's 90% accurate still misses 10% of violations. In a facility with 500 safety events per year, that's 50 missed violations — any of which could be serious. High accuracy reduces risk but doesn't eliminate it. Layered safety approaches are always required.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario-sim fade-in">
+    <div class="ss-label">🎮 Scenario Practice</div>
+    <div class="ss-title">What Would You Do?</div>
+    <div class="ss-scenario">
+      <p>Your facility installed an AI safety monitoring system 8 months ago. It monitors PPE compliance in Zones A, B, and C. Last week, the company reorganized the floor and added a new Zone D for a different production process. Zone D uses a different type of chemical and requires a different type of respirator than the other zones.</p>
+      <p>Your manager says: "Great, the AI monitors the whole floor now — we don't need to add extra walkthroughs." A new worker asks you if the AI will catch anyone in Zone D without the right respirator.</p>
+      <p class="ss-q">What is the most accurate and responsible answer?</p>
+    </div>
+    <div class="ss-choices">
+      <div class="ss-choice" onclick="simAnswer(this,false,'❌ This overstates what the AI can do. The system was trained on the original three zones and their specific PPE requirements. Zone D is new — the AI was never trained on what the right respirator for that zone looks like, or what a violation in that zone even means. Telling the new worker the AI will catch everything is dangerously inaccurate.')">Yes, the AI monitors all zones and will flag any safety violations it sees.</div>
+      <div class="ss-choice" onclick="simAnswer(this,true,'✅ Correct. This is exactly right. The AI was trained on Zones A, B, and C — it has no training data for Zone D\'s specific chemical hazards or the new respirator type. Until the system is updated and retrained, Zone D has no effective AI monitoring for its specific hazards. Human walkthroughs and manual oversight are required until the system catches up.')">Probably not — the AI was trained on the old zones. It likely hasn\'t been updated to detect violations specific to Zone D\'s new chemicals and respirator requirements. Manual monitoring will be needed until the system is retrained.</div>
+      <div class="ss-choice" onclick="simAnswer(this,false,'❌ A manager saying \"we don\'t need extra walkthroughs\" doesn\'t change what the AI system is capable of. The AI\'s limitations are technical, not managerial. If the system hasn\'t been retrained for Zone D, no amount of policy language changes that reality.')">The manager said the AI covers everything, so it must be fine.</div>
+      <div class="ss-choice" onclick="simAnswer(this,false,'❌ AI systems don\'t automatically learn new requirements when a zone is added — they require deliberate retraining with new labeled data specific to the new zone and hazard type. Assuming automatic adaptation is a common and dangerous misconception about how these systems work.')">The AI will automatically learn the new zone requirements over time as it watches the cameras.</div>
+    </div>
+    <div class="ss-feedback" id="ssFeedback"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI safety monitoring is powerful but limited. It can watch more cameras than any human team, detect violations in seconds, and log everything — but it cannot intervene physically, understand context, see around corners, or detect hazards it wasn't trained on.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Automation bias — over-trusting the AI and reducing human vigilance — is one of the biggest risks of deploying these systems. Understanding limitations keeps humans actively engaged even when AI is monitoring.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The seven real limitations are: training boundaries, camera blind spots, lighting sensitivity, no contextual judgment, no physical intervention capability, alert fatigue risk, and model drift over time.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI safety systems require ongoing maintenance, testing, and updates — especially when operations change. "Set it and forget it" is not a safety strategy.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function toggleLimit(header){const body=header.parentElement.querySelector(".limit-body");const arrow=header.querySelector(".limit-arrow");const isOpen=body.classList.contains("show");body.classList.toggle("show",!isOpen);arrow.classList.toggle("open",!isOpen);}
+function simAnswer(btn,correct,msg){const choices=btn.parentElement;if(choices.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById("ssFeedback");fb.className="ss-feedback show "+(correct?"good":"bad");fb.textContent=msg;}
+</script>
+</body>
+</html>

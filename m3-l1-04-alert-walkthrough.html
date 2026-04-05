@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Happens When an AI Safety Alert Goes Off?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Alert simulation */
+.alert-sim{background:#0A0514;border-radius:24px;padding:0;margin:28px 0;overflow:hidden;border:1.5px solid var(--purple-mid);}
+.sim-topbar{background:#1A0A2E;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
+.sim-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;}
+.sim-live{display:flex;align-items:center;gap:6px;font-size:12px;color:#6EE7B7;font-family:var(--mono);}
+.sim-live-dot{width:8px;height:8px;background:#6EE7B7;border-radius:50%;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.sim-body{padding:24px;}
+.sim-scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.sim-btn{padding:8px 14px;border-radius:8px;border:1.5px solid #3D2456;background:rgba(123,47,190,.1);color:#8B7FA0;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.sim-btn:hover,.sim-btn.active{background:var(--purple);border-color:var(--purple);color:white;}
+.sim-alert-card{background:#1A0A2E;border-radius:16px;padding:20px;border-left:3px solid;}
+.sim-alert-card.critical{border-color:#EF4444;}
+.sim-alert-card.warning{border-color:#F59E0B;}
+.sim-alert-card.info{border-color:#6EE7B7;}
+.alert-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.alert-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:var(--mono);flex-shrink:0;}
+.critical .alert-badge{background:rgba(239,68,68,.2);color:#FCA5A5;}
+.warning .alert-badge{background:rgba(245,158,11,.2);color:#FDE68A;}
+.info .alert-badge{background:rgba(110,231,183,.15);color:#6EE7B7;}
+.alert-title{font-size:16px;font-weight:700;color:#E2D9F3;line-height:1.3;}
+.alert-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.alert-field{background:rgba(255,255,255,.04);border-radius:8px;padding:8px 12px;}
+.alert-field-label{font-size:10px;color:#8B7FA0;font-family:var(--mono);letter-spacing:.08em;margin-bottom:2px;}
+.alert-field-val{font-size:13px;color:#E2D9F3;font-family:var(--mono);}
+.alert-action-needed{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:#FCA5A5;margin-bottom:10px;}
+.warning .alert-action-needed{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#FDE68A;}
+.info .alert-action-needed{background:rgba(110,231,183,.1);border-color:rgba(110,231,183,.3);color:#6EE7B7;}
+.alert-response-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.resp-btn{padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;border:1.5px solid;transition:all .2s;}
+.resp-btn.primary{background:rgba(239,68,68,.2);border-color:#EF4444;color:#FCA5A5;}
+.resp-btn.secondary{background:rgba(255,255,255,.06);border-color:#3D2456;color:#8B7FA0;}
+.resp-btn:hover{opacity:.8;}
+.sim-response{background:#0F0A1A;border-top:1px solid #3D2456;padding:16px 24px;font-size:13px;color:#8B7FA0;font-family:var(--mono);min-height:44px;}
+
+/* Timeline walkthrough */
+.timeline{margin:28px 0;}
+.tl-step{display:flex;gap:0;margin-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0;}
+.tl-circle{width:44px;height:44px;border-radius:50%;border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--purple-pale);flex-shrink:0;z-index:1;}
+.tl-line{flex:1;width:2px;background:var(--purple-mid);min-height:20px;}
+.tl-right{padding:0 0 28px 16px;flex:1;}
+.tl-who{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.tl-right h3{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);margin-bottom:8px;}
+.tl-right p{font-size:14px;line-height:1.7;color:var(--gray-text);margin:0;}
+.tl-tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-top:8px;}
+.tl-tag.ai{background:var(--purple-pale);color:var(--purple);}
+.tl-tag.human{background:var(--green-pale);color:var(--green);}
+.tl-tag.auto{background:var(--blue-pale);color:var(--blue);}
+.tl-step:last-child .tl-line{display:none;}
+
+/* Decision matrix */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;}
+.dec-card{border-radius:16px;padding:18px;border:1.5px solid;}
+.dec-card.real{background:var(--red-pale);border-color:var(--red);}
+.dec-card.false-pos{background:var(--orange-pale);border-color:var(--orange);}
+.dec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.real .dec-label{color:var(--red);}
+.false-pos .dec-label{color:var(--orange);}
+.dec-card h3{font-family:"Fraunces",serif;font-size:15px;margin-bottom:8px;}
+.real h3{color:var(--red);}
+.false-pos h3{color:#92400E;}
+.dec-item{font-size:13px;line-height:1.6;color:var(--gray-text);display:flex;gap:8px;margin-bottom:5px;}
+@media(max-width:560px){.decision-grid{grid-template-columns:1fr;}.alert-meta{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>What Happens When an AI Safety Alert Goes Off?</h1>
+  <p class="hero-sub">The slides say "AI alerts, humans respond." But what does that actually look like? This walkthrough takes you through every step — from the moment a camera detects a violation to the moment a supervisor closes the alert. Understanding the process is what makes you useful in it.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Gap Between "Alert" and "Fixed"</h2>
+    <p>Here's the thing about AI safety monitoring that the slides don't quite show: <mark>the AI's job ends when it sends the alert</mark>. Everything that happens after that is human work. The AI can't walk over and hand a worker their hard hat. It can't call the forklift operator and tell them to slow down. It can't decide whether a situation is serious enough to stop the production line.</p>
+    <p>All of that — assessment, communication, decision-making, and follow-through — is done by people. This is what "AI alerts, humans respond" actually means. The AI is the first observer. Humans are the ones who fix things.</p>
+
+    <div class="pull-quote"><p>An AI alert without a human response is just a notification that disappears. The safety outcome depends entirely on what people do next.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>See It in Action: An AI Safety Dashboard</h2>
+    <p>Below is a simulation of what a real-time AI safety monitoring dashboard looks like. Select a scenario to see the kind of alert a supervisor would receive — and what their response options are.</p>
+
+    <div class="alert-sim">
+      <div class="sim-topbar">
+        <span class="sim-title">SAFETY MONITORING DASHBOARD · SHIFT 2</span>
+        <span class="sim-live"><span class="sim-live-dot"></span>LIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-scenario-btns">
+          <button class="sim-btn active" onclick="setAlert('nohat',this)">Missing Hard Hat</button>
+          <button class="sim-btn" onclick="setAlert('forklift',this)">Forklift Zone</button>
+          <button class="sim-btn" onclick="setAlert('spill',this)">Floor Spill</button>
+          <button class="sim-btn" onclick="setAlert('restricted',this)">Restricted Area</button>
+        </div>
+        <div class="sim-alert-card" id="alertCard">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="sim-response" id="simResponse">Select a response action above to see what happens next.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Full Alert Response Process — Step by Step</h2>
+    <p>Here's the complete process that happens from the moment the AI detects something to the moment the situation is resolved. Notice how many steps involve human judgment.</p>
+
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">📷</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">AI System</div>
+          <h3>Camera Detects a Potential Violation</h3>
+          <p>The AI analyzes video frames in real time. When pixel patterns match what it was trained to recognize as a hazard (missing PPE, person in restricted zone, floor obstruction), it calculates a confidence score. If the score crosses the alert threshold, the system flags the detection.</p>
+          <span class="tl-tag ai">🤖 AI Action</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">⚡</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">Automated System</div>
+          <h3>Alert Is Generated and Routed</h3>
+          <p>The system creates an alert with a timestamp, camera location, violation type, confidence score, and a still image or video clip from the moment of detection. The alert is routed to the right people — typically a floor supervisor, a safety officer, or both — via the dashboard, mobile app, or a direct message to a radio or tablet.</p>
+          <span class="tl-tag auto">⚙️ Automated</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">👀</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">Supervisor or Safety Officer</div>
+          <h3>Alert Is Reviewed — Is This Real?</h3>
+          <p>The human who receives the alert looks at it. This is the first judgment call: does the image actually show a violation? The AI might have flagged a worker whose hard hat was briefly obscured by a shelf. The supervisor checks the video clip and decides whether this alert is a genuine violation or a false alarm. This review typically happens within 30–90 seconds in a well-run facility.</p>
+          <span class="tl-tag human">👤 Human Decision</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">📞</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">Supervisor</div>
+          <h3>Response Is Initiated</h3>
+          <p>If the alert is real, the supervisor takes action. This could mean: radioing the worker directly, sending a nearby team member to address the issue, issuing an audio announcement to the zone, or — in serious cases — stopping that section of the production line. The type and speed of response depends on the severity of the hazard.</p>
+          <span class="tl-tag human">👤 Human Decision</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">🔧</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">Worker / Team</div>
+          <h3>The Hazard Is Addressed</h3>
+          <p>The worker puts on their hard hat. The spill is cleaned and marked. The person in the restricted zone is redirected. The equipment is shut down. Whatever the hazard was, a human physically resolves it. The AI cannot do this step — this is always a person's job.</p>
+          <span class="tl-tag human">👤 Human Action</span>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-left"><div class="tl-circle">✅</div><div class="tl-line"></div></div>
+        <div class="tl-right">
+          <div class="tl-who">Supervisor</div>
+          <h3>Alert Is Closed and Logged</h3>
+          <p>The supervisor marks the alert as resolved in the system. They may add a note describing what was found and what action was taken. This closes the loop for this specific incident — but the data from this alert is also added to the system's records, where it can be analyzed later to find patterns (like if Zone B consistently has more PPE violations on the night shift).</p>
+          <span class="tl-tag auto">📋 Logged Automatically</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>When a Supervisor Receives an Alert: The Two Possible Situations</h2>
+    <p>Every alert that reaches a supervisor is either a real violation or a false alarm. Both require a response. Here's how experienced safety staff handle each one:</p>
+
+    <div class="decision-grid">
+      <div class="dec-card real">
+        <div class="dec-label">🚨 Real Violation</div>
+        <h3>What the Supervisor Does</h3>
+        <div class="dec-item"><span>→</span><span>Confirm by reviewing the video clip or camera feed</span></div>
+        <div class="dec-item"><span>→</span><span>Assess severity: is there immediate danger, or just a compliance issue?</span></div>
+        <div class="dec-item"><span>→</span><span>Initiate the appropriate response (radio, in-person, announcement)</span></div>
+        <div class="dec-item"><span>→</span><span>Verify the hazard has been corrected</span></div>
+        <div class="dec-item"><span>→</span><span>Close alert and document what happened</span></div>
+        <div class="dec-item"><span>→</span><span>Consider whether a follow-up conversation or retraining is needed</span></div>
+      </div>
+      <div class="dec-card false-pos">
+        <div class="dec-label">⚠️ False Alarm</div>
+        <h3>What the Supervisor Does</h3>
+        <div class="dec-item"><span>→</span><span>Confirm by reviewing the video — the worker was actually compliant</span></div>
+        <div class="dec-item"><span>→</span><span>Mark the alert as a false positive in the system</span></div>
+        <div class="dec-item"><span>→</span><span>Note what caused the false alarm (poor lighting, unusual angle, etc.)</span></div>
+        <div class="dec-item"><span>→</span><span>If false alarms from this camera are frequent, flag for system review</span></div>
+        <div class="dec-item"><span>→</span><span>This data helps the AI team improve detection accuracy over time</span></div>
+      </div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Important Concept</div>
+      <div class="vocab-def"><strong>Why false alarms matter:</strong> If a system generates too many false alarms, supervisors start ignoring alerts — including real ones. This is called <strong>alert fatigue</strong>, and it's one of the biggest practical risks with AI monitoring systems. A well-tuned system generates mostly real violations, keeping supervisors engaged and responsive.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>A Complete Example: Hard Hat Missing in Zone C</h2>
+    <p>Let's walk through a real-world scenario end to end.</p>
+    <p><strong>8:14 AM:</strong> A camera in Zone C detects a worker without a hard hat near an overhead crane operating area. Confidence score: 87%. The alert threshold is 75%. An alert fires.</p>
+    <p><strong>8:14 AM (5 seconds later):</strong> The safety dashboard on Floor Supervisor Maria's tablet buzzes. She sees: "PPE Violation — Hard Hat — Zone C — Camera 12 — Confidence: 87%." A 4-second video clip shows the worker clearly without head protection.</p>
+    <p><strong>8:15 AM:</strong> Maria reviews the clip. It's a real violation — the worker's hard hat is hanging from their belt instead of on their head. She radios Zone C: "Team leader in Zone C, worker near Crane 3 needs their hard hat on immediately."</p>
+    <p><strong>8:15 AM (30 seconds later):</strong> The Zone C team leader confirms the worker has their hard hat on. They also mention the worker was briefly below the crane to grab a tool and thought they'd be back at their station in 10 seconds.</p>
+    <p><strong>8:16 AM:</strong> Maria marks the alert as resolved in the system. She adds a note: "Worker complied immediately. Brief moment of inattention — reminder issued about hard hat requirements even for momentary stops near crane zones." The alert is logged with timestamp, camera ID, worker zone, and resolution notes.</p>
+    <p><strong>Later that week:</strong> The safety manager reviews the week's alerts and notices Zone C has had 4 hard hat alerts in the past 5 days, all near Crane 3. She schedules a brief safety stand-down for that zone to remind the team about overhead hazard protocols. The AI didn't tell her to do this — she noticed the pattern in the data the AI collected.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A supervisor receives an AI alert for a PPE violation. They review the footage and see that the worker actually IS wearing their vest — it's just the same shade as the background wall, which confused the AI. What should the supervisor do?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The worker isn\'t actually violating anything — disciplining them for what the camera misidentified would be unfair and inaccurate. The alert is a false positive. The correct action involves addressing the system issue, not the worker.')">Contact the worker and remind them to wear brighter PPE so the AI can detect it better</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Disabling the camera would remove safety monitoring from that zone entirely — creating a real blind spot. The solution isn\'t to remove the tool but to document the issue so the system can be improved.')">Disable the camera in that zone to avoid further false alarms</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is a false positive — the AI was wrong, the worker was compliant. The supervisor should mark it as a false positive, note the cause (vest color matching background), and flag it for the system team. That feedback helps improve detection accuracy over time. The worker needs no corrective action — they did nothing wrong.')">Mark the alert as a false positive, note the cause (vest color), and flag it for the AI system team to review</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ If a supervisor starts ignoring all alerts without reviewing them, real violations will also go unaddressed. Every alert needs to be reviewed — the goal is to improve the system\'s accuracy, not to stop paying attention to it.')">Ignore the alert and all future alerts from that camera since it\'s clearly unreliable</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The AI's job ends when it sends the alert. Every step after that — reviewing the footage, assessing the situation, communicating with the worker, resolving the hazard, and logging the outcome — is done by people.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The alert response process has six steps: detection → alert generation → human review → human response → hazard resolved → logged. Multiple steps require human judgment — especially the review step, where supervisors determine if an alert is real or a false alarm.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>False alarms must be properly labeled in the system. That data is used to improve AI accuracy over time. Dismissing alerts without logging them wastes the feedback that makes the system better.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Alert fatigue is a real risk — if false alarms are too frequent, supervisors start ignoring alerts. A well-tuned system generates mostly real violations, keeping human responders engaged and effective.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const alerts={
+  nohat:{cls:"critical",badge:"🚨 CRITICAL",title:"PPE Violation — Hard Hat Missing",cam:"CAM-07 · Zone B Assembly",time:"08:14:32",conf:"87%",action:"Worker near overhead crane operating zone detected without hard hat. Immediate correction required.",btns:[{t:"Radio Zone B Supervisor",r:"You radio the Zone B team leader. They locate the worker and confirm hard hat is now on. Violation resolved in 90 seconds.",p:true},{t:"Mark False Positive",r:"Marked as false positive. You reviewed the footage again — hard hat was genuinely absent. This was a real violation. Always verify before dismissing a critical alert.",p:false},{t:"Flag for Later Review",r:"⚠️ This is a high-risk scenario near active crane equipment. Flagging for later review on a CRITICAL alert near heavy machinery is not best practice — immediate response is required."}]},
+  forklift:{cls:"critical",badge:"🚨 CRITICAL",title:"Pedestrian in Forklift Zone — No Hi-Vis Vest",cam:"CAM-12 · Zone D Warehouse",time:"08:31:05",conf:"91%",action:"Worker without high-visibility vest detected in active forklift operating corridor. Forklift Operator 3 is currently in zone. Risk of pedestrian collision.",btns:[{t:"Broadcast Zone Warning",r:"You issue a zone-wide audio announcement: 'Caution — pedestrian alert in Zone D. Forklift operators slow to 3 mph.' Worker is redirected and equipped with vest. Risk mitigated.",p:true},{t:"Mark False Positive",r:"91% confidence + active forklift in same zone. Reviewing footage confirms a real violation. This was not a false alarm — immediate response was the right call.",p:false},{t:"Contact the Worker Directly",r:"You radio the zone and the worker is reached. They put on their vest and exit the forklift corridor. Good response — though a zone broadcast might have been faster given the forklift proximity.",p:true}]},
+  spill:{cls:"warning",badge:"⚠️ WARNING",title:"Floor Obstruction Detected — Spill / Debris",cam:"CAM-03 · Zone A Entrance Corridor",time:"09:47:18",conf:"78%",action:"Potential floor hazard detected in main entrance corridor. Substance visible in high-traffic walkway. Risk of slip/fall incident if unaddressed.",btns:[{t:"Send Maintenance to Zone A",r:"Maintenance is dispatched. They confirm a small hydraulic fluid spill near the equipment bay. Area is coned off and cleaned within 4 minutes. No injuries. Good response.",p:true},{t:"Mark False Positive",r:"Footage review shows a real substance on the floor. At 78% confidence, this alert was worth investigating — it was accurate. Dismissing it would have left a slip hazard in a high-traffic corridor.",p:false},{t:"Flag for Later Review",r:"A floor spill in a high-traffic corridor is a time-sensitive hazard — slip injuries can happen within minutes. Flagging for later review on a walkway obstruction delays the response when immediate action is safer.",p:false}]},
+  restricted:{cls:"critical",badge:"🚨 CRITICAL",title:"Unauthorized Access — Restricted Zone",cam:"CAM-19 · Zone E Chemical Storage",time:"10:02:44",conf:"83%",action:"Individual detected inside chemical storage restricted zone without proper authorization badge or respiratory PPE. Area requires clearance Level 3 and full respirator.",btns:[{t:"Dispatch Safety Officer Immediately",r:"Safety Officer Raj is dispatched. He finds a new contractor who didn't know the zone was restricted — they were looking for a supply closet. The contractor is safely escorted out, and zone signage is noted for improvement.",p:true},{t:"Activate Zone Lockdown Protocol",r:"You initiate the zone communication alert. The contractor hears the warning tone and exits the zone before Raj arrives. Zone access is logged as unauthorized and an incident report is filed.",p:true},{t:"Mark False Positive",r:"Footage review at 83% confidence confirms an unauthorized individual without appropriate PPE in a chemical storage area. This is a real and serious situation — dismissing it without investigation could result in a chemical exposure incident.",p:false}]}
+};
+
+function setAlert(key,btn){
+  document.querySelectorAll(".sim-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  document.getElementById("simResponse").textContent="Select a response action above to see what happens next.";
+  const a=alerts[key];
+  const btnsHtml=a.btns.map((b,i)=>`<button class="resp-btn ${b.p!==undefined?(b.p?"primary":"secondary"):"secondary"}" onclick="simRespond('${key}',${i})">${b.t}</button>`).join("");
+  document.getElementById("alertCard").className="sim-alert-card "+a.cls;
+  document.getElementById("alertCard").innerHTML=`<div class="alert-top"><div class="alert-title">${a.title}</div><div class="alert-badge">${a.badge}</div></div><div class="alert-meta"><div class="alert-field"><div class="alert-field-label">LOCATION</div><div class="alert-field-val">${a.cam}</div></div><div class="alert-field"><div class="alert-field-label">TIME</div><div class="alert-field-val">${a.time}</div></div><div class="alert-field"><div class="alert-field-label">CONFIDENCE</div><div class="alert-field-val">${a.conf}</div></div><div class="alert-field"><div class="alert-field-label">STATUS</div><div class="alert-field-val">⏳ AWAITING RESPONSE</div></div></div><div class="alert-action-needed">${a.action}</div><div class="alert-response-btns">${btnsHtml}</div>`;
+}
+function simRespond(key,idx){const r=document.getElementById("simResponse");r.textContent=alerts[key].btns[idx].r;}
+setAlert("nohat",document.querySelector(".sim-btn.active"));
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

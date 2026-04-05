@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>False Alarms and Missed Hazards: Why AI Safety Systems Aren't Perfect</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* 2x2 matrix */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:20px;overflow:hidden;border:2px solid var(--purple-mid);margin:28px 0;}
+.mx-cell{padding:22px;}
+.mx-cell.tp{background:var(--green-pale);}
+.mx-cell.fp{background:var(--orange-pale);}
+.mx-cell.fn{background:var(--red-pale);}
+.mx-cell.tn{background:var(--blue-pale);}
+.mx-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.tp .mx-label{color:var(--green);}
+.fp .mx-label{color:#92400E;}
+.fn .mx-label{color:var(--red);}
+.tn .mx-label{color:var(--blue);}
+.mx-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:8px;}
+.tp .mx-title{color:var(--green);}
+.fp .mx-title{color:#92400E;}
+.fn .mx-title{color:var(--red);}
+.tn .mx-title{color:var(--blue);}
+.mx-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.mx-impact{margin-top:8px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:100px;display:inline-block;}
+.tp .mx-impact{background:var(--green-pale);color:var(--green);}
+.fp .mx-impact{background:var(--orange-pale);color:#92400E;}
+.fn .mx-impact{background:var(--red-pale);color:var(--red);}
+.tn .mx-impact{background:var(--blue-pale);color:var(--blue);}
+@media(max-width:560px){.matrix{grid-template-columns:1fr;}}
+
+/* Threshold slider */
+.threshold-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ts-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ts-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ts-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;}
+.ts-slider-wrap{margin-bottom:20px;}
+.ts-slider{width:100%;accent-color:var(--purple);}
+.ts-val{text-align:center;font-size:28px;font-weight:700;color:var(--purple-dark);font-family:"Fraunces",serif;margin-bottom:4px;}
+.ts-val-sub{text-align:center;font-size:13px;color:var(--gray-muted);margin-bottom:20px;}
+.ts-meters{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ts-meter{border-radius:14px;padding:16px;}
+.ts-meter.fp{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.ts-meter.fn{background:var(--red-pale);border:1.5px solid var(--red);}
+.ts-meter-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.fp .ts-meter-label{color:var(--orange);}
+.fn .ts-meter-label{color:var(--red);}
+.ts-bar-wrap{height:14px;background:rgba(0,0,0,.08);border-radius:7px;overflow:hidden;margin-bottom:6px;}
+.ts-bar{height:100%;border-radius:7px;transition:width .3s ease;}
+.fp .ts-bar{background:var(--orange);}
+.fn .ts-bar{background:var(--red);}
+.ts-meter-val{font-size:22px;font-weight:700;font-family:"Fraunces",serif;}
+.fp .ts-meter-val{color:#92400E;}
+.fn .ts-meter-val{color:var(--red);}
+.ts-meter-desc{font-size:12px;color:var(--gray-muted);margin-top:4px;line-height:1.5;}
+.ts-insight{margin-top:16px;padding:14px;background:var(--purple-pale);border-radius:12px;font-size:14px;color:var(--purple-dark);font-weight:500;line-height:1.6;}
+@media(max-width:560px){.ts-meters{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>False Alarms and Missed Hazards</h1>
+  <p class="hero-sub">Why AI safety systems aren't perfect — and what to do about it. This article connects the false positive / false negative concepts from Module 2 directly to safety monitoring, where the cost of each type of error is real and very different.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>You Already Know the Framework — Now Apply It to Safety</h2>
+    <p>In Module 2, you learned about false positives and false negatives — the two ways AI can be wrong. You saw how these errors play out with maintenance diagnostics. Now we're applying the same framework to safety monitoring, where the stakes change significantly.</p>
+    <p>In maintenance, a false positive might mean checking a machine that's actually fine — wasted time but no one gets hurt. In safety monitoring, the two types of errors have very different consequences, and understanding which is worse in which situation helps you calibrate how to respond to alerts.</p>
+
+    <div class="matrix">
+      <div class="mx-cell tp">
+        <div class="mx-label">TRUE POSITIVE</div>
+        <div class="mx-title">Real Violation, Alert Fired</div>
+        <div class="mx-desc">AI detected a real PPE violation or hazard, and sent the correct alert. Supervisor responds and prevents potential injury.</div>
+        <div class="mx-impact">✅ Best outcome</div>
+      </div>
+      <div class="mx-cell fp">
+        <div class="mx-label">FALSE POSITIVE</div>
+        <div class="mx-title">No Violation, Alert Fired Anyway</div>
+        <div class="mx-desc">Worker was actually compliant but AI misidentified the scene. Supervisor investigates and finds no real issue. Wastes time and causes alert fatigue if frequent.</div>
+        <div class="mx-impact">⚠️ Costly if repeated</div>
+      </div>
+      <div class="mx-cell fn">
+        <div class="mx-label">FALSE NEGATIVE</div>
+        <div class="mx-title">Real Violation, No Alert Sent</div>
+        <div class="mx-desc">A real hazard existed but the AI missed it — poor lighting, camera blind spot, training gap. No alert means no response. This is the scenario that leads to injuries.</div>
+        <div class="mx-impact">🚨 Highest safety risk</div>
+      </div>
+      <div class="mx-cell tn">
+        <div class="mx-label">TRUE NEGATIVE</div>
+        <div class="mx-title">No Violation, No Alert</div>
+        <div class="mx-desc">Everything on the floor is actually compliant, and the AI correctly generates no alert. The system is working as intended — quiet because there's nothing to flag.</div>
+        <div class="mx-impact">✅ Correct silence</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Threshold Trade-Off — Explore It Yourself</h2>
+    <p>The alert threshold — the minimum confidence required before an alert fires — is the dial that shifts the balance between false positives and false negatives. There's no perfect setting. Move the slider below to see how adjusting the threshold changes both error types.</p>
+
+    <div class="threshold-sim">
+      <div class="ts-label">🎛️ Interactive Threshold Simulator — Safety Monitoring</div>
+      <div class="ts-title">Alert Threshold Setting</div>
+      <div class="ts-sub">Move the slider to change the minimum confidence required to trigger a safety alert</div>
+      <div class="ts-slider-wrap">
+        <div class="ts-val" id="tsVal">75%</div>
+        <div class="ts-val-sub" id="tsValSub">Balanced threshold</div>
+        <input class="ts-slider" type="range" min="40" max="95" value="75" oninput="updateThreshold(this.value)">
+      </div>
+      <div class="ts-meters">
+        <div class="ts-meter fp">
+          <div class="ts-meter-label">⚠️ False Positive Rate</div>
+          <div class="ts-bar-wrap"><div class="ts-bar" id="fpBar" style="width:30%;"></div></div>
+          <div class="ts-meter-val" id="fpVal">~30%</div>
+          <div class="ts-meter-desc">of alerts are false alarms — real violations that weren't happening</div>
+        </div>
+        <div class="ts-meter fn">
+          <div class="ts-meter-label">🚨 False Negative Rate</div>
+          <div class="ts-bar-wrap"><div class="ts-bar" id="fnBar" style="width:15%;"></div></div>
+          <div class="ts-meter-val" id="fnVal">~15%</div>
+          <div class="ts-meter-desc">of real violations are missed — no alert fires even though a hazard exists</div>
+        </div>
+      </div>
+      <div class="ts-insight" id="tsInsight">At 75%: A balanced setting. Supervisors see mostly real violations with some false alarms — manageable alert volume while catching most genuine hazards. Good starting point for most facilities.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why False Negatives Are the Greater Safety Risk</h2>
+    <p>False positives are annoying and, if persistent, contribute to alert fatigue. But false negatives — real hazards that the AI misses entirely — are the ones that lead to actual injuries. When the AI fails to detect a violation, the only remaining detection layer is human observation. If no human is actively monitoring that area at that moment, the hazard goes unchecked.</p>
+    <p>This is why safety-critical facilities often <mark>deliberately set thresholds lower</mark> — accepting more false positives in exchange for catching more real violations. A supervisor who investigates 10 false alarms but catches the 1 real one that matters has done their job. A system that only alerts on certainties might miss the hazard that injures someone.</p>
+
+    <div class="pull-quote"><p>In safety monitoring, the cost of a missed hazard is a potential injury. The cost of a false alarm is a supervisor's time. These are not equal — and threshold decisions should reflect that.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What to Do When You Suspect the System Is Missing Things</h2>
+    <p>If you're working in a facility with AI safety monitoring and you notice patterns that concern you — violations happening that the AI isn't flagging, cameras that seem to miss things — here's what responsible workers and supervisors do:</p>
+    <p><strong>Document the concern.</strong> Note the specific location, time, and type of situation the AI appeared to miss. Vague concerns are hard to investigate. Specific examples with timestamps give the system team something to work with.</p>
+    <p><strong>Report through proper channels.</strong> Most facilities have a process for reporting safety system concerns. Use it. This is exactly what that process exists for.</p>
+    <p><strong>Increase manual monitoring in the gap.</strong> While the system issue is being investigated, supervisors should increase walkthrough frequency in areas where detection seems unreliable. The AI's gap is your gap to fill temporarily.</p>
+    <p><strong>Never assume "the AI would have caught it."</strong> If you see a hazard with your own eyes, that observation is valid and actionable regardless of whether the AI flagged it. Human observation remains a safety layer even in AI-monitored facilities.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A safety manager notices that her AI system is generating 80 alerts per shift, but when she investigates them, only about 15 turn out to be real violations. Supervisors have started dismissing alerts without reviewing them carefully. What type of problem is this, and what is the correct response?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Disciplining supervisors treats the symptom (alert fatigue behavior) rather than the cause (a system generating too many false positives). Alert fatigue is a documented response to overloaded alert systems — the problem is system calibration, not supervisor attitude.')">A discipline problem — supervisors should review every alert regardless of how many fire</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Disabling the system entirely removes all AI monitoring and is clearly the wrong response. The goal is to improve the system\'s signal-to-noise ratio, not to eliminate it.')">A software failure — the system should be shut down and replaced</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is an alert fatigue problem caused by a high false positive rate. When 65 out of 80 daily alerts are false alarms, supervisors rationally start discounting alerts — and that means real violations start getting missed. The correct response is to raise the alert threshold or improve the model\'s precision so that a higher proportion of alerts are genuine. Fixing the signal-to-noise ratio re-engages human responders.')">An alert fatigue problem — the alert threshold needs to be raised or detection accuracy improved so supervisors receive fewer but more reliable alerts</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Adding more supervisors to review the same volume of mostly-false alerts doesn\'t fix the underlying problem. It just distributes the alert fatigue more broadly. The fix is to improve the quality of alerts, not add more humans to process low-quality ones.')">A staffing problem — more supervisors are needed to handle the alert volume</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>In safety monitoring, false positives (false alarms) waste supervisor time and cause alert fatigue. False negatives (missed hazards) are the scenario that leads to actual injuries — making them the more serious error type.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The alert threshold controls the tradeoff. Lower thresholds catch more real violations but generate more false alarms. Higher thresholds produce cleaner alerts but miss more genuine hazards. Safety-critical environments often accept more false positives to reduce false negatives.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Alert fatigue — when supervisors stop engaging with alerts because too many are false — is a system calibration problem. The fix is improving alert precision, not disciplining human responders.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>If you observe hazards the AI isn't flagging, document them specifically, report through proper channels, increase manual monitoring in the gap, and never wait for an AI alert before acting on what you personally observe.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+function updateThreshold(v){
+  v=parseInt(v);
+  const fpRate=Math.max(5,Math.round(80-v));
+  const fnRate=Math.max(3,Math.round((v-35)*0.55));
+  document.getElementById("tsVal").textContent=v+"%";
+  document.getElementById("fpBar").style.width=Math.min(100,fpRate*1.5)+"%";
+  document.getElementById("fnBar").style.width=Math.min(100,fnRate*2)+"%";
+  document.getElementById("fpVal").textContent="~"+fpRate+"%";
+  document.getElementById("fnVal").textContent="~"+fnRate+"%";
+  let sub,insight;
+  if(v<55){sub="Very low threshold — catching everything, even uncertain detections";insight=`At ${v}%: Very low threshold. Almost every uncertain detection triggers an alert. False alarm rate is very high — supervisors will be overwhelmed and alert fatigue is a serious risk. Real violations are caught reliably, but the signal-to-noise ratio makes the system hard to use effectively.`;}
+  else if(v<68){sub="Low-moderate threshold — more alerts, fewer misses";insight=`At ${v}%: Lower threshold favors catching real violations at the cost of more false alarms. Appropriate for extremely high-risk zones where missing a violation has severe consequences. Requires high-capacity supervisor response systems.`;}
+  else if(v<80){sub="Balanced threshold — moderate false alarms and misses";insight=`At ${v}%: A balanced setting. Supervisors see mostly real violations with manageable false alarms. A good starting point for most general manufacturing zones. Monitor false alarm rates and adjust based on real-world performance.`;}
+  else if(v<90){sub="High threshold — fewer alerts, more reliable but may miss borderline cases";insight=`At ${v}%: High precision threshold. Alerts are reliable and supervisors stay engaged. But real violations with borderline confidence scores (75-89%) will be missed. Requires strong manual monitoring to compensate for the higher miss rate.`;}
+  else{sub="Very high threshold — extremely selective, high miss rate";insight=`At ${v}%: Very high threshold. Almost no false alarms — but a significant portion of real violations are missed because the AI rarely reaches this certainty. Only appropriate as a supplementary alert layer in zones with very strong manual monitoring.`;}
+  document.getElementById("tsValSub").textContent=sub;
+  document.getElementById("tsInsight").textContent=insight;
+}
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

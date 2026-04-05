@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is PPE and Why Does It Save Lives?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* PPE Grid */
+.ppe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:28px 0;}
+.ppe-card{background:var(--gray-soft);border:2px solid var(--purple-mid);border-radius:20px;padding:24px;cursor:pointer;transition:all .2s;}
+.ppe-card:hover,.ppe-card.active{background:var(--purple-pale);border-color:var(--purple);transform:translateY(-2px);}
+.ppe-icon{font-size:40px;margin-bottom:12px;display:block;}
+.ppe-name{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.ppe-short{font-size:13px;color:var(--gray-muted);line-height:1.5;}
+.ppe-detail{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:16px;padding:24px;margin-top:8px;display:none;}
+.ppe-detail.show{display:block;}
+.ppe-detail h3{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);margin-bottom:10px;}
+.ppe-detail p{font-size:15px;margin-bottom:10px;}
+.ppe-stat{background:var(--purple-dark);color:white;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;display:inline-block;margin-top:4px;}
+
+/* Hazard types */
+.hazard-row{display:flex;gap:12px;align-items:flex-start;padding:18px;background:var(--gray-soft);border-radius:16px;margin-bottom:12px;border-left:4px solid var(--purple);}
+.hazard-emoji{font-size:28px;flex-shrink:0;}
+.hazard-body h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.hazard-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.6;}
+
+/* AI connection callout */
+.ai-connect{background:linear-gradient(135deg,#4A1580,#7B2FBE);color:white;border-radius:20px;padding:28px 32px;margin:28px 0;}
+.ai-connect h3{font-family:"Fraunces",serif;font-size:20px;margin-bottom:12px;color:white;}
+.ai-connect p{color:rgba(255,255,255,.88);font-size:15px;margin-bottom:10px;line-height:1.7;}
+.ai-connect p:last-child{margin-bottom:0;}
+.ai-connect mark{background:rgba(255,255,255,.2);color:white;}
+
+/* Required/Not required */
+.req-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.req-card{border-radius:16px;padding:20px;border:2px solid;}
+.req-card.yes{background:var(--green-pale);border-color:var(--green);}
+.req-card.no{background:var(--red-pale);border-color:var(--red);}
+.req-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.yes .req-label{color:var(--green);}
+.no .req-label{color:var(--red);}
+.req-card h3{font-family:"Fraunces",serif;font-size:15px;margin-bottom:8px;}
+.yes h3{color:var(--green);}
+.no h3{color:var(--red);}
+.req-item{font-size:13px;line-height:1.7;color:var(--gray-text);display:flex;gap:8px;margin-bottom:4px;}
+@media(max-width:560px){.req-grid{grid-template-columns:1fr;}.ppe-grid{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>What Is PPE and Why Does It Save Lives?</h1>
+  <p class="hero-sub">Before AI can monitor for safety violations, you need to know what it's looking for. This guide breaks down every major type of personal protective equipment — what it is, what it protects against, and why it matters on a manufacturing floor.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>What Does "PPE" Mean?</h2>
+    <p><mark>PPE stands for Personal Protective Equipment.</mark> It's any gear a worker wears to protect their body from getting hurt on the job. Think of it like armor — but designed for a specific type of danger.</p>
+    <p>In manufacturing, workers are surrounded by heavy machines, sharp materials, loud noise, dangerous chemicals, falling objects, and electrical hazards every single day. PPE doesn't make those dangers disappear. What it does is put a barrier between the worker and the danger, so that if something goes wrong, the worker walks away instead of getting seriously hurt — or killed.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Personal Protective Equipment (PPE):</strong> Gear worn by workers to reduce the risk of injury from physical, chemical, electrical, or environmental hazards in the workplace. PPE is the last line of defense — meaning it protects you when all other safety measures have already been applied.</div>
+    </div>
+
+    <div class="pull-quote"><p>PPE doesn't make hazards disappear. It makes surviving them possible.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Big Categories of Hazards PPE Protects Against</h2>
+    <p>Before we look at specific equipment, it helps to understand the types of dangers that exist in a factory. PPE is designed around these hazard categories:</p>
+
+    <div class="hazard-row">
+      <div class="hazard-emoji">💥</div>
+      <div class="hazard-body">
+        <h3>Impact Hazards</h3>
+        <p>Objects falling from shelves, tools being dropped, materials flying off machines. Think: something hard hitting your head, foot, or face.</p>
+      </div>
+    </div>
+    <div class="hazard-row">
+      <div class="hazard-emoji">🔪</div>
+      <div class="hazard-body">
+        <h3>Cut and Puncture Hazards</h3>
+        <p>Sharp edges on sheet metal, broken glass, metal burrs on machined parts. Even a quick grab of the wrong object can cause a serious cut.</p>
+      </div>
+    </div>
+    <div class="hazard-row">
+      <div class="hazard-emoji">☠️</div>
+      <div class="hazard-body">
+        <h3>Chemical Hazards</h3>
+        <p>Acids, solvents, cleaning agents, paints, and gases that can burn skin, damage eyes, or be dangerous to breathe in. Chemical plants and pharma factories have especially high chemical exposure risk.</p>
+      </div>
+    </div>
+    <div class="hazard-row">
+      <div class="hazard-emoji">🔊</div>
+      <div class="hazard-body">
+        <h3>Noise Hazards</h3>
+        <p>Machines can produce noise loud enough to permanently damage hearing over time — even if each individual moment doesn't seem that loud. This is called noise-induced hearing loss, and it's one of the most common occupational injuries in the US.</p>
+      </div>
+    </div>
+    <div class="hazard-row">
+      <div class="hazard-emoji">⚡</div>
+      <div class="hazard-body">
+        <h3>Electrical Hazards</h3>
+        <p>Exposed wiring, arc flash from electrical panels, and conductive surfaces that can cause electrocution or severe burns.</p>
+      </div>
+    </div>
+    <div class="hazard-row">
+      <div class="hazard-emoji">🌡️</div>
+      <div class="hazard-body">
+        <h3>Temperature Hazards</h3>
+        <p>Extreme heat from furnaces, welding, or molten materials — or extreme cold in refrigerated warehouses. Both can cause serious injury fast.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Main Types of PPE — Click to Learn More</h2>
+    <p>Each piece of equipment below protects a specific part of the body from a specific type of hazard. Click any card to see the full details.</p>
+
+    <div class="ppe-grid" id="ppeGrid">
+      <div class="ppe-card" onclick="togglePPE('helmet')">
+        <span class="ppe-icon">⛑️</span>
+        <div class="ppe-name">Hard Hat</div>
+        <div class="ppe-short">Protects your head from falling objects and bumps</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('vest')">
+        <span class="ppe-icon">🦺</span>
+        <div class="ppe-name">Safety Vest</div>
+        <div class="ppe-short">Makes workers visible to machines and vehicles</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('boots')">
+        <span class="ppe-icon">👢</span>
+        <div class="ppe-name">Steel-Toed Boots</div>
+        <div class="ppe-short">Protects feet from heavy falling objects</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('glasses')">
+        <span class="ppe-icon">🥽</span>
+        <div class="ppe-name">Safety Glasses / Goggles</div>
+        <div class="ppe-short">Shields eyes from particles, splashes, and debris</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('gloves')">
+        <span class="ppe-icon">🧤</span>
+        <div class="ppe-name">Gloves</div>
+        <div class="ppe-short">Protects hands from cuts, chemicals, and heat</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('hearing')">
+        <span class="ppe-icon">🎧</span>
+        <div class="ppe-name">Hearing Protection</div>
+        <div class="ppe-short">Prevents permanent hearing damage from loud machines</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('mask')">
+        <span class="ppe-icon">😷</span>
+        <div class="ppe-name">Respirator / Mask</div>
+        <div class="ppe-short">Filters dangerous particles or chemicals from the air</div>
+      </div>
+      <div class="ppe-card" onclick="togglePPE('harness')">
+        <span class="ppe-icon">🪝</span>
+        <div class="ppe-name">Safety Harness</div>
+        <div class="ppe-short">Prevents falls when working at heights</div>
+      </div>
+    </div>
+
+    <div class="ppe-detail" id="detail-helmet">
+      <h3>⛑️ Hard Hat</h3>
+      <p>A hard hat is a rigid helmet made of plastic that protects your head from two main dangers: objects falling from above (like a tool dropped from a shelf) and hitting your head on overhead equipment like pipes or beams.</p>
+      <p>Different colored hard hats actually mean different things in many factories. White = supervisors or engineers. Yellow = general workers. Orange = new workers or visitors. Red = safety officers. This color system helps the whole team quickly identify who is who.</p>
+      <p><strong>When is it required?</strong> Any area where there's risk of falling objects, overhead work, or exposed electrical lines. In many factories, hard hats are required everywhere on the production floor.</p>
+      <span class="ppe-stat">📊 Head injuries account for 9% of all fatal workplace injuries in the US</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-vest">
+      <h3>🦺 Safety Vest (High-Visibility Vest)</h3>
+      <p>A safety vest — sometimes called a hi-vis vest — is a brightly colored vest (usually neon yellow or orange) with reflective strips. Its entire purpose is to make you visible. In a busy factory, forklifts move constantly, machines are running, and workers are focused on their tasks. The vest makes sure vehicle operators and other workers can see you from a distance.</p>
+      <p>This might seem simple, but it's one of the most effective pieces of PPE in manufacturing. Forklift accidents are one of the leading causes of workplace fatalities. Being seen is the first step to not getting hit.</p>
+      <p><strong>When is it required?</strong> Any area where vehicles or forklifts operate. Often required across entire warehouses and production floors.</p>
+      <span class="ppe-stat">📊 Nearly 85 workers are killed and 34,900 are injured in forklift accidents each year in the US</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-boots">
+      <h3>👢 Steel-Toed Boots (Safety Boots)</h3>
+      <p>Steel-toed boots look like regular work boots on the outside, but they have a reinforced cap (made of steel or composite material) built into the toe. If a heavy object — like a pallet, a machine part, or a dropped tool — falls on your foot, the cap absorbs the impact instead of your toes.</p>
+      <p>They also typically have thick, slip-resistant soles to prevent slipping on wet or oily floors, and puncture-resistant midsoles to stop nails or sharp objects from stabbing through from below.</p>
+      <p><strong>When is it required?</strong> Anywhere heavy materials are handled, tools are used, or machinery is operated. Often required across entire manufacturing facilities.</p>
+      <span class="ppe-stat">📊 Foot and toe injuries send over 40,000 workers to emergency rooms every year</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-glasses">
+      <h3>🥽 Safety Glasses and Goggles</h3>
+      <p>Your eyes are among the most vulnerable parts of your body in a factory. Safety glasses have impact-resistant lenses (regular eyeglasses will shatter) and protect against flying particles, metal chips, and debris. Goggles create a full seal around the eye and are used when there's risk of chemical splashes or dust getting in from the sides.</p>
+      <p>Face shields go even further — they cover the entire face and are used during grinding, welding, or working with molten materials.</p>
+      <p><strong>When is it required?</strong> Whenever machining, grinding, cutting, welding, handling chemicals, or working near flying debris. Many facilities require eye protection everywhere on the floor.</p>
+      <span class="ppe-stat">📊 Over 20,000 eye injuries happen in the workplace every year — 90% are preventable with proper PPE</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-gloves">
+      <h3>🧤 Gloves</h3>
+      <p>Gloves come in many types, and the right glove depends on the hazard. Cut-resistant gloves protect against sharp edges. Chemical-resistant gloves (made of rubber, nitrile, or latex) protect against acids and solvents. Heat-resistant gloves protect against hot surfaces and sparks from welding. Anti-vibration gloves reduce the effect of vibrating tools on the hands over time.</p>
+      <p>Important: using the <em>wrong</em> type of glove can actually be more dangerous than wearing none at all. A glove that isn't rated for chemicals might dissolve on contact.</p>
+      <p><strong>When is it required?</strong> Depends on the task. Chemical handling, material cutting, welding, and hot work all require different glove types specified by the facility's safety protocols.</p>
+      <span class="ppe-stat">📊 Hand and finger injuries are the #1 type of workplace injury — over 1 million ER visits per year</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-hearing">
+      <h3>🎧 Hearing Protection (Earplugs and Earmuffs)</h3>
+      <p>Earplugs are foam or rubber plugs inserted into the ear canal. Earmuffs are padded cups that cover the entire outer ear. Both reduce the volume of sound that reaches your eardrum. The key thing about noise-related hearing loss: it's painless, gradual, and permanent. You don't feel your hearing being damaged — you just slowly stop being able to hear high-pitched sounds, then more and more of the sound range. By the time you notice, the damage is done.</p>
+      <p>OSHA (the government agency that sets workplace safety rules) requires hearing protection when noise levels exceed 85 decibels. For reference, a normal conversation is about 60 decibels. Many factory machines run at 90–110 decibels.</p>
+      <p><strong>When is it required?</strong> Wherever noise levels exceed 85 decibels — which includes most production floors with active machinery.</p>
+      <span class="ppe-stat">📊 About 22 million US workers are exposed to dangerous noise levels every year</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-mask">
+      <h3>😷 Respirator / Mask</h3>
+      <p>A basic dust mask filters large particles from the air. A respirator is more advanced — it uses specialized filters or cartridges to block specific chemicals, gases, or very fine particles (like silica dust or paint fumes). In pharmaceutical manufacturing, some workers wear full-face respirators because even tiny airborne particles could contaminate a product or harm the worker.</p>
+      <p>The type of respirator required depends entirely on what's in the air. Respirators must be properly fitted to the worker's face — a gap at the seal makes them nearly useless against gases.</p>
+      <p><strong>When is it required?</strong> When working with chemicals, dust, fumes, or in environments with poor air quality. Pharma, chemical, and metal fabrication facilities have the strictest requirements.</p>
+      <span class="ppe-stat">📊 About 575,000 workers suffer from occupational lung disease every year in the US</span>
+    </div>
+
+    <div class="ppe-detail" id="detail-harness">
+      <h3>🪝 Safety Harness</h3>
+      <p>A safety harness wraps around a worker's torso, shoulders, and thighs and connects via a lanyard (a strong strap or cable) to a fixed anchor point. If the worker falls, the lanyard catches them before they hit the ground. This is called a fall arrest system. It's required when working at heights — on elevated platforms, scaffolding, or near open floor edges.</p>
+      <p>In manufacturing, this is especially common when workers need to maintain overhead equipment, work on roof structures, or access elevated storage areas. The harness itself must be inspected before every use — a frayed strap can fail.</p>
+      <p><strong>When is it required?</strong> Any work at heights of 4 feet or more in general industry (6 feet in construction). OSHA defines the specific thresholds by industry.</p>
+      <span class="ppe-stat">📊 Falls are the #2 cause of workplace fatalities in manufacturing, after transportation incidents</span>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>PPE Is Required by Law — Not Just a Good Idea</h2>
+    <p>In the United States, PPE requirements aren't optional. A government agency called <mark>OSHA (Occupational Safety and Health Administration)</mark> sets legal standards for workplace safety — and PPE is a core part of those standards. You'll learn more about OSHA in a later article, but here's the key point: factories are legally required to provide PPE and to make sure workers wear it in the right areas.</p>
+    <p>This is exactly why AI safety monitoring systems are designed to check for PPE compliance. It's not just about caring whether workers are safe (though that matters enormously) — it's also about legal compliance. A factory that repeatedly allows workers to operate without required PPE can face large fines, forced shutdowns, and even criminal charges if a worker is seriously hurt.</p>
+
+    <div class="req-grid">
+      <div class="req-card yes">
+        <div class="req-label">✅ Employers Must</div>
+        <h3>Provide and Enforce PPE</h3>
+        <div class="req-item"><span>→</span><span>Supply appropriate PPE for every hazard in the facility</span></div>
+        <div class="req-item"><span>→</span><span>Train workers on how to use it correctly</span></div>
+        <div class="req-item"><span>→</span><span>Replace worn or damaged equipment</span></div>
+        <div class="req-item"><span>→</span><span>Enforce PPE use in designated areas</span></div>
+      </div>
+      <div class="req-card no">
+        <div class="req-label">❌ Violations Can Result In</div>
+        <h3>Serious Consequences</h3>
+        <div class="req-item"><span>→</span><span>OSHA fines of $15,625 per violation</span></div>
+        <div class="req-item"><span>→</span><span>Up to $156,259 for willful violations</span></div>
+        <div class="req-item"><span>→</span><span>Mandatory facility inspections</span></div>
+        <div class="req-item"><span>→</span><span>Criminal charges if a worker is killed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why AI Safety Monitoring Starts With PPE</h2>
+    <div class="ai-connect">
+      <h3>🤖 The Connection to AI</h3>
+      <p>Now that you understand what PPE is and why it matters, the role of AI safety monitoring makes much more sense. AI camera systems are specifically trained to recognize whether workers are wearing required equipment — and to send an alert the moment someone isn't.</p>
+      <p>Here's how it works in basic terms: the AI has been shown thousands of images of workers <em>with</em> hard hats and thousands of images of workers <em>without</em> hard hats. It learned to spot the difference. Now, when it watches a live camera feed, it can flag a worker who's missing their hard hat in real time — even if no human supervisor is looking at that part of the floor.</p>
+      <p>This is why understanding PPE is essential before you can understand AI safety monitoring. <mark>The AI is only as useful as the rules it's trained to enforce</mark>. If you don't know what a safety vest is, you can't evaluate whether the AI is detecting violations correctly — or catching them at all.</p>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A worker on a factory floor enters the forklift operating zone without wearing a high-visibility vest. The AI safety system sends an alert. Which type of hazard is the vest designed to protect against?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Not quite. Chemical hazards require respirators, gloves, and protective suits — not a hi-vis vest. The vest has nothing to do with chemical exposure.')">Chemical exposure from nearby solvents</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct! The high-visibility vest is specifically designed to make workers visible to forklift operators and other vehicle drivers. In a busy facility, being seen is what prevents a worker from being struck by a moving vehicle — which is one of the leading causes of fatal manufacturing accidents.')">Being struck by a forklift or other moving vehicle</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Not this one. Falling objects from above are a head hazard, which is why hard hats exist. A vest protects against a completely different type of danger.')">Falling objects from overhead shelves</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Close — noise is a real factory hazard, but hearing protection (earplugs or earmuffs) addresses that. The safety vest is entirely about visibility, not sound.')">Damage from loud machinery noise</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">An AI system flags a worker for a "PPE violation" on the production floor. A supervisor checks the footage and sees the worker is wearing regular sneakers instead of steel-toed boots. What is the primary risk the boots are meant to prevent?</div>
+    <div class="quiz-opts" id="q2opts">
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ Slipping on wet floors is a real factory hazard, but it\'s addressed by the slip-resistant sole — which is a secondary feature of safety boots. The steel-toed cap is specifically designed for impact protection, not traction.')">Slipping on a wet factory floor</button>
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ Chemical resistance is handled by specialized boots or boot covers — it\'s a feature of different protective footwear. Standard steel-toed boots are built for impact protection from heavy falling objects.')">Chemical burns from floor spills</button>
+      <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct! The steel-toed cap is a reinforced insert in the toe that absorbs the force of a heavy falling object — like a pallet, a machine component, or a dropped tool — before it crushes the worker\'s toes. It\'s designed specifically for impact protection.')">Crushing injuries from heavy objects falling on the feet</button>
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ Electrical insulation is a feature of specific electrically-rated boots — they\'re made differently and labeled with an "EH" (Electrical Hazard) rating. Standard steel-toed boots may actually conduct electricity, which is why the right boot for the right job matters.')">Electric shock from exposed wiring on the floor</button>
+    </div>
+    <div class="qfb" id="q2fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>PPE stands for Personal Protective Equipment — gear workers wear to protect against specific hazards like falling objects, chemicals, noise, and moving vehicles. Each piece protects a different body part from a different type of danger.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The main types of PPE in manufacturing are: hard hats (head), safety vests (visibility), steel-toed boots (feet), safety glasses/goggles (eyes), gloves (hands), hearing protection (ears), respirators (lungs), and safety harnesses (fall prevention).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>PPE requirements are set by law through OSHA. Factories must provide proper equipment, train workers, and enforce its use. Violations can result in fines, shutdowns, and criminal charges.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI safety monitoring systems are trained to detect PPE violations in real time — but to evaluate those systems properly, you first need to understand what PPE is and why each piece matters. The AI enforces rules humans defined.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const activeDetails={};
+function togglePPE(id){
+  const detail=document.getElementById("detail-"+id);
+  const isOpen=detail.classList.contains("show");
+  document.querySelectorAll(".ppe-detail").forEach(d=>d.classList.remove("show"));
+  document.querySelectorAll(".ppe-card").forEach(c=>c.classList.remove("active"));
+  if(!isOpen){detail.classList.add("show");event.currentTarget.classList.add("active");}
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

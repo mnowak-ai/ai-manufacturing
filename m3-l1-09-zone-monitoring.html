@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zone Monitoring, Proximity Alerts, and Restricted Areas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Floor map sim */
+.floor-map{background:#0F0A1A;border-radius:24px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.fm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.fm-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;}
+.fm-legend{display:flex;gap:14px;}
+.fm-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#8B7FA0;}
+.fm-leg-dot{width:10px;height:10px;border-radius:2px;}
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.map-zone{border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;}
+.map-zone.green{background:rgba(39,103,73,.2);border-color:#6EE7B7;}
+.map-zone.yellow{background:rgba(245,158,11,.15);border-color:#FDE68A;}
+.map-zone.red{background:rgba(220,38,38,.15);border-color:#FCA5A5;}
+.map-zone.purple{background:rgba(123,47,190,.2);border-color:var(--purple-mid);}
+.map-zone:hover{transform:scale(1.03);}
+.map-zone.selected{transform:scale(1.05);box-shadow:0 0 0 3px white;}
+.mz-icon{font-size:22px;margin-bottom:6px;}
+.mz-name{font-size:11px;font-weight:700;font-family:var(--mono);color:white;}
+.mz-status{font-size:10px;margin-top:4px;opacity:.7;color:white;}
+.map-detail{background:#1A0A2E;border-radius:14px;padding:20px;min-height:100px;}
+.md-zone-name{font-family:var(--mono);font-size:14px;font-weight:700;color:#E2D9F3;margin-bottom:8px;}
+.md-type{font-size:11px;margin-bottom:12px;}
+.md-type.green{color:#6EE7B7;}
+.md-type.yellow{color:#FDE68A;}
+.md-type.red{color:#FCA5A5;}
+.md-type.purple{color:var(--purple-mid);}
+.md-rules{display:flex;flex-direction:column;gap:6px;}
+.md-rule{font-size:13px;color:rgba(255,255,255,.75);display:flex;gap:8px;}
+@media(max-width:560px){.map-grid{grid-template-columns:1fr 1fr;}}
+
+/* Zone type cards */
+.zone-types{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.zt-card{border-radius:16px;padding:20px;border:1.5px solid;}
+.zt-card.open{background:var(--green-pale);border-color:var(--green);}
+.zt-card.controlled{background:var(--orange-pale);border-color:var(--orange);}
+.zt-card.restricted{background:var(--red-pale);border-color:var(--red);}
+.zt-card.exclusion{background:var(--blue-pale);border-color:var(--blue);}
+.zt-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.open .zt-label{color:var(--green);}
+.controlled .zt-label{color:#92400E;}
+.restricted .zt-label{color:var(--red);}
+.exclusion .zt-label{color:var(--blue);}
+.zt-card h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.open h3{color:var(--green);}
+.controlled h3{color:#92400E;}
+.restricted h3{color:var(--red);}
+.exclusion h3{color:var(--blue);}
+.zt-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.zone-types{grid-template-columns:1fr;}}
+
+/* Proximity types */
+.prox-cards{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.prox-card{background:var(--gray-soft);border-radius:14px;padding:18px 20px;border-left:4px solid var(--purple);}
+.prox-card h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.prox-card p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* AI enforcement */
+.enforcement-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:28px 0;}
+.enf-card{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px;text-align:center;}
+.enf-icon{font-size:28px;margin-bottom:8px;}
+.enf-card h3{font-size:13px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;line-height:1.3;}
+.enf-card p{font-size:12px;color:var(--gray-muted);margin:0;line-height:1.5;}
+@media(max-width:560px){.enforcement-row{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>Zone Monitoring, Proximity Alerts, and Restricted Areas</h1>
+  <p class="hero-sub">The slides list "unsafe machine proximity" as a detection type — but what does that actually mean? This article explains how AI tracks movement across a factory floor, why certain zones are restricted, and how digital boundaries enforce safety rules without physically blocking access.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>A Factory Floor Is a Map of Risk Levels</h2>
+    <p>Not every part of a factory is equally dangerous. The area near a running conveyor belt is more hazardous than the break room. The space directly beside a chemical storage tank requires different PPE than the loading dock. A manufacturing facility is essentially a map of different risk levels — and managing safety means having different rules for different areas.</p>
+    <p>This is what <mark>zone monitoring</mark> is built around. Rather than applying the same alert rules to every square foot of a facility, AI safety systems divide the floor into zones — each with its own specific hazard profile, PPE requirements, and access rules. When the AI detects someone in a zone, it applies the rules for <em>that zone specifically</em>.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Zone Monitoring:</strong> A safety approach that divides a facility into defined areas with different risk levels and rules. AI monitoring systems apply zone-specific detection logic — checking for the PPE required in that specific zone, flagging unauthorized access to restricted zones, and tracking pedestrian-vehicle proximity in high-traffic corridors.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Explore a Factory Floor Map</h2>
+    <p>Click on any zone below to see what it contains, what hazards it has, and what the AI monitors for in that specific area.</p>
+
+    <div class="floor-map">
+      <div class="fm-header">
+        <span class="fm-title">FACILITY FLOOR PLAN — ZONE OVERVIEW</span>
+        <div class="fm-legend">
+          <div class="fm-leg-item"><div class="fm-leg-dot" style="background:#6EE7B7;"></div>Open</div>
+          <div class="fm-leg-item"><div class="fm-leg-dot" style="background:#FDE68A;"></div>Controlled</div>
+          <div class="fm-leg-item"><div class="fm-leg-dot" style="background:#FCA5A5;"></div>Restricted</div>
+          <div class="fm-leg-item"><div class="fm-leg-dot" style="background:var(--purple-mid);"></div>Exclusion</div>
+        </div>
+      </div>
+      <div class="map-grid">
+        <div class="map-zone green" onclick="selectZone('breakroom',this)"><div class="mz-icon">☕</div><div class="mz-name">BREAK ROOM</div><div class="mz-status">Open Zone</div></div>
+        <div class="map-zone yellow" onclick="selectZone('assembly',this)"><div class="mz-icon">🔧</div><div class="mz-name">ASSEMBLY LINE</div><div class="mz-status">Controlled Zone</div></div>
+        <div class="map-zone yellow" onclick="selectZone('warehouse',this)"><div class="mz-icon">📦</div><div class="mz-name">WAREHOUSE</div><div class="mz-status">Controlled Zone</div></div>
+        <div class="map-zone red" onclick="selectZone('chemical',this)"><div class="mz-icon">⚗️</div><div class="mz-name">CHEMICAL HANDLING</div><div class="mz-status">Restricted Zone</div></div>
+        <div class="map-zone yellow" onclick="selectZone('loading',this)"><div class="mz-icon">🚛</div><div class="mz-name">LOADING DOCK</div><div class="mz-status">Controlled Zone</div></div>
+        <div class="map-zone purple" onclick="selectZone('hvpress',this)"><div class="mz-icon">⚙️</div><div class="mz-name">HIGH-VOL. PRESS</div><div class="mz-status">Exclusion Zone</div></div>
+        <div class="map-zone red" onclick="selectZone('electrical',this)"><div class="mz-icon">⚡</div><div class="mz-name">ELECTRICAL ROOM</div><div class="mz-status">Restricted Zone</div></div>
+        <div class="map-zone green" onclick="selectZone('admin',this)"><div class="mz-icon">💼</div><div class="mz-name">ADMIN OFFICE</div><div class="mz-status">Open Zone</div></div>
+      </div>
+      <div class="map-detail" id="mapDetail">
+        <div class="md-zone-name">← Select a zone to see its monitoring rules</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Zone Types</h2>
+    <p>Most manufacturing facilities organize their zones into a hierarchy of access levels. Here's what each level means:</p>
+
+    <div class="zone-types">
+      <div class="zt-card open">
+        <div class="zt-label">Level 1</div>
+        <h3>✅ Open Zones</h3>
+        <p>Accessible to all workers with standard facility PPE (e.g., closed-toe shoes). Break rooms, offices, reception areas. AI monitoring is minimal — mainly checking that no one who needs specific PPE is operating without it.</p>
+      </div>
+      <div class="zt-card controlled">
+        <div class="zt-label">Level 2</div>
+        <h3>⚠️ Controlled Zones</h3>
+        <p>Require specific PPE for entry. Assembly lines, warehouses, loading docks. AI monitors for PPE compliance and may track pedestrian-vehicle proximity in forklift corridors. All authorized workers may enter with correct equipment.</p>
+      </div>
+      <div class="zt-card restricted">
+        <div class="zt-label">Level 3</div>
+        <h3>🚫 Restricted Zones</h3>
+        <p>Limited to specific authorized personnel with appropriate training and PPE. Chemical handling areas, server/electrical rooms, specialized process areas. AI alerts any time an unauthorized person or someone without appropriate PPE enters.</p>
+      </div>
+      <div class="zt-card exclusion">
+        <div class="zt-label">Level 4</div>
+        <h3>🔴 Exclusion Zones</h3>
+        <p>No humans permitted while machinery is actively operating. The area directly within a robot's operating radius, inside an active press, around certain high-voltage equipment. AI sends an immediate, high-priority alert the moment any person enters — and may trigger an automatic machine stop.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Proximity Alerts: The Forklift Problem</h2>
+    <p>One of the most valuable — and technically complex — applications of zone monitoring is pedestrian-vehicle proximity detection. Forklifts kill approximately 85 workers and seriously injure nearly 35,000 more every year in the US. Most of these incidents happen not because of reckless driving, but because of blind spots, high-traffic corridors, and the basic physics of a heavy vehicle that can't stop instantly.</p>
+    <p>Proximity alerts use AI to monitor the <em>relationship</em> between pedestrians and vehicles, not just their individual locations. Here's how different proximity alert types work:</p>
+
+    <div class="prox-cards">
+      <div class="prox-card">
+        <h3>📏 Distance-Based Alerts</h3>
+        <p>The AI calculates the distance between a tracked pedestrian and a moving vehicle. When the distance drops below a set threshold (for example, 10 feet), an alert fires — giving the operator a warning before the worker is in the immediate danger zone, not after. The threshold can be adjusted based on the vehicle's speed and the facility's aisle width.</p>
+      </div>
+      <div class="prox-card">
+        <h3>📐 Trajectory Prediction</h3>
+        <p>More advanced systems analyze the direction and speed of both the vehicle and the pedestrian to predict where they'll both be in 2–5 seconds. If the predicted paths intersect — even if they aren't currently close — the system can alert in advance. This is the difference between detecting danger and predicting it before it develops.</p>
+      </div>
+      <div class="prox-card">
+        <h3>🚦 Intersection Monitoring</h3>
+        <p>High-traffic intersections (where pedestrian walkways cross forklift corridors) get specialized monitoring rules. The AI watches for vehicles approaching from one direction while pedestrians approach from another — flagging potential blind-spot collisions before either party can see the other. Some systems also control digital warning lights at these intersections based on live traffic detection.</p>
+      </div>
+      <div class="prox-card">
+        <h3>🔴 Zone Boundary Alerts</h3>
+        <p>Some facilities designate pedestrian-only and vehicle-only corridors with painted floor markings. AI monitoring can detect when a vehicle crosses into a pedestrian corridor or when a worker steps into a vehicle corridor — flagging the boundary violation regardless of whether any other person or vehicle is nearby at that moment.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>The most dangerous moment in a forklift corridor is when neither the driver nor the pedestrian knows the other is there. AI proximity monitoring's most important function is catching that moment before it becomes a collision.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Enforces Boundaries Without Blocking Access</h2>
+    <p>A key point: AI zone monitoring doesn't physically prevent anyone from going anywhere. There are no locked doors or automated barriers controlled by the AI safety system (though some facilities add those as a separate system). The AI's enforcement mechanism is <em>information</em> — fast, reliable, automatic information to the right people at the right moment.</p>
+
+    <div class="enforcement-row">
+      <div class="enf-card">
+        <div class="enf-icon">🔔</div>
+        <h3>Instant Alerts to Supervisors</h3>
+        <p>Unauthorized zone entry triggers an immediate alert on the supervisor dashboard, tablet, or radio — they can respond before the worker gets far into the restricted area</p>
+      </div>
+      <div class="enf-card">
+        <div class="enf-icon">🔊</div>
+        <h3>Zone Audio Warnings</h3>
+        <p>Some facilities integrate zone monitoring with speaker systems — an automatic voice warning plays in the zone when unauthorized entry is detected, alerting the worker directly</p>
+      </div>
+      <div class="enf-card">
+        <div class="enf-icon">🚦</div>
+        <h3>Warning Lights</h3>
+        <p>Proximity alerts near vehicle corridors can trigger flashing warning lights or digital signage, alerting both the worker and the vehicle operator that a conflict is approaching</p>
+      </div>
+      <div class="enf-card">
+        <div class="enf-icon">⛔</div>
+        <h3>Machine Interlock</h3>
+        <p>In exclusion zones, AI detection can trigger automatic machine stops or slowdowns — preventing the machinery from operating while a person is in the danger zone</p>
+      </div>
+      <div class="enf-card">
+        <div class="enf-icon">📋</div>
+        <h3>Automatic Logging</h3>
+        <p>Every zone entry, proximity event, and alert is timestamped and logged — creating an audit trail that can be reviewed for patterns, incident investigation, and OSHA compliance</p>
+      </div>
+      <div class="enf-card">
+        <div class="enf-icon">📊</div>
+        <h3>Pattern Reporting</h3>
+        <p>Zone violation data aggregated over time shows which zones are being entered most frequently, at what times, and by whom — enabling targeted interventions before a serious incident</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A worker needs to retrieve a tool from an area near an active robotic welding cell — a Level 4 exclusion zone. The robot is currently running. The AI alert fires when the worker approaches. What should happen next?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Exclusion zones (Level 4) are designated as no-human areas while machinery is actively operating — precisely because the hazard inside is severe enough that even brief entry with full PPE is considered unacceptable. PPE compliance is not the issue; the issue is that no person should enter while the robot is running, regardless of equipment.')">The worker should ensure they have all required PPE and proceed quickly to minimize time in the zone</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Exclusion zones exist specifically because the hazard inside them is severe enough that no human should enter while the equipment is active — regardless of PPE, reason, or how fast they\'ll be in there. The correct process is to pause or lock out the robotic cell before entering (called a lockout/tagout procedure), retrieve the tool, confirm the area is clear, and then restart the machine. The AI alert is doing exactly what it should: flagging that someone is approaching an active exclusion zone so the correct process can be followed.')">The robot should be paused or locked out before anyone enters the exclusion zone — retrieve the tool only after the equipment is safely stopped</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Dismissing alerts and proceeding in an exclusion zone is a serious safety violation. The alert system exists precisely for this scenario. The hazard inside an active robotic welding cell is severe and fast — the amount of time spent inside does not meaningfully reduce the risk of a catastrophic injury.')">The worker should acknowledge the alert and proceed anyway since it will only take a moment</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While contacting a supervisor is good practice, the supervisor cannot override an exclusion zone requirement while equipment is actively operating. The process is the same regardless of who initiates it: stop the equipment first, then enter. A supervisor\'s permission doesn\'t make an active robotic cell safe to enter.')">The worker should contact their supervisor first to get permission to override the alert</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Zone monitoring divides a factory floor into areas with different risk levels and rules. AI applies zone-specific detection logic — checking for the right PPE, flagging unauthorized access, and monitoring pedestrian-vehicle proximity based on the specific hazards in each area.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The four zone levels are: Open (all workers, standard PPE), Controlled (zone-specific PPE required), Restricted (limited authorized personnel), and Exclusion (no humans allowed while equipment is active). Each level has progressively stricter AI monitoring rules.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Proximity alerts monitor the relationship between pedestrians and vehicles — not just their individual locations. Advanced systems predict trajectory intersections before they happen, catching dangerous situations before either party can see each other.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI enforces zone rules through information and alerts — instant supervisor notifications, audio warnings, machine interlocks — not by physically blocking access. Human response to those alerts is still what determines whether the safety system actually works.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const zones={
+  breakroom:{name:"BREAK ROOM — Open Zone",type:"Open Zone",cls:"green",rules:["No specific PPE required for entry","AI monitors for any production-area PPE (like hard hats) being worn unnecessarily — they shouldn't be on in rest areas","Basic camera coverage for general security","No proximity alerts — no vehicle traffic in this zone"]},
+  assembly:{name:"ASSEMBLY LINE — Controlled Zone",type:"Controlled Zone",cls:"yellow",rules:["Hard hat required throughout zone","Hi-vis vest required in all areas","Safety glasses required near active machinery","AI monitors PPE compliance on every camera feed","Proximity alerts active near conveyor entry/exit points","PPE checkpoint alert fires if worker enters without full equipment"]},
+  warehouse:{name:"WAREHOUSE — Controlled Zone",type:"Controlled Zone",cls:"yellow",rules:["Hi-vis vest required at all times — forklift traffic is active","Steel-toed boots required","Hard hat required in stacking areas","Forklift proximity alerts: worker within 10 ft of moving forklift triggers alert","Pedestrian corridor boundary monitoring active","Intersection cameras flag vehicle-pedestrian crossing conflicts"]},
+  chemical:{name:"CHEMICAL HANDLING — Restricted Zone",type:"Restricted Zone",cls:"red",rules:["Access limited to Level 3 authorized personnel only","Full chemical-resistant gloves required","Appropriate respirator required (type varies by chemical)","Safety glasses or face shield required","AI alerts immediately when ANY unauthorized person enters","AI verifies respirator AND gloves together — missing either triggers alert","Entry logged with timestamp for compliance records"]},
+  loading:{name:"LOADING DOCK — Controlled Zone",type:"Controlled Zone",cls:"yellow",rules:["Hi-vis vest required — truck and forklift traffic","Hard hat required near overhead loading operations","Steel-toed boots required throughout","Proximity alerts: pedestrian-truck conflict detection active","AI monitors dock edge proximity — alerts when worker approaches unguarded edge","Truck entry/exit tracking for pedestrian clearance verification"]},
+  hvpress:{name:"HIGH-VOLUME PRESS — Exclusion Zone",type:"Exclusion Zone — No humans while active",cls:"purple",rules:["NO human entry permitted while press is in operation","Machine interlock: AI detection triggers automatic press pause","Immediate high-priority alert to safety officer on any entry detection","Entry permitted only during lockout/tagout maintenance procedures","Boundary clearly marked with floor striping and physical barriers","All entry events logged regardless of authorization"]},
+  electrical:{name:"ELECTRICAL ROOM — Restricted Zone",type:"Restricted Zone",cls:"red",rules:["Access limited to licensed electricians and authorized maintenance only","Arc flash PPE required (specialized insulating suit, face shield, gloves)","AI alerts on unauthorized entry immediately","Entry outside maintenance windows triggers automatic safety officer notification","All access logged for regulatory compliance","Camera coverage maintained even when zone is unoccupied"]},
+  admin:{name:"ADMIN OFFICE — Open Zone",type:"Open Zone",cls:"green",rules:["No PPE required — not a production area","Standard building access controls","Camera coverage for general security only","No zone-specific AI safety monitoring rules apply","Workers transitioning from production areas should remove or store PPE before entering"]}
+};
+function selectZone(key,el){
+  document.querySelectorAll(".map-zone").forEach(z=>z.classList.remove("selected"));
+  el.classList.add("selected");
+  const z=zones[key];
+  document.getElementById("mapDetail").innerHTML=`<div class="md-zone-name">${z.name}</div><div class="md-type ${z.cls}">${z.type}</div><div class="md-rules">${z.rules.map(r=>`<div class="md-rule"><span>→</span><span>${r}</span></div>`).join("")}</div>`;
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

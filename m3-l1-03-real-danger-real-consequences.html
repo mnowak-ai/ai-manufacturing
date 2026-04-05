@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Danger, Real Consequences: The Most Common Workplace Injuries in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Stat hero */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.stat-box{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:20px;text-align:center;}
+.stat-num{font-family:"Fraunces",serif;font-size:32px;font-weight:900;color:var(--purple-dark);line-height:1;}
+.stat-unit{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:4px;display:block;}
+.stat-desc{font-size:12px;color:var(--gray-muted);line-height:1.5;}
+@media(max-width:560px){.stat-row{grid-template-columns:1fr 1fr;}}
+
+/* Injury explorer */
+.injury-explorer{margin:28px 0;}
+.injury-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.inj-tab{padding:8px 16px;border-radius:100px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray-text);}
+.inj-tab:hover,.inj-tab.active{background:var(--purple);border-color:var(--purple);color:white;}
+.injury-panel{display:none;background:var(--gray-soft);border-radius:20px;padding:28px;border-left:5px solid var(--purple);}
+.injury-panel.show{display:block;}
+.inj-header{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.inj-icon{font-size:44px;}
+.inj-meta h3{font-family:"Fraunces",serif;font-size:22px;color:var(--purple-dark);margin-bottom:4px;}
+.inj-meta .inj-rank{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);}
+.inj-stat-row{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0;}
+.inj-stat{background:white;border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;flex:1;min-width:120px;}
+.inj-stat-num{font-family:"Fraunces",serif;font-size:22px;font-weight:700;color:var(--purple-dark);}
+.inj-stat-label{font-size:11px;color:var(--gray-muted);margin-top:2px;}
+.inj-story{background:white;border-radius:14px;padding:20px;margin-top:16px;border-left:3px solid var(--orange);}
+.inj-story-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:8px;}
+.inj-story p{font-size:14px;line-height:1.7;color:var(--gray-text);margin:0;}
+.inj-ai{background:var(--purple-pale);border-radius:14px;padding:18px 20px;margin-top:14px;}
+.inj-ai-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.inj-ai p{font-size:14px;line-height:1.7;color:var(--purple-dark);margin:0;}
+
+/* Before/After AI */
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.ba-card{border-radius:20px;padding:24px;border:2px solid;}
+.ba-card.before{background:#FFF7ED;border-color:#D97706;}
+.ba-card.after{background:var(--green-pale);border-color:var(--green);}
+.ba-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.before .ba-label{color:#D97706;}
+.after .ba-label{color:var(--green);}
+.ba-card h3{font-family:"Fraunces",serif;font-size:16px;margin-bottom:10px;}
+.before h3{color:#92400E;}
+.after h3{color:var(--green);}
+.ba-item{font-size:13px;line-height:1.7;display:flex;gap:8px;margin-bottom:6px;}
+@media(max-width:560px){.before-after{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring</div>
+  <h1>Real Danger, Real Consequences</h1>
+  <p class="hero-sub">The most common workplace injuries in manufacturing — what causes them, how serious they are, and how AI safety monitoring is changing the equation. Understanding the real risks is what makes AI monitoring meaningful, not just technical.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Manufacturing Is One of the Most Dangerous Industries in America</h2>
+    <p>Let's start with numbers that put the stakes in perspective. Manufacturing is consistently ranked among the most hazardous industries in the United States — not just slightly more dangerous than an office job, but significantly so.</p>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <span class="stat-unit">Every Year</span>
+        <div class="stat-num">340K+</div>
+        <div class="stat-desc">Manufacturing workers in the US suffer injuries serious enough to require time off work or job restrictions</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-unit">Every Year</span>
+        <div class="stat-num">~300</div>
+        <div class="stat-desc">Manufacturing workers die from workplace injuries — nearly one every weekday</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-unit">Cost Per Injury</span>
+        <div class="stat-num">$38K+</div>
+        <div class="stat-desc">Average cost to an employer for a single workplace injury — including medical, lost productivity, and training replacements</div>
+      </div>
+    </div>
+
+    <p>These aren't statistics about people being careless. Most manufacturing injuries happen to experienced workers who know the rules — because hazards happen fast, people get distracted, and without constant monitoring, even well-trained workers end up in the wrong place at the wrong time.</p>
+
+    <div class="pull-quote"><p>The goal of AI safety monitoring isn't to assume workers are irresponsible. It's to catch the moments when any human — no matter how trained — might miss something.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Six Most Common Manufacturing Injuries — Explore Each One</h2>
+    <p>Click any injury type below to see how it happens, the real-world statistics, and how AI monitoring helps prevent it.</p>
+
+    <div class="injury-explorer">
+      <div class="injury-tabs">
+        <button class="inj-tab active" onclick="showInjury('slips',this)">Slips & Falls</button>
+        <button class="inj-tab" onclick="showInjury('struck',this)">Struck by Object</button>
+        <button class="inj-tab" onclick="showInjury('caught',this)">Caught in Equipment</button>
+        <button class="inj-tab" onclick="showInjury('repetitive',this)">Repetitive Motion</button>
+        <button class="inj-tab" onclick="showInjury('chemical',this)">Chemical Exposure</button>
+        <button class="inj-tab" onclick="showInjury('noise',this)">Noise / Hearing</button>
+      </div>
+
+      <div class="injury-panel show" id="panel-slips">
+        <div class="inj-header">
+          <div class="inj-icon">🤸</div>
+          <div class="inj-meta">
+            <div class="inj-rank">#1 Most Common Manufacturing Injury</div>
+            <h3>Slips, Trips, and Falls</h3>
+          </div>
+        </div>
+        <p>Slips happen when a foot loses traction — usually from a wet or oily floor, a spill, or a slick surface. Trips happen when a foot catches on something — a cord, a raised floor edge, a misplaced object. Falls from height (ladders, platforms, shelving) are especially serious because the impact can be fatal.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">~20%</div><div class="inj-stat-label">of all manufacturing injuries involve slips, trips, or falls</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">#2</div><div class="inj-stat-label">cause of manufacturing fatalities (after transportation incidents)</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">$70B+</div><div class="inj-stat-label">annual cost of fall injuries across all US workplaces</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A forklift operator clips a water line. A puddle forms. Before anyone notices or posts a wet floor sign, a worker rounds a corner and slips — breaking their wrist catching themselves, or worse, hitting their head on equipment. The puddle was there for 12 minutes. No one saw it until after the fall.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>Computer vision systems can be trained to detect floor spills, standing water, or debris in walkways — and flag them immediately, before any person has to stumble across them. AI can also detect blocked emergency exits or cluttered walkways in real time, giving safety teams a chance to clear them before an accident occurs.</p>
+        </div>
+      </div>
+
+      <div class="injury-panel" id="panel-struck">
+        <div class="inj-header">
+          <div class="inj-icon">💥</div>
+          <div class="inj-meta">
+            <div class="inj-rank">#2 Most Common Manufacturing Injury Type</div>
+            <h3>Struck by Object or Equipment</h3>
+          </div>
+        </div>
+        <p>Being struck means something — a tool, a machine part, a forklift, a pallet — hits a worker. This includes everything from a dropped wrench falling from a catwalk to a forklift backing into a pedestrian in a blind spot. The severity ranges from bruises to broken bones to fatal crushing injuries.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">85</div><div class="inj-stat-label">workers killed by forklifts every year in the US</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">34,900</div><div class="inj-stat-label">serious forklift injuries per year</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">25%</div><div class="inj-stat-label">of forklift fatalities involve pedestrians — workers on foot</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A warehouse worker steps around a shelf into a main aisle — without a hi-vis vest, without looking. A forklift operator coming from the opposite direction can't see around the shelf corner. They're both moving at a normal pace. The forklift clips the worker before either of them can react. This happens in seconds.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>AI monitoring systems can detect when workers without hi-vis vests enter forklift operating zones and immediately alert both the worker (via alarm) and the operator. Some advanced systems can detect pedestrian-vehicle proximity in real time and trigger automatic speed reduction alerts — a warning that slows traffic before a collision.</p>
+        </div>
+      </div>
+
+      <div class="injury-panel" id="panel-caught">
+        <div class="inj-header">
+          <div class="inj-icon">⚙️</div>
+          <div class="inj-meta">
+            <div class="inj-rank">High Severity — Often Fatal or Permanently Disabling</div>
+            <h3>Caught In or Between Equipment</h3>
+          </div>
+        </div>
+        <p>This happens when a body part gets pulled into moving machinery — a conveyor belt, a rotating shaft, a press — or gets caught between two pieces of equipment. These injuries are almost always catastrophic: amputations, crush injuries, or death. They happen extraordinarily fast — often in less than a second.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">~10%</div><div class="inj-stat-label">of fatal manufacturing injuries involve machinery entanglement</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">50,000+</div><div class="inj-stat-label">machine-related injuries per year in US manufacturing</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">&lt;1 sec</div><div class="inj-stat-label">is all it takes for entanglement to cause permanent damage</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A worker leans over a conveyor to reach something without turning the belt off first — a step that takes 30 seconds but feels unnecessary. A loose sleeve catches the belt. Before the worker can pull back, the belt pulls the arm in. This is why machine guarding (physical barriers around moving parts) and lockout/tagout procedures (formally turning off and locking machinery before working on it) exist — but both require humans to follow them every single time.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>AI can monitor restricted zones around dangerous machinery and alert when a worker enters without authorization or without proper PPE. Some systems are integrated with machine controls — if a worker crosses into a danger zone, the machine can be automatically paused. These are called safety interlock systems, and AI adds intelligence to when and how they trigger.</p>
+        </div>
+      </div>
+
+      <div class="injury-panel" id="panel-repetitive">
+        <div class="inj-header">
+          <div class="inj-icon">🔁</div>
+          <div class="inj-meta">
+            <div class="inj-rank">Most Underreported Category of Manufacturing Injury</div>
+            <h3>Repetitive Motion Injuries</h3>
+          </div>
+        </div>
+        <p>Repetitive motion injuries don't happen in a single dramatic moment — they build up over weeks and months of doing the same motion over and over. Assembly line workers who perform the same hand movement hundreds of times per shift often develop carpal tunnel syndrome, tendinitis, or back injuries from poor lifting posture. These are called musculoskeletal disorders (MSDs), and they're the most common cause of lost work time in manufacturing.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">33%</div><div class="inj-stat-label">of all workplace injuries and illnesses involve musculoskeletal disorders</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">$20B+</div><div class="inj-stat-label">estimated annual cost of work-related MSDs in the US</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">Days to Years</div><div class="inj-stat-label">recovery time varies widely — some conditions are permanent</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A worker on an automotive assembly line performs the same awkward twisting motion to install a component — 450 times per shift, 5 days a week, for 3 years. No single motion causes harm. But the cumulative stress on the shoulder joint eventually causes a rotator cuff tear that requires surgery and 6 months of recovery. The worker never "had an accident." The injury built up invisibly over years.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>This is a newer area of AI safety monitoring. Some systems use computer vision to analyze workers' body posture and movement patterns — flagging when someone is lifting with their back instead of their legs, or performing motions that biomechanics research identifies as injury risk factors. This is called ergonomics monitoring, and it can catch the invisible injuries before they become permanent.</p>
+        </div>
+      </div>
+
+      <div class="injury-panel" id="panel-chemical">
+        <div class="inj-header">
+          <div class="inj-icon">☠️</div>
+          <div class="inj-meta">
+            <div class="inj-rank">Highest in Chemical, Pharmaceutical, and Metal Manufacturing</div>
+            <h3>Chemical Exposure</h3>
+          </div>
+        </div>
+        <p>Chemical hazards include direct skin contact with corrosive substances, inhaling toxic fumes, and accidental splashes to the eyes or face. The severity ranges from minor skin irritation to permanent lung damage, chemical burns, or death from acute poisoning. Many chemical exposures have delayed effects — a worker may not feel sick until hours or days after exposure, making it hard to connect cause and effect.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">575K+</div><div class="inj-stat-label">workers suffer from occupational lung disease annually in the US</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">50,000</div><div class="inj-stat-label">deaths per year are linked to occupational chemical exposures</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">Often Delayed</div><div class="inj-stat-label">symptoms may appear hours or years after initial exposure</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A maintenance worker enters a storage area to check on equipment. Unknown to them, a slow gas leak has been building for two hours. The gas is colorless and odorless. Their respirator is hanging on a hook by the door — they figured the check would only take a minute. They feel dizzy within 30 seconds. This is exactly the scenario chemical sensors connected to AI monitoring systems are designed to catch before anyone enters the space.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>AI safety systems can monitor sensor data (gas detectors, air quality sensors) and flag dangerous chemical levels before anyone enters an affected area. Vision-based systems can also check whether workers handling chemicals are wearing the correct type of PPE — the right gloves, the right respirator — and alert when they're not.</p>
+        </div>
+      </div>
+
+      <div class="injury-panel" id="panel-noise">
+        <div class="inj-header">
+          <div class="inj-icon">🔊</div>
+          <div class="inj-meta">
+            <div class="inj-rank">Most Common Occupational Illness in Manufacturing</div>
+            <h3>Noise-Induced Hearing Loss</h3>
+          </div>
+        </div>
+        <p>Hearing loss from workplace noise is permanent, painless, and invisible until it's too late. Workers exposed to loud machines for years slowly lose the ability to hear high-pitched sounds — then more of the sound range — until they can no longer understand conversations clearly even with hearing aids. Unlike a broken bone, it doesn't heal. Once the hair cells in your inner ear are damaged by noise, they don't come back.</p>
+        <div class="inj-stat-row">
+          <div class="inj-stat"><div class="inj-stat-num">22M</div><div class="inj-stat-label">US workers exposed to hazardous noise levels every year</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">$242M</div><div class="inj-stat-label">spent on workers' compensation for hearing loss annually</div></div>
+          <div class="inj-stat"><div class="inj-stat-num">100% Preventable</div><div class="inj-stat-label">with consistent hearing protection use in high-noise areas</div></div>
+        </div>
+        <div class="inj-story">
+          <div class="inj-story-label">🔍 How It Actually Happens</div>
+          <p>A worker on a stamping press floor works without earplugs for years — not because the rules don't require them, but because putting them in and out while talking to coworkers is inconvenient, and "just a few minutes" without them feels harmless. Over 10 years, those accumulated minutes of exposure add up to permanent high-frequency hearing loss. By the time the damage is noticed, it cannot be reversed.</p>
+        </div>
+        <div class="inj-ai">
+          <div class="inj-ai-label">🤖 How AI Helps</div>
+          <p>AI safety cameras in hearing protection zones can detect when workers are not wearing earplugs or earmuffs and send an alert. Some systems also monitor noise levels in real time using audio sensors integrated with the AI platform — and can automatically adjust which zones require hearing protection based on current decibel readings, rather than relying on static zone maps.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Before and After AI Safety Monitoring</h2>
+    <p>AI doesn't eliminate these hazards — it changes who notices them and how fast. Here's what that shift looks like in practice:</p>
+
+    <div class="before-after">
+      <div class="ba-card before">
+        <div class="ba-label">⏳ Before AI Monitoring</div>
+        <h3>Reactive Safety</h3>
+        <div class="ba-item"><span>→</span><span>Supervisors catch violations during walkthroughs — which might happen once per shift</span></div>
+        <div class="ba-item"><span>→</span><span>Spills and hazards are found after someone notices or trips</span></div>
+        <div class="ba-item"><span>→</span><span>PPE violations on large floors go unnoticed for hours</span></div>
+        <div class="ba-item"><span>→</span><span>Incident reports happen after injuries occur</span></div>
+        <div class="ba-item"><span>→</span><span>Pattern analysis requires manual review of paper logs</span></div>
+      </div>
+      <div class="ba-card after">
+        <div class="ba-label">✅ With AI Monitoring</div>
+        <h3>Proactive Safety</h3>
+        <div class="ba-item"><span>→</span><span>Every zone is monitored continuously, 24/7, regardless of shift or staffing</span></div>
+        <div class="ba-item"><span>→</span><span>Spills are flagged within seconds of appearing on camera</span></div>
+        <div class="ba-item"><span>→</span><span>PPE violations trigger instant alerts to supervisors</span></div>
+        <div class="ba-item"><span>→</span><span>Patterns of near-misses are visible before a serious injury occurs</span></div>
+        <div class="ba-item"><span>→</span><span>Data from all zones is automatically logged for analysis</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A worker develops carpal tunnel syndrome after two years on an assembly line performing the same hand motion 400 times per shift. Which category of workplace injury does this fall under?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Struck by object injuries involve something hitting the worker — a tool, a vehicle, a falling part. Carpal tunnel builds up from internal stress on tendons and nerves, not from external impact.')">Struck by object</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Caught in equipment involves body parts being pulled into or trapped by machinery. Carpal tunnel syndrome is a nerve condition caused by cumulative overuse, not a single machinery entanglement event.')">Caught in equipment</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Carpal tunnel syndrome is a classic repetitive motion injury — technically called a musculoskeletal disorder (MSD). It doesn\'t happen in a single incident. It builds up over months or years of the same motion being repeated, causing cumulative stress on tendons, nerves, and joints. It\'s the most common type of injury in manufacturing by total count.')">Repetitive motion / musculoskeletal disorder</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Chemical exposure refers to contact with or inhalation of hazardous substances. Carpal tunnel is caused by mechanical stress on the wrist joint — it has nothing to do with chemical hazards.')">Chemical exposure</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Manufacturing is one of the most dangerous industries in the US — over 340,000 serious injuries and ~300 deaths per year. Most are preventable with better hazard detection.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The six major injury categories are: slips and falls, struck by objects or vehicles, caught in equipment, repetitive motion disorders, chemical exposure, and noise-induced hearing loss. Each one has specific AI detection strategies.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI safety monitoring shifts factories from reactive (finding hazards after the fact) to proactive (catching them before anyone gets hurt). It doesn't replace human judgment — it gives humans better, faster information to act on.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Understanding these injury types is what makes AI safety monitoring feel real and important — the AI is trained to catch exactly these scenarios before they become statistics.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showInjury(id,btn){document.querySelectorAll(".injury-panel").forEach(p=>p.classList.remove("show"));document.querySelectorAll(".inj-tab").forEach(t=>t.classList.remove("active"));document.getElementById("panel-"+id).classList.add("show");btn.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

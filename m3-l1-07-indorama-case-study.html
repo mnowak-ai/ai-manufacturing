@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Dive: How Indorama Ventures Used AI to Cut Safety Violations by 83%</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Company profile card */
+.company-card{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:24px;padding:32px;margin:28px 0;color:white;}
+.cc-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:16px;}
+.cc-name{font-family:"Fraunces",serif;font-size:28px;font-weight:900;margin-bottom:8px;}
+.cc-desc{font-size:15px;color:rgba(255,255,255,.75);margin-bottom:20px;line-height:1.65;}
+.cc-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.cc-fact{background:rgba(255,255,255,.08);border-radius:12px;padding:14px;}
+.cc-fact-num{font-family:"Fraunces",serif;font-size:22px;font-weight:700;color:var(--purple-mid);}
+.cc-fact-label{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px;line-height:1.4;}
+@media(max-width:560px){.cc-facts{grid-template-columns:1fr 1fr;}}
+
+/* Hazard cards */
+.hazard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.haz-card{background:var(--red-pale);border:1.5px solid #FECACA;border-radius:16px;padding:20px;}
+.haz-icon{font-size:28px;margin-bottom:8px;}
+.haz-card h3{font-size:15px;font-weight:700;color:var(--red);margin-bottom:6px;}
+.haz-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.hazard-grid{grid-template-columns:1fr;}}
+
+/* Timeline */
+.impl-timeline{margin:28px 0;}
+.impl-step{display:flex;gap:16px;margin-bottom:4px;}
+.impl-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.impl-circle{width:40px;height:40px;border-radius:50%;background:var(--purple);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.impl-line{flex:1;width:2px;background:var(--purple-mid);min-height:16px;}
+.impl-body{background:var(--gray-soft);border-radius:0 14px 14px 14px;padding:16px 20px;flex:1;margin-bottom:4px;}
+.impl-body h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.impl-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+.impl-step:last-child .impl-line{display:none;}
+
+/* Results */
+.results-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.result-card{background:var(--green-pale);border:2px solid var(--green);border-radius:20px;padding:20px;text-align:center;}
+.result-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--green);line-height:1;}
+.result-label{font-size:13px;color:var(--gray-text);margin-top:6px;line-height:1.5;}
+@media(max-width:560px){.results-row{grid-template-columns:1fr 1fr;}}
+
+/* Worker perspective */
+.worker-box{background:var(--orange-pale);border:1.5px solid var(--orange);border-radius:20px;padding:24px;margin:28px 0;}
+.wb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:12px;}
+.wb-item{display:flex;gap:12px;margin-bottom:12px;}
+.wb-icon{font-size:22px;flex-shrink:0;}
+.wb-item h3{font-size:14px;font-weight:700;color:#92400E;margin-bottom:4px;}
+.wb-item p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* Number explainer */
+.num-explainer{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:28px;margin:28px 0;}
+.ne-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:14px;}
+.ne-stat{font-family:"Fraunces",serif;font-size:52px;font-weight:900;color:var(--purple-dark);line-height:1;margin-bottom:8px;}
+.ne-explain{font-size:15px;color:var(--gray-text);line-height:1.75;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Summary */
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.1 — Safety Monitoring · Case Study</div>
+  <h1>Deep Dive: How Indorama Ventures Cut Safety Violations by 83%</h1>
+  <p class="hero-sub">The slides mention this result in one line. This article tells you the full story — what the company makes, what hazards workers actually faced, how the AI system was implemented, what workers experienced, and what that 83% number really means.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>First: Who Is Indorama Ventures?</h2>
+    <p>Before we can understand what the AI system did, we need to understand what this company actually makes — because the type of manufacturing shapes the type of hazard.</p>
+
+    <div class="company-card">
+      <div class="cc-tag">🏭 Company Profile</div>
+      <div class="cc-name">Indorama Ventures</div>
+      <div class="cc-desc">One of the world's largest producers of PET (polyethylene terephthalate) — a type of plastic used to make water bottles, food packaging, polyester clothing fibers, and industrial materials. Founded in Thailand, it now operates manufacturing plants across Asia, Europe, Africa, and the Americas.</div>
+      <div class="cc-facts">
+        <div class="cc-fact"><div class="cc-fact-num">160+</div><div class="cc-fact-label">manufacturing sites across 35+ countries</div></div>
+        <div class="cc-fact"><div class="cc-fact-num">26,000+</div><div class="cc-fact-label">employees worldwide</div></div>
+        <div class="cc-fact"><div class="cc-fact-num">$17B+</div><div class="cc-fact-label">annual revenue — a major global industrial company</div></div>
+      </div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">What Is PET?</div>
+      <div class="vocab-def"><strong>PET (Polyethylene Terephthalate)</strong> is a type of plastic. It's the clear plastic in most water and soda bottles (look for the recycling #1 symbol). In fiber form, it becomes polyester clothing. Manufacturing PET involves chemical processes, high heat, and pressurized systems — all of which create significant workplace hazards.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Real Hazards on an Indorama Factory Floor</h2>
+    <p>Chemical manufacturing plants have a unique combination of hazards that make PPE compliance especially critical. Understanding what workers actually face helps explain why the AI monitoring program was so impactful.</p>
+
+    <div class="hazard-grid">
+      <div class="haz-card">
+        <div class="haz-icon">🌡️</div>
+        <h3>Extreme Heat and Hot Surfaces</h3>
+        <p>PET production involves melting plastic at temperatures above 250°C (480°F). Workers near extrusion and molding equipment are at risk of serious burns from steam, hot surfaces, and splashes of molten material.</p>
+      </div>
+      <div class="haz-card">
+        <div class="haz-icon">☠️</div>
+        <h3>Chemical Exposure</h3>
+        <p>The PET production process uses ethylene glycol and terephthalic acid — chemicals that can cause skin and respiratory irritation. Workers in chemical handling zones require appropriate gloves and respirators at all times.</p>
+      </div>
+      <div class="haz-card">
+        <div class="haz-icon">⚙️</div>
+        <h3>Heavy Machinery and Moving Parts</h3>
+        <p>Large extruders, conveyors, and cutting machinery create entanglement and crush hazards. Machine guarding and restricted zone protocols exist around all active equipment.</p>
+      </div>
+      <div class="haz-card">
+        <div class="haz-icon">🏗️</div>
+        <h3>Large-Scale Logistics</h3>
+        <p>Moving bulk materials, large resin pellet containers, and finished product pallets involves forklifts and overhead cranes — creating vehicle-pedestrian collision risk across the facility floor.</p>
+      </div>
+    </div>
+
+    <p>In this environment, <mark>PPE isn't optional safety theater — it's the line between a shift that ends normally and one that ends with a serious injury</mark>. And across a large facility with dozens of zones, monitoring PPE compliance manually was simply not possible at the scale needed.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Problem Before AI: Manual Monitoring at Scale</h2>
+    <p>Before the AI system was deployed, Indorama's safety team faced a challenge that's common to large manufacturing operations: the facility was simply too big for humans to watch effectively.</p>
+    <p>Safety officers would conduct periodic walkthroughs — checking zones for PPE compliance, hazard signs, and equipment condition. But between walkthroughs, large sections of the floor were effectively unmonitored. A worker who removed their hard hat to wipe sweat might put it back on before a supervisor arrived. Or they might not. No one would know either way.</p>
+    <p>The result was a gap between the safety rules that existed on paper and the actual behavior happening on the floor — particularly during busy periods when production pressure was high and safety shortcuts felt harmless.</p>
+
+    <div class="pull-quote"><p>The problem wasn't that workers were reckless. It was that large, complex facilities have too many people in too many places for any human team to monitor continuously.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How the AI System Was Implemented</h2>
+    <p>Indorama worked with an AI safety monitoring vendor to deploy a computer vision system across their facilities. Here's how the implementation unfolded:</p>
+
+    <div class="impl-timeline">
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">1</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Camera Infrastructure Setup</h3>
+          <p>High-resolution cameras were installed throughout production zones, covering areas with the highest historical incident rates and PPE requirements. Camera placement was designed to minimize blind spots around the most hazardous equipment.</p>
+        </div>
+      </div>
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">2</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Defining Detection Rules</h3>
+          <p>Safety managers worked with the AI team to define exactly what violations should be flagged: missing hard hats, missing hi-vis vests, missing chemical gloves in chemical handling areas, missing eye protection near certain equipment. Each zone had its own rule set based on the specific hazards present.</p>
+        </div>
+      </div>
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">3</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Training and Calibration</h3>
+          <p>The AI model was trained on images from Indorama's actual facilities — workers in their specific PPE, in their specific lighting conditions, at the specific camera angles installed. This facility-specific training is important: generic safety AI trained on other factories often performs poorly in a new environment until it's calibrated to local conditions.</p>
+        </div>
+      </div>
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">4</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Alert Routing and Response Protocols</h3>
+          <p>The team built alert routing so that violations in each zone went to the right supervisor or safety officer — someone physically close enough to respond quickly. Response time targets were set: supervisors were expected to review alerts within 60 seconds and initiate a response within 3 minutes.</p>
+        </div>
+      </div>
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">5</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Rollout and Worker Communication</h3>
+          <p>Workers were informed about the new system before it went live — explaining what it monitors, how alerts work, and emphasizing that the goal was safety, not surveillance or discipline. This communication step is often skipped but is critical for worker trust and cooperation.</p>
+        </div>
+      </div>
+      <div class="impl-step">
+        <div class="impl-left"><div class="impl-circle">6</div><div class="impl-line"></div></div>
+        <div class="impl-body">
+          <h3>Ongoing Review and Improvement</h3>
+          <p>After deployment, the safety team reviewed alert data weekly — looking at false alarm rates, response times, and violation trends by zone. This data drove ongoing calibration: adjusting thresholds, adding training data, and improving camera angles where needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Results — What That 83% Actually Means</h2>
+
+    <div class="num-explainer">
+      <div class="ne-label">📊 The Headline Number</div>
+      <div class="ne-stat">83%</div>
+      <div class="ne-explain">reduction in recorded PPE safety violations over the monitoring period. This means that for every 100 violations the system was logging before full implementation, fewer than 17 were occurring by the end of the monitored period. That's not a small improvement — it's a near-elimination of a category of safety failures that had been happening at scale.</div>
+    </div>
+
+    <div class="results-row">
+      <div class="result-card">
+        <div class="result-num">83%</div>
+        <div class="result-label">Reduction in PPE violations across monitored zones</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">24/7</div>
+        <div class="result-label">Continuous monitoring replacing periodic manual walkthroughs</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">Real-time</div>
+        <div class="result-label">Alert delivery — seconds from detection to supervisor notification</div>
+      </div>
+    </div>
+
+    <p>It's also worth understanding <em>how</em> an 83% reduction happens. It's not just that the AI caught violations faster. The presence of consistent monitoring created a behavioral change: when workers knew that the cameras were always watching and that violations would be caught quickly, the rate of violations themselves dropped. <mark>The AI's deterrent effect was as significant as its detection capability.</mark></p>
+    <p>This is called a compliance culture shift — when the knowledge of consistent monitoring changes the day-to-day behavior of people on the floor, not just the response to violations after they happen.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Workers Actually Experienced</h2>
+    <p>Safety monitoring AI often gets described purely from the management perspective. But the workers on the floor are the ones whose daily routine is most directly affected. Here's an honest picture of what that looked like:</p>
+
+    <div class="worker-box">
+      <div class="wb-label">👷 The Worker's Perspective</div>
+      <div class="wb-item">
+        <div class="wb-icon">😟</div>
+        <div>
+          <h3>Initial Concern: "Are We Being Watched?"</h3>
+          <p>Many workers' first reaction to camera-based monitoring is discomfort — a feeling of being surveilled. This is a real and legitimate concern. Indorama's implementation included explicit worker communication explaining that the system was tracking PPE compliance, not individual productivity, bathroom breaks, or conversations. Transparency about what the system monitors — and what it doesn't — was key to acceptance.</p>
+        </div>
+      </div>
+      <div class="wb-item">
+        <div class="wb-icon">📱</div>
+        <div>
+          <h3>The Experience of Receiving an Alert</h3>
+          <p>When a worker was flagged, the process wasn't a public shaming — a supervisor would approach them directly and privately remind them about their PPE. In most cases, workers had simply forgotten (a hard hat left at a workstation, glasses pushed up on a forehead). The alert gave supervisors a way to address the issue immediately and specifically, rather than waiting for a scheduled safety meeting.</p>
+        </div>
+      </div>
+      <div class="wb-item">
+        <div class="wb-icon">✅</div>
+        <div>
+          <h3>What Changed Over Time</h3>
+          <p>Workers reported that knowing the cameras were active created a consistent mental reminder to check their PPE before entering monitored zones. The AI essentially built a habit — not through punishment, but through the same consistent reinforcement that makes any safety habit stick. The repeated small reminders changed default behavior over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What This Case Study Teaches Us About AI Safety Monitoring</h2>
+    <p>Indorama's implementation is a useful real-world example because it illustrates several things that the theory alone doesn't capture:</p>
+    <p><strong>Scale matters.</strong> AI monitoring has the most transformative impact in large facilities where human coverage gaps are significant. The bigger the floor, the more a continuous monitoring system changes what's possible.</p>
+    <p><strong>Implementation quality determines outcomes.</strong> The 83% result wasn't automatic — it required thoughtful camera placement, facility-specific AI training, clear alert protocols, and ongoing calibration. A poorly implemented AI system in the same facility might have produced much weaker results or even made things worse through alert fatigue.</p>
+    <p><strong>Worker communication is not optional.</strong> The behavioral change that created the 83% improvement required workers to understand and accept the system. Surveillance that workers feel is punitive or opaque tends to breed resentment, workarounds, and reduced cooperation with safety programs overall.</p>
+    <p><strong>The AI is a tool — people create the culture.</strong> The AI flagged violations. Supervisors responded. Workers changed their behavior. Safety officers analyzed the data and improved the system. The 83% came from all of those humans doing their jobs effectively, aided by better information.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">The Indorama case study reports an 83% reduction in PPE safety violations. A classmate argues: "That just means the AI was better at catching violations — there were probably just as many happening as before." Based on what you read, what is the most accurate response?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While the AI did improve detection, the 83% reduction specifically refers to violations logged — not detection rate. If detection improved but behavior didn\'t change, you\'d expect more violations to be logged as the AI caught more. The fact that violations dropped dramatically suggests actual behavior on the floor changed.')">Your classmate is right — better detection explains all of the improvement</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The article explains both effects: improved detection (catching violations that would have been missed) AND a deterrent effect — the presence of consistent monitoring changed worker behavior, making violations less frequent in the first place. The combination of both effects is what produces a large, sustained reduction in violations, not just better counting of the same number of incidents.')">Both effects were happening: the AI caught violations faster AND the presence of consistent monitoring changed worker behavior, reducing violations themselves</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Better cameras do help detection quality, but camera quality alone doesn\'t explain behavioral change. Workers weren\'t wearing PPE more consistently because cameras had higher resolution — they were doing so because those cameras were connected to an AI system that immediately flagged violations to supervisors.')">The improvement was entirely due to higher-quality cameras, not the AI</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The article actually addresses this: Indorama was explicit with workers about what the cameras monitored. The behavioral change was documented and expected — it\'s a known effect of consistent monitoring called compliance culture shift, not something to dismiss or assume away.')">The number is unreliable because workers might have just hidden violations better to avoid the cameras</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Indorama Ventures is a global plastics manufacturer with hazards including extreme heat, chemical exposure, heavy machinery, and vehicle traffic — a high-risk environment where PPE compliance is critical and manual monitoring at scale was not sufficient.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The 83% reduction in violations came from two effects: better detection (catching violations that would have been missed) and a compliance culture shift (workers changing their habits because they knew the cameras were always active).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Implementation quality determines outcomes. The result required thoughtful camera placement, facility-specific AI training, clear alert protocols, and ongoing calibration. Worker communication and transparency about what the system monitored were essential to worker acceptance.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The AI provided the information. Supervisors, workers, and safety officers created the actual improvement. The case study is a model of what AI-assisted safety looks like when it's implemented well — not AI replacing humans, but AI making human safety work more effective.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
