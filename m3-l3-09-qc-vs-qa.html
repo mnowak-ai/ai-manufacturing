@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quality Control vs. Quality Assurance: What's the Difference and Why Both Matter</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Head-to-head compare */
+.compare-table{border-radius:20px;overflow:hidden;border:2px solid var(--purple-mid);margin:28px 0;}
+.ct-header{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--purple-dark);}
+.ct-hcell{padding:14px 16px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:white;}
+.ct-hcell.qc{background:rgba(220,38,38,.3);}
+.ct-hcell.qa{background:rgba(39,103,73,.3);}
+.ct-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--purple-mid);}
+.ct-row:nth-child(even){background:var(--gray-soft);}
+.ct-cell{padding:13px 16px;font-size:13px;line-height:1.6;color:var(--gray-text);}
+.ct-cell.dim{font-weight:700;color:var(--purple-dark);font-size:12px;text-transform:uppercase;letter-spacing:.06em;}
+.ct-cell.qc-val{color:var(--red);}
+.ct-cell.qa-val{color:var(--green);}
+
+/* Analogy */
+.analogy-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.an-card{border-radius:16px;padding:20px;}
+.an-card.qc-an{background:var(--red-pale);border:2px solid #FECACA;}
+.an-card.qa-an{background:var(--green-pale);border:2px solid #86EFAC;}
+.an-card h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.qc-an h3{color:var(--red);}
+.qa-an h3{color:var(--green);}
+.an-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.analogy-row{grid-template-columns:1fr;}}
+
+/* AI roles */
+.ai-roles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.air-card{border-radius:16px;padding:20px;border:2px solid var(--purple-mid);background:var(--purple-pale);}
+.air-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.air-item{display:flex;gap:8px;font-size:13px;color:var(--gray-text);margin-bottom:6px;line-height:1.55;}
+@media(max-width:560px){.ai-roles{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>Quality Control vs. Quality Assurance</h1>
+  <p class="hero-sub">These two terms get used interchangeably in casual conversation — but in manufacturing they mean very different things, describe different functions, and use AI in different ways. Understanding the distinction matters for every QC-related career.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Core Distinction in One Sentence</h2>
+    <p><mark>Quality Control (QC) is reactive</mark> — it inspects products that have already been made to find defects. <mark>Quality Assurance (QA) is proactive</mark> — it designs and manages the processes that prevent defects from occurring in the first place.</p>
+    <p>QC asks: "Does this product meet the specification?" QA asks: "Do we have the right processes in place to ensure that products consistently meet the specification?"</p>
+    <p>Both matter. A company with only QC catches defects after they're made — but keeps making them. A company with only QA has great processes on paper — but no systematic way to verify the output matches the intention. World-class quality programs have both, working together.</p>
+
+    <div class="analogy-row">
+      <div class="an-card qc-an"><h3>🔍 QC = The Lifeguard</h3><p>Watches the pool and pulls out anyone who's drowning. Reactive — responds to problems that already exist. Essential. But better if fewer people need rescuing in the first place.</p></div>
+      <div class="an-card qa-an"><h3>🏊 QA = Pool Safety Design</h3><p>Designs the pool with the right depth markings, non-slip edges, clear sight lines, and training programs. Proactive — reduces the chance anyone will drown. Essential, but can't catch every problem on its own.</p></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Side by Side: QC vs. QA</h2>
+
+    <div class="compare-table">
+      <div class="ct-header">
+        <div class="ct-hcell">Dimension</div>
+        <div class="ct-hcell qc">Quality Control (QC)</div>
+        <div class="ct-hcell qa">Quality Assurance (QA)</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Orientation</div>
+        <div class="ct-cell qc-val">Reactive — responds to defects found</div>
+        <div class="ct-cell qa-val">Proactive — prevents defects from occurring</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Focus</div>
+        <div class="ct-cell qc-val">The product — does this unit meet spec?</div>
+        <div class="ct-cell qa-val">The process — are our processes capable of producing spec?</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Timing</div>
+        <div class="ct-cell qc-val">During and after production</div>
+        <div class="ct-cell qa-val">Before and throughout production (process design, audits)</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Activities</div>
+        <div class="ct-cell qc-val">Inspection, testing, measurement, defect disposition</div>
+        <div class="ct-cell qa-val">Process design, SOP writing, supplier qualification, audits, training</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Question Asked</div>
+        <div class="ct-cell qc-val">"Did this product turn out right?"</div>
+        <div class="ct-cell qa-val">"Are we set up to make it right consistently?"</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Who Does It</div>
+        <div class="ct-cell qc-val">QC technicians, inspectors, vision systems</div>
+        <div class="ct-cell qa-val">QA engineers, quality managers, process engineers, auditors</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-cell dim">Output</div>
+        <div class="ct-cell qc-val">Pass/fail decisions on products; defect data</div>
+        <div class="ct-cell qa-val">Process improvements, standard procedures, audit findings, certifications</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Plays Different Roles in Each</h2>
+    <p>Artificial intelligence tools are being adopted in both QC and QA — but for very different tasks. Understanding this distinction helps you understand what the AI systems in this lesson actually do.</p>
+
+    <div class="ai-roles">
+      <div class="air-card">
+        <h3>🔍 AI in Quality Control</h3>
+        <div class="ai-item"><span>→</span><span>Vision systems inspect 100% of products at production speed</span></div>
+        <div class="ai-item"><span>→</span><span>Detect surface defects, dimensional errors, missing components</span></div>
+        <div class="ai-item"><span>→</span><span>Generate pass/fail decisions with confidence scores</span></div>
+        <div class="ai-item"><span>→</span><span>Flag units for human verification and disposition</span></div>
+        <div class="ai-item"><span>→</span><span>Log every defect with time, location, and type for QA analysis</span></div>
+      </div>
+      <div class="air-card">
+        <h3>📋 AI in Quality Assurance</h3>
+        <div class="ai-item"><span>→</span><span>Analyze defect patterns across production runs to find root causes</span></div>
+        <div class="ai-item"><span>→</span><span>Predict which processes are at risk of drifting out of control</span></div>
+        <div class="ai-item"><span>→</span><span>Monitor supplier quality data for incoming material risk</span></div>
+        <div class="ai-item"><span>→</span><span>Simulate how process changes will affect defect rates before implementation</span></div>
+        <div class="ai-item"><span>→</span><span>Support audit preparation with auto-generated compliance records</span></div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>AI in QC is like a sharp-eyed inspector who never gets tired. AI in QA is like a data analyst who reads every inspection report ever written and finds the patterns no one else could see.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why You Need Both — and What Happens Without Each</h2>
+    <p><strong>QC without QA:</strong> Your inspection system catches defects — but the factory keeps making them at the same rate. You spend enormous resources on inspection, rework, and scrap but never fix the underlying process. Costs stay high. Quality stays inconsistent.</p>
+    <p><strong>QA without QC:</strong> You have great processes and procedures on paper — but no real-time verification that they're being followed and producing quality output. Problems accumulate undetected until a customer complaint or recall reveals a months-long quality failure that your audit system missed.</p>
+    <p><strong>QC and QA together:</strong> QC inspection generates a stream of real defect data. QA analysis turns that data into process improvements that reduce the defect rate. The improved process produces fewer defects for QC to find. Over time, the system drives toward Six Sigma performance — fewer defects, lower costs, better products.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">An electronics manufacturer is seeing a spike in circuit board defects — specifically, solder bridges between adjacent pads. Their QC inspection system is catching 98% of them before shipment. A manager says "our QC is working great — we're catching almost all the defects." What is the problem with this reasoning?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ 98% detection is actually quite good for QC. The problem the manager is missing isn\'t that QC detection is low — it\'s that QC catching the defects is only part of a good quality system. The defects are still being made in the first place, which means QA work (finding why solder bridges are occurring and fixing the process) is being neglected.')">98% detection is too low — they need to improve the QC system to catch closer to 100%</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The manager is only thinking about QC (catching defects that already exist) and ignoring QA (preventing defects from being made in the first place). Catching 98% of solder bridge defects is good QC — but a spike in solder bridges means a process problem that QA should be investigating. What changed? A new solder paste batch? A machine calibration drift? A process temperature change? Finding and fixing the root cause stops the defects from being made — which is far more cost-effective than catching them after the fact, plus it eliminates the 2% that slip through.')">They are relying on QC to manage a problem that QA should be solving — catching defects doesn\'t fix the process making them; the root cause of the solder bridge spike needs investigation and correction</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While improving from 98% to 100% detection would be valuable, it still doesn\'t address the root cause of why solder bridges are happening. Even perfect detection doesn\'t prevent defects from being made — it just catches all of them. QA work is needed to stop producing them in the first place.')">They should replace their QC system with one that catches 100% of defects</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A 2% escape rate (defects reaching customers) would be a very serious quality problem. But the manager\'s reasoning flaw is specifically in thinking QC catching defects is sufficient — it isn\'t. The underlying process issue creating the solder bridges needs to be fixed, not just managed through inspection.')">The reasoning is correct — 98% detection is excellent and the remaining 2% is within acceptable limits</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>QC is reactive — it inspects products after they're made to find defects. QA is proactive — it designs and manages the processes that prevent defects from occurring. Both are essential; neither is sufficient alone.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI in QC inspects 100% of products at speed and generates defect data. AI in QA analyzes that data to find root causes, predict process drift, and simulate the impact of improvements. These are different tools for different jobs.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Together, QC and QA form a feedback loop: QC inspection generates real defect data → QA analysis turns that data into process improvements → improved processes produce fewer defects → the system drives toward Six Sigma performance over time.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

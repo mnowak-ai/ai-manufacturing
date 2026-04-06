@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Dive: How Ford Uses AI Cameras to Catch Defects at the Dearborn Truck Plant</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+.plant-card{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:24px;padding:32px;margin:28px 0;color:white;}
+.pc-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple-mid);margin-bottom:12px;}
+.pc-name{font-family:"Fraunces",serif;font-size:26px;font-weight:900;margin-bottom:6px;}
+.pc-sub{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:18px;}
+.pc-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.pc-fact{background:rgba(255,255,255,.08);border-radius:10px;padding:12px 10px;text-align:center;}
+.pc-fact-num{font-family:"Fraunces",serif;font-size:19px;font-weight:700;color:var(--purple-mid);}
+.pc-fact-label{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.4;}
+@media(max-width:560px){.pc-facts{grid-template-columns:1fr 1fr;}}
+.mm-visual{background:var(--orange-pale);border:2px solid var(--orange);border-radius:20px;padding:26px;margin:28px 0;}
+.mm-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange);margin-bottom:14px;}
+.mm-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+.mm-col h3{font-size:14px;font-weight:700;margin-bottom:6px;}
+.mm-col.human h3{color:#92400E;}
+.mm-col.ai h3{color:var(--purple-dark);}
+.mm-col p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.mm-compare{grid-template-columns:1fr;}}
+.sys-cards{display:flex;flex-direction:column;gap:16px;margin:28px 0;}
+.sys-card{border-radius:20px;overflow:hidden;border:2px solid var(--purple-mid);}
+.sys-header{background:var(--purple-dark);padding:16px 24px;display:flex;align-items:center;gap:14px;}
+.sys-badge{background:var(--purple);color:white;font-size:13px;font-weight:700;padding:6px 14px;border-radius:8px;flex-shrink:0;}
+.sys-header-meta h3{font-size:17px;font-weight:700;color:white;margin-bottom:2px;}
+.sys-header-meta .sys-role{font-size:12px;color:var(--purple-mid);}
+.sys-body{padding:20px 24px;}
+.sys-body p{font-size:15px;line-height:1.75;margin-bottom:10px;}
+.sys-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.sys-feat{background:var(--purple-pale);border:1px solid var(--purple-mid);border-radius:8px;padding:4px 12px;font-size:13px;color:var(--purple-dark);}
+.worker-steps{display:flex;flex-direction:column;margin:28px 0;}
+.ws-row{display:flex;gap:14px;}
+.ws-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.ws-circle{width:40px;height:40px;border-radius:50%;background:var(--purple);color:white;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+.ws-line{flex:1;width:2px;background:var(--purple-mid);min-height:12px;}
+.ws-body{background:var(--gray-soft);border-radius:0 14px 14px 14px;padding:14px 18px;flex:1;margin-bottom:4px;}
+.ws-body h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.ws-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.6;}
+.ws-row:last-child .ws-line{display:none;}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.res-card{background:var(--green-pale);border:2px solid var(--green);border-radius:20px;padding:20px;text-align:center;}
+.res-num{font-family:"Fraunces",serif;font-size:32px;font-weight:900;color:var(--green);line-height:1;}
+.res-label{font-size:13px;color:var(--gray-text);margin-top:6px;line-height:1.5;}
+@media(max-width:560px){.results-grid{grid-template-columns:1fr 1fr;}}
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control · Case Study</div>
+  <h1>Deep Dive: How Ford Uses AI Cameras at the Dearborn Truck Plant</h1>
+  <p class="hero-sub">The slides give this case study one line. This article tells the full story — what the F-150 line actually looks like, what millimeter-scale defects mean for a $50,000 truck, what AiTriz and MAIVS do specifically, and how workers interact with the AI every shift.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+  <div class="section fade-in">
+    <h2>The Dearborn Truck Plant: Scale First</h2>
+    <p>Before you can understand what the AI does, you need to understand what it's operating inside. The Ford Dearborn Truck Plant is one of the most productive manufacturing facilities in North America — and its product is America's best-selling vehicle for over 40 consecutive years.</p>
+    <div class="plant-card">
+      <div class="pc-tag">🏭 Facility Profile</div>
+      <div class="pc-name">Ford Dearborn Truck Plant</div>
+      <div class="pc-sub">Dearborn, Michigan · Home of the Ford F-150</div>
+      <div class="pc-facts">
+        <div class="pc-fact"><div class="pc-fact-num">~1,700</div><div class="pc-fact-label">trucks produced daily across two shifts</div></div>
+        <div class="pc-fact"><div class="pc-fact-num">30,000+</div><div class="pc-fact-label">individual parts in every F-150</div></div>
+        <div class="pc-fact"><div class="pc-fact-num">$40K–$100K+</div><div class="pc-fact-label">price range depending on trim level</div></div>
+        <div class="pc-fact"><div class="pc-fact-num">750,000+</div><div class="pc-fact-label">F-150s sold per year in the US</div></div>
+      </div>
+    </div>
+    <p>At that volume and price point, defects that reach customers are enormously costly. A single recall covering even 1% of annual production means 7,500 vehicles — each requiring dealer service, customer communication, and parts replacement. Catching defects at the line, before a truck leaves the plant, is both a quality and financial imperative.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What "Millimeter-Scale" Detection Actually Means</h2>
+    <p>Ford's AI inspection systems detect defects smaller than 1mm — roughly the width of a pencil tip. The human eye reliably detects surface defects of about 3–5mm under good lighting. That gap matters at production speed.</p>
+    <div class="mm-visual">
+      <div class="mm-label">📏 Why Sub-Millimeter Detection Matters</div>
+      <p style="font-size:14px;color:#92400E;margin-bottom:14px;">A paint inclusion that's 0.8mm — invisible at arm's length under factory lighting — becomes clearly visible in direct sunlight at a specific angle. A customer paying $60,000 for a pickup truck notices it on Day 1. The warranty repair costs Ford far more than catching it at the line.</p>
+      <div class="mm-compare">
+        <div class="mm-col human"><h3>👁️ Human Inspector</h3><p>Fatigues after hours of repetitive visual work. Detection accuracy drops 20–30% by end of shift. Subjective — different inspectors make different calls. Can cover each panel in 30–60 seconds at best.</p></div>
+        <div class="mm-col ai"><h3>📷 AI Vision System</h3><p>No fatigue. Same sensitivity at hour 8 as hour 1. Objective — identical criteria every time. Inspects each surface in milliseconds. Generates data on every defect found for continuous improvement.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Two AI Systems: AiTriz and MAIVS</h2>
+    <div class="sys-cards">
+      <div class="sys-card">
+        <div class="sys-header"><div class="sys-badge">AiTriz</div><div class="sys-header-meta"><h3>AI-Powered Problem Solving Platform</h3><div class="sys-role">Role: Engineering root cause analysis and solution generation</div></div></div>
+        <div class="sys-body">
+          <p>AiTriz is built on the TRIZ methodology — a structured engineering problem-solving framework. Ford's AI-powered version analyzes recurring quality problems and searches millions of engineering patents and case studies to surface solutions. When a specific weld keeps cracking or a paint defect pattern keeps recurring, AiTriz can generate solution candidates in hours rather than the weeks a traditional engineering investigation would take.</p>
+          <div class="sys-features"><div class="sys-feat">Root cause analysis acceleration</div><div class="sys-feat">Engineering solution suggestion</div><div class="sys-feat">Cross-domain knowledge search</div><div class="sys-feat">Design contradiction resolution</div></div>
+        </div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-header"><div class="sys-badge">MAIVS</div><div class="sys-header-meta"><h3>Machine Aided Industrial Vision System</h3><div class="sys-role">Role: Real-time surface and assembly defect detection</div></div></div>
+        <div class="sys-body">
+          <p>MAIVS is Ford's computer vision platform for real-time defect detection. High-resolution cameras at key inspection points capture images of vehicle surfaces, welds, panels, and components as they move through the line. An AI model trained on thousands of good and defective examples analyzes each image in real time — generating alerts with defect location, type, and confidence score that go immediately to quality technicians.</p>
+          <div class="sys-features"><div class="sys-feat">Paint surface inspection</div><div class="sys-feat">Weld quality verification</div><div class="sys-feat">Panel gap and alignment</div><div class="sys-feat">Missing component detection</div><div class="sys-feat">Real-time alert generation</div><div class="sys-feat">Defect location mapping</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Workers Experience on the Line</h2>
+    <div class="worker-steps">
+      <div class="ws-row"><div class="ws-left"><div class="ws-circle">1</div><div class="ws-line"></div></div><div class="ws-body"><h3>Vehicle enters inspection zone</h3><p>As each truck body passes through a painted surface inspection station, MAIVS cameras capture hundreds of images from multiple angles. The full surface scan takes seconds — far faster than any human inspection.</p></div></div>
+      <div class="ws-row"><div class="ws-left"><div class="ws-circle">2</div><div class="ws-line"></div></div><div class="ws-body"><h3>AI flags a potential defect</h3><p>MAIVS detects a paint inclusion on the driver-side door. Alert appears on the technician's workstation: location (door panel, lower third), defect type (inclusion), confidence (94%), and a magnified image of the flagged area.</p></div></div>
+      <div class="ws-row"><div class="ws-left"><div class="ws-circle">3</div><div class="ws-line"></div></div><div class="ws-body"><h3>Technician verifies the finding</h3><p>The quality technician goes to the flagged location, uses an inspection light at the angle that best reveals surface defects, and confirms: yes, there is a paint inclusion. The AI was correct.</p></div></div>
+      <div class="ws-row"><div class="ws-left"><div class="ws-circle">4</div><div class="ws-line"></div></div><div class="ws-body"><h3>Technician makes the call</h3><p>The inclusion is 0.8mm — within the range that can be polished out. The technician tags the vehicle for paint correction at the refinish station and logs the defect. The truck continues down the line with a work order attached.</p></div></div>
+      <div class="ws-row"><div class="ws-left"><div class="ws-circle">5</div><div class="ws-line"></div></div><div class="ws-body"><h3>Data feeds back to the system</h3><p>The confirmed defect — location, type, size, shift, and paint batch — is logged. Quality management software tracks whether inclusions cluster on specific shifts, batches, or conditions. This drives root cause investigation and prevents recurrence.</p></div></div>
+    </div>
+    <div class="pull-quote"><p>The AI catches the defect. The technician confirms it. The technician decides what to do. Quality data from both feeds back into the system to prevent the next one. That's the full loop.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Business Impact</h2>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-num">~70%</div><div class="res-label">Reduction in defects reaching final inspection in AI-monitored zones</div></div>
+      <div class="res-card"><div class="res-num">ms</div><div class="res-label">Per surface area inspected vs. 30–60 seconds for manual inspection</div></div>
+      <div class="res-card"><div class="res-num">100%</div><div class="res-label">Coverage — every unit inspected, not just sampled</div></div>
+    </div>
+    <p>Beyond defect reduction, the shift to AI-assisted inspection changed what Ford's quality engineers spend their time on. Instead of floor inspections, they analyze defect data — finding patterns, investigating root causes, and making process changes that prevent defects from happening in the first place. The AI freed human expertise for higher-value work.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">Ford's MAIVS flags a paint defect on a truck door with 91% confidence. The quality technician inspects under normal lighting and cannot see anything. What should happen next?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ 91% confidence means the AI is fairly certain — but technician verification is exactly what the human-in-the-loop system exists for. Skipping verification and going straight to repair would also misuse technician time on false positives.')">Trust the AI completely — 91% is high enough to send straight to repair</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The AI detecting something the naked eye can\'t see under normal lighting is precisely the point of sub-millimeter AI inspection. Paint defects that are only visible at specific light angles or in direct sunlight are real quality failures — the technician should try different lighting conditions before concluding the flag was a false positive. If thorough inspection finds nothing, log it as a false positive, which is valuable calibration data for the system.')">Try different lighting angles — sub-millimeter defects often only appear under specific light conditions that the cameras captured but the naked eye misses at standard inspection angle</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ One unconfirmed flag is not grounds to recalibrate the whole system. Doing so would reduce sensitivity and cause the system to miss real defects. Unconfirmed flags should be logged as potential false positives and reviewed in aggregate over time before any threshold changes are made.')">Immediately recalibrate MAIVS — a 9% error rate means it is underperforming</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Releasing without further investigation after a 91% confidence AI flag is not appropriate. The technician\'s initial visual check under normal light is not the end of verification for sub-millimeter defects — it\'s the beginning.')">Release the vehicle — if the technician can\'t see it under normal light, it doesn\'t count as a defect</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Ford's Dearborn plant produces ~1,700 F-150s per day. At this volume and price point, sub-millimeter defects that reach customers generate warranty costs and brand damage that far exceed the cost of catching them at the line.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>MAIVS detects surface defects smaller than 1mm in milliseconds. AiTriz uses AI to analyze recurring quality problems and generate engineering solutions by searching patents and case studies. Together they address both detection and root cause analysis.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Workers verify AI flags, make disposition decisions, and log confirmed defects. That data feeds back into quality systems to identify patterns and prevent recurrence — the human-AI quality loop in action.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

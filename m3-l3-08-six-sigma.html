@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Six Sigma? Understanding the Quality Framework Behind Manufacturing Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Sigma levels */
+.sigma-levels{display:flex;flex-direction:column;gap:8px;margin:28px 0;}
+.sigma-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;border:1.5px solid;}
+.sigma-row.s1{background:#FFF1F1;border-color:#FECACA;}
+.sigma-row.s2{background:#FFF7ED;border-color:#FED7AA;}
+.sigma-row.s3{background:var(--orange-pale);border-color:#FDE68A;}
+.sigma-row.s4{background:#ECFDF5;border-color:#A7F3D0;}
+.sigma-row.s5{background:var(--green-pale);border-color:#6EE7B7;}
+.sigma-row.s6{background:var(--purple-pale);border-color:var(--purple-mid);}
+.sigma-badge{font-family:"Fraunces",serif;font-size:18px;font-weight:900;min-width:90px;flex-shrink:0;}
+.s1 .sigma-badge{color:var(--red);}
+.s2 .sigma-badge{color:#EA580C;}
+.s3 .sigma-badge{color:var(--orange);}
+.s4 .sigma-badge{color:#059669;}
+.s5 .sigma-badge{color:var(--green);}
+.s6 .sigma-badge{color:var(--purple-dark);}
+.sigma-defects{font-size:14px;font-weight:700;min-width:160px;flex-shrink:0;}
+.s1 .sigma-defects{color:var(--red);}
+.s2 .sigma-defects{color:#EA580C;}
+.s3 .sigma-defects{color:var(--orange);}
+.s4 .sigma-defects{color:#059669;}
+.s5 .sigma-defects{color:var(--green);}
+.s6 .sigma-defects{color:var(--purple-dark);}
+.sigma-context{font-size:13px;color:var(--gray-text);line-height:1.5;}
+
+/* DMAIC */
+.dmaic-steps{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.dm-row{display:flex;gap:14px;}
+.dm-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0;}
+.dm-letter{width:48px;height:48px;border-radius:12px;background:var(--purple);color:white;display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-size:22px;font-weight:900;flex-shrink:0;}
+.dm-line{flex:1;width:2px;background:var(--purple-mid);min-height:12px;}
+.dm-body{background:var(--gray-soft);border-radius:0 14px 14px 14px;padding:16px 20px;flex:1;margin-bottom:4px;}
+.dm-body h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.dm-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+.dm-body .dm-ai{font-size:12px;color:var(--purple);font-weight:600;margin-top:8px;}
+.dm-row:last-child .dm-line{display:none;}
+
+/* Belt levels */
+.belt-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:28px 0;}
+.belt-card{border-radius:14px;padding:16px;text-align:center;border:2px solid;}
+.belt-card.yellow{background:#FEFCE8;border-color:#FDE047;}
+.belt-card.green{background:var(--green-pale);border-color:var(--green);}
+.belt-card.black{background:#1F2937;border-color:#374151;}
+.belt-card.master{background:var(--purple-pale);border-color:var(--purple);}
+.belt-icon{font-size:28px;margin-bottom:8px;}
+.belt-card h3{font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.yellow h3{color:#92400E;}
+.green h3{color:var(--green);}
+.black h3{color:white;}
+.master h3{color:var(--purple-dark);}
+.belt-card p{font-size:12px;line-height:1.5;margin:0;}
+.yellow p{color:#92400E;}
+.green p{color:var(--gray-text);}
+.black p{color:rgba(255,255,255,.7);}
+.master p{color:var(--gray-text);}
+@media(max-width:560px){.belt-row{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>What Is Six Sigma?</h1>
+  <p class="hero-sub">Six Sigma is the dominant quality methodology in manufacturing — you'll encounter it on job postings, in team meetings, and in quality reports within your first month in a manufacturing role. This article explains what it means, why it matters, and how AI connects to it — no statistics background required.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Where Six Sigma Came From</h2>
+    <p>Six Sigma was developed at Motorola in the 1980s as a response to a quality crisis — Japanese electronics manufacturers were consistently producing higher-quality products at lower cost, and American companies needed a systematic response. Bill Smith, an engineer at Motorola, developed the framework. Jack Welch made it famous by adopting it company-wide at General Electric in the 1990s, where it saved the company over $10 billion in a decade.</p>
+    <p>Today, Six Sigma is used in manufacturing, healthcare, finance, logistics, and software — anywhere that process consistency and defect reduction matter. In manufacturing, it's the language of quality improvement.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Six Sigma:</strong> A data-driven methodology for improving process quality by identifying and eliminating the causes of defects. The name comes from statistics — "sigma" (σ) measures how much a process varies from its target. Six sigma means achieving fewer than 3.4 defects per million opportunities (DPMO) — essentially near-perfect consistency.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Sigma Scale: From 1 to 6</h2>
+    <p>Sigma is a statistical measure of how consistent a process is. Higher sigma = less variation = fewer defects. The table below shows what each sigma level means in practice — and puts the "6 sigma" goal in perspective.</p>
+
+    <div class="sigma-levels">
+      <div class="sigma-row s1"><span class="sigma-badge">1σ</span><span class="sigma-defects">690,000 DPMO</span><span class="sigma-context">69% defect rate. Essentially random output. No functional manufacturing process operates here.</span></div>
+      <div class="sigma-row s2"><span class="sigma-badge">2σ</span><span class="sigma-defects">308,000 DPMO</span><span class="sigma-context">69% good product. The post office loses 1 in 3 pieces of mail. Not viable for manufacturing.</span></div>
+      <div class="sigma-row s3"><span class="sigma-badge">3σ</span><span class="sigma-defects">66,800 DPMO</span><span class="sigma-context">93.3% good. 20,000 lost pieces of mail per hour. Many service industries operate here.</span></div>
+      <div class="sigma-row s4"><span class="sigma-badge">4σ</span><span class="sigma-defects">6,210 DPMO</span><span class="sigma-context">99.4% good. Most manufacturing companies target 4σ as a baseline. Better — but still problematic at scale.</span></div>
+      <div class="sigma-row s5"><span class="sigma-badge">5σ</span><span class="sigma-defects">233 DPMO</span><span class="sigma-context">99.98% good. High-quality manufacturing target. 1 wrong drug prescription per 25 years.</span></div>
+      <div class="sigma-row s6"><span class="sigma-badge">6σ</span><span class="sigma-defects">3.4 DPMO</span><span class="sigma-context">99.9997% good. Near-perfection. Semiconductor manufacturing, medical devices, and aviation components target this level.</span></div>
+    </div>
+
+    <p>To make 3.4 DPMO concrete: if Ford produces 750,000 trucks per year and achieves Six Sigma quality on their assembly process, that's fewer than 3 defective trucks per million — or roughly 2–3 defects per year across their entire US production. <mark>That's the level of consistency Six Sigma targets.</mark></p>
+
+    <div class="pull-quote"><p>99% sounds great — until you realize that at 99% quality, a hospital giving 200 medications per day delivers 2 wrong medications every single day. At Six Sigma, that's 1 error every 400 years.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>DMAIC: The Five-Step Problem-Solving Framework</h2>
+    <p>Six Sigma improvement projects follow a structured methodology called <mark>DMAIC</mark> — pronounced "deh-MAY-ick." Every letter stands for a phase. DMAIC gives quality teams a repeatable playbook for diagnosing and fixing quality problems — and AI tools now accelerate every phase.</p>
+
+    <div class="dmaic-steps">
+      <div class="dm-row"><div class="dm-left"><div class="dm-letter">D</div><div class="dm-line"></div></div><div class="dm-body"><h3>Define — What problem are we solving?</h3><p>Identify the problem, the process affected, who the customer is, and what matters to them. Write a clear problem statement: "The defect rate on Line 4 paint application is 2.3% — above our 0.5% target — causing $240,000 in monthly rework costs." Define the project scope and success criteria.</p><div class="dm-ai">🤖 AI role: Quality dashboards surface where defect rates are highest and translate data into project scope.</div></div></div>
+      <div class="dm-row"><div class="dm-left"><div class="dm-letter">M</div><div class="dm-line"></div></div><div class="dm-body"><h3>Measure — How bad is the problem, exactly?</h3><p>Collect precise data on the current process. How many defects? Of what types? At what rate? At which stations? During which shifts? The measurement phase establishes the baseline that improvement will be compared against — and reveals where to look for root causes.</p><div class="dm-ai">🤖 AI role: Automated inspection systems provide continuous, comprehensive defect data — far more precise than manual sampling.</div></div></div>
+      <div class="dm-row"><div class="dm-left"><div class="dm-letter">A</div><div class="dm-line"></div></div><div class="dm-body"><h3>Analyze — Why is it happening?</h3><p>Dig into the data to find root causes — not symptoms. A defect clustering on a specific shift points to a training or supervision issue. Defects clustering after a machine maintenance cycle points to a calibration issue. Root cause analysis tools like fishbone diagrams, 5 Whys, and statistical correlation find the real causes.</p><div class="dm-ai">🤖 AI role: Pattern recognition across large datasets identifies root cause correlations that would take humans weeks to find manually.</div></div></div>
+      <div class="dm-row"><div class="dm-left"><div class="dm-letter">I</div><div class="dm-line"></div></div><div class="dm-body"><h3>Improve — What changes will fix it?</h3><p>Design, test, and implement solutions that address root causes. Solutions might include equipment recalibration, process parameter changes, material supplier changes, training updates, or workflow redesign. Solutions are tested in controlled pilots before full-scale rollout.</p><div class="dm-ai">🤖 AI role: Simulation models test proposed changes before implementation. AI systems like Ford's AiTriz suggest solution candidates from engineering databases.</div></div></div>
+      <div class="dm-row"><div class="dm-left"><div class="dm-letter">C</div></div><div class="dm-body"><h3>Control — How do we keep the gains?</h3><p>Implement monitoring systems to ensure the improvement sticks. Document new procedures. Set up control charts to detect if the process drifts back toward old defect rates. This phase is where Six Sigma projects hand off to ongoing quality monitoring — including AI surveillance systems that watch for the problem recurring.</p><div class="dm-ai">🤖 AI role: Continuous monitoring systems provide the ongoing surveillance that makes the Control phase automatic rather than requiring constant manual attention.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Belt System: Career Levels in Six Sigma</h2>
+    <p>Six Sigma practitioners earn certifications called "belts" — similar to martial arts rankings. These appear constantly on manufacturing job postings and promotions. Here's what each means:</p>
+
+    <div class="belt-row">
+      <div class="belt-card yellow"><div class="belt-icon">🟡</div><h3>Yellow Belt</h3><p>Basic Six Sigma awareness. Participates in projects. Understands DMAIC concepts. Often required for entry-level QC roles.</p></div>
+      <div class="belt-card green"><div class="belt-icon">🟢</div><h3>Green Belt</h3><p>Leads small improvement projects while working in their primary role. Applies DMAIC tools. Common milestone for QC technicians moving into specialist roles.</p></div>
+      <div class="belt-card black"><div class="belt-icon">⚫</div><h3>Black Belt</h3><p>Dedicated Six Sigma role — leads major improvement projects full time. Deep statistical and DMAIC expertise. Often earns $80K–$120K+.</p></div>
+      <div class="belt-card master"><div class="belt-icon">🟣</div><h3>Master Black Belt</h3><p>Trains and coaches Black Belts. Drives organizational quality strategy. Senior leadership role in quality-focused companies.</p></div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A food manufacturer is producing 2 million granola bars per month. Their current defect rate (foreign objects detected) is 0.05% — which means 1,000 defective bars per month. A Six Sigma improvement project reduces the defect rate to 0.001% (20 bars per month). Which sigma level are they approximately operating at after the improvement?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Three sigma (3σ) corresponds to roughly 66,800 defects per million opportunities — about 6.7% defect rate. At 0.001% (10 per million), this manufacturer is well above 3σ performance.')">3 Sigma — they still have some defects so they haven\'t reached a high sigma level</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Four sigma (4σ) corresponds to about 6,210 defects per million opportunities — roughly 0.6% defect rate. At 0.001% (10 defects per million), this manufacturer is above 4σ performance.')">4 Sigma — most manufacturing companies target this level</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. 0.001% defect rate = 10 defects per million opportunities (DPMO). Six Sigma targets 3.4 DPMO — so at 10 DPMO, this manufacturer is approaching Six Sigma performance, sitting between 5σ (233 DPMO) and 6σ (3.4 DPMO). That\'s exceptional quality for food manufacturing. The improvement project took them from roughly 4σ performance (500 DPMO) to near 6σ — a dramatic quality leap that almost certainly eliminated customer complaints, regulatory risk, and potential recall exposure from the foreign object issue.')">Between 5 and 6 Sigma — at 10 defects per million, they are approaching Six Sigma territory</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Achieving true Six Sigma means 3.4 DPMO or fewer. At 10 DPMO, this manufacturer is close but not quite there — they\'re between 5σ and 6σ. Still, this is outstanding performance that would represent near-elimination of the foreign object defect issue.')">Exactly Six Sigma — any defect rate below 0.01% qualifies as Six Sigma performance</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Six Sigma is a quality methodology targeting fewer than 3.4 defects per million opportunities — near-perfect consistency. The name comes from statistics: sigma measures process variation, and six sigma means the process is so consistent that virtually nothing falls outside the acceptable range.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>DMAIC is the five-step improvement framework: Define (what problem?), Measure (how bad?), Analyze (why?), Improve (what changes?), Control (keep the gains). AI accelerates every phase — from surfacing defect patterns in Measure to continuous monitoring in Control.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The belt system (Yellow, Green, Black, Master Black Belt) marks career levels in Six Sigma expertise. These appear on manufacturing job postings constantly — knowing what they mean gives you an immediate vocabulary advantage in QC-related roles.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

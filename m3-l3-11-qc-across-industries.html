@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-World Spotlight: QC AI in Food, Pharma, and Electronics</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Industry deep-dives */
+.ind-section{border-radius:24px;overflow:hidden;border:2px solid;margin:32px 0;}
+.ind-section.food{border-color:#86EFAC;}
+.ind-section.pharma{border-color:var(--blue-mid);}
+.ind-section.elec{border-color:var(--purple-mid);}
+.ind-header{padding:22px 28px;display:flex;align-items:center;gap:18px;}
+.food .ind-header{background:linear-gradient(135deg,#14532D,#166534);}
+.pharma .ind-header{background:linear-gradient(135deg,#1E3A8A,#1D4ED8);}
+.elec .ind-header{background:linear-gradient(135deg,#1A0A2E,#4A1580);}
+.ind-icon{font-size:42px;}
+.ind-header-meta h2{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:white;margin:0 0 4px;}
+.ind-header-meta .ind-sub{font-size:13px;color:rgba(255,255,255,.65);}
+.ind-body{padding:24px 28px;background:white;}
+.ind-body p{font-size:15px;margin-bottom:14px;}
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.tech-card{border-radius:12px;padding:14px 16px;border:1.5px solid;}
+.food .tech-card{background:var(--green-pale);border-color:#86EFAC;}
+.pharma .tech-card{background:var(--blue-pale);border-color:var(--blue-mid);}
+.elec .tech-card{background:var(--purple-pale);border-color:var(--purple-mid);}
+.tech-card h3{font-size:13px;font-weight:700;margin-bottom:4px;}
+.food .tech-card h3{color:var(--green);}
+.pharma .tech-card h3{color:var(--blue);}
+.elec .tech-card h3{color:var(--purple-dark);}
+.tech-card p{font-size:12px;color:var(--gray-text);margin:0;line-height:1.6;}
+.stakes-box{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.65;}
+.food .stakes-box{background:#FEF2F2;color:var(--red);border:1px solid #FECACA;}
+.pharma .stakes-box{background:#FFF7ED;color:#92400E;border:1px solid #FED7AA;}
+.elec .stakes-box{background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid);}
+@media(max-width:560px){.tech-grid{grid-template-columns:1fr;}}
+
+/* What's the same / what's different */
+.same-diff{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.sd-card{border-radius:16px;padding:20px;border:2px solid var(--purple-mid);}
+.sd-card.same{background:var(--purple-pale);}
+.sd-card.diff{background:var(--gray-soft);}
+.sd-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.same .sd-label{color:var(--purple);}
+.diff .sd-label{color:var(--gray-muted);}
+.sd-item{display:flex;gap:8px;font-size:13px;line-height:1.6;color:var(--gray-text);margin-bottom:6px;}
+@media(max-width:560px){.same-diff{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>QC AI Across Industries</h1>
+  <p class="hero-sub">Ford gets the case study — but machine vision quality control is used across food, pharma, and electronics manufacturing in ways that are just as interesting and just as impactful. The same core technology looks very different when it's inspecting potato chips versus circuit boards versus medication tablets.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>One Technology, Many Contexts</h2>
+    <p>Machine vision QC — cameras + AI models trained to detect defects — is the common thread. But how that technology is configured, what it's looking for, and what happens when it finds a problem differs dramatically across industries. Each context has its own production speeds, defect stakes, regulatory requirements, and inspection challenges.</p>
+    <div class="pull-quote"><p>The same principle — train an AI to recognize what "correct" looks like, flag everything that doesn't match — produces completely different systems depending on whether you're inspecting a pill, a potato chip, or a processor chip.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="ind-section food">
+      <div class="ind-header"><div class="ind-icon">🥫</div><div class="ind-header-meta"><h2>Food Manufacturing</h2><div class="ind-sub">Key challenge: Foreign objects, contamination, weight consistency, and packaging integrity — at massive production volumes</div></div></div>
+      <div class="ind-body">
+        <p>Food manufacturing operates at some of the highest production speeds in any industry. A single potato chip line can produce 2,000 kg of product per hour. A bottled beverage line fills 1,500 bottles per minute. Human visual inspection at these speeds is physically impossible — AI inspection is not optional, it's essential.</p>
+        <p>The most critical food QC challenge is foreign object detection — finding metal fragments, bone chips, glass pieces, plastic bits, or insects in food products before they reach consumers. X-ray inspection systems scan every unit of product in real time, and AI models trained on thousands of contaminated product images can detect objects as small as 0.5mm of metal at line speed.</p>
+        <div class="tech-grid">
+          <div class="tech-card food"><h3>X-Ray Inspection</h3><p>Detects dense foreign objects (metal, bone, glass, some plastics) inside packaged products that optical cameras can't see. Standard in meat, poultry, bread, and ready meals production.</p></div>
+          <div class="tech-card food"><h3>Hyperspectral Imaging</h3><p>Analyzes light at hundreds of wavelengths simultaneously. Can detect mold, bruising, contamination, and wrong ingredients that look normal to standard cameras. Used in produce, nuts, and grains.</p></div>
+          <div class="tech-card food"><h3>Weight Verification AI</h3><p>Every unit weighed at speed. AI correlates weight with fill level, detects underfills and overfills, and flags packaging lines that are drifting out of specification before a full batch is affected.</p></div>
+          <div class="tech-card food"><h3>Seal Integrity Inspection</h3><p>Vision systems check seal quality on every package — detecting incomplete seals, wrinkles, or contamination in the seal zone that could allow spoilage. Critical for food safety and shelf life.</p></div>
+        </div>
+        <p><strong>What makes food QC unique:</strong> The combination of massive volume, extremely diverse products (different shapes, colors, and textures in every category), and the direct health consequences of contamination. AI models must be trained separately for each product type — a model trained on potato chips doesn't inspect granola bars.</p>
+        <div class="stakes-box"><strong>What's at stake:</strong> A single metal fragment that reaches a consumer can cause severe dental or internal injury. An undeclared allergen from a contaminated production line can be fatal to a severely allergic person. The 2015 Blue Bell listeria outbreak killed 3 people. Food contamination QC failures have direct human consequences — and full recalls that can bankrupt smaller food companies.</div>
+      </div>
+    </div>
+
+    <div class="ind-section pharma">
+      <div class="ind-header"><div class="ind-icon">💊</div><div class="ind-header-meta"><h2>Pharmaceutical Manufacturing</h2><div class="ind-sub">Key challenge: 100% inspection of every unit for defects that directly affect patient safety — at thousands of units per minute</div></div></div>
+      <div class="ind-body">
+        <p>Pharmaceutical QC operates under the strictest requirements of any manufacturing industry — because a defective medication can directly harm or kill the patient who takes it. Unlike automotive or food inspection, where statistical sampling is sometimes acceptable, pharmaceutical QC under FDA GMP regulations requires that every unit be inspectable — with a documented rationale for any sampling approach used.</p>
+        <p>Modern tablet and capsule inspection machines inspect 200,000–400,000 units per hour using multiple cameras and imaging systems simultaneously. Every unit is checked for color, size, shape, coating uniformity, surface defects, print quality (the imprint that identifies the drug), and foreign contamination. AI models are trained on the specific product — a model for ibuprofen tablets is completely different from one for extended-release capsules.</p>
+        <div class="tech-grid">
+          <div class="tech-card pharma"><h3>Multi-Camera Vision Systems</h3><p>Simultaneously capture top, bottom, and side views of every tablet or capsule. AI checks each view for cracks, chips, coating defects, color inconsistency, and surface contamination.</p></div>
+          <div class="tech-card pharma"><h3>Near-Infrared (NIR) Spectroscopy</h3><p>Verifies chemical composition non-destructively. Can confirm a tablet actually contains the active ingredient at the right concentration — not just that it looks right on the outside.</p></div>
+          <div class="tech-card pharma"><h3>Weight Sampling AI</h3><p>Statistical weight sampling (weighing 1 unit per X units) verifies dosage consistency. AI monitors trends — a slow weight drift indicates a feeding mechanism problem before it causes out-of-spec product.</p></div>
+          <div class="tech-card pharma"><h3>Print Verification</h3><p>Checks that the imprint (drug name, dose, manufacturer) on each tablet is present, correctly positioned, and legible. A missing or wrong imprint can cause wrong-drug administration errors.</p></div>
+        </div>
+        <p><strong>What makes pharma QC unique:</strong> Every defect has a potential patient impact. Zero tolerance for foreign particle contamination. Extensive documentation requirements — every inspection result must be logged, every rejected unit traced. The regulatory audit trail generated by AI inspection systems is as valuable as the detection capability itself.</p>
+        <div class="stakes-box"><strong>What's at stake:</strong> Wrong dosage → treatment failure or overdose. Foreign contamination → allergic reaction or illness. Cracked tablet → inconsistent drug release. In pharmaceutical QC, the person affected by a quality failure is a patient who trusted the medication to help them. The stakes are personal and immediate.</div>
+      </div>
+    </div>
+
+    <div class="ind-section elec">
+      <div class="ind-header"><div class="ind-icon">🔬</div><div class="ind-header-meta"><h2>Electronics Manufacturing</h2><div class="ind-sub">Key challenge: Microscopic defects invisible to the naked eye — at high volumes and high product complexity</div></div></div>
+      <div class="ind-body">
+        <p>Electronics QC faces a fundamental problem: the most important defects are often invisible. A solder joint that looks perfect on the surface may have microscopic voids inside that cause intermittent failures after six months of thermal cycling. A component mounted 0.1mm off-position may pass visual inspection but fail under vibration. Electronics inspection requires technologies that can see things the human eye never could.</p>
+        <p>A modern smartphone circuit board (PCB) has thousands of components — some smaller than a grain of sand — placed with robotic precision. Automated Optical Inspection (AOI) systems photograph every square millimeter of the board at high magnification and AI models check every solder joint, component position, and pad connection. Lines producing consumer electronics inspect boards at rates exceeding 10,000 per hour.</p>
+        <div class="tech-grid">
+          <div class="tech-card elec"><h3>Automated Optical Inspection (AOI)</h3><p>High-resolution cameras photograph PCBs from multiple angles. AI checks component presence, orientation, solder joint shape, and board cleanliness. The primary QC tool for surface-mounted electronics.</p></div>
+          <div class="tech-card elec"><h3>X-Ray Inspection (AXI)</h3><p>Sees inside BGA (Ball Grid Array) packages where solder joints are hidden beneath the component. X-ray AI detects voids, bridging, and insufficient solder in connections that are physically inaccessible to optical inspection.</p></div>
+          <div class="tech-card elec"><h3>In-Circuit Testing (ICT)</h3><p>Electrical probes test every node on the circuit to verify correct component values and connections. AI manages test sequences and interprets results — separating genuine failures from test artifacts.</p></div>
+          <div class="tech-card elec"><h3>Thermal Imaging</h3><p>Detects heat patterns that indicate defective components or connections. A component drawing more current than expected shows up as a hot spot — before it causes a field failure.</p></div>
+        </div>
+        <p><strong>What makes electronics QC unique:</strong> The combination of microscopic scale, extreme product complexity, and invisible failure modes. AI vision in electronics isn't just faster than human inspection — for many defect types, it's the only feasible inspection method at all. Human inspectors simply cannot see what needs to be seen.</p>
+        <div class="stakes-box"><strong>What's at stake:</strong> A defective medical device (pacemaker, insulin pump) can directly harm a patient. A defective consumer device damages brand reputation and triggers recalls — Samsung's Galaxy Note 7 battery defect cost over $5 billion. In automotive electronics, a defective control module can affect safety systems. The consequences span from inconvenient to life-threatening depending on application.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What's the Same Across All Three — and What's Different</h2>
+    <div class="same-diff">
+      <div class="sd-card same">
+        <div class="sd-label">✅ The Same Core Principles</div>
+        <div class="sd-item"><span>→</span><span>Train AI on examples of good and defective product</span></div>
+        <div class="sd-item"><span>→</span><span>Apply at production speed to every unit</span></div>
+        <div class="sd-item"><span>→</span><span>Generate confidence scores, not just binary pass/fail</span></div>
+        <div class="sd-item"><span>→</span><span>Flag for human verification and disposition</span></div>
+        <div class="sd-item"><span>→</span><span>Log all defects for root cause analysis</span></div>
+        <div class="sd-item"><span>→</span><span>AI detects; humans decide what to do</span></div>
+      </div>
+      <div class="sd-card diff">
+        <div class="sd-label">⚡ What Differs by Industry</div>
+        <div class="sd-item"><span>→</span><span>Inspection technology (optical, X-ray, NIR, AOI)</span></div>
+        <div class="sd-item"><span>→</span><span>Production speed and scale requirements</span></div>
+        <div class="sd-item"><span>→</span><span>Regulatory requirements and documentation burden</span></div>
+        <div class="sd-item"><span>→</span><span>What "defect" means and its consequence severity</span></div>
+        <div class="sd-item"><span>→</span><span>Sampling vs. 100% inspection requirements</span></div>
+        <div class="sd-item"><span>→</span><span>The cost and stakes of a false negative</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A food manufacturer is considering upgrading from standard optical cameras to X-ray inspection for their frozen meat product line. The plant manager asks: "Our cameras are already catching surface defects — why would we need X-ray too?" What is the best answer?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ X-ray inspection does cost more than optical cameras — but that\'s not the reason to choose it. The choice between inspection technologies should be based on what defects need to be detected, not cost alone. For frozen meat, the most dangerous defects may require X-ray to detect.')">X-ray is more expensive and probably not worth the cost for most food applications</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Optical cameras can only detect defects on the surface of a product that are visible in the wavelengths of light they capture. Bone fragments, metal shards, or dense foreign objects inside a frozen meat product are completely invisible to an optical camera — they\'re hidden inside the product. X-ray inspection penetrates the product and can detect these interior objects regardless of what the surface looks like. For meat products specifically, bone fragment detection is a critical safety requirement — and bones are often completely invisible on the product surface. The optical camera upgrade addresses surface defects; X-ray addresses interior contamination. Both are needed for comprehensive inspection.')">Optical cameras only see the surface — X-ray penetrates the product to detect bone fragments, metal, and other foreign objects hidden inside the meat that surface cameras cannot see</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The choice between optical and X-ray inspection is not primarily about resolution or pixel count. A very high-resolution optical camera still cannot see inside a frozen meat product — that\'s a fundamental physics limitation, not a resolution limitation. X-ray is needed for a completely different reason: penetration, not magnification.')">X-ray systems have better image resolution than optical cameras and will catch more surface defects</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ X-ray inspection is not required for regulatory compliance in all food applications — it\'s required when the hazard analysis (HACCP) identifies foreign object contamination as a significant hazard that requires a control point. The reason to choose X-ray for frozen meat is the detection capability it provides, not a blanket regulatory mandate.')">X-ray is required by FDA regulations for all food products regardless of optical camera capability</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Machine vision QC — AI trained to detect defects, applied at production speed — is used across food, pharmaceutical, and electronics manufacturing. The core principle is the same; the technology, scale, and stakes differ significantly by industry.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>Different defects require different inspection technologies: optical cameras for surface defects, X-ray for interior contamination, NIR spectroscopy for chemical composition, AOI for circuit board components, and AXI for hidden solder joints. Matching the technology to the defect type is fundamental.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Across all industries, AI detects and humans decide. What differs is the regulatory burden on documentation, the speed and scale of production, and the severity of consequences if a defect reaches the end user — from inconvenience to direct patient or consumer harm.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

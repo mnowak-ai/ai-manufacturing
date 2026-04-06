@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Production Line and How Does It Work?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Interactive line sim */
+.line-sim{background:#0F0A1A;border-radius:24px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.ls-header{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;margin-bottom:18px;}
+.ls-conveyor{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--purple) #1A0A2E;}
+.ls-station{min-width:90px;border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid;}
+.ls-station.ops{background:rgba(123,47,190,.15);border-color:var(--purple-mid);}
+.ls-station.qc{background:rgba(39,103,73,.15);border-color:#6EE7B7;}
+.ls-station.alert{background:rgba(220,38,38,.15);border-color:#FCA5A5;}
+.ls-station:hover{transform:translateY(-2px);}
+.ls-station.selected{transform:translateY(-3px);box-shadow:0 0 0 3px white;}
+.ls-st-icon{font-size:22px;margin-bottom:5px;}
+.ls-st-name{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.75);line-height:1.3;}
+.ls-detail{background:#1A0A2E;border-radius:14px;padding:18px;}
+.ld-name{font-family:var(--mono);font-size:14px;font-weight:700;color:#E2D9F3;margin-bottom:6px;}
+.ld-type{font-size:11px;margin-bottom:10px;font-weight:700;}
+.ld-type.ops{color:var(--purple-mid);}
+.ld-type.qc{color:#6EE7B7;}
+.ld-type.alert{color:#FCA5A5;}
+.ld-items{display:flex;flex-direction:column;gap:4px;}
+.ld-item{font-size:13px;color:rgba(255,255,255,.75);display:flex;gap:8px;line-height:1.5;}
+
+/* Downstream defect explainer */
+.downstream{background:var(--orange-pale);border:2px solid var(--orange);border-radius:20px;padding:26px;margin:28px 0;}
+.ds-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange);margin-bottom:14px;}
+.ds-steps{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.ds-step{background:white;border-radius:10px;padding:10px 14px;text-align:center;border:1.5px solid var(--orange);min-width:80px;}
+.ds-step .ds-icon{font-size:20px;}
+.ds-step .ds-lbl{font-size:11px;font-weight:700;color:#92400E;margin-top:3px;line-height:1.3;}
+.ds-arrow{font-size:18px;color:var(--orange);}
+.ds-note{font-size:14px;color:#92400E;line-height:1.65;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>What Is a Production Line and How Does It Work?</h1>
+  <p class="hero-sub">You can't visualize where QC happens if you don't know what a production line looks like. This article walks through how products move through stations, where quality checkpoints exist, and why defects that aren't caught early become much bigger problems downstream.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Production Line: A Simple Idea, Massive Impact</h2>
+    <p>A <mark>production line</mark> (also called an assembly line) is a manufacturing arrangement where a product moves through a sequence of workstations, with each station completing one specific operation before passing the product to the next. The product starts as raw materials or components and ends as a finished product — transformed incrementally at each step.</p>
+    <p>This idea — which Henry Ford perfected for automobile manufacturing in 1913 — is what made mass production possible. Before assembly lines, a skilled craftsperson would build an entire product from start to finish, one at a time. On an assembly line, each worker or machine specializes in one step, doing it repeatedly and quickly. Ford's Model T took over 12 hours to build by hand — the assembly line cut it to 93 minutes.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Terms</div>
+      <div class="vocab-def"><strong>Workstation:</strong> A fixed location on the production line where a specific operation is performed. Could be manual (a person doing assembly), automated (a robot welding), or a combination.<br><br><strong>Takt Time:</strong> The rate at which products must be completed to meet customer demand. If a factory needs to produce 480 units in an 8-hour shift, the takt time is 60 seconds — every station must complete its work within 60 seconds or the line falls behind.<br><br><strong>Bottleneck:</strong> The slowest station on the line — the one that limits overall throughput. Everything upstream backs up waiting for the bottleneck to finish.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Explore an Automotive Assembly Line</h2>
+    <p>Click on any station below to see what operation happens there, who or what performs it, and where QC checkpoints exist along the way.</p>
+
+    <div class="line-sim">
+      <div class="ls-header">AUTOMOTIVE ASSEMBLY LINE — CLICK ANY STATION</div>
+      <div class="ls-conveyor" id="conveyor"></div>
+      <div class="ls-detail" id="stationDetail"><div class="ld-name">← Select a station to see details</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Catching Defects Early Is So Important</h2>
+    <p>On a production line, every station adds value — materials, labor, energy, and time. A defect that isn't caught at Station 3 carries all the accumulated cost of Stations 1, 2, and 3 forward into every subsequent station. By the time it reaches the end of the line, it has consumed the full value of every operation that went into it — plus it may have made downstream operations impossible or caused additional damage.</p>
+
+    <div class="downstream">
+      <div class="ds-label">⚠️ How Defects Travel — and Get More Expensive</div>
+      <div class="ds-steps">
+        <div class="ds-step"><div class="ds-icon">🔩</div><div class="ds-lbl">Defect Created<br>at Station 2</div></div>
+        <div class="ds-arrow">→</div>
+        <div class="ds-step"><div class="ds-icon">🔧</div><div class="ds-lbl">Station 3<br>adds labor</div></div>
+        <div class="ds-arrow">→</div>
+        <div class="ds-step"><div class="ds-icon">🎨</div><div class="ds-lbl">Station 4<br>adds paint</div></div>
+        <div class="ds-arrow">→</div>
+        <div class="ds-step"><div class="ds-icon">🔌</div><div class="ds-lbl">Station 5<br>adds wiring</div></div>
+        <div class="ds-arrow">→</div>
+        <div class="ds-step"><div class="ds-icon">🔍</div><div class="ds-lbl">QC catches<br>at Station 6</div></div>
+      </div>
+      <div class="ds-note">By the time QC catches the defect at Station 6, all the labor, materials, and time from Stations 3–5 have already been invested in a product that may need to be scrapped. Catching the defect at Station 2 costs pennies. Catching it at Station 6 costs dollars. Missing it entirely and shipping it to a customer costs far more.</div>
+    </div>
+
+    <p>This is why <mark>inline QC checkpoints</mark> — inspection at each station, not just at the end — are so valuable. An AI vision system positioned at Station 3 that catches a defect before Stations 4 and 5 do their work saves all the cost of those subsequent operations.</p>
+
+    <div class="pull-quote"><p>A production line turns a defect into a downstream problem with every station it passes through. Early detection doesn't just find defects — it prevents the compounding of cost.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where QC Fits in the Line</h2>
+    <p>Quality control happens at three levels in a production line:</p>
+    <p><strong>Incoming inspection</strong> happens before production starts — verifying that incoming materials and components meet specification before they're used. Defects in raw materials contaminate every product made from them. AI sensors and vision systems can automate incoming inspection for many material types.</p>
+    <p><strong>In-process inspection</strong> happens at specific checkpoints during production — typically after operations that are hard to correct if done wrong (welding, painting, bonding). This is where AI vision systems on the line operate. Catching defects in-process, before more operations are added, minimizes rework cost.</p>
+    <p><strong>Final inspection</strong> happens at the end of the line, before shipment. This is the last chance to catch anything that slipped through in-process inspection. AI final inspection systems can catch issues that accumulated across multiple stations — ensuring nothing substandard leaves the facility.</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A car door hinge is welded at Station 4 of a 12-station assembly line. The weld is slightly weak — it won't fail immediately, but it will likely fail within the first year of vehicle use. The AI inspection system at Station 4 does not flag it because the defect is in the weld's internal structure, not its visible surface. The vehicle passes all final inspection checks and is shipped. What category of QC failure does this represent?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A false positive means the system flags something as defective when it isn\'t. In this case, the AI did NOT flag the defective weld — the defective product passed through. This is the opposite: a false negative.')">A false positive — the AI flagged a good weld as defective</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is a false negative — the defect existed, but the AI inspection system did not detect it. In this case, the failure mode is fundamental to the inspection method: surface visual inspection cannot detect internal structural weakness in a weld. This is exactly why different types of defects require different inspection methods — a visual camera is the wrong tool for detecting internal weld defects. Non-destructive testing methods like ultrasonic testing or X-ray are used to evaluate internal weld integrity. This case illustrates the importance of matching the inspection method to the defect type being detected.')">A false negative — the defect existed but the AI inspection system did not detect it, because surface visual inspection cannot see internal structural weakness</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The QC system functioned exactly as designed — it caught what a surface camera can catch. The limitation is that surface inspection cannot detect internal structural defects, not that the system malfunctioned. This is a detection method gap, not a system failure per se.')">A QC system malfunction — the AI should have caught any defect regardless of type</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A reliability defect refers to a product that meets initial spec but fails in use — which is partially accurate here, but the more precise QC classification is a false negative: the inspection system failed to detect a defect that existed at the time of inspection. The root cause is that the inspection method (visual surface inspection) is not capable of detecting this type of defect (internal weld integrity).')">A reliability defect — the product met QC spec at time of inspection so QC is not responsible</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A production line moves products through a sequence of specialized workstations, each adding one step of value. This arrangement makes mass production possible — and means defects that aren't caught early accumulate additional cost with every subsequent station they pass through.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>QC happens at three levels: incoming inspection (before production), in-process inspection (at key checkpoints during production), and final inspection (before shipment). AI vision systems operate most effectively as in-process inspection — catching defects before subsequent operations add more cost to a flawed product.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Different defect types require different inspection methods. Surface defects need optical cameras. Internal structural defects need X-ray or ultrasonic testing. Matching the inspection method to the defect type is a fundamental QC design decision — a system that inspects the wrong way will produce false negatives regardless of how sophisticated the AI is.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const stations=[
+  {id:"stamp",icon:"🔩",name:"STAMPING",type:"ops",detail:{name:"Station 1 — Metal Stamping",type:"Production Operation",items:["Large hydraulic presses stamp flat sheet steel into body panels — doors, hoods, roof sections","Each press can exert thousands of tons of pressure to form precise three-dimensional shapes","Dies (stamping molds) must be maintained to exact tolerances — worn dies produce out-of-spec panels","Typical rate: 1 stamped panel every 5–10 seconds"]}},
+  {id:"qc1",icon:"🔍",name:"STAMP QC",type:"qc",detail:{name:"QC Checkpoint 1 — Post-Stamping Inspection",type:"QC Checkpoint",items:["AI vision cameras check every panel for cracks, tears, wrinkles, and dimensional accuracy","Dimensional measurement verifies panel matches CAD specification within ±0.5mm","Defects caught here: scrap or return to press for adjustment","Cost of defect here: low — only the raw steel sheet and press time invested so far"]}},
+  {id:"weld",icon:"⚡",name:"BODY WELD",type:"ops",detail:{name:"Station 2 — Body Welding",type:"Production Operation",items:["Robots perform thousands of spot welds to join stamped panels into the car body structure (called the 'body-in-white')","A modern car body has 4,000–5,000 individual welds","Weld quality is critical — structural welds affect crash safety","Each weld takes milliseconds but must meet precise specifications for penetration depth and nugget size"]}},
+  {id:"qc2",icon:"🔬",name:"WELD QC",type:"qc",detail:{name:"QC Checkpoint 2 — Weld Inspection",type:"QC Checkpoint",items:["Vision systems check visible weld surface quality and position","Ultrasonic testing samples verify internal weld integrity (invisible to cameras)","AI monitors weld robot parameters (current, time, pressure) for each weld in real time","Defects caught here: rework or scrap the body before painting — still manageable cost"]}},
+  {id:"paint",icon:"🎨",name:"PAINT",type:"ops",detail:{name:"Station 3 — Paint Shop",type:"Production Operation",items:["One of the most complex and expensive stages — multiple coat application in a controlled environment","Process: e-coat (rust protection) → primer → base coat → clear coat, each cured in ovens","Paint environment is temperature and humidity controlled to within tight ranges","A paint defect here means stripping and repainting — extremely expensive"]}},
+  {id:"qc3",icon:"📷",name:"PAINT QC",type:"qc",detail:{name:"QC Checkpoint 3 — Paint Inspection (Primary AI QC Zone)",type:"QC Checkpoint",items:["This is where Ford's MAIVS AI system does its most critical work","High-resolution cameras scan every painted surface for inclusions, runs, sags, fish-eyes, and scratches","AI detects defects smaller than 1mm that human inspectors would miss","Defects caught here: paint correction (polishing) or respray — expensive but better than shipping","Defect data logged by location, type, and shift for root cause analysis"]}},
+  {id:"trim",icon:"🪑",name:"TRIM & ASSEMBLY",type:"ops",detail:{name:"Station 4 — Trim and General Assembly",type:"Production Operation",items:["Interior components installed: seats, dashboard, carpet, headliner, glass, wiring harnesses","Hundreds of individual parts installed, most by hand or collaborative robots","Sequence matters — some components must be installed before others can be fitted","Torque specifications for every fastener are tracked electronically"]}},
+  {id:"alert",icon:"⚠️",name:"ALERT: DEFECT",type:"alert",detail:{name:"⚠️ In-Process Defect Alert Example",type:"QC Alert — Human Action Required",items:["AI vision system detects: windshield alignment 2.3mm outside specification at upper driver corner","Alert sent to station supervisor workstation within 1 second of detection","Supervisor verifies finding: confirmed — windshield was installed with incorrect adhesive bead thickness","Decision: hold vehicle, return to glass installation for correction","All subsequent stations paused on this vehicle ID until correction confirmed"]}},
+  {id:"chassis",icon:"🚗",name:"CHASSIS MARRY",type:"ops",detail:{name:"Station 5 — Chassis Marriage",type:"Production Operation",items:["The painted body is lowered onto the completed chassis/powertrain assembly ('the marriage')","Engine, transmission, suspension, and fuel system already assembled as a unit","Highly automated — robotic systems align body and chassis to millimeter precision","One of the most visible quality moments — gaps and misalignments from this operation affect every panel line"]}},
+  {id:"final",icon:"✅",name:"FINAL QC",type:"qc",detail:{name:"Final Inspection — End of Line",type:"QC Checkpoint",items:["Comprehensive multi-point inspection before vehicle leaves the line","Panel gap and flush measurements verified at every body joint","Electrical system function test: all lights, windows, locks, sensors","Water leak test: vehicle driven through simulated rain","Road test: brief drive to check drivetrain, brakes, steering","Any failures here require full documentation and repair before vehicle can ship"]}}
+];
+
+const conveyor=document.getElementById("conveyor");
+stations.forEach(s=>{
+  const el=document.createElement("div");
+  el.className=`ls-station ${s.type}`;
+  el.innerHTML=`<div class="ls-st-icon">${s.icon}</div><div class="ls-st-name">${s.name}</div>`;
+  el.onclick=()=>{
+    document.querySelectorAll(".ls-station").forEach(x=>x.classList.remove("selected"));
+    el.classList.add("selected");
+    const d=s.detail;
+    document.getElementById("stationDetail").innerHTML=`<div class="ld-name">${d.name}</div><div class="ld-type ${s.type}">${d.type}</div><div class="ld-items">${d.items.map(i=>`<div class="ld-item"><span>→</span><span>${i}</span></div>`).join("")}</div>`;
+  };
+  conveyor.appendChild(el);
+});
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
