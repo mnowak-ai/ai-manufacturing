@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 Capstone: A Full Diagnostic Scenario From Problem to Resolution</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{background:linear-gradient(180deg,#F3EAFF 0%,var(--white) 100%);padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.module-badge{display:inline-flex;align-items:center;gap:8px;background:var(--purple-dark);color:var(--white);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;}
+.module-badge::before{content:"";width:6px;height:6px;background:#A78BFA;border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,54px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Scenario phases */
+.phase{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;margin-bottom:18px;overflow:hidden;}
+.phase-header{padding:20px 24px;background:var(--white);border-bottom:1.5px solid var(--purple-mid);display:flex;align-items:center;gap:14px;}
+.phase-num{width:40px;height:40px;border-radius:50%;background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:3px;}
+.phase-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);}
+.phase-body{padding:20px 24px;}
+.phase-body p{font-size:15px;line-height:1.8;margin-bottom:12px;}
+
+/* Data display */
+.data-panel{background:#1A0A25;border-radius:16px;padding:22px;margin:14px 0;}
+.dp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:12px;font-family:var(--mono);}
+.dp-readings{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.dp-reading{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;}
+.dp-r-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:3px;font-family:var(--mono);}
+.dp-r-val{font-size:16px;font-weight:700;font-family:var(--mono);}
+.dp-r-val.normal{color:#6EE7B7;}
+.dp-r-val.warn{color:#FDE68A;}
+.dp-r-val.alert{color:#FCA5A5;}
+.dp-r-note{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;}
+.ai-rec{background:rgba(123,47,190,.25);border:1px solid #7B2FBE;border-radius:12px;padding:14px 16px;margin-top:12px;}
+.ai-rec-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#A78BFA;margin-bottom:5px;}
+.ai-rec-text{font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;}
+.ai-conf{font-family:var(--mono);font-size:12px;color:#A78BFA;margin-top:6px;}
+@media(max-width:560px){.dp-readings{grid-template-columns:1fr 1fr;}}
+
+/* Decision points */
+.decision-point{background:var(--orange-pale);border:2px solid var(--orange);border-radius:16px;padding:18px 20px;margin:14px 0;}
+.dp-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#92400E;margin-bottom:6px;}
+.dp-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:#92400E;margin-bottom:10px;line-height:1.3;}
+.dp-opts{display:flex;flex-direction:column;gap:7px;}
+.dp-opt{background:var(--white);border:1.5px solid #FDE68A;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;transition:all .2s;font-family:"DM Sans",sans-serif;color:var(--gray-text);text-align:left;}
+.dp-opt:hover{border-color:var(--orange);background:var(--orange-pale);}
+.dp-opt.correct-choice{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.dp-opt.wrong-choice{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.dp-fb{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.7;}
+.dp-fb.show{display:block;}
+.dp-fb.good{background:var(--green-pale);color:var(--green);}
+.dp-fb.bad{background:var(--red-pale);color:var(--red);}
+
+/* Work order closeout */
+.wo-closeout{background:var(--white);border:2px solid var(--green);border-radius:16px;padding:20px;margin:14px 0;}
+.woc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:8px;}
+.woc-fields{display:flex;flex-direction:column;gap:8px;}
+.woc-field{background:var(--gray-soft);border-radius:8px;padding:10px 12px;}
+.woc-field-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-muted);margin-bottom:3px;}
+.woc-field-val{font-size:13px;color:var(--gray-text);line-height:1.55;}
+
+/* Skills wrap-up */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0;}
+.skill-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px;}
+.sk-module{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.sk-title{font-size:13px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.sk-demo{font-size:12px;line-height:1.6;color:var(--gray-text);}
+@media(max-width:560px){.skills-grid{grid-template-columns:1fr;}}
+
+.completion{background:linear-gradient(135deg,#1A0933 0%,#2D1060 60%,#4A1580 100%);border-radius:24px;padding:36px;margin-top:40px;text-align:center;}
+.comp-icon{font-size:48px;margin-bottom:14px;}
+.comp-title{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--white);margin-bottom:8px;}
+.comp-sub{font-size:16px;color:rgba(255,255,255,.75);margin-bottom:24px;line-height:1.6;}
+.comp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.comp-stat{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.15);}
+.cs-num{font-family:"Fraunces",serif;font-size:24px;font-weight:900;color:var(--white);margin-bottom:3px;}
+.cs-label{font-size:10px;color:rgba(255,255,255,.65);line-height:1.4;}
+@media(max-width:560px){.comp-stats{grid-template-columns:1fr 1fr;}}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="module-badge">Module 2 Capstone · Lesson 2.4</div>
+  <h1>A Full Diagnostic Scenario: From Problem to Resolution</h1>
+  <p class="hero-sub">Every skill from this module — sensors, anomaly detection, validation, confidence scores, human judgment, work order documentation — comes together in one extended scenario. Work through each phase and make the calls a real technician would make.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <p>You are a maintenance technician at Apex Stamping — a metal stamping plant producing structural brackets for the automotive industry. It's Tuesday morning, 7:12 AM. Your shift just started. You log into the monitoring dashboard and see an alert you didn't have before leaving last night.</p>
+  </div>
+
+  <div class="section fade-in">
+
+    <div class="phase fade-in">
+      <div class="phase-header"><div class="phase-num">1</div><div><div class="phase-label">Phase 1</div><div class="phase-title">Receive and Read the Alert</div></div></div>
+      <div class="phase-body">
+        <p>Here's what the dashboard shows for Hydraulic Press #3 — your highest-volume machine, producing 400 brackets per shift.</p>
+        <div class="data-panel">
+          <div class="dp-label">PRESS #3 — HYDRAULIC SYSTEM — Alert Generated 04:48 AM</div>
+          <div class="dp-readings">
+            <div class="dp-reading"><div class="dp-r-label">System Pressure</div><div class="dp-r-val warn">156 PSI</div><div class="dp-r-note">Normal: 165–185 PSI</div></div>
+            <div class="dp-reading"><div class="dp-r-label">Pressure Trend</div><div class="dp-r-val warn">↓ –9 PSI</div><div class="dp-r-note">Over 72 hrs</div></div>
+            <div class="dp-reading"><div class="dp-r-label">Fluid Temperature</div><div class="dp-r-val normal">52°C</div><div class="dp-r-note">Normal: 45–60°C</div></div>
+            <div class="dp-reading"><div class="dp-r-label">Fluid Level</div><div class="dp-r-val normal">OK</div><div class="dp-r-note">Within range</div></div>
+            <div class="dp-reading"><div class="dp-r-label">Pump Vibration</div><div class="dp-r-val normal">0.9 mm/s</div><div class="dp-r-note">Normal: &lt;1.5 mm/s</div></div>
+            <div class="dp-reading"><div class="dp-r-label">Cycle Count</div><div class="dp-r-val normal">12,840</div><div class="dp-r-note">Since last PM</div></div>
+          </div>
+          <div class="ai-rec">
+            <div class="ai-rec-label">🤖 AI Recommendation</div>
+            <div class="ai-rec-text">Gradual pressure decline consistent with hydraulic filter restriction. Recommend: replace hydraulic filter (P/N HF-440) during next scheduled production break. Machine may continue operating. Monitor pressure — stop if pressure drops below 145 PSI.</div>
+            <div class="ai-conf">Confidence: 79% · Based on: 72-hr pressure trend, pump vibration pattern, fluid temperature</div>
+          </div>
+        </div>
+        <div class="decision-point">
+          <div class="dp-head">🎯 Decision Point 1</div>
+          <div class="dp-q">Before you do anything else — what is your first response to this alert?</div>
+          <div class="dp-opts">
+            <button class="dp-opt" onclick="dpQ(1,this,false,'dp1fb','❌ Acting immediately before evaluating the situation — even if the AI is right — skips the validation step. The AI has 79% confidence: useful, but not a confirmed diagnosis. Before ordering parts or scheduling anything, you need to evaluate whether the recommendation makes sense.')">Order the replacement filter part and schedule the repair for the next break</button>
+            <button class="dp-opt" onclick="dpQ(1,this,true,'dp1fb','✅ Correct first move. The alert came in at 4:48 AM — the machine has been running for several hours since. Your first response is to evaluate the alert: read the sensor data, read the AI recommendation, apply the 5-question framework mentally. 79% confidence is good but not definitive. The pressure is below normal but not critical yet. This situation calls for planned investigation, not panic or immediate blind action.')">Evaluate the alert — read all the sensor data, assess the AI recommendation and its confidence level, determine urgency</button>
+            <button class="dp-opt" onclick="dpQ(1,this,false,'dp1fb','❌ Shutting down immediately at 79% confidence and 156 PSI (still above the AI\'s own 145 PSI threshold) is an overcorrection. The machine is still operating. The right move is investigation, not immediate shutdown. Shutting down without investigation could cause unnecessary production loss if the AI is wrong.')">Stop the machine immediately — any hydraulic pressure drop warrants an emergency shutdown</button>
+          </div>
+          <div class="dp-fb" id="dp1fb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase fade-in">
+      <div class="phase-header"><div class="phase-num">2</div><div><div class="phase-label">Phase 2</div><div class="phase-title">Apply the Framework and Investigate</div></div></div>
+      <div class="phase-body">
+        <p>You apply the five-question framework from Lesson 2.4. The data makes sense — a 72-hour gradual pressure decline with normal pump vibration and normal temperature is consistent with filter restriction. The AI's logic checks out. 79% confidence is solid. You check the validation checklist from Lesson 2.2: Does the data fit the situation? A filter at 12,840 cycles since last PM is overdue for inspection — the normal interval at this plant is 10,000 cycles.</p>
+        <p>You go to the machine. You listen — no unusual sounds from the pump. You check the hydraulic fluid visually through the sight glass — slightly darker than fresh fluid. You locate the hydraulic filter housing and put your hand on it — warm but not hot.</p>
+        <div class="decision-point">
+          <div class="dp-head">🎯 Decision Point 2</div>
+          <div class="dp-q">Your physical inspection is consistent with the AI's recommendation. What do you do now?</div>
+          <div class="dp-opts">
+            <button class="dp-opt" onclick="dpQ(2,this,true,'dp2fb','✅ Correct. Physical evidence consistent with AI recommendation + 79% confidence + overdue PM interval = good basis to proceed with the suggested repair. You create the work order, confirm parts availability, and schedule the repair for the 10 AM production break — rather than shutting down now or waiting until full pressure failure. This is proactive maintenance done right: the AI detected the trend, physical inspection validated it, and you\'re acting before it becomes an emergency.')">Create a work order for filter replacement, confirm the part is in stock, and schedule repair for the 10 AM production break — continue running while monitoring pressure</button>
+            <button class="dp-opt" onclick="dpQ(2,this,false,'dp2fb','❌ The physical inspection supported the AI\'s recommendation — darker fluid, overdue PM interval, and gradual pressure decline all fit. There\'s no conflicting evidence here. Dismissing the AI when evidence supports it is the opposite problem from automation bias: it\'s unnecessary skepticism that results in missed maintenance.')">Dismiss the AI recommendation — trust your physical check over the AI system</button>
+            <button class="dp-opt" onclick="dpQ(2,this,false,'dp2fb','❌ Stopping production immediately isn\'t warranted here — the pressure is declining but hasn\'t reached the 145 PSI emergency threshold, the pump is running normally, and you have time to schedule this properly. An immediate stop causes unnecessary production disruption when the machine can safely continue with monitoring.')">Stop the machine immediately to replace the filter — don\'t wait for the scheduled break</button>
+          </div>
+          <div class="dp-fb" id="dp2fb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase fade-in">
+      <div class="phase-header"><div class="phase-num">3</div><div><div class="phase-label">Phase 3</div><div class="phase-title">The Repair — and an Unexpected Finding</div></div></div>
+      <div class="phase-body">
+        <p>The 10 AM production break arrives. You apply lockout/tagout per SOP-HYD-02. You drain the hydraulic circuit to the filter housing. You remove the filter — and it's 60% blocked with dark sludge. Consistent with the AI's prediction. So far, AI was right.</p>
+        <p>But here's where your eyes matter: you notice the filter bypass valve housing has a hairline crack — a small fracture in the aluminum casting that would not be detectable by any sensor. If this valve cracks through during operation, it could create an uncontrolled hydraulic pressure bypass that causes an unexpected ram movement. This is a safety issue that the AI could not have flagged, because no sensor measures housing integrity.</p>
+        <div class="decision-point">
+          <div class="dp-head">🎯 Decision Point 3</div>
+          <div class="dp-q">You found the cracked bypass valve housing. The original work order is for filter replacement only. What do you do?</div>
+          <div class="dp-opts">
+            <button class="dp-opt" onclick="dpQ(3,this,false,'dp3fb','❌ Proceeding with the filter replacement and ignoring the cracked housing is a safety violation. A cracked bypass valve housing in a hydraulic press is a potential safety hazard — unexpected ram movement could injure workers. This goes beyond the original work order scope and must be escalated.')">Complete the filter replacement per the original work order and note the crack in the closeout notes</button>
+            <button class="dp-opt" onclick="dpQ(3,this,true,'dp3fb','✅ Correct. The cracked bypass valve housing is a safety finding that requires escalation beyond the original work order scope. You stop, apply continued lockout/tagout, notify your supervisor immediately, and document the finding with a photo if possible. The machine must not restart until the cracked housing is evaluated by maintenance engineering and either replaced or declared safe by a qualified person. The cracked housing is exactly the kind of finding that physical inspection by a knowledgeable human uncovers — and that AI can never detect. This is the human-in-the-loop delivering value the sensor system cannot.')">Stop. Do not complete the repair. Keep machine locked out. Notify supervisor immediately about the cracked housing — this is a safety escalation beyond the original work order scope.</button>
+            <button class="dp-opt" onclick="dpQ(3,this,false,'dp3fb','❌ Replacing the filter and the housing yourself without supervisor notification could create liability issues and skips the engineering review that a cracked pressure component requires. A hairline crack in a hydraulic bypass valve requires an engineering assessment, not a field repair decision made alone.')">Replace both the filter and the cracked housing yourself — you have the part in stock</button>
+          </div>
+          <div class="dp-fb" id="dp3fb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase fade-in">
+      <div class="phase-header"><div class="phase-num">4</div><div><div class="phase-label">Phase 4</div><div class="phase-title">Resolution and Documentation</div></div></div>
+      <div class="phase-body">
+        <p>Your supervisor arrives within 8 minutes. Maintenance engineering reviews the cracked housing — it's a critical finding; the crack had propagated 60% through the casting wall and would likely have failed within 2–3 days under operating pressure. A full hydraulic bypass failure on Press #3 during operation could have caused an unexpected ram stroke with workers in the die area. Engineering authorizes replacement of both the filter and the bypass valve housing. Parts are pulled from stock. The full repair takes 2 hours and 20 minutes. Machine restarts at 12:42 PM.</p>
+        <p>Now you close out the work order — and this documentation is some of the most important work you'll do today.</p>
+        <div class="wo-closeout">
+          <div class="woc-label">✅ Work Order WO-5519 — Closeout Documentation</div>
+          <div class="woc-fields">
+            <div class="woc-field"><div class="woc-field-label">AI Recommendation</div><div class="woc-field-val">AI flagged hydraulic pressure decline at 79% confidence — recommended filter replacement. Recommendation validated by physical inspection and confirmed correct.</div></div>
+            <div class="woc-field"><div class="woc-field-label">AI Accuracy</div><div class="woc-field-val">Confirmed: filter was 60% blocked — AI diagnosis was accurate. Original recommendation was appropriate given available data.</div></div>
+            <div class="woc-field"><div class="woc-field-label">Additional Finding (Human)</div><div class="woc-field-val">Physical inspection during repair identified hairline crack in bypass valve housing (P/N BVH-220). Crack estimated 60% through casting wall — safety escalation required. AI had no sensor data that could detect housing integrity. FINDING WOULD NOT HAVE BEEN CAPTURED BY AI MONITORING ALONE.</div></div>
+            <div class="woc-field"><div class="woc-field-label">Action Taken</div><div class="woc-field-val">HF-440 filter replaced. BVH-220 bypass valve housing replaced per engineering authorization. Full lockout/tagout maintained throughout. All connections torqued to spec per SOP-HYD-02.</div></div>
+            <div class="woc-field"><div class="woc-field-label">Post-Repair Readings</div><div class="woc-field-val">System pressure: 174 PSI ✓ (normal 165–185). Fluid temperature: 49°C ✓. Pump vibration: 0.8 mm/s ✓. Machine returned to production 12:42 PM.</div></div>
+            <div class="woc-field"><div class="woc-field-label">Recommendation for Next PM</div><div class="woc-field-val">Recommend engineering inspect ALL bypass valve housings on hydraulic presses at next scheduled PM — same casting batch may have similar defects. Log filter replacement interval: reset at 10,000 cycles.</div></div>
+          </div>
+        </div>
+        <p>That last recommendation — to inspect all bypass valve housings on all hydraulic presses — is what turns a single repair into an organizational safety improvement. It's also how human observation prevents problems the AI cannot predict.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section fade-in">
+    <h2>What This Scenario Demonstrates</h2>
+    <div class="skills-grid fade-in">
+      <div class="skill-card"><div class="sk-module">Lesson 2.1</div><div class="sk-title">Sensor reading interpretation</div><div class="sk-demo">You read the pressure trend, pump vibration, and fluid temperature data to understand the machine's condition — not just the alert headline.</div></div>
+      <div class="skill-card"><div class="sk-module">Lesson 2.2</div><div class="sk-title">Validation before action</div><div class="sk-demo">You applied the validation checklist and 5-question framework before creating the work order — confirming AI recommendation matched physical evidence.</div></div>
+      <div class="skill-card"><div class="sk-module">Lesson 2.2</div><div class="sk-title">Confidence score interpretation</div><div class="sk-demo">79% confidence was treated as "solid starting hypothesis" — not certainty. Physical inspection was still required before proceeding.</div></div>
+      <div class="skill-card"><div class="sk-module">Lesson 2.3</div><div class="sk-title">Work order creation and documentation</div><div class="sk-demo">You created a complete work order, escalated appropriately when scope expanded, and documented everything including the AI accuracy and the unexpected finding.</div></div>
+      <div class="skill-card"><div class="sk-module">Lesson 2.4</div><div class="sk-title">Human-in-the-loop value</div><div class="sk-demo">The cracked housing — invisible to every sensor — was found by physical inspection during the repair. This is the irreplaceable value of skilled human eyes on equipment.</div></div>
+      <div class="skill-card"><div class="sk-module">Lesson 2.4</div><div class="sk-title">Safety override and escalation</div><div class="sk-demo">When the unexpected safety finding appeared, you stopped, escalated, and kept the machine locked out — not because the original work order said to, but because safety takes precedence.</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Final Check</div>
+      <div class="quiz-q">The AI in this scenario was accurate about the filter — 79% confidence, and the filter was indeed blocked. But the most important finding came from human physical inspection. What does this demonstrate about the relationship between AI and human expertise?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The AI was actually quite valuable here — it detected the pressure trend early enough to allow planned maintenance rather than emergency breakdown. The finding is not that AI adds limited value; it\'s that human physical inspection added value AI couldn\'t provide.')">That AI adds limited value when experienced technicians are doing the physical work</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This scenario shows exactly what the module has been building toward: AI and human expertise cover different blind spots. AI detected what no human could — a 72-hour gradual pressure trend at 4:48 AM when no technician was on the machine. Human inspection detected what no sensor could — a physical defect in a casting that would have failed within days. Neither alone would have achieved the full outcome: planned filter replacement AND safety escalation of the cracked housing. This is the ideal model: AI handles scale and continuous monitoring; humans handle physical presence, judgment, and the unexpected.')">That AI and human expertise cover different blind spots — AI detected the trending data pattern; the human detected the physical defect that no sensor measured. Both were essential.</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ While it\'s true that the technician was the one who caught the cracked housing, this doesn\'t mean the AI was a mistake. Without the AI\'s alert, the technician might not have opened the hydraulic system during this shift at all — meaning the cracked housing might not have been found until a more serious failure occurred.')">That human inspection is always sufficient — the AI alert was unnecessary since the technician would have caught the problem anyway</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="completion fade-in">
+    <div class="comp-icon">🏆</div>
+    <div class="comp-title">Module 2 Complete</div>
+    <div class="comp-sub">You've worked through the complete AI in Manufacturing diagnostic cycle — from how sensors detect anomalies to how skilled workers validate, decide, and document. These aren't just concepts. They're the skills that make you genuinely more valuable in any AI-integrated manufacturing environment.</div>
+    <div class="comp-stats">
+      <div class="comp-stat"><div class="cs-num">4</div><div class="cs-label">Lessons completed</div></div>
+      <div class="comp-stat"><div class="cs-num">33</div><div class="cs-label">Articles across the module</div></div>
+      <div class="comp-stat"><div class="cs-num">5</div><div class="cs-label">Case studies examined</div></div>
+      <div class="comp-stat"><div class="cs-num">1</div><div class="cs-label">Core principle: AI + Human ></div></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function dpQ(n,btn,correct,fbId,msg){
+  const panel=btn.closest('.dp-opts');
+  if(panel.querySelector('.correct-choice,.wrong-choice'))return;
+  btn.classList.add(correct?'correct-choice':'wrong-choice');
+  const fb=document.getElementById(fbId);
+  fb.className='dp-fb show '+(correct?'good':'bad');
+  fb.textContent=msg;
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

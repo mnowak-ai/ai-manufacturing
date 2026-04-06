@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automation Bias: Why Smart People Trust AI Too Much (And How Not To)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--red-pale);color:var(--red);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FECACA;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--red);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+
+.ab-stories{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.ab-story{border-radius:18px;padding:22px;border:1.5px solid;}
+.ab-story.aviation{background:#FFF8F0;border-color:#FDE68A;}
+.ab-story.medical{background:var(--red-pale);border-color:#FECACA;}
+.ab-story.mfg{background:var(--purple-pale);border-color:var(--purple-mid);}
+.abs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.aviation .abs-label{color:#92400E;}
+.medical .abs-label{color:var(--red);}
+.mfg .abs-label{color:var(--purple);}
+.abs-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:8px;}
+.aviation .abs-title{color:#92400E;}
+.medical .abs-title{color:var(--red);}
+.mfg .abs-title{color:var(--purple-dark);}
+.abs-text{font-size:14px;line-height:1.75;color:var(--gray-text);}
+
+.why-happens{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;}
+.wh-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.wh-icon{font-size:26px;margin-bottom:6px;}
+.wh-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.wh-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+@media(max-width:560px){.why-happens{grid-template-columns:1fr;}}
+
+.counter-measures{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.cm-item{display:flex;gap:14px;align-items:flex-start;background:var(--green-pale);border:1.5px solid #86EFAC;border-radius:14px;padding:14px 16px;}
+.cm-icon{font-size:20px;flex-shrink:0;}
+.cm-title{font-size:14px;font-weight:700;color:var(--green);margin-bottom:3px;}
+.cm-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.4 · Critical Concept</div>
+  <h1>Automation Bias: Why Smart People Trust AI Too Much (And How Not To)</h1>
+  <p class="hero-sub">Automation bias is one of the most well-documented failure modes in human-machine collaboration. It's not a sign of low intelligence or laziness — it happens to everyone, including experts. Understanding it by name is the first step to fighting it.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <div class="vocab fade-in">
+      <div class="vocab-word">📖 Key Concept</div>
+      <div class="vocab-def"><strong>Automation bias</strong> — The documented human tendency to over-rely on automated systems, accepting their outputs without sufficient critical evaluation. People experiencing automation bias give automated recommendations more weight than they would give the same recommendation from a human expert — and are less likely to question, override, or investigate an automated output even when physical evidence suggests the output may be wrong. First formally described in aviation research in the 1990s; now documented across healthcare, manufacturing, finance, and military operations.</div>
+    </div>
+
+    <p>Automation bias isn't a character flaw. It's a predictable cognitive response to how automated systems present information — with apparent authority, precision, and consistency that humans rarely match. A technician who would immediately push back on a supervisor's offhand suggestion might follow the same suggestion without question when it appears on a screen with a confidence score attached.</p>
+    <p><mark>Knowing automation bias exists — and being able to name it — is one of the most important things this certification teaches you.</mark> You can't counteract a cognitive bias you don't know you have.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Automation Bias Has Caused Real Harm</h2>
+    <div class="ab-stories fade-in">
+      <div class="ab-story aviation">
+        <div class="abs-label">✈️ Aviation</div>
+        <div class="abs-title">Flight Crews Who Trusted Autopilot Over Their Own Eyes</div>
+        <div class="abs-text">Aviation has documented automation bias extensively since the 1990s. In multiple accident investigations, flight data recorders showed trained pilots continuing to follow automated flight management system guidance even when instrument readings and visual cues clearly indicated the autopilot was making an error. In post-accident interviews, crew members described a cognitive state where contradicting the automated system "felt wrong" even when they had physical evidence it was incorrect. Aviation regulators now require crews to practice "manual flight" skills regularly specifically to counteract the automation dependency that builds with extended reliance on autopilot systems.</div>
+      </div>
+      <div class="ab-story medical">
+        <div class="abs-label">🏥 Healthcare</div>
+        <div class="abs-title">Radiologists Who Missed Findings Because AI Said "Normal"</div>
+        <div class="abs-text">Clinical studies have shown that when radiologists review medical images after seeing AI analysis, their interpretation shifts toward the AI's conclusion — even when the AI is incorrect. In one study, radiologists who viewed images after seeing a false AI "normal" result missed lesions they detected without the AI prompting. The AI label functioned as an anchor that made anomalies less cognitively visible. Researchers found the effect was strongest among experienced radiologists — suggesting automation bias isn't reduced by expertise and may actually increase as people become more accustomed to working with AI systems they generally trust.</div>
+      </div>
+      <div class="ab-story mfg">
+        <div class="abs-label">🏭 Manufacturing</div>
+        <div class="abs-title">Quality Inspectors Who Waved Through Defects After AI Approval</div>
+        <div class="abs-text">In a manufacturing quality control study, human inspectors were given the same batch of components to evaluate — some with AI "approved" labels pre-applied, some without. Inspectors who saw AI-approved labels before their own inspection rejected 34% fewer defective parts than inspectors who evaluated components without AI labels. The AI approval created a cognitive shortcut: the system said it's fine, so it probably is. This effect persisted even after the study told participants about the error rate of the AI system — suggesting that awareness of AI limitations doesn't fully counteract automation bias in the moment of decision-making.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Automation Bias Happens</h2>
+    <div class="why-happens fade-in">
+      <div class="wh-card">
+        <div class="wh-icon">🧠</div>
+        <div class="wh-title">Cognitive offloading is efficient</div>
+        <div class="wh-desc">Our brains conserve mental energy. When a trusted system provides a clear answer, the brain naturally reduces its own processing effort. This is adaptive — until the trusted system is wrong.</div>
+      </div>
+      <div class="wh-card">
+        <div class="wh-icon">📊</div>
+        <div class="wh-title">Numbers signal authority</div>
+        <div class="wh-desc">"78% confidence — probable filter blockage" reads as authoritative. The same information from a colleague saying "I think it might be the filter" triggers much more pushback. Presentation format affects how critically we evaluate information.</div>
+      </div>
+      <div class="wh-card">
+        <div class="wh-icon">⚡</div>
+        <div class="wh-title">AI is usually right</div>
+        <div class="wh-desc">When an AI system is accurate 80–85% of the time, following it without checking usually works. This reinforces the habit. When the 15–20% wrong case occurs, the well-established habit of compliance is hard to override in the moment.</div>
+      </div>
+      <div class="wh-card">
+        <div class="wh-icon">😰</div>
+        <div class="wh-title">Overriding feels risky</div>
+        <div class="wh-desc">Overriding an AI recommendation puts you on record as having made a different call. If you're wrong, it's visible. If the AI would have been right, you look bad. This asymmetric risk makes deference feel safer — even when your judgment is better.</div>
+      </div>
+      <div class="wh-card">
+        <div class="wh-icon">🔄</div>
+        <div class="wh-title">Vigilance decreases with trust</div>
+        <div class="wh-desc">When an AI system is reliably accurate over many interactions, humans naturally reduce their critical evaluation of its outputs. Trust built over hundreds of correct recommendations makes it psychologically harder to question the next recommendation.</div>
+      </div>
+      <div class="wh-card">
+        <div class="wh-icon">⏱️</div>
+        <div class="wh-title">Time pressure amplifies it</div>
+        <div class="wh-desc">Under production pressure, automation bias worsens. When there's no time to investigate, the AI recommendation becomes the default — because questioning it requires time and investigation that isn't available.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How to Counteract Automation Bias in Your Work</h2>
+    <div class="counter-measures fade-in">
+      <div class="cm-item"><div class="cm-icon">🔍</div><div><div class="cm-title">Form your own hypothesis before reading the AI output</div><div class="cm-desc">When you get a maintenance alert, look at the sensor data yourself first and form an initial interpretation. Then compare to what the AI suggests. This forces independent evaluation rather than anchoring on the AI's conclusion.</div></div></div>
+      <div class="cm-item"><div class="cm-icon">🤔</div><div><div class="cm-title">Ask "what would I think if a coworker told me this?" </div><div class="cm-desc">Before acting on an AI recommendation, mentally translate it: if a coworker walked up and said "I think you should adjust the calibration and keep running," how would you respond? Apply the same critical evaluation you'd apply to a human suggestion.</div></div></div>
+      <div class="cm-item"><div class="cm-icon">📋</div><div><div class="cm-title">Use a physical checklist — not just the AI output — as your action guide</div><div class="cm-desc">The validation checklist from Lesson 2.2 exists for exactly this reason. Running through it systematically forces evaluation of evidence beyond the AI output and activates your own judgment rather than deferring to the system.</div></div></div>
+      <div class="cm-item"><div class="cm-icon">✍️</div><div><div class="cm-title">Document your reasoning when you follow — and when you override</div><div class="cm-desc">Writing down why you're following or overriding an AI recommendation activates deliberate reasoning. It also creates accountability — both for the AI system's accuracy over time and for the quality of your own decision-making.</div></div></div>
+      <div class="cm-item"><div class="cm-icon">🗣️</div><div><div class="cm-title">Say the AI recommendation out loud to a colleague before acting</div><div class="cm-desc">Stating an AI recommendation aloud for a second person to evaluate naturally triggers more critical thinking. "The AI says adjust calibration and keep running — does that make sense to you given what we're seeing?" often surfaces the question you should have been asking yourself.</div></div></div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>The antidote to automation bias isn't distrust of AI. It's deliberately engaging your own thinking rather than allowing the AI's output to replace it.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">A technician with 15 years of experience consistently catches quality issues before the AI flags them. After 18 months of working with a new AI system that's been 88% accurate, a colleague notices they're checking the AI output first and then doing their physical inspection based on what the AI suggested rather than independently. What is this an example of?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ This has nothing to do with the technician\'s experience level — in fact, research shows experienced workers are equally susceptible to automation bias, and may even be more vulnerable because they\'ve built more trust in reliable systems over time.')">Skill degradation — the technician\'s skills are declining because they\'ve worked in manufacturing too long</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This is a textbook example of automation bias developing over time with a reliable system. The technician is now letting the AI output anchor and shape their physical inspection, rather than forming an independent hypothesis first. The 88% accuracy rate built justified trust — but that trust has crossed into over-reliance. The technician is now less likely to catch the 12% of cases where the AI is wrong, because their inspection is guided by the AI\'s framework rather than their own independent evaluation. Noticing this pattern — in yourself or a colleague — is the first step to addressing it.')">Automation bias — over time with a reliable AI system, the technician has shifted from independent evaluation to AI-guided inspection</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ This behavior actually reduces efficiency of the human inspection by anchoring it to the AI\'s framework. The technician may check fewer things independently and more things the AI flagged — which is less thorough, not more. The AI and the human\'s independent judgment are meant to be two separate inputs, not one guiding the other.')">Good workflow — using AI output to guide physical inspection is more efficient than independent evaluation</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Automation bias is the documented human tendency to over-rely on automated systems — giving AI recommendations more weight than they deserve and being less likely to question them even when physical evidence suggests they're wrong. It happens to everyone, including experts.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Automation bias develops because AI systems present information with apparent authority, because cognitive offloading is efficient, because reliable systems build justified trust that eventually becomes over-trust, and because overriding feels riskier than complying.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Counteracting automation bias requires deliberate habits: form your own hypothesis first, apply the same skepticism to AI you'd apply to a colleague's suggestion, use physical checklists rather than following AI output alone, document your reasoning, and talk through recommendations with colleagues.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

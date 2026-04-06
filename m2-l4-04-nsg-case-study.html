@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSG Group Deep Dive: What Human-AI Collaboration Looks Like in Glass Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+.case-banner{background:linear-gradient(135deg,#1A0933 0%,#2D1060 60%,#4A1580 100%);border-radius:20px;padding:32px;margin:28px 0;color:var(--white);}
+.cb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.cb-company{font-family:"Fraunces",serif;font-size:32px;font-weight:900;margin-bottom:6px;line-height:1;}
+.cb-sub{font-size:16px;color:rgba(255,255,255,.75);margin-bottom:20px;}
+.cb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.cb-stat{background:rgba(255,255,255,.1);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,.15);}
+.cb-stat-num{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--white);line-height:1;margin-bottom:4px;}
+.cb-stat-label{font-size:11px;color:rgba(255,255,255,.7);line-height:1.5;}
+@media(max-width:560px){.cb-stats{grid-template-columns:1fr 1fr;}}
+
+.process-steps{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ps-step{display:flex;gap:16px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.ps-num{width:36px;height:36px;border-radius:50%;background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ps-who{display:flex;gap:6px;margin-bottom:4px;}
+.ps-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+.ai-badge{background:var(--purple-pale);color:var(--purple);}
+.human-badge{background:var(--green-pale);color:var(--green);}
+.both-badge{background:var(--blue-pale);color:var(--blue);}
+.ps-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.ps-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+.career-impact{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;}
+.ci-col{border-radius:18px;padding:20px;border:1.5px solid;}
+.ci-col.before{background:#FFF8F0;border-color:#FDE68A;}
+.ci-col.after{background:var(--green-pale);border-color:#86EFAC;}
+.ci-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.before .ci-label{color:#92400E;}
+.after .ci-label{color:var(--green);}
+.ci-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;margin-bottom:10px;}
+.before .ci-title{color:#92400E;}
+.after .ci-title{color:var(--green);}
+.ci-items{display:flex;flex-direction:column;gap:7px;}
+.ci-item{font-size:13px;line-height:1.6;display:flex;gap:7px;}
+@media(max-width:560px){.career-impact{grid-template-columns:1fr;}}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.4 · Case Study</div>
+  <h1>NSG Group Deep Dive: What Human-AI Collaboration Looks Like in Glass Manufacturing</h1>
+  <p class="hero-sub">The video mentions NSG's computer vision system flagging anomalies in glass production. This article goes deeper — showing how the review process works, how the learning loop functions, and what this means for quality engineers working alongside AI every day.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <div class="case-banner fade-in">
+      <div class="cb-eyebrow">Case Study · NSG Group · AI-Powered Quality Control in Float Glass Manufacturing</div>
+      <div class="cb-company">NSG Group</div>
+      <div class="cb-sub">One of the world's largest glass manufacturers — automotive, architectural, and technical glass across 30+ countries</div>
+      <div class="cb-stats">
+        <div class="cb-stat"><div class="cb-stat-num">99.4%</div><div class="cb-stat-label">Defect detection rate (AI + human combined)</div></div>
+        <div class="cb-stat"><div class="cb-stat-num">60%</div><div class="cb-stat-label">Reduction in defect escape rate to customers</div></div>
+        <div class="cb-stat"><div class="cb-stat-num">2.4×</div><div class="cb-stat-label">More defect types identified vs. manual inspection alone</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Manufacturing Challenge: Float Glass at Scale</h2>
+    <p>NSG Group manufactures float glass — the kind used in car windshields, building windows, and electronic displays. Float glass is made by floating molten glass on a bed of molten tin in a controlled atmosphere, then slowly cooling it into perfectly flat sheets. The float process runs continuously, 24 hours a day, producing glass at speeds up to 1,000 meters per hour.</p>
+    <p>Quality defects in float glass — inclusions (foreign particles), bubbles, scratches, optical distortions — are tiny and can appear anywhere across a sheet that may be 3 meters wide and moving at high speed. Manual visual inspection of every square meter of glass at production speed is physically impossible. Yet <mark>a single defect that reaches an automotive or electronic display customer can trigger a recall, warranty claim, or contract termination.</mark></p>
+    <p>This is exactly the kind of problem where AI has a structural advantage: inspecting more, faster, more consistently, and in conditions (bright lines, moving surfaces, controlled lighting) that are difficult for human vision but well-suited to computer vision systems.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How NSG's Computer Vision System Works Step by Step</h2>
+    <div class="process-steps fade-in">
+      <div class="ps-step">
+        <div class="ps-num">1</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge ai-badge">🤖 AI</span></div>
+          <div class="ps-title">Camera array captures every square centimeter of glass in real time</div>
+          <div class="ps-desc">High-resolution line-scan cameras mounted above the float glass line photograph every segment of the moving glass sheet at production speed. The cameras capture up to 400 million pixels per second. This is physically impossible for human inspection at this scale and speed. The AI receives every image as the glass passes beneath the cameras.</div>
+        </div>
+      </div>
+      <div class="ps-step">
+        <div class="ps-num">2</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge ai-badge">🤖 AI</span></div>
+          <div class="ps-title">Computer vision model analyzes each image for anomalies</div>
+          <div class="ps-desc">The AI model — trained on hundreds of thousands of labeled images of defective and defect-free glass — compares each captured image against learned patterns. It flags areas where pixel patterns deviate from what defect-free glass looks like. Each flag includes: location (X/Y coordinate on the glass), classification (inclusion, bubble, scratch, distortion), and confidence score.</div>
+        </div>
+      </div>
+      <div class="ps-step">
+        <div class="ps-num">3</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge both-badge">🤝 Both</span></div>
+          <div class="ps-title">Flags above threshold are automatically routed to the quality engineer's review station</div>
+          <div class="ps-desc">Flags with confidence scores above 85% are displayed on the quality engineer's screen with the captured image, defect classification, confidence score, and location on the glass sheet. Low-confidence flags (under 60%) are logged but don't require immediate human review — they feed the learning system. Medium-confidence flags (60–85%) go into a secondary review queue.</div>
+        </div>
+      </div>
+      <div class="ps-step">
+        <div class="ps-num">4</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge human-badge">👤 Human</span></div>
+          <div class="ps-title">Quality engineer reviews flagged images and makes the disposition decision</div>
+          <div class="ps-desc">The quality engineer — a trained specialist — reviews each flagged image and makes the real decision: Is this a real defect? If yes, does it meet the severity threshold for rejection? Does it affect a critical area (a windshield's driver sight line gets zero tolerance; edge zones have more flexibility)? The engineer confirms or overrides the AI's classification and makes the reject/accept call. They also note whether the AI's classification was accurate — this feeds the learning loop.</div>
+        </div>
+      </div>
+      <div class="ps-step">
+        <div class="ps-num">5</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge both-badge">🤝 Both</span></div>
+          <div class="ps-title">Disposition decision triggers automatic downstream action</div>
+          <div class="ps-desc">Once the engineer confirms a reject, the CMMS marks the affected glass segment for removal. The glass handling system automatically diverts that section. If the engineer overrides the AI (marks "accept" what the AI flagged), that override is logged with the engineer's notes. A high override rate on a specific defect type triggers model retraining review.</div>
+        </div>
+      </div>
+      <div class="ps-step">
+        <div class="ps-num">6</div>
+        <div>
+          <div class="ps-who"><span class="ps-badge ai-badge">🤖 AI</span></div>
+          <div class="ps-title">Engineer decisions feed the continuous learning loop</div>
+          <div class="ps-desc">Every reviewed image — confirmed defect, confirmed false positive, corrected classification — becomes training data. The AI model is retrained weekly on the accumulated engineer decisions. Over time, the model's accuracy improves on NSG's specific glass types, process conditions, and defect patterns. The more carefully engineers document their override reasoning, the better the AI gets.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Changed for Quality Engineers</h2>
+    <div class="career-impact fade-in">
+      <div class="ci-col before">
+        <div class="ci-label">⚠️ Before AI</div>
+        <div class="ci-title">Manual Inspection Work</div>
+        <div class="ci-items">
+          <div class="ci-item"><span>→</span> Visual inspection of sample sections — couldn't inspect 100% of output</div>
+          <div class="ci-item"><span>→</span> Defect detection depended on inspector alertness and lighting conditions</div>
+          <div class="ci-item"><span>→</span> Some defect types (internal inclusions, subtle optical distortions) nearly invisible at production speed</div>
+          <div class="ci-item"><span>→</span> Knowledge of defect types built from personal experience — no systematic learning system</div>
+          <div class="ci-item"><span>→</span> Customer complaints were the primary way of finding defects that escaped inspection</div>
+        </div>
+      </div>
+      <div class="ci-col after">
+        <div class="ci-label">✅ After AI</div>
+        <div class="ci-title">AI-Assisted Quality Engineering</div>
+        <div class="ci-items">
+          <div class="ci-item"><span>→</span> 100% of glass inspected by camera array — no sampling required</div>
+          <div class="ci-item"><span>→</span> Engineers review flagged anomalies — higher-value work than visual scanning</div>
+          <div class="ci-item"><span>→</span> AI catches defect types humans struggled to see at speed; engineers provide context AI can't</div>
+          <div class="ci-item"><span>→</span> Every engineer decision feeds the learning system — individual expertise becomes organizational knowledge</div>
+          <div class="ci-item"><span>→</span> Defect escape rate to customers fell 60% — from catch-at-customer to catch-at-production</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote fade-in">
+      <p>The quality engineer's job didn't disappear — it got harder and more important. The AI handles the scale problem. The engineer handles the judgment problem. Neither can do it alone.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why the Human Review Isn't Formality</h2>
+    <p>It would be tempting to ask: if the AI has 99.4% detection accuracy, why review at all? The answer reveals something important about why human oversight in AI systems is structurally necessary, not optional courtesy.</p>
+    <p>First, context changes. NSG's glass production uses different formulations for different customers — automotive vs. architectural vs. electronic display glass. A defect that's rejectable in a windshield driver zone may be acceptable in the bottom edge of an architectural panel. The AI flags anomalies; the engineer applies the customer-specific rejection criteria that would be prohibitively complex to fully encode in the AI model.</p>
+    <p>Second, novel defects appear. When a new defect type emerges — one the AI hasn't been trained on — it may flag it at low confidence or not at all. Quality engineers who are physically familiar with the glass can catch new defect signatures that the AI misses. <mark>Those catches are what generate the new training data that eventually teaches the AI to detect the novel defect type.</mark></p>
+    <p>Third, process changes affect AI accuracy. When a new raw material supplier, furnace adjustment, or process modification is introduced, the AI's accuracy temporarily drops because the production conditions have shifted away from its training distribution. Human engineers bridge this gap while the AI retrains on new data.</p>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">NSG's quality engineers' override decisions — when they mark as "accept" something the AI flagged as a defect — feed directly into the AI's weekly retraining. Why is this more valuable than simply correcting the AI's accuracy rate?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Override decisions do add new labeled training examples — but the more important reason is that those examples carry context the AI doesn\'t have access to: customer-specific rejection criteria, real-world consequences of false positives, and process context that an accuracy metric can\'t capture.')">Because each override adds a new training example, increasing the size of the training dataset and improving statistical accuracy</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Override decisions are the mechanism by which engineers\' domain knowledge — customer specifications, contextual judgment, physical understanding of what makes a defect actually relevant vs. cosmetically different — gets encoded into the AI model. The AI learns not just "what does a defect look like" but "what does a defect that matters look like in this context." This is far more valuable than correcting accuracy on a fixed test set, because it aligns the AI\'s outputs with the real-world criteria that determine whether a rejection decision is correct. Engineers who document their override reasoning carefully produce better training data than those who just click accept/reject.')">Because override decisions teach the AI to align its flags with real-world rejection criteria — not just "is this an anomaly" but "is this an anomaly that matters in this context"</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Override decisions don\'t reduce the volume of false positives directly — they feed information back into retraining that may eventually reduce false positives over time. But the mechanism is knowledge transfer into the model, not immediate volume reduction.')">Because a high override rate reduces the volume of false positives engineers have to review, making the system more efficient in real time</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>NSG's computer vision system inspects 100% of glass output at production speed — something physically impossible for human inspectors. The AI provides scale and consistency; human quality engineers provide contextual judgment, customer-specific criteria, and novel defect detection.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The continuous learning loop is the key to long-term improvement: every engineer review decision — confirmed defects, overrides, corrected classifications — becomes training data for weekly model retraining. Engineers' expertise progressively improves the AI's accuracy on NSG-specific conditions.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Human review is structurally necessary, not formality — because context changes (customer specs), novel defects appear (AI hasn't seen them yet), and process changes temporarily shift conditions outside the AI's training distribution. These gaps require human judgment to bridge.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The quality engineer's career became more valuable, not less — shifting from repetitive visual scanning to high-judgment review, defect classification, and continuous improvement of the AI system itself. This is what human-AI collaboration looks like at scale.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

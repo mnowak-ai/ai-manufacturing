@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety First: When to Override AI and Shut Down the Process</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--red-pale);color:var(--red);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FECACA;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--red);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+.hard-rule{background:var(--red-pale);border:3px solid var(--red);border-radius:20px;padding:28px;margin:24px 0;text-align:center;}
+.hr-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--red);margin-bottom:8px;}
+.hr-text{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--red);line-height:1.3;}
+.hr-sub{font-size:14px;color:var(--gray-text);margin-top:10px;line-height:1.65;}
+
+.stop-conditions{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.sc-item{display:flex;gap:14px;align-items:flex-start;background:var(--red-pale);border:1.5px solid #FECACA;border-radius:14px;padding:14px 16px;}
+.sc-icon{font-size:22px;flex-shrink:0;}
+.sc-title{font-size:14px;font-weight:700;color:var(--red);margin-bottom:3px;}
+.sc-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+.osha-box{background:var(--blue-pale);border:2px solid var(--blue-mid);border-radius:18px;padding:24px;margin:24px 0;}
+.ob-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:8px;}
+.ob-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--blue);margin-bottom:12px;}
+.ob-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ob-text strong{color:var(--purple-dark);}
+
+.shutdown-steps{display:flex;flex-direction:column;gap:8px;margin:24px 0;}
+.ss-step{display:flex;gap:14px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 16px;}
+.ss-num{width:28px;height:28px;border-radius:50%;background:var(--red);color:var(--white);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ss-title{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:3px;}
+.ss-desc{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.4 · Safety</div>
+  <h1>Safety First: When to Override AI and Shut Down the Process</h1>
+  <p class="hero-sub">The scenario activity gives you three choices — including stopping the process. This article gives that option its full treatment. When is stopping right? What conditions require it? And what does OSHA say about your right and responsibility to halt an unsafe process?</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <div class="hard-rule fade-in">
+      <div class="hr-label">🔴 Non-Negotiable Rule</div>
+      <div class="hr-text">No AI recommendation overrides worker safety. Ever.</div>
+      <div class="hr-sub">If an AI system tells you to continue a process and you have reason to believe that process poses an immediate safety risk to yourself or others, you have both the right and the responsibility to stop the process. This is true regardless of the AI's confidence score, the production schedule, or what your supervisor has said about following AI recommendations.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Conditions That Always Justify Stopping</h2>
+    <p>These situations call for an immediate process stop regardless of what any AI system recommends. These are not judgment calls — they are hard safety thresholds:</p>
+
+    <div class="stop-conditions fade-in">
+      <div class="sc-item"><div class="sc-icon">⚡</div><div><div class="sc-title">Any sign of electrical hazard</div><div class="sc-desc">Sparking, burning smell from electrical components, unexplained tripping of breakers, visible wire damage, or any reading suggesting electrical fault. Electrical hazards can escalate to fire or electrocution within seconds. Stop, de-energize, and notify immediately.</div></div></div>
+      <div class="sc-item"><div class="sc-icon">🔥</div><div><div class="sc-title">Smoke, flame, or unusual heat that has no confirmed safe explanation</div><div class="sc-desc">Sensors may or may not catch a developing fire hazard. If you can smell or see smoke, or feel unusual heat from equipment, stop the process. Do not wait for an AI alert to confirm what your senses are telling you.</div></div></div>
+      <div class="sc-item"><div class="sc-icon">💧</div><div><div class="sc-title">Unexpected fluid leaks — especially near electrical or hot components</div><div class="sc-desc">Coolant, hydraulic fluid, or lubricant leaking onto electrical equipment or near high-temperature surfaces is an immediate fire and slip hazard. Stop, secure the area, notify maintenance.</div></div></div>
+      <div class="sc-item"><div class="sc-icon">🔧</div><div><div class="sc-title">Structural failure or near-miss — broken components, flying debris, unusual machine movement</div><div class="sc-desc">If a part of the machine breaks, a component flies off, or the machine moves in an unexpected way, stop immediately and clear personnel from the area. Do not restart until engineering has reviewed.</div></div></div>
+      <div class="sc-item"><div class="sc-icon">🧪</div><div><div class="sc-title">Chemical exposure risk — unusual fumes, coolant contamination, pressurized leaks</div><div class="sc-desc">Coolant with unusual odor may indicate microbial contamination or the wrong fluid was added. Pressurized hydraulic leaks can inject fluid under skin. These require immediate stop and safety assessment.</div></div></div>
+      <div class="sc-item"><div class="sc-icon">🚨</div><div><div class="sc-title">Any time a person is, or could be, in the machine's operating zone</div><div class="sc-desc">If anyone enters a machine's operating zone during an active process — regardless of how minor the intrusion seems — stop the machine. Restart only after lockout/tagout verification and confirmed clearance.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What OSHA Says About Your Right to Stop Work</h2>
+
+    <div class="osha-box fade-in">
+      <div class="ob-label">⚖️ Legal Framework</div>
+      <div class="ob-title">Worker Rights Under OSHA Section 11(c)</div>
+      <div class="ob-text">Under the Occupational Safety and Health Act, <strong>workers have the legal right to refuse work they reasonably believe poses an imminent danger of death or serious physical harm.</strong> This right exists regardless of employer pressure, production schedules, or AI system recommendations. To be protected: (1) you must have a reasonable belief that the danger is real and imminent, (2) the danger must be serious enough that a reasonable person would refuse the work, (3) there must not be sufficient time to eliminate the danger through normal OSHA enforcement channels, and (4) you must have tried, if possible, to have the condition corrected through normal channels first. OSHA also prohibits employers from retaliating against workers who refuse unsafe work in good faith. If you are ever threatened with discipline for stopping a process due to a genuine safety concern, contact OSHA.</div>
+    </div>
+
+    <p>This legal right exists independently of any AI system. An AI recommendation to "continue production" does not override your OSHA rights. An employer policy to "follow the AI system's guidance" does not override your OSHA rights. <mark>Your professional judgment about your personal safety is protected by federal law.</mark></p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Right Way to Stop a Process</h2>
+    <div class="shutdown-steps fade-in">
+      <div class="ss-step"><div class="ss-num">1</div><div><div class="ss-title">Stop the machine using the correct emergency stop procedure</div><div class="ss-desc">Use the E-stop button or the normal shutdown sequence depending on severity. For immediate danger, use E-stop. For developing concerns, use normal shutdown to avoid damaging the machine if there's time.</div></div></div>
+      <div class="ss-step"><div class="ss-num">2</div><div><div class="ss-title">Apply lockout/tagout if the machine needs to stay offline</div><div class="ss-desc">If any person will need to enter the machine's hazard zone for investigation, apply full lockout/tagout per your facility's LOTO procedure before anyone enters. Do not bypass this step under any circumstances.</div></div></div>
+      <div class="ss-step"><div class="ss-num">3</div><div><div class="ss-title">Clear personnel from the area if there is an active hazard</div><div class="ss-desc">If there's an active hazard (fire, chemical exposure, structural failure), clear people from the area before anything else. Notify your supervisor of the situation and location.</div></div></div>
+      <div class="ss-step"><div class="ss-num">4</div><div><div class="ss-title">Notify your supervisor immediately</div><div class="ss-desc">Call or contact your supervisor as soon as the immediate safety concern is addressed. Do not wait until end of shift. If your supervisor is unreachable, notify their backup or the plant safety officer.</div></div></div>
+      <div class="ss-step"><div class="ss-num">5</div><div><div class="ss-title">Document what you observed and what you did</div><div class="ss-desc">Write down: what you observed (specific, physical), what time it was, what action you took, and why. This documentation is your professional record and supports any investigation or OSHA review.</div></div></div>
+      <div class="ss-step"><div class="ss-num">6</div><div><div class="ss-title">Machine does not restart until the concern is cleared by the appropriate authority</div><div class="ss-desc">For safety stops, the machine must be reviewed and cleared by maintenance, engineering, or the safety officer before restart — not just by you. For quality stops, your supervisor sign-off is typically sufficient. Know your facility's specific protocols.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">An AI system shows all sensors normal and recommends continuing production. A technician notices an unusual burning smell from the electrical cabinet near the machine. What should the technician do?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ A burning smell from an electrical cabinet is a potential electrical fire hazard — this is not a situation where waiting for an additional alert is appropriate. Electrical fires can escalate rapidly. The fact that the AI shows all sensors normal doesn\'t mean there\'s no hazard — it means the sensors haven\'t detected it yet. The technician\'s senses are detecting something the AI cannot.')">Continue monitoring and wait for the AI to confirm an anomaly before acting</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A burning smell from an electrical cabinet is a potential electrical fire hazard — one of the conditions that always justifies stopping regardless of what the AI shows. The AI shows normal because the sensors measure machine performance parameters, not whether an electrical component is overheating or failing. The technician\'s sense of smell has detected something real that no sensor in the system is measuring. Stop the machine, notify the supervisor, and do not restart until the electrical cabinet has been inspected by a qualified electrician.')">Stop the machine immediately, notify the supervisor, and have the electrical cabinet inspected before restarting</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Opening an electrical cabinet without qualified inspection — especially when there\'s a burning smell — risks electrical shock or fire. The appropriate action is to stop the machine and notify the supervisor so a qualified person can open and inspect the cabinet safely.')">Open the electrical cabinet to visually check for the source of the smell, then decide whether to stop</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Safety conditions always override AI recommendations. Electrical hazards, smoke, structural failure, chemical exposure risk, unexpected machine movement, and any person in the operating zone are all conditions requiring immediate process stop — regardless of what the AI system recommends.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Under OSHA Section 11(c), workers have the legal right to refuse work they reasonably believe poses imminent danger of death or serious harm. This right is federally protected and cannot be overridden by employer policy or AI system recommendations.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The shutdown sequence: stop the machine → apply lockout/tagout if needed → clear personnel → notify supervisor immediately → document what you observed and did → machine doesn't restart until cleared by appropriate authority.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

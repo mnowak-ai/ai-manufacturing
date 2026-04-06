@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Deep Dive: The Machine With No Clear Pattern</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--orange-pale);color:var(--orange);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid #FDE68A;}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--orange);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--orange);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Situation briefing */
+.briefing{background:#1A0A25;border-radius:20px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.br-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;font-family:var(--mono);}
+.br-title{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--white);margin-bottom:18px;line-height:1.2;}
+.br-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.br-field{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 14px;}
+.br-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.4);margin-bottom:3px;font-family:var(--mono);}
+.br-val{font-size:13px;color:rgba(255,255,255,.9);font-weight:600;}
+.br-ai{background:rgba(123,47,190,.3);border:1px solid #7B2FBE;border-radius:12px;padding:14px 16px;margin-top:6px;}
+.br-ai-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#A78BFA;margin-bottom:6px;}
+.br-ai-text{font-size:14px;color:rgba(255,255,255,.9);line-height:1.65;}
+.br-confidence{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.br-conf-label{font-size:12px;color:rgba(255,255,255,.6);}
+.br-conf-bar{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden;}
+.br-conf-fill{height:100%;background:linear-gradient(90deg,#7B2FBE,#A78BFA);border-radius:4px;}
+.br-conf-pct{font-family:var(--mono);font-size:13px;font-weight:700;color:#A78BFA;}
+@media(max-width:560px){.br-grid{grid-template-columns:1fr;}}
+
+/* Evidence log */
+.evidence-log{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:26px;margin:24px 0;}
+.ev-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ev-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.ev-items{display:flex;flex-direction:column;gap:8px;}
+.ev-item{display:flex;gap:12px;align-items:flex-start;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 14px;}
+.ev-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.ev-dot.normal{background:var(--green);}
+.ev-dot.warn{background:var(--orange);}
+.ev-dot.red{background:var(--red);}
+.ev-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.ev-text strong{color:var(--purple-dark);}
+
+/* Decision activity */
+.decision-activity{background:var(--gray-soft);border:2px solid var(--orange);border-radius:22px;padding:28px;margin:28px 0;}
+.da-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+.da-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.da-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.choices{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.choice-btn{background:var(--white);border:2px solid var(--purple-mid);border-radius:16px;padding:16px 20px;cursor:pointer;text-align:left;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.choice-btn:hover{border-color:var(--purple);background:var(--purple-pale);}
+.choice-btn.selected-a{border-color:var(--green);background:var(--green-pale);}
+.choice-btn.selected-b{border-color:var(--orange);background:var(--orange-pale);}
+.choice-btn.selected-c{border-color:var(--red);background:var(--red-pale);}
+.choice-letter{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.choice-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.choice-desc{font-size:13px;color:var(--gray-muted);line-height:1.6;}
+.outcome-panel{display:none;border-radius:16px;padding:20px;margin-top:8px;}
+.outcome-panel.show{display:block;}
+.op-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.op-text{font-size:14px;line-height:1.8;}
+
+/* Debrief */
+.debrief{background:var(--green-pale);border:2px solid var(--green);border-radius:20px;padding:28px;margin:28px 0;}
+.db-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.db-title{font-family:"Fraunces",serif;font-size:20px;color:var(--green);font-weight:700;margin-bottom:14px;}
+.db-points{display:flex;flex-direction:column;gap:10px;}
+.db-point{display:flex;gap:12px;font-size:14px;line-height:1.7;color:var(--gray-text);}
+.db-check{color:var(--green);font-weight:700;flex-shrink:0;}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.4 · Scenario Activity</div>
+  <h1>Scenario Deep Dive: The Machine With No Clear Pattern</h1>
+  <p class="hero-sub">Intermittent errors. Quality defects nobody can pin down. An AI recommendation that doesn't quite fit. This scenario puts you in the seat of a quality technician who has to make a real call — with incomplete information and real consequences.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Your Situation</h2>
+    <p>You're a quality technician at a precision machined components plant. You've been called to CNC Machine 9 — a horizontal milling center producing aluminum housings for aerospace clients. This part has tight tolerances: dimensional error over ±0.003 inches is a rejection. The client has a zero-defect policy; any confirmed defective shipment triggers a full quality audit and potential contract review.</p>
+
+    <div class="briefing fade-in">
+      <div class="br-eyebrow">CNC Machine 9 · Situation Briefing · 10:47 AM</div>
+      <div class="br-title">Intermittent Quality Failures — No Clear Root Cause Identified</div>
+      <div class="br-grid">
+        <div class="br-field"><div class="br-label">Machine</div><div class="br-val">CNC Horizontal Milling Center #9</div></div>
+        <div class="br-field"><div class="br-label">Part</div><div class="br-val">AH-2240 Aerospace Housing</div></div>
+        <div class="br-field"><div class="br-label">Failure Rate</div><div class="br-val">4 of last 22 parts rejected (18%)</div></div>
+        <div class="br-field"><div class="br-label">Defect Type</div><div class="br-val">Dimensional — bore diameter off ±0.005–0.008 in</div></div>
+        <div class="br-field"><div class="br-label">Pattern</div><div class="br-val">Failures at parts 3, 9, 14, 22 — no obvious interval</div></div>
+        <div class="br-field"><div class="br-label">Vibration</div><div class="br-val">Normal (1.1 mm/s) — no anomaly flagged</div></div>
+        <div class="br-field"><div class="br-label">Spindle Temp</div><div class="br-val">Slightly elevated (74°C vs 68°C baseline)</div></div>
+        <div class="br-field"><div class="br-label">Cutting Tool</div><div class="br-val">Replaced 3 days ago, 280 of 500 rated hrs used</div></div>
+      </div>
+      <div class="br-ai">
+        <div class="br-ai-label">🤖 AI Recommendation</div>
+        <div class="br-ai-text">Dimensional variation consistent with calibration drift in linear encoder. Recommend: adjust encoder calibration offset +0.002 in and continue production. No shutdown required. Monitor next 5 parts.</div>
+        <div class="br-confidence">
+          <span class="br-conf-label">Confidence:</span>
+          <div class="br-conf-bar"><div class="br-conf-fill" style="width:58%"></div></div>
+          <span class="br-conf-pct">58%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Read the Evidence Carefully</h2>
+    <p>Before you decide, review what you actually know. Not everything here points the same direction.</p>
+
+    <div class="evidence-log fade-in">
+      <div class="ev-label">📋 Evidence Log — What You Know</div>
+      <div class="ev-title">Sorting the Signals</div>
+      <div class="ev-items">
+        <div class="ev-item"><div class="ev-dot normal"></div><div class="ev-text"><strong>Vibration normal (1.1 mm/s).</strong> Machine is not showing the vibration signature of a bearing problem, tool chatter, or spindle imbalance. That's a meaningful absence of evidence.</div></div>
+        <div class="ev-item"><div class="ev-dot warn"></div><div class="ev-text"><strong>Spindle temperature slightly elevated (74°C vs 68°C baseline).</strong> A 6°C rise isn't critical — but it's not normal either. Could be thermal expansion causing dimensional shifts. Could be early spindle bearing wear. Could be ambient temperature in the plant today. Unknown.</div></div>
+        <div class="ev-item"><div class="ev-dot warn"></div><div class="ev-text"><strong>Failure pattern is irregular: parts 3, 9, 14, 22.</strong> If this were a calibration drift, you'd expect failures to cluster — either getting progressively worse or appearing consistently after a certain interval. Intermittent, non-patterned failures suggest something that comes and goes. Calibration drift doesn't "come and go."</div></div>
+        <div class="ev-item"><div class="ev-dot warn"></div><div class="ev-text"><strong>Cutting tool is mid-life (280 of 500 hours).</strong> Should have plenty of life left. But tool wear can be uneven depending on the material and cutting conditions. Worth checking physical tool condition — sensor data alone doesn't tell you about edge geometry.</div></div>
+        <div class="ev-item"><div class="ev-dot red"></div><div class="ev-text"><strong>AI confidence is 58%.</strong> This is a spread, low-confidence recommendation. The AI is not sure. At 58%, almost 1 in 2 cases with this pattern do NOT have encoder calibration drift as the root cause. This is not a high-confidence recommendation.</div></div>
+        <div class="ev-item"><div class="ev-dot red"></div><div class="ev-text"><strong>The AI's recommended fix (encoder calibration) doesn't match the evidence pattern.</strong> Calibration drift causes progressive, monotonic error — not intermittent failures at random intervals. The AI's suggested cause and the observed failure pattern are logically inconsistent.</div></div>
+        <div class="ev-item"><div class="ev-dot red"></div><div class="ev-text"><strong>Stakes are very high.</strong> Aerospace housing, zero-defect client policy, ±0.003 inch tolerance. Current defects are ±0.005–0.008 — nearly double the limit. A bad shipment triggers a full audit and potential contract review.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Your Decision</h2>
+    <p>You have to make a call. The production schedule has this machine running for another 4 hours today, producing 30 more parts. What do you do?</p>
+
+    <div class="decision-activity fade-in">
+      <div class="da-label">🎯 Decision Activity</div>
+      <div class="da-title">What Do You Do?</div>
+      <div class="da-sub">Click your choice to see where it leads. Read each outcome carefully before moving to the debrief.</div>
+      <div class="choices">
+        <div class="choice-btn" onclick="selectChoice('A',this)">
+          <div class="choice-letter">Choice A</div>
+          <div class="choice-title">Follow the AI recommendation</div>
+          <div class="choice-desc">Adjust the encoder calibration offset +0.002 inches as suggested and continue production. Monitor the next 5 parts and see if the errors resolve.</div>
+        </div>
+        <div class="choice-btn" onclick="selectChoice('B',this)">
+          <div class="choice-letter">Choice B</div>
+          <div class="choice-title">Stop production and investigate further before continuing</div>
+          <div class="choice-desc">Put Machine 9 on hold. Physically inspect the spindle, cutting tool, workholding fixture, and coolant system. Get more information before making a calibration change or running more parts.</div>
+        </div>
+        <div class="choice-btn" onclick="selectChoice('C',this)">
+          <div class="choice-letter">Choice C</div>
+          <div class="choice-title">Shut down Machine 9 and escalate immediately</div>
+          <div class="choice-desc">Call the maintenance supervisor and quality manager now. Take Machine 9 offline completely until engineering can perform a full investigation. No more parts until root cause is found and confirmed.</div>
+        </div>
+      </div>
+      <div class="outcome-panel" id="outcome-A" style="background:var(--red-pale);border:1.5px solid var(--red);">
+        <div class="op-label" style="color:var(--red);">⚠️ Choice A Outcome: What Happens</div>
+        <div class="op-text" style="color:var(--gray-text);">You adjust the encoder calibration and resume production. Parts 23–26 pass inspection — giving you confidence the fix worked. Parts 27 fails. Parts 28, 29 pass. Part 30 fails. The calibration change didn't solve the underlying problem; it just shifted the error. 6 more parts are eventually scrapped. More critically: 3 of the 18 "passing" parts from this production run are later found to have borderline dimensional tolerance — they passed the initial inspection but are near the failure limit. Two are already in a shipment to the aerospace client. This triggers the full quality audit. The actual root cause? A worn workholding fixture clamp that was intermittently slipping during cutting — causing random dimensional shifts when the part moved mid-operation. The AI never had data about fixture condition. Adjusting calibration was irrelevant to the real problem — and continuing production made it worse. <strong>This is what following a 58%-confidence AI recommendation without validating it looks like.</strong></div>
+      </div>
+      <div class="outcome-panel" id="outcome-B" style="background:var(--green-pale);border:1.5px solid var(--green);">
+        <div class="op-label" style="color:var(--green);">✅ Choice B Outcome: What Happens</div>
+        <div class="op-text" style="color:var(--gray-text);">You pause Machine 9 and begin a systematic physical inspection. You check the spindle — it's warm but within tolerance. You check the cutting tool under magnification — edge geometry looks good. You check the workholding fixture. You find it: the pneumatic clamp on the fixture is not achieving full pressure consistently — the clamp pressure gauge reads 72 PSI when it should be 90 PSI. The clamp is intermittently allowing the part to shift by 0.004–0.009 inches during the cutting operation. That's exactly the range of defects you've been seeing. You document the finding, replace the pneumatic clamp seal (a 25-minute repair), verify proper clamp pressure, and run 5 test parts — all within tolerance. Machine 9 resumes production with 3.5 hours remaining in the shift. Zero defective parts reach the client. <strong>This is what thorough investigation before acting looks like.</strong></div>
+      </div>
+      <div class="outcome-panel" id="outcome-C" style="background:var(--orange-pale);border:1.5px solid var(--orange);">
+        <div class="op-label" style="color:#92400E;">📊 Choice C Outcome: What Happens</div>
+        <div class="op-text" style="color:var(--gray-text);">You shut down Machine 9 and escalate to the maintenance supervisor and quality manager. They're frustrated — production schedule impact is significant with a full shutdown. Engineering conducts a full investigation over the next 2 hours. They find the same root cause: faulty pneumatic clamp seal. The repair takes 25 minutes. Machine 9 resumes production — but 2 hours of production time is lost, a 20-part shortfall that requires overtime to recover. The complete shutdown was technically correct on the quality dimension (no defective parts left the facility) but overcorrected on the operations side. A thorough-but-targeted investigation (Choice B) would have found the same root cause in less time with less production impact. <strong>Choice C is not wrong — in high-stakes manufacturing, stopping is often the right instinct. But in this scenario, Choice B reached the same quality outcome with less disruption.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Debrief: What Made This Decision Hard</h2>
+
+    <div class="debrief fade-in">
+      <div class="db-label">✅ What the Right Call Was and Why</div>
+      <div class="db-title">Choice B — Investigate Before Acting</div>
+      <div class="db-points">
+        <div class="db-point"><div class="db-check">✓</div>The AI's 58% confidence was a clear signal to investigate, not to follow blindly. Below 70% confidence means the AI is genuinely uncertain — that uncertainty should translate to more investigation, not immediate action.</div>
+        <div class="db-point"><div class="db-check">✓</div>The failure pattern (intermittent, non-sequential) was logically inconsistent with the AI's suggested cause (calibration drift, which is progressive). When the AI's reasoning doesn't match the evidence pattern, that's a red flag — not a reason to dismiss the AI, but a reason to dig deeper.</div>
+        <div class="db-point"><div class="db-check">✓</div>The AI had no access to fixture condition. Sensor systems monitor machine parameters — spindle, vibration, temperature — not the mechanical condition of workholding fixtures. A problem the sensors can't see can never appear in the AI's analysis. Physical inspection closes this gap.</div>
+        <div class="db-point"><div class="db-check">✓</div>The stakes demanded investigation before action. Aerospace, zero-defect policy, client contract at risk — these stakes make a 25-minute investigation pause worth far more than 25 minutes of avoided downtime.</div>
+        <div class="db-point"><div class="db-check">✓</div>Adjusting calibration to fix the wrong problem can mask the real problem. Choice A didn't just fail to fix the issue — it potentially obscured it by making some dimensional readings shift, making the real root cause harder to find.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">The AI recommended adjusting encoder calibration. One key piece of evidence that should have raised serious doubt about this recommendation was the failure pattern. Why does intermittent failure at irregular intervals (parts 3, 9, 14, 22) argue against calibration drift as the cause?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ Calibration drift actually does get progressively worse over time — that\'s what "drift" means. The issue isn\'t that the AI recommended a fix that improves things — it\'s that calibration drift produces a consistent, progressive error pattern, not random intermittent failures.')">Calibration drift gets progressively worse over time, meaning failures should improve after a fix — making the AI\'s recommendation counterproductive</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Calibration drift is a gradual, monotonic shift — it gets worse consistently over time, not randomly. If calibration drift were the cause, you\'d expect dimensional errors to become progressively more common and more severe as the drift accumulates. Instead, the failures appeared at irregular intervals with passing parts in between — exactly the signature of something that causes errors intermittently (like a clamp that sometimes slips and sometimes holds). This logical inconsistency between the AI\'s suggested cause and the observed evidence pattern should trigger investigation, not immediate compliance with the AI\'s recommendation.')">Calibration drift causes progressive, consistent errors — not intermittent, random-interval failures. The irregular pattern doesn\'t match what calibration drift actually produces.</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ The number of failures (4 of 22 = 18%) is actually concerning for an aerospace application — any defect rate above 0% is significant. But the number of failures alone isn\'t the strongest argument against calibration drift as the cause. The pattern (irregular intervals, not progressive) is the more diagnostic evidence.')">4 failures out of 22 parts is too low a failure rate to indicate calibration drift — drift would cause more failures</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Low AI confidence (58%) is a signal to investigate further, not a reason to comply while monitoring. When the AI itself is nearly coin-flip uncertain, human investigation is the appropriate next step — not cautious compliance.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Evidence patterns that are logically inconsistent with the AI's suggested cause should trigger skepticism. The AI recommends based on training data — if the physical evidence doesn't match the pattern the AI learned, the recommendation may be wrong.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI systems can't see everything. In this scenario, the root cause (worn fixture clamp) was invisible to sensors — the AI had no data about fixture condition. Physical inspection is what finds problems in the AI's blind spots.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Stakes determine investigation depth. Aerospace, zero-defect client policy, tolerance violations — these stakes justified a 25-minute investigation pause. The cost of a wrong action was far higher than the cost of the pause.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function selectChoice(c,btn){
+  document.querySelectorAll(".choice-btn").forEach(b=>{b.className="choice-btn";});
+  btn.classList.add("selected-"+c.toLowerCase());
+  document.querySelectorAll(".outcome-panel").forEach(p=>p.classList.remove("show"));
+  document.getElementById("outcome-"+c).classList.add("show");
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

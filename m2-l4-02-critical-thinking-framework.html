@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Think Critically About AI Output: A Framework for Manufacturing Workers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Framework cards */
+.framework{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.fw-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:22px 24px;}
+.fw-step{display:flex;align-items:flex-start;gap:16px;}
+.fw-num{width:40px;height:40px;border-radius:50%;background:var(--purple-dark);color:var(--white);font-family:"Fraunces",serif;font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fw-content{}
+.fw-q{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;line-height:1.25;}
+.fw-what{font-size:14px;line-height:1.75;color:var(--gray-text);margin-bottom:8px;}
+.fw-ask{background:var(--purple-pale);border-radius:10px;padding:10px 14px;}
+.fw-ask-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:4px;}
+.fw-ask-items{display:flex;flex-direction:column;gap:3px;}
+.fw-ask-item{font-size:13px;color:var(--gray-text);display:flex;gap:6px;}
+.fw-ask-item::before{content:"→";opacity:.5;flex-shrink:0;}
+
+/* Signal table */
+.signal-table{border-radius:18px;overflow:hidden;margin:24px 0;border:1.5px solid var(--purple-mid);}
+.st-header{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--purple-dark);padding:12px 16px;gap:10px;}
+.st-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.8);}
+.st-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:12px 16px;gap:10px;border-top:1px solid var(--purple-mid);}
+.st-row:nth-child(even){background:var(--gray-soft);}
+.st-cell{font-size:13px;line-height:1.55;color:var(--gray-text);}
+.st-cell strong{color:var(--purple-dark);}
+.badge-green{display:inline-block;background:var(--green-pale);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+.badge-orange{display:inline-block;background:var(--orange-pale);color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+.badge-red{display:inline-block;background:var(--red-pale);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;}
+@media(max-width:560px){.st-header,.st-row{grid-template-columns:1fr;}}
+
+/* Field card */
+.field-card{background:var(--green-pale);border:2px solid var(--green);border-radius:20px;padding:24px;margin:24px 0;}
+.fc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:10px;}
+.fc-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:12px;}
+.fc-items{display:flex;flex-direction:column;gap:8px;}
+.fc-item{display:flex;gap:10px;font-size:14px;line-height:1.7;color:var(--gray-text);}
+.fc-check{color:var(--green);font-weight:700;flex-shrink:0;}
+
+.quiz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:32px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:18px;line-height:1.35;}
+.qopts{display:flex;flex-direction:column;gap:10px;}
+.qopt{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:15px;line-height:1.6;transition:all .2s;text-align:left;font-family:"DM Sans",sans-serif;color:var(--gray-text);}
+.qopt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);pointer-events:none;}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);pointer-events:none;}
+.qfb{font-size:14px;line-height:1.7;padding:14px 18px;border-radius:12px;margin-top:14px;display:none;}
+.qfb.show{display:block;}
+.cfb{background:var(--green-pale);color:var(--green);}
+.wfb{background:var(--red-pale);color:var(--red);}
+.summary{background:var(--purple-dark);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;}
+.summary h2{color:var(--white);margin-bottom:24px;}
+.spoints{display:flex;flex-direction:column;gap:14px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;border-radius:50%;background:var(--purple);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin:0;}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero">
+  <div class="lesson-tag">Module 2 · Lesson 2.4</div>
+  <h1>How to Think Critically About AI Output: A Framework for Manufacturing Workers</h1>
+  <p class="hero-sub">This is the module's central skill — the one that determines whether AI makes you more effective or gets you into trouble. Five questions. Applied consistently. Every time an AI system gives you a recommendation.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why a Framework Matters</h2>
+    <p>Critical thinking about AI output isn't something that comes naturally — because AI systems are designed to look authoritative. Confidence scores, clean interfaces, specific numbers — all of it signals "I know what I'm doing." But confidence in appearance is not the same as accuracy in fact.</p>
+    <p>A framework gives you a repeatable process. Instead of asking "does this feel right?" — which is unreliable — you ask specific questions in a specific order. <mark>The goal isn't to distrust AI. It's to be a more intelligent user of AI by knowing exactly what to validate before acting on it.</mark></p>
+    <div class="pull-quote fade-in">
+      <p>You don't need to understand how AI works to use it well. You need to know what questions to ask about what it tells you.</p>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Five-Question Framework</h2>
+    <div class="framework fade-in">
+      <div class="fw-card">
+        <div class="fw-step">
+          <div class="fw-num">1</div>
+          <div class="fw-content">
+            <div class="fw-q">What data is the AI actually seeing?</div>
+            <div class="fw-what">AI systems analyze the data they have access to — and only that data. Before trusting a recommendation, you need to know what inputs the AI used. Sensor data? Work order history? This machine specifically, or a general model? You can't evaluate a recommendation without knowing what it's based on.</div>
+            <div class="fw-ask"><div class="fw-ask-label">Ask Yourself</div><div class="fw-ask-items"><div class="fw-ask-item">Which sensors is this AI reading? Are they all calibrated and clean?</div><div class="fw-ask-item">Is this a model trained on this machine, this machine type, or all machines?</div><div class="fw-ask-item">How recent is the training data? Is this machine operating in conditions similar to what the AI was trained on?</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-step">
+          <div class="fw-num">2</div>
+          <div class="fw-content">
+            <div class="fw-q">What could the AI be missing?</div>
+            <div class="fw-what">AI sees what sensors report. It cannot see what sensors don't measure: mechanical condition of fixtures, quality of incoming raw material, recent procedural changes, unusual ambient conditions, or information that workers know but haven't entered into a system. The gap between sensor data and physical reality is where AI blind spots live.</div>
+            <div class="fw-ask"><div class="fw-ask-label">Ask Yourself</div><div class="fw-ask-items"><div class="fw-ask-item">Is there anything relevant that happened recently that the AI wouldn't know about? (New supplier batch, tooling change, process modification)</div><div class="fw-ask-item">What physical aspects of this machine can't be sensed? (Fixture wear, coolant contamination, chip buildup)</div><div class="fw-ask-item">Do I know something about this machine that isn't in the data?</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-step">
+          <div class="fw-num">3</div>
+          <div class="fw-content">
+            <div class="fw-q">Does the recommendation match the physical evidence?</div>
+            <div class="fw-what">The AI's suggested cause should produce a pattern that matches what you're actually observing. Calibration drift produces progressive errors. A loose fixture produces intermittent errors. Bearing wear produces vibration and heat together. If the physical evidence pattern doesn't match what the AI's suggested cause would produce — that's a logical inconsistency worth investigating before acting.</div>
+            <div class="fw-ask"><div class="fw-ask-label">Ask Yourself</div><div class="fw-ask-items"><div class="fw-ask-item">What pattern would I expect to see if the AI's suggested cause were correct?</div><div class="fw-ask-item">Does what I'm actually observing match that expected pattern?</div><div class="fw-ask-item">Can I think of another cause that would better explain the observed pattern?</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-step">
+          <div class="fw-num">4</div>
+          <div class="fw-content">
+            <div class="fw-q">What are the stakes if the AI is wrong?</div>
+            <div class="fw-what">The depth of investigation required should scale with the consequences of a wrong action. A 65% confident recommendation to adjust a lubricant interval on a low-priority machine is different from a 65% confident recommendation to continue production on an aerospace component. Same confidence. Completely different investigation requirements. Stakes determine how much verification is appropriate.</div>
+            <div class="fw-ask"><div class="fw-ask-label">Ask Yourself</div><div class="fw-ask-items"><div class="fw-ask-item">What happens if I follow this recommendation and the AI is wrong?</div><div class="fw-ask-item">Who is downstream of this decision — what customers, products, or safety systems are affected?</div><div class="fw-ask-item">Is this reversible? Can we course-correct easily if the recommendation is wrong?</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-step">
+          <div class="fw-num">5</div>
+          <div class="fw-content">
+            <div class="fw-q">What would an experienced technician check first?</div>
+            <div class="fw-what">Your own expertise and the expertise of your senior colleagues is a validation layer that no AI system can replace. Before acting on an AI recommendation, ask: what would the most experienced technician on your team physically look at first? That question often identifies the fastest path to physical validation — and may surface considerations the AI never had access to.</div>
+            <div class="fw-ask"><div class="fw-ask-label">Ask Yourself</div><div class="fw-ask-items"><div class="fw-ask-item">Have I or a senior colleague seen a similar situation before? What was the real cause then?</div><div class="fw-ask-item">What physical check would take 5 minutes that could confirm or contradict this recommendation?</div><div class="fw-ask-item">If I were mentoring a new technician, what would I tell them to look at first?</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Quick Reference: How Much Validation Does This Need?</h2>
+    <div class="signal-table fade-in">
+      <div class="st-header"><div class="st-h">Signal</div><div class="st-h">Validation Required</div><div class="st-h">Action Threshold</div></div>
+      <div class="st-row"><div class="st-cell"><strong>90%+ confidence, consistent pattern, low stakes</strong></div><div class="st-cell">Quick physical check — 5 minutes</div><div class="st-cell"><span class="badge-green">LOW</span> Act after quick verification</div></div>
+      <div class="st-row"><div class="st-cell"><strong>75–89% confidence, pattern fits, moderate stakes</strong></div><div class="st-cell">Systematic validation checklist — 15–20 minutes</div><div class="st-cell"><span class="badge-orange">MEDIUM</span> Verify before acting</div></div>
+      <div class="st-row"><div class="st-cell"><strong>50–74% confidence, any stakes</strong></div><div class="st-cell">Full investigation — physical inspection across all likely causes</div><div class="st-cell"><span class="badge-red">HIGH</span> Investigate first</div></div>
+      <div class="st-row"><div class="st-cell"><strong>Any confidence, pattern inconsistency</strong></div><div class="st-cell">Full investigation — pattern mismatch is a red flag regardless of confidence score</div><div class="st-cell"><span class="badge-red">HIGH</span> Investigate first</div></div>
+      <div class="st-row"><div class="st-cell"><strong>Any confidence, high stakes (safety, quality, regulatory)</strong></div><div class="st-cell">Full investigation + supervisor notification</div><div class="st-cell"><span class="badge-red">HIGH</span> Escalate and investigate</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Pocket Version: Five Questions in the Field</h2>
+    <div class="field-card fade-in">
+      <div class="fc-label">📋 Quick Reference Card</div>
+      <div class="fc-title">Five Questions Before You Act on Any AI Recommendation</div>
+      <div class="fc-items">
+        <div class="fc-item"><div class="fc-check">1.</div>What data is the AI actually seeing — and is that data reliable?</div>
+        <div class="fc-item"><div class="fc-check">2.</div>What relevant information could the AI be missing that I have access to?</div>
+        <div class="fc-item"><div class="fc-check">3.</div>Does the physical evidence match what the AI's suggested cause would actually produce?</div>
+        <div class="fc-item"><div class="fc-check">4.</div>What are the consequences if this recommendation is wrong?</div>
+        <div class="fc-item"><div class="fc-check">5.</div>What would the most experienced person on my team check first?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="quiz fade-in">
+      <div class="quiz-label">🧠 Knowledge Check</div>
+      <div class="quiz-q">An AI gives a recommendation with 91% confidence. According to the framework, does this mean you should act on it without physical verification?</div>
+      <div class="qopts" id="q1opts">
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ 91% confidence means the AI has seen this pattern successfully resolved by this fix in the past — but it doesn\'t mean the physical situation is confirmed. Skipping physical verification entirely, even at 91%, removes the human validation layer that catches what sensors miss.')">Yes — 91% is well above the threshold where physical verification adds meaningful value</button>
+        <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Even at 91% confidence, the framework calls for a quick physical check before acting. At high confidence with low stakes, this is just a 5-minute verification — not a full investigation. But it\'s never zero. This is because: (1) sensors can be drifted or malfunctioning without the AI knowing, (2) physical conditions the AI can\'t measure could be the actual cause, and (3) 91% confidence still means 9 out of 100 cases with this pattern don\'t have the suggested cause. The five-question framework scales the depth of verification — it doesn\'t eliminate it.')">No — even at 91% confidence, a quick physical check is still appropriate. The framework scales verification depth, not whether to verify at all.</button>
+        <button class="qopt" onclick="doQ('q1',this,false,'❌ A physical verification is not the same as a full investigation. At 91% confidence with low stakes, the quick physical check from the framework might take 5 minutes. That\'s proportional, not overcautious. The framework explicitly addresses this by matching verification depth to confidence level and stakes.')">Not necessarily — but the physical verification required at 91% confidence would typically take hours and delay production significantly</button>
+      </div>
+      <div class="qfb" id="q1fb"></div>
+    </div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The five-question framework: What data does the AI see? What could it be missing? Does the recommendation match the evidence? What are the stakes? What would an expert check first? Applied consistently, these questions make you a significantly more effective user of AI recommendations.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Validation depth scales with confidence and stakes — not one-size-fits-all. A quick physical check at 91% confidence is appropriate. A full investigation at 58% confidence is appropriate. Stakes can override confidence: high-stakes situations always require more verification regardless of the AI's confidence level.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Pattern mismatch is a red flag at any confidence level. If the physical evidence doesn't match what the AI's suggested cause would produce, investigate before acting — regardless of the confidence score.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
