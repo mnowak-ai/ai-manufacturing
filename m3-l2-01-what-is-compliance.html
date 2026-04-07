@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Compliance in Manufacturing?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Rule source cards */
+.rule-sources{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.rs-card{border-radius:18px;padding:22px;border:2px solid;}
+.rs-card.federal{background:var(--blue-pale);border-color:var(--blue-mid);}
+.rs-card.industry{background:var(--purple-pale);border-color:var(--purple-mid);}
+.rs-card.internal{background:var(--green-pale);border-color:var(--green);}
+.rs-card.customer{background:var(--orange-pale);border-color:var(--orange);}
+.rs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;}
+.federal .rs-label{color:var(--blue);}
+.industry .rs-label{color:var(--purple);}
+.internal .rs-label{color:var(--green);}
+.customer .rs-label{color:var(--orange);}
+.rs-card h3{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:8px;}
+.federal h3{color:var(--blue);}
+.industry h3{color:var(--purple-dark);}
+.internal h3{color:var(--green);}
+.customer h3{color:#92400E;}
+.rs-card p{font-size:13px;line-height:1.65;color:var(--gray-text);margin-bottom:8px;}
+.rs-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.rs-ex{font-size:12px;padding:3px 10px;border-radius:6px;font-weight:600;}
+.federal .rs-ex{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.industry .rs-ex{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.internal .rs-ex{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.customer .rs-ex{background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;}
+@media(max-width:560px){.rule-sources{grid-template-columns:1fr;}}
+
+/* Compliance areas explorer */
+.comp-explorer{margin:28px 0;}
+.comp-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.comp-tab{padding:8px 16px;border-radius:100px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray-text);}
+.comp-tab:hover,.comp-tab.active{background:var(--purple);border-color:var(--purple);color:white;}
+.comp-panel{display:none;background:var(--gray-soft);border-radius:20px;padding:26px;border-left:5px solid var(--purple);}
+.comp-panel.show{display:block;}
+.cp-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.cp-icon{font-size:36px;}
+.cp-meta h3{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:2px;}
+.cp-meta .cp-gov{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);}
+.cp-body p{font-size:15px;line-height:1.75;color:var(--gray-text);margin-bottom:12px;}
+.cp-examples{display:flex;flex-direction:column;gap:8px;}
+.cp-ex{background:white;border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.6;color:var(--gray-text);display:flex;gap:10px;}
+.cp-ex-icon{flex-shrink:0;}
+.ai-note{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:16px;padding:20px 24px;margin-top:16px;color:white;}
+.ai-note-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple-mid);margin-bottom:8px;}
+.ai-note p{font-size:14px;color:rgba(255,255,255,.85);margin:0;line-height:1.7;}
+
+/* Consequence ladder */
+.consequence-ladder{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.cl-step{display:flex;gap:16px;align-items:flex-start;}
+.cl-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.cl-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:2px solid;}
+.cl-line{flex:1;width:2px;min-height:16px;}
+.cl-step:nth-child(1) .cl-circle{background:var(--orange-pale);border-color:var(--orange);}
+.cl-step:nth-child(2) .cl-circle{background:var(--red-pale);border-color:var(--red);}
+.cl-step:nth-child(3) .cl-circle{background:#FEE2E2;border-color:#B91C1C;}
+.cl-step:nth-child(4) .cl-circle{background:#1F2937;border-color:#374151;}
+.cl-step:nth-child(1) .cl-line{background:#FDE68A;}
+.cl-step:nth-child(2) .cl-line{background:#FECACA;}
+.cl-step:nth-child(3) .cl-line{background:#FCA5A5;}
+.cl-step:nth-child(4) .cl-line{display:none;}
+.cl-body{background:var(--gray-soft);border-radius:0 14px 14px 14px;padding:16px 20px;flex:1;margin-bottom:4px;}
+.cl-body h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.cl-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+.cl-cost{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;margin-top:8px;background:var(--red-pale);color:var(--red);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>What Is Compliance in Manufacturing?</h1>
+  <p class="hero-sub">The slides say "compliance = doing the job the right way every time." But right according to whom? This article explains where manufacturing rules come from, what areas of a factory they govern, and why failing to follow them has consequences far beyond a warning letter.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Compliance Means Following the Rules — But Whose Rules?</h2>
+    <p>In everyday life, compliance usually means following instructions — do what you're told. In manufacturing, it means something more specific: <mark>following every applicable rule, standard, regulation, and procedure that governs how your product is made, how your facility operates, and how your workers are treated.</mark></p>
+    <p>The tricky part is that those rules don't come from just one place. A single manufacturing facility might be simultaneously subject to federal safety law, FDA product regulations, international quality standards, environmental guidelines, and its own internal quality procedures — all at the same time, all of which need to be followed, all the time.</p>
+    <p>This is why compliance is complex enough to be a full-time job — and why AI tools designed to track it are genuinely valuable. Keeping track of every applicable rule, for every process, on every shift, in every zone, is simply more than a human team can reliably do without help.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Compliance:</strong> Following all applicable rules, standards, and regulations that govern how a manufacturing facility operates. In regulated industries like pharmaceuticals, food, or aerospace, compliance is not optional — it's the legal and ethical condition for being allowed to operate at all.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Manufacturing Rules Come From</h2>
+    <p>There are four main sources of compliance requirements for a typical manufacturing company. Each one carries different authority, different consequences for violations, and different ways that AI monitoring helps track adherence.</p>
+
+    <div class="rule-sources">
+      <div class="rs-card federal">
+        <div class="rs-label">Source 1</div>
+        <h3>🏛️ Federal & Government Regulations</h3>
+        <p>Laws passed by Congress and rules written by government agencies. These are mandatory — factories don't get to opt out. Violations can result in fines, facility shutdowns, product recalls, and criminal charges.</p>
+        <div class="rs-examples">
+          <span class="rs-ex">OSHA (worker safety)</span>
+          <span class="rs-ex">FDA (food & drugs)</span>
+          <span class="rs-ex">EPA (environment)</span>
+          <span class="rs-ex">DOT (transportation)</span>
+        </div>
+      </div>
+      <div class="rs-card industry">
+        <div class="rs-label">Source 2</div>
+        <h3>📋 Industry Standards</h3>
+        <p>Rules developed by industry organizations — not laws, but widely expected in certain sectors. Many customers, partners, and regulators require compliance with these standards as a condition of doing business.</p>
+        <div class="rs-examples">
+          <span class="rs-ex">ISO 9001 (quality)</span>
+          <span class="rs-ex">ISO 45001 (safety)</span>
+          <span class="rs-ex">ISO 14001 (environment)</span>
+          <span class="rs-ex">GMP (pharma/food)</span>
+        </div>
+      </div>
+      <div class="rs-card internal">
+        <div class="rs-label">Source 3</div>
+        <h3>🏭 Internal Company Standards</h3>
+        <p>Rules the company sets for itself, often stricter than what law requires. Standard Operating Procedures (SOPs), quality checklists, maintenance schedules — internal rules that define exactly how every task should be done.</p>
+        <div class="rs-examples">
+          <span class="rs-ex">SOPs</span>
+          <span class="rs-ex">Work instructions</span>
+          <span class="rs-ex">Quality checklists</span>
+          <span class="rs-ex">Maintenance schedules</span>
+        </div>
+      </div>
+      <div class="rs-card customer">
+        <div class="rs-label">Source 4</div>
+        <h3>🤝 Customer Requirements</h3>
+        <p>Rules a specific buyer requires before they'll purchase from a manufacturer. A car company might require its parts suppliers to meet specific quality standards. An airline might require its component manufacturers to use certain documentation practices.</p>
+        <div class="rs-examples">
+          <span class="rs-ex">Supplier audits</span>
+          <span class="rs-ex">Contract specifications</span>
+          <span class="rs-ex">Approved supplier lists</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Areas of a Factory Does Compliance Cover?</h2>
+    <p>Compliance isn't just about safety equipment. It touches nearly every aspect of manufacturing operations. Click each area to see what compliance looks like in practice.</p>
+
+    <div class="comp-explorer">
+      <div class="comp-tabs">
+        <button class="comp-tab active" onclick="showComp('safety',this)">Worker Safety</button>
+        <button class="comp-tab" onclick="showComp('product',this)">Product Quality</button>
+        <button class="comp-tab" onclick="showComp('environment',this)">Environment</button>
+        <button class="comp-tab" onclick="showComp('equipment',this)">Equipment</button>
+        <button class="comp-tab" onclick="showComp('records',this)">Records</button>
+        <button class="comp-tab" onclick="showComp('training',this)">Training</button>
+      </div>
+
+      <div class="comp-panel show" id="panel-safety">
+        <div class="cp-header"><div class="cp-icon">🦺</div><div class="cp-meta"><h3>Worker Safety Compliance</h3><div class="cp-gov">Governed by: OSHA, ISO 45001, internal SOPs</div></div></div>
+        <div class="cp-body">
+          <p>Worker safety compliance means following every rule that protects employees from injury or illness — wearing required PPE, maintaining safe zones, operating machinery correctly, handling chemicals properly, and providing required training to all workers.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Every worker in a noise zone must wear hearing protection — documented and monitored</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Machine guards must be in place and inspected on a set schedule — records kept</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Chemical handling procedures must be followed exactly as written, every time</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>AI cameras monitor PPE compliance in real time. Sensor systems track noise and chemical exposure levels. Digital checklists record when safety inspections have been completed — and flag when they haven't been done on schedule.</p></div>
+      </div>
+
+      <div class="comp-panel" id="panel-product">
+        <div class="cp-header"><div class="cp-icon">📦</div><div class="cp-meta"><h3>Product Quality Compliance</h3><div class="cp-gov">Governed by: ISO 9001, FDA, GMP, customer specs</div></div></div>
+        <div class="cp-body">
+          <p>Product quality compliance means ensuring that every product meets the specifications it's required to meet — dimensions, purity, strength, appearance, labeling, and more. In regulated industries like pharmaceuticals, a product that doesn't meet specifications cannot legally be sold.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>A pharmaceutical tablet must contain exactly the stated dose of active ingredient — within a defined tolerance range</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>A machined part must meet dimensional specs to within thousandths of an inch</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Food products must be free of contaminants and labeled accurately for allergens</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>Computer vision inspects products on production lines in real time, flagging defects faster than human inspectors. AI-powered sensors measure product dimensions, weight, or chemical composition during production — catching out-of-spec products before they're packaged.</p></div>
+      </div>
+
+      <div class="comp-panel" id="panel-environment">
+        <div class="cp-header"><div class="cp-icon">🌿</div><div class="cp-meta"><h3>Environmental Compliance</h3><div class="cp-gov">Governed by: EPA, state environmental agencies, ISO 14001</div></div></div>
+        <div class="cp-body">
+          <p>Environmental compliance means following rules about what a factory can emit into the air, discharge into water, and dispose of as waste. These rules protect communities and ecosystems around the facility. Violations can result in massive fines and remediation costs.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Air emissions from manufacturing processes must stay below EPA-permitted levels — continuously monitored</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Wastewater discharged from the facility must be treated to specific standards before release</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Hazardous waste must be stored, handled, and disposed of according to strict protocols</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>Continuous monitoring sensors track air and water emissions in real time. AI analyzes sensor data to detect when emissions approach permitted limits — alerting operators to take corrective action before a violation occurs, rather than discovering it in a periodic report.</p></div>
+      </div>
+
+      <div class="comp-panel" id="panel-equipment">
+        <div class="cp-header"><div class="cp-icon">⚙️</div><div class="cp-meta"><h3>Equipment Compliance</h3><div class="cp-gov">Governed by: OSHA, FDA, ISO, manufacturer specs</div></div></div>
+        <div class="cp-body">
+          <p>Equipment compliance means maintaining all machinery according to required schedules — inspections, calibrations, preventive maintenance, and replacements. In regulated industries, using equipment that is out of calibration or past its inspection date is itself a compliance violation, regardless of whether anything went wrong.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Pressure vessels must be inspected by a certified inspector on a defined schedule</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Measuring instruments used in quality testing must be calibrated on a set frequency</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>FDA-regulated equipment must have validated performance records showing it works as intended</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>AI maintenance scheduling systems track every piece of equipment's inspection and calibration history, automatically flag overdue tasks, and can predict when maintenance will be needed based on equipment performance data — before a failure or a compliance violation occurs.</p></div>
+      </div>
+
+      <div class="comp-panel" id="panel-records">
+        <div class="cp-header"><div class="cp-icon">📋</div><div class="cp-meta"><h3>Records and Documentation Compliance</h3><div class="cp-gov">Governed by: FDA 21 CFR Part 11, ISO, OSHA</div></div></div>
+        <div class="cp-body">
+          <p>Records compliance means creating, maintaining, and retaining the required documentation to prove that compliant work was done. In many regulated industries, if it isn't documented, legally it didn't happen — no matter how well the actual work was performed.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Batch records in pharmaceutical manufacturing must document every step of production — who did it, when, with what materials</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Training records must show that every worker received required training before performing regulated tasks</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Inspection records must be signed, dated, and retained for a specified number of years</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>Digital compliance management systems automatically create records when steps are completed, timestamp actions, and flag when required documentation is missing. AI-generated audit trails can be reviewed by inspectors in minutes instead of the days it takes to compile paper records.</p></div>
+      </div>
+
+      <div class="comp-panel" id="panel-training">
+        <div class="cp-header"><div class="cp-icon">🎓</div><div class="cp-meta"><h3>Training Compliance</h3><div class="cp-gov">Governed by: OSHA, FDA, ISO, company policy</div></div></div>
+        <div class="cp-body">
+          <p>Training compliance means ensuring that every worker has received all required training before performing regulated tasks — and that the training is documented, current, and renewed on schedule. An untrained worker performing a regulated task is a compliance violation even if they do it perfectly.</p>
+          <div class="cp-examples">
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Hazardous materials workers must complete required HAZMAT training and renew it on schedule</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Forklift operators must be certified before operating, with recertification every 3 years</span></div>
+            <div class="cp-ex"><span class="cp-ex-icon">→</span><span>Workers in GMP environments must complete regulatory compliance training before handling product</span></div>
+          </div>
+        </div>
+        <div class="ai-note"><div class="ai-note-label">🤖 How AI Helps</div><p>AI-powered compliance tracking systems monitor worker training status, automatically alert when certifications are approaching expiration, and can flag when a worker attempts to log into a system or enter a zone for which they don't have current required training.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Happens When Compliance Fails</h2>
+    <p>Compliance violations aren't just paperwork problems. They have a real escalation path — from manageable corrective actions to consequences that can end careers and close facilities. Understanding this escalation is part of understanding why AI compliance monitoring is worth investing in.</p>
+
+    <div class="consequence-ladder">
+      <div class="cl-step">
+        <div class="cl-left"><div class="cl-circle">⚠️</div><div class="cl-line"></div></div>
+        <div class="cl-body">
+          <h3>Level 1: Observation or Minor Violation</h3>
+          <p>A regulator notices a minor gap — a missing signature on a checklist, a slightly overdue calibration. Usually results in a written observation requiring corrective action within a defined time period. No immediate penalty if addressed promptly.</p>
+        </div>
+      </div>
+      <div class="cl-step">
+        <div class="cl-left"><div class="cl-circle">🚨</div><div class="cl-line"></div></div>
+        <div class="cl-body">
+          <h3>Level 2: Warning Letter or Citation</h3>
+          <p>A more serious violation — repeated minor issues, or a significant gap in a critical process. Results in a formal warning letter requiring a detailed response and corrective action plan. In pharma, an FDA Warning Letter is public and damages the company's reputation significantly.</p>
+          <div class="cl-cost">Potential fines: $10,000–$100,000+</div>
+        </div>
+      </div>
+      <div class="cl-step">
+        <div class="cl-left"><div class="cl-circle">⛔</div><div class="cl-line"></div></div>
+        <div class="cl-body">
+          <h3>Level 3: Product Recall or Consent Decree</h3>
+          <p>Serious compliance failures that affected product integrity. A recall requires retrieving all affected products from the market. A consent decree is a court-ordered agreement placing the facility under intensive regulatory oversight until compliance is demonstrated.</p>
+          <div class="cl-cost">Cost of a product recall: $10M–$600M+</div>
+        </div>
+      </div>
+      <div class="cl-step">
+        <div class="cl-left"><div class="cl-circle">🔒</div><div class="cl-line"></div></div>
+        <div class="cl-body">
+          <h3>Level 4: Facility Shutdown or Criminal Charges</h3>
+          <p>Willful, repeated, or catastrophic violations. Regulators can force a facility to cease operations entirely until compliance is demonstrated. Individuals — executives, quality managers, safety officers — can face personal criminal charges for knowingly violating regulations that lead to harm.</p>
+          <div class="cl-cost">Criminal fines: unlimited. Prison sentences possible.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>Compliance violations don't always start as serious problems. They start as small gaps — a missed step, an overdue inspection, an undocumented procedure. AI monitoring exists to catch these gaps before they escalate.</p></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical company has been following all FDA regulations perfectly — but has failed to properly document two steps in their batch records for the last three months. No product was harmed. Which of the following best describes this situation?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The fact that no product was harmed is not what determines whether a compliance violation occurred. In regulated manufacturing, failing to document required steps is itself the violation — regardless of the actual outcome.')">Not a compliance issue — no product was harmed, so no rules were actually broken</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Records compliance is one of the core areas of manufacturing compliance. In FDA-regulated pharmaceutical manufacturing, failing to document required batch record steps is a compliance violation regardless of product quality — because the documentation itself is required by regulation. "If it isn\'t documented, it didn\'t happen" is a foundational principle of GMP compliance. This situation would likely result in a Warning Letter and could escalate to more serious consequences if not corrected.')">A records compliance violation — documentation is required by FDA regulation, and failing to document steps is a violation even if the work was done correctly</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While internal company policy certainly requires documentation, the issue here is bigger than that. FDA regulations specifically require complete batch records in pharmaceutical manufacturing — this is a regulatory compliance violation, not just a company policy matter.')">Only an internal company policy violation — regulations only care about product quality, not paperwork</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Minor violations do require corrective action, but "paperwork errors" significantly understates the regulatory importance of batch records in pharmaceutical manufacturing. Incomplete batch records are taken very seriously by FDA and regularly result in Warning Letters and enforcement actions.')">A minor paperwork error with no significant consequences</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A factory manager says: "We follow all the ISO standards our customers require, so we're compliant." A compliance officer disagrees. Who is right, and why?</div>
+    <div class="quiz-opts" id="q2opts">
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ ISO standards are important, but they represent just one source of compliance requirements. A factory must also comply with federal regulations (OSHA, EPA), industry-specific requirements (FDA for pharma, FAA for aerospace), and its own internal SOPs — regardless of what customers require.')">The manager — if customers are satisfied with ISO compliance, that\'s the only compliance that matters</button>
+      <button class="qopt" onclick="doQ('q2',this,true,'✅ Correct. The compliance officer is right. There are four sources of manufacturing compliance requirements: federal/government regulations, industry standards, internal company standards, and customer requirements. Meeting ISO standards satisfies customer requirements, but it doesn\'t automatically cover federal safety law (OSHA), environmental regulations (EPA), or product-specific regulations (FDA). A factory can be ISO-certified and still be out of compliance with federal law.')">The compliance officer — ISO standards are just one source of compliance requirements; federal regulations, environmental rules, and internal SOPs all also apply</button>
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ Both can\'t be equally right here because they\'re making contradictory claims. The manager is saying ISO compliance is sufficient; the compliance officer is saying it isn\'t. The compliance officer is correct — ISO is necessary but not sufficient for full regulatory compliance.')">Both are equally right — compliance depends on the specific industry</button>
+      <button class="qopt" onclick="doQ('q2',this,false,'❌ ISO standards do actually matter — they\'re a significant source of compliance requirements, especially for quality and safety management. The issue is that they\'re not the only source, and the manager is wrong to assume they cover everything.')">Neither — ISO standards don\'t count as compliance at all</button>
+    </div>
+    <div class="qfb" id="q2fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Compliance in manufacturing means following all applicable rules, standards, and regulations — not just company policy, but federal law, industry standards, and customer requirements simultaneously.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Rules come from four sources: federal/government regulations (OSHA, FDA, EPA), industry standards (ISO, GMP), internal company standards (SOPs), and customer requirements. All four apply simultaneously.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Compliance covers six main areas: worker safety, product quality, environment, equipment, records/documentation, and training. Each area has specific rules and consequences for violations.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Compliance failures escalate from minor observations to warning letters, product recalls, consent decrees, facility shutdowns, and criminal charges. AI monitoring exists to catch small gaps before they become serious violations.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showComp(id,btn){document.querySelectorAll(".comp-panel").forEach(p=>p.classList.remove("show"));document.querySelectorAll(".comp-tab").forEach(t=>t.classList.remove("active"));document.getElementById("panel-"+id).classList.add("show");btn.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Paper Trail: Why Documentation Is a Compliance Tool, Not Just a Chore</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Purpose cards */
+.purpose-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.purpose-card{border-radius:18px;padding:22px;border:2px solid var(--purple-mid);background:var(--gray-soft);}
+.pc-icon{font-size:30px;margin-bottom:10px;}
+.purpose-card h3{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);margin-bottom:8px;}
+.purpose-card p{font-size:13px;line-height:1.65;color:var(--gray-text);margin:0;}
+@media(max-width:560px){.purpose-cards{grid-template-columns:1fr;}}
+
+/* Batch record sim */
+.batch-record{background:#0F0A1A;border-radius:20px;padding:24px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.br-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.br-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;}
+.br-status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;font-family:var(--mono);}
+.br-status.hold{background:rgba(245,158,11,.2);color:#FDE68A;}
+.br-status.released{background:rgba(110,231,183,.15);color:#6EE7B7;}
+.br-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.br-field{background:#1A0A2E;border-radius:8px;padding:10px 12px;}
+.br-field-label{font-size:10px;color:#8B7FA0;font-family:var(--mono);letter-spacing:.08em;margin-bottom:3px;}
+.br-field-val{font-size:13px;color:#E2D9F3;font-family:var(--mono);}
+.br-steps-title{font-size:11px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;margin-bottom:10px;}
+.br-step-row{display:flex;align-items:center;gap:10px;background:#1A0A2E;border-radius:8px;padding:8px 12px;margin-bottom:6px;}
+.br-step-num{font-size:11px;color:#8B7FA0;font-family:var(--mono);width:30px;flex-shrink:0;}
+.br-step-name{font-size:12px;color:#E2D9F3;font-family:var(--mono);flex:1;}
+.br-step-status{font-size:11px;font-weight:700;font-family:var(--mono);flex-shrink:0;}
+.br-step-status.ok{color:#6EE7B7;}
+.br-step-status.flag{color:#FCA5A5;}
+.br-step-status.miss{color:#FDE68A;}
+@media(max-width:560px){.br-fields{grid-template-columns:1fr;}}
+
+/* Without docs */
+.without-docs{background:var(--red-pale);border:2px solid #FECACA;border-radius:20px;padding:28px;margin:28px 0;}
+.wd-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:14px;}
+.wd-scenario{display:flex;gap:12px;margin-bottom:12px;}
+.wd-icon{font-size:22px;flex-shrink:0;}
+.wd-body h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.wd-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* AI documentation */
+.ai-doc{background:linear-gradient(135deg,#4A1580,#7B2FBE);color:white;border-radius:20px;padding:28px 32px;margin:28px 0;}
+.ai-doc h3{font-family:"Fraunces",serif;font-size:20px;margin-bottom:12px;color:white;}
+.ai-doc p{color:rgba(255,255,255,.88);font-size:15px;margin-bottom:10px;line-height:1.7;}
+.ai-doc-items{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.ai-doc-item{display:flex;gap:10px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.6;}
+.ai-doc-item mark{background:rgba(255,255,255,.2);color:white;}
+
+/* Bridge to 3.4 */
+.bridge-card{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:28px;margin:28px 0;}
+.bridge-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:12px;}
+.bridge-card p{font-size:15px;color:var(--purple-dark);margin:0;line-height:1.7;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>The Paper Trail</h1>
+  <p class="hero-sub">Why documentation exists in the first place — and why it's one of the most powerful compliance tools a manufacturer has. This article bridges Lesson 3.2 into Lesson 3.4 (Documentation) by showing what records are actually for, beyond filling out forms.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Documentation Feels Like Bureaucracy. It's Actually Evidence.</h2>
+    <p>Ask any factory worker what they think of paperwork and you'll often hear: "It takes forever and nobody reads it anyway." That frustration is understandable. But the mental model behind it is wrong — and understanding why documentation actually exists changes how you approach it.</p>
+    <p>In manufacturing, documentation is not about satisfying bureaucrats. It's about creating <mark>evidence that a process happened correctly</mark> — evidence that can be reviewed by regulators, investigators, customers, and courts. A batch record isn't just a log. It's the proof that a product is what it's supposed to be.</p>
+    <p>And when something goes wrong — a product fails, a patient is harmed, a customer files a complaint, a regulator investigates — the documentation is the difference between being able to identify and solve the problem versus having no idea what happened.</p>
+
+    <div class="pull-quote"><p>In regulated manufacturing, "we followed the process" is not enough. "We followed the process, here is the timestamped evidence, signed by the people who did each step" — that's compliance.</p></div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Audit Trail:</strong> A chronological record of events, actions, and changes in a process — with enough detail to reconstruct exactly what happened, when, and by whom. In manufacturing, an audit trail is the collection of records that allows regulators, quality teams, and investigators to verify that a process was carried out correctly and that any deviations were identified and properly handled.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Real Purposes of Manufacturing Documentation</h2>
+    <div class="purpose-cards">
+      <div class="purpose-card">
+        <div class="pc-icon">🔍</div>
+        <h3>Regulatory Evidence</h3>
+        <p>Government agencies (FDA, OSHA, EPA) require documented proof that regulations were followed. During an inspection, auditors don't take your word for it — they review records. Documentation is the evidence that compliance actually happened.</p>
+      </div>
+      <div class="purpose-card">
+        <div class="pc-icon">🧩</div>
+        <h3>Problem Investigation</h3>
+        <p>When a product fails or an incident occurs, records let investigators answer: What happened? When? Who was involved? What conditions existed? Without documentation, investigations are guesswork. With it, root causes can be found and fixed.</p>
+      </div>
+      <div class="purpose-card">
+        <div class="pc-icon">⚖️</div>
+        <h3>Legal Protection</h3>
+        <p>If a company is sued over a defective product or an injured worker, documentation showing that proper procedures were followed — and that deviations were identified and corrected — is the primary legal defense. Missing records create legal vulnerability.</p>
+      </div>
+      <div class="purpose-card">
+        <div class="pc-icon">📈</div>
+        <h3>Process Improvement</h3>
+        <p>Documentation creates data. Analyzing records over time — where deviations cluster, which equipment fails most, which steps have the most inspection failures — reveals improvement opportunities that would otherwise be invisible. Good records enable smarter decisions.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What a Batch Record Looks Like</h2>
+    <p>In pharmaceutical and food manufacturing, the primary documentation artifact is the <mark>batch record</mark> — a complete account of everything that happened during the production of a specific lot of product. This is what regulators review, what quality teams use to release or reject product, and what investigators study when something goes wrong.</p>
+
+    <div class="batch-record">
+      <div class="br-header">
+        <span class="br-title">BATCH RECORD — PHARMACEUTICAL PRODUCTION</span>
+        <span class="br-status hold">QC HOLD — UNDER REVIEW</span>
+      </div>
+      <div class="br-fields">
+        <div class="br-field"><div class="br-field-label">PRODUCT</div><div class="br-field-val">Amoxicillin 500mg Capsules</div></div>
+        <div class="br-field"><div class="br-field-label">BATCH NUMBER</div><div class="br-field-val">AMX-2241-B</div></div>
+        <div class="br-field"><div class="br-field-label">MANUFACTURED DATE</div><div class="br-field-val">2026-04-05 · Shift 2</div></div>
+        <div class="br-field"><div class="br-field-label">BATCH SIZE</div><div class="br-field-val">50,000 units</div></div>
+        <div class="br-field"><div class="br-field-label">PRODUCTION LINE</div><div class="br-field-val">Line 4 — Building C</div></div>
+        <div class="br-field"><div class="br-field-label">EQUIPMENT IDs</div><div class="br-field-val">MXR-07, FLL-12, SEAL-03</div></div>
+      </div>
+      <div class="br-steps-title">PROCESS STEP LOG</div>
+      <div class="br-step-row"><span class="br-step-num">S01</span><span class="br-step-name">Raw Material Receipt & ID Check · R.Vasquez</span><span class="br-step-status ok">✓ 07:44</span></div>
+      <div class="br-step-row"><span class="br-step-num">S02</span><span class="br-step-name">Ingredient Weighing · K.Okafor · Scale CAL: 2026-03-15</span><span class="br-step-status ok">✓ 08:12</span></div>
+      <div class="br-step-row"><span class="br-step-num">S03</span><span class="br-step-name">Mixing · 45 min / 120 RPM · Temp: 22.4°C</span><span class="br-step-status ok">✓ 09:02</span></div>
+      <div class="br-step-row"><span class="br-step-num">S04</span><span class="br-step-name">In-line pH Test · Result: 6.2 · Spec: 6.8–7.2</span><span class="br-step-status flag">⚠️ OUT OF SPEC</span></div>
+      <div class="br-step-row"><span class="br-step-num">S05</span><span class="br-step-name">Fill & Seal · Capsule Count · J.Müller</span><span class="br-step-status miss">— ON HOLD</span></div>
+      <div class="br-step-row"><span class="br-step-num">DEV</span><span class="br-step-name">Deviation #DEV-2241-04 opened · QM notified · Investigation pending</span><span class="br-step-status flag">⚠️ OPEN</span></div>
+    </div>
+
+    <p>Every line in a batch record matters. The calibration date on the scale in S02 tells an investigator that the weighing equipment was verified recently. The specific operator names create accountability. The deviation record in the last row shows the system worked — the pH issue was caught and formally documented rather than ignored.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Happens Without Adequate Documentation</h2>
+    <p>The consequences of poor documentation aren't abstract — they play out in real investigations, real recalls, and real legal proceedings.</p>
+
+    <div class="without-docs">
+      <div class="wd-label">⚠️ Real Consequences of Missing or Inadequate Records</div>
+      <div class="wd-scenario">
+        <div class="wd-icon">🏥</div>
+        <div class="wd-body"><h3>Product Recall — Unknown Scope</h3><p>A contaminated batch is identified after patients report adverse effects. Without full traceability records, the company can't determine which batches used the same raw material lot — so they must recall far more product than may actually be affected, at enormous cost and brand damage.</p></div>
+      </div>
+      <div class="wd-scenario">
+        <div class="wd-icon">⚖️</div>
+        <div class="wd-body"><h3>Legal Liability — No Defense</h3><p>A worker is injured in a machine operation. The company claims the machine was properly maintained. Without maintenance records proving it, the company cannot demonstrate due diligence — and faces full liability. A simple calibration log would have provided the defense.</p></div>
+      </div>
+      <div class="wd-scenario">
+        <div class="wd-icon">🏛️</div>
+        <div class="wd-body"><h3>Regulatory Enforcement — No Explanation</h3><p>An FDA inspector finds a quality failure in a pharmaceutical batch. The company says the problem was a one-time equipment issue that's since been fixed. Without deviation records documenting when it was identified, investigated, and corrected, the company cannot prove this claim — and the FDA treats it as an ongoing unresolved problem.</p></div>
+      </div>
+      <div class="wd-scenario">
+        <div class="wd-icon">🔁</div>
+        <div class="wd-body"><h3>Recurring Problems — No Memory</h3><p>The same equipment failure happens every three months. Without comprehensive maintenance logs, each occurrence is treated as a new problem — and the pattern that would reveal the root cause (a specific component that needs replacement on a different schedule) is never visible.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Changes Documentation</h2>
+    <div class="ai-doc">
+      <h3>🤖 From Manual Logging to Automatic Audit Trails</h3>
+      <p>Traditional manufacturing documentation was manual — workers filled out paper forms, supervisors signed them, and records were filed in binders. This was slow, prone to transcription errors, and difficult to search or analyze at scale.</p>
+      <div class="ai-doc-items">
+        <div class="ai-doc-item"><span>→</span><span><mark>Automatic timestamping</mark> — every sensor reading, scan, and system event is logged with a precise timestamp that can't be backdated or altered</span></div>
+        <div class="ai-doc-item"><span>→</span><span><mark>Electronic batch records</mark> — automatically populated from sensor data, eliminating manual transcription errors</span></div>
+        <div class="ai-doc-item"><span>→</span><span><mark>Instant audit trails</mark> — every deviation, alert, and response is linked in a searchable database rather than scattered across paper files</span></div>
+        <div class="ai-doc-item"><span>→</span><span><mark>Pattern detection</mark> — AI can analyze months of records to find the recurring failures that manual review would miss</span></div>
+        <div class="ai-doc-item"><span>→</span><span><mark>Inspection readiness</mark> — compliance reports that would take weeks to compile manually can be generated in minutes</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="bridge-card">
+      <div class="bridge-label">🔗 Looking Ahead to Lesson 3.4</div>
+      <p>Everything in this article — batch records, audit trails, deviation logs, the difference between documented and undocumented problems — is the foundation of Lesson 3.4 (Documentation). In that lesson, you'll go deeper into what different types of manufacturing documents look like, how AI generates and verifies them, and what good documentation practice looks like from the worker's perspective. The principle to carry forward: <strong>documentation is proof</strong>. It's the difference between "we did it right" and "we can prove we did it right."</p>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A quality manager is reviewing records from the past six months and notices that a particular inspection step on Line 3 has been documented as "completed" in every batch record — but the in-line test that follows it shows consistently out-of-range results. What does this documentation pattern most likely indicate?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While equipment calibration could cause consistent test failures, the more significant finding is that the inspection step is being signed off as "completed" while its output (the in-line test) consistently fails — suggesting the inspection itself may not be catching what it\'s designed to catch. Both the equipment and the inspection process need investigation.')">The in-line testing equipment needs recalibration</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. If the inspection step is consistently documented as completed, but the test that validates its outcome consistently fails, one of two things is likely happening: either the inspection step is not actually being performed correctly (it\'s being signed off on paper without the actual check being done), or the inspection method itself is ineffective at catching the problem it\'s supposed to catch. Either way, the documentation pattern is revealing a systemic issue that individual records wouldn\'t show. This is exactly the kind of insight that analyzing records over time — rather than reviewing one batch at a time — enables. AI compliance systems that flag this kind of cross-batch pattern are providing information that manual record review would likely miss.')">The inspection step may not be effective or may not be genuinely being performed — the documentation pattern across batches reveals a systemic gap</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While specification review is a periodic quality activity, out-of-range results that consistently follow a documented inspection step don\'t primarily indicate that the specification is wrong — they indicate something is wrong with the process or the inspection. Changing the specification to match actual performance would be masking a quality problem, not solving it.')">The product specification should be revised to accept the actual results being produced</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A consistent out-of-range pattern is not normal manufacturing variation. Natural variation produces occasional out-of-range results — not consistent ones following a specific step. The pattern here is systematic, not random, and requires investigation rather than acceptance.')">Nothing — minor test variations are expected in manufacturing and don\'t require investigation</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary · Lesson 3.2 Closing</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Documentation is evidence — not bureaucracy. It proves that a process happened correctly, enables investigation when it doesn't, provides legal protection in disputes, and creates the data needed for continuous improvement. Without it, "we followed the process" is an unverifiable claim.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The four purposes of manufacturing documentation are: regulatory evidence (proving compliance to auditors), problem investigation (finding what went wrong), legal protection (defending against liability), and process improvement (revealing patterns invisible in individual records).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI compliance systems transform documentation from manual form-filling to automatic audit trails — timestamped, searchable, and analyzable at scale. The result is documentation that's more complete, more accurate, and far more useful for the investigations and audits that depend on it.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Cross-batch pattern analysis — seeing what individual record review can't show — is one of AI documentation systems' most powerful capabilities. Patterns that indicate systemic problems often only become visible when months of records are analyzed together.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

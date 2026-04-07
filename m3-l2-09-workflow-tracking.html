@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workflow Tracking AI: How Systems Know When a Step Has Been Skipped</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Workflow sim */
+.workflow-sim{background:#0F0A1A;border-radius:24px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.ws-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.ws-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;}
+.ws-scenario-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.ws-btn{padding:8px 14px;border-radius:8px;border:1.5px solid #3D2456;background:rgba(123,47,190,.1);color:#8B7FA0;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.ws-btn:hover,.ws-btn.active{background:var(--purple);border-color:var(--purple);color:white;}
+.ws-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.ws-step{display:flex;align-items:center;gap:12px;background:#1A0A2E;border-radius:10px;padding:12px 16px;border-left:3px solid;}
+.ws-step.done{border-color:#6EE7B7;}
+.ws-step.skipped{border-color:#EF4444;background:rgba(239,68,68,.08);}
+.ws-step.pending{border-color:#3D2456;}
+.ws-step.alert{border-color:#F59E0B;background:rgba(245,158,11,.08);animation:pulse-alert .8s infinite;}
+@keyframes pulse-alert{0%,100%{opacity:1;}50%{opacity:.7;}}
+.ws-step-icon{font-size:16px;flex-shrink:0;}
+.ws-step-name{font-size:13px;font-family:var(--mono);flex:1;}
+.ws-step.done .ws-step-name{color:#6EE7B7;}
+.ws-step.skipped .ws-step-name{color:#FCA5A5;text-decoration:line-through;}
+.ws-step.pending .ws-step-name{color:#8B7FA0;}
+.ws-step.alert .ws-step-name{color:#FDE68A;}
+.ws-step-status{font-size:11px;font-weight:700;font-family:var(--mono);flex-shrink:0;}
+.ws-step.done .ws-step-status{color:#6EE7B7;}
+.ws-step.skipped .ws-step-status{color:#FCA5A5;}
+.ws-step.pending .ws-step-status{color:#3D2456;}
+.ws-step.alert .ws-step-status{color:#FDE68A;}
+.ws-alert-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:14px 16px;}
+.ws-alert-none{background:rgba(110,231,183,.1);border:1px solid rgba(110,231,183,.3);border-radius:12px;padding:14px 16px;font-size:13px;color:#6EE7B7;font-family:var(--mono);}
+.ws-alert-title{font-size:12px;font-weight:700;color:#FCA5A5;font-family:var(--mono);margin-bottom:6px;}
+.ws-alert-msg{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+
+/* Signal types */
+.signal-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.signal-card{background:var(--gray-soft);border-radius:14px;padding:18px 20px;border-left:4px solid var(--purple);}
+.signal-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.signal-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.signal-cards{grid-template-columns:1fr;}}
+
+/* Digital twin explainer */
+.dt-explainer{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:28px;margin:28px 0;}
+.dt-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:12px;}
+.dt-comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;}
+.dt-side{background:white;border-radius:14px;padding:18px;}
+.dt-side h3{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:8px;}
+.dt-side.real h3{color:var(--orange);}
+.dt-side.digital h3{color:var(--purple-dark);}
+.dt-item{font-size:13px;color:var(--gray-text);display:flex;gap:8px;margin-bottom:5px;line-height:1.5;}
+.dt-arrow{text-align:center;font-size:24px;color:var(--purple);}
+.dt-note{margin-top:16px;font-size:14px;color:var(--purple-dark);line-height:1.65;font-weight:500;}
+@media(max-width:560px){.dt-comparison{grid-template-columns:1fr;}.dt-arrow{display:none;}}
+
+/* When AI flags */
+.flag-scenarios{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.flag-sc{background:var(--gray-soft);border-radius:14px;padding:18px 20px;}
+.flag-sc h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.flag-sc p{font-size:14px;color:var(--gray-text);margin-bottom:6px;line-height:1.65;}
+.flag-sc .flag-result{font-size:13px;font-weight:600;color:var(--purple-dark);background:var(--purple-pale);border-radius:8px;padding:6px 12px;display:inline-block;margin-top:4px;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>Workflow Tracking AI</h1>
+  <p class="hero-sub">The slides show AI "flagging missing steps" — but how does it actually know a step was skipped? This article walks through how AI monitors production workflows, what a digital twin of a process looks like, and what signals tell the system something has gone wrong before a human notices.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Problem With Complex Processes</h2>
+    <p>A pharmaceutical drug, a car door panel, a can of food — each is produced through a sequence of steps that must happen in the right order, at the right time, with the right inputs. Miss a step or do it out of sequence, and the product may be defective, unsafe, or non-compliant with regulations.</p>
+    <p>In simple operations, a supervisor can watch the whole process. But modern manufacturing facilities run dozens of concurrent production lines, around the clock, with hundreds of steps happening simultaneously. <mark>No human team can monitor every step of every process in real time</mark> — which is exactly why workflow tracking AI exists.</p>
+
+    <div class="pull-quote"><p>A production step that gets skipped doesn't announce itself. The system keeps moving. The defect or compliance gap is silent — until an audit or a customer complaint makes it very loud.</p></div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Workflow Tracking AI:</strong> A system that monitors the sequence, timing, and completion of steps in a production or maintenance process — and alerts operators when a required step is missed, done out of order, takes too long, or produces a result outside the expected range. The AI compares what's actually happening to what's supposed to happen.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>See It in Action — Production Workflow Simulator</h2>
+    <p>Select a scenario below to see how the AI workflow tracking system responds to different situations on a pharmaceutical packaging line.</p>
+
+    <div class="workflow-sim">
+      <div class="ws-header"><span class="ws-title">WORKFLOW MONITOR · LINE 4 — PHARMACEUTICAL PACKAGING</span></div>
+      <div class="ws-scenario-btns">
+        <button class="ws-btn active" onclick="setWorkflow('normal',this)">Normal Run</button>
+        <button class="ws-btn" onclick="setWorkflow('skip',this)">Skipped Step</button>
+        <button class="ws-btn" onclick="setWorkflow('outoforder',this)">Out of Order</button>
+        <button class="ws-btn" onclick="setWorkflow('timeout',this)">Step Timeout</button>
+      </div>
+      <div class="ws-steps" id="wsSteps"></div>
+      <div id="wsAlert"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How Does the AI Know What "Supposed to Happen" Looks Like?</h2>
+    <p>Before an AI workflow tracking system can detect deviations, it needs a reference — a complete, documented picture of what the correct process looks like. This is usually called the <mark>Standard Operating Procedure (SOP)</mark>, and the AI is essentially given a digital version of it to enforce.</p>
+    <p>Every step in the SOP becomes a rule the AI monitors. For each step, the AI knows: what should trigger the step, what the step involves, what signals confirm it was completed, how long it should take, and what the expected output is. When any of those parameters fall outside the expected range, the system flags it.</p>
+
+    <div class="signal-cards">
+      <div class="signal-card">
+        <h3>📡 Sensor Signals</h3>
+        <p>Temperature, pressure, pH, weight, torque, speed — sensors confirm that physical conditions match what the SOP requires. A mixing step requires a specific RPM for a specific duration; sensors confirm both happened.</p>
+      </div>
+      <div class="signal-card">
+        <h3>🔍 Barcode / RFID Scans</h3>
+        <p>Workers scan materials, components, or equipment at key steps. A missing scan = a step that didn't happen (or wasn't verified). This is one of the most reliable workflow tracking signals in regulated industries.</p>
+      </div>
+      <div class="signal-card">
+        <h3>⏱️ Time Stamps</h3>
+        <p>Every step has an expected duration. If a step completes too quickly (suggesting it was rushed or skipped), or takes too long (suggesting a problem), the AI flags the timing deviation for review.</p>
+      </div>
+      <div class="signal-card">
+        <h3>📷 Computer Vision</h3>
+        <p>Cameras verify physical completion of steps — confirming a part was installed, a seal was applied, a label was affixed. Vision-based verification works alongside sensor and scan data for high-consequence steps.</p>
+      </div>
+      <div class="signal-card">
+        <h3>🖥️ System Logins / Touchpoints</h3>
+        <p>In digital manufacturing environments, operators log into systems or confirm steps electronically. These digital footprints create an audit trail showing who did what, when, and in what order.</p>
+      </div>
+      <div class="signal-card">
+        <h3>🧪 In-Line Testing Results</h3>
+        <p>Many processes include in-line quality tests between steps. The AI monitors test results — if a step produced an out-of-range result, the system can flag it and prevent the next step from proceeding until the issue is resolved.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Digital Twin: A Mirror of the Real Process</h2>
+    <p>A concept closely related to workflow tracking AI is the <mark>digital twin</mark> — a virtual replica of a physical process, production line, or piece of equipment that reflects its real-time state. As the physical process runs, the digital twin updates to match. When the two diverge — when what's happening in the physical world doesn't match what the digital twin expects — the system flags the discrepancy.</p>
+
+    <div class="dt-explainer">
+      <div class="dt-label">🔄 Digital Twin — How It Works</div>
+      <div class="dt-comparison">
+        <div class="dt-side real">
+          <h3>🏭 Physical Line</h3>
+          <div class="dt-item"><span>→</span><span>Real equipment running in the facility</span></div>
+          <div class="dt-item"><span>→</span><span>Real workers performing steps</span></div>
+          <div class="dt-item"><span>→</span><span>Real sensors measuring conditions</span></div>
+          <div class="dt-item"><span>→</span><span>Real outputs: products, test results</span></div>
+        </div>
+        <div class="dt-arrow">⟷</div>
+        <div class="dt-side digital">
+          <h3>💻 Digital Twin</h3>
+          <div class="dt-item"><span>→</span><span>Virtual model of the same line</span></div>
+          <div class="dt-item"><span>→</span><span>Expected state at each moment in time</span></div>
+          <div class="dt-item"><span>→</span><span>Expected sensor values from the SOP</span></div>
+          <div class="dt-item"><span>→</span><span>Expected outputs, timing, and sequence</span></div>
+        </div>
+      </div>
+      <div class="dt-note">⚡ When physical and digital diverge — a step is late, a sensor reading is off, a scan is missing — the AI immediately flags the gap. This is how workflow tracking AI "knows" something is wrong without a human having to notice it first.</div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Digital Twin:</strong> A virtual model of a physical asset, process, or system that mirrors its real-world counterpart in real time. In manufacturing, digital twins are used to monitor production lines, detect deviations from expected behavior, simulate the impact of changes before implementing them, and analyze performance data over time.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What the AI Flags — and What Humans Do Next</h2>
+    <p>Workflow tracking AI generates alerts when it detects deviations. But as with all AI monitoring, the alert is just the beginning. Here are the types of flags the system generates and what human response looks like:</p>
+
+    <div class="flag-scenarios">
+      <div class="flag-sc">
+        <h3>⏭️ Step Skipped Entirely</h3>
+        <p>The expected scan, sensor confirmation, or system login for Step 4 never happened — but the line moved to Step 5. The AI flags a missing step alert immediately.</p>
+        <p>Human response: The operator must determine whether the step was genuinely skipped or whether the recording mechanism failed (a scanner that didn't read, a sensor that didn't transmit). If the step was genuinely skipped, the production batch may need to be held and the step completed or the batch quarantined.</p>
+        <div class="flag-result">⚠️ Compliance alert — missing step in batch record</div>
+      </div>
+      <div class="flag-sc">
+        <h3>🔀 Steps Completed Out of Sequence</h3>
+        <p>Step 7 was completed before Step 6. In many regulated processes, sequence matters — certain steps must happen in a specific order for chemical, biological, or safety reasons.</p>
+        <p>Human response: Investigate whether the out-of-sequence step affects product quality or safety. In pharmaceutical manufacturing, an out-of-sequence step is a deviation that requires a formal investigation and documentation, regardless of whether any visible defect resulted.</p>
+        <div class="flag-result">🚨 Deviation event — sequence nonconformance</div>
+      </div>
+      <div class="flag-sc">
+        <h3>⏰ Step Took Too Long (or Too Short)</h3>
+        <p>A mixing step that should take 45 minutes completed in 12 minutes. Either the process was rushed (not actually completing properly) or the timing recording has an error. The AI flags both as worth investigating.</p>
+        <p>Human response: Review sensor data during the step to determine whether the process actually ran correctly at accelerated speed, or whether the timer was manually overridden. Document the finding and its resolution in the batch record.</p>
+        <div class="flag-result">📋 Timing deviation — investigation required</div>
+      </div>
+      <div class="flag-sc">
+        <h3>📊 Step Completed But Output Out of Range</h3>
+        <p>The pH test after the mixing step returned 6.2 — the specification requires 6.8–7.2. The step happened, but the result was wrong. The AI flags the out-of-spec result and may prevent the line from automatically advancing to the next step.</p>
+        <p>Human response: This is a nonconformance. The operator must decide whether to reprocess, reject the batch, or escalate to quality management. The decision is human; the detection and prevention of downstream steps was AI.</p>
+        <div class="flag-result">🔴 Out-of-spec result — batch hold recommended</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Critical Rule: AI Detects. Humans Decide.</h2>
+    <p>Workflow tracking AI can flag a missing step, an out-of-range result, or a sequence error. What it cannot do is determine whether that deviation matters, what caused it, what the correct response is, or whether the batch is safe to continue. All of those decisions belong to qualified humans.</p>
+    <p>In regulated industries, the human decision is also the human responsibility. An operator who overrides an AI flag and approves a batch that later causes harm is accountable for that decision — "the system flagged it but I approved it" is not a defense, it's an admission. This is why workflow AI is designed to require human confirmation for high-consequence decisions, not to make them automatically.</p>
+
+    <div class="pull-quote"><p>AI can tell you that Step 5 didn't happen. Only a qualified operator can tell you whether that matters enough to hold the batch — and sign their name to that decision.</p></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical production line's workflow tracking system flags that the environmental temperature in the sterile fill room dropped below the required range for 8 minutes during Step 3 of the batch. A technician says the product looks fine visually and suggests logging it as a minor anomaly and continuing. What is the most appropriate response?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Visual inspection of a pharmaceutical product cannot detect microbial contamination or chemical degradation that may have occurred during a temperature excursion. In regulated pharmaceutical manufacturing, visual assessment is not an acceptable substitute for documented investigation of a temperature deviation.')">Agree with the technician — if the product looks fine, it probably is fine</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A temperature excursion during a sterile pharmaceutical manufacturing step is a formal deviation — not a minor anomaly. GMP regulations require that any deviation from validated process parameters be documented, investigated, and assessed for potential product impact. The batch must be placed on hold pending a formal investigation by quality management. The AI\'s flag was doing its job: detecting a parameter deviation that requires human assessment. The technician\'s suggestion to log it as a minor anomaly and continue would bypass the required regulatory process.')">Place the batch on hold, document the deviation formally, and involve quality management in a root cause investigation before releasing the batch</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Discarding the entire batch may ultimately be necessary, but the decision to scrap or release should come after a proper investigation — not before. A temperature excursion doesn\'t automatically mean the batch is unusable; a qualified quality review determines that. Acting before investigating wastes product unnecessarily if the investigation determines the deviation had no product impact.')">Immediately discard the entire batch without further investigation</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Recalibrating the temperature sensor doesn\'t address whether the temperature actually deviated — and it doesn\'t resolve the question of what happened to the batch during those 8 minutes. Sensor calibration is a separate maintenance task. The primary obligation is to investigate the deviation and assess product impact before releasing the batch.')">Recalibrate the temperature sensor and re-run the batch step</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Workflow tracking AI monitors the sequence, timing, and completion of process steps — comparing what's actually happening to the documented Standard Operating Procedure. When they diverge, the system alerts.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The signals the AI uses include sensors (temperature, pressure, pH), barcode/RFID scans, time stamps, computer vision confirmation, electronic system logins, and in-line test results. Multiple signal types together make detection more reliable.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A digital twin is a virtual model of a physical process that updates in real time. When the physical and digital diverge, the AI flags the gap — enabling detection without requiring a human to be watching every step simultaneously.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI detects; humans decide. Workflow flags require human investigation and decision-making. In regulated industries, operators who approve batches over AI flags own that decision — and the accountability that comes with it.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const workflows={
+  normal:{steps:[{s:"done",i:"✅",n:"1. Raw Material Verification Scan",t:"COMPLETE · 08:02:14"},{s:"done",i:"✅",n:"2. Equipment Sterilization Confirmed",t:"COMPLETE · 08:14:33"},{s:"done",i:"✅",n:"3. Environmental Check — Temp/Humidity",t:"COMPLETE · 08:16:01"},{s:"done",i:"✅",n:"4. Ingredient Weighing — Batch Record",t:"COMPLETE · 08:31:44"},{s:"done",i:"✅",n:"5. Mixing Step — 45 min @ 120 RPM",t:"COMPLETE · 09:18:02"},{s:"done",i:"✅",n:"6. In-Line pH Test — Result: 6.94",t:"COMPLETE · 09:21:17"},{s:"done",i:"✅",n:"7. Fill and Seal — Units: 5,000",t:"COMPLETE · 10:04:38"}],alert:"none",msg:"✅ ALL STEPS COMPLETE — Batch 2241 compliant. No deviations detected."},
+  skip:{steps:[{s:"done",i:"✅",n:"1. Raw Material Verification Scan",t:"COMPLETE · 08:02:14"},{s:"done",i:"✅",n:"2. Equipment Sterilization Confirmed",t:"COMPLETE · 08:14:33"},{s:"done",i:"✅",n:"3. Environmental Check — Temp/Humidity",t:"COMPLETE · 08:16:01"},{s:"skipped",i:"⛔",n:"4. Ingredient Weighing — Batch Record",t:"MISSING — NOT RECORDED"},{s:"alert",i:"⚠️",n:"5. Mixing Step — Expected after Step 4",t:"WAITING — CANNOT PROCEED"},{s:"pending",i:"○",n:"6. In-Line pH Test",t:"PENDING"},{s:"pending",i:"○",n:"7. Fill and Seal",t:"PENDING"}],alert:"🚨 COMPLIANCE ALERT — Step 4 Missing",msg:"Step 4 (Ingredient Weighing) has no recorded scan or batch entry. The system cannot confirm correct ingredient quantities were used. Batch 2241 is on hold. Action required: Verify whether weighing occurred and was not recorded, or whether the step was genuinely skipped. Quality management notification sent."},
+  outoforder:{steps:[{s:"done",i:"✅",n:"1. Raw Material Verification Scan",t:"COMPLETE · 08:02:14"},{s:"done",i:"✅",n:"2. Equipment Sterilization Confirmed",t:"COMPLETE · 08:14:33"},{s:"skipped",i:"⚠️",n:"3. Environmental Check — Temp/Humidity",t:"OUT OF SEQUENCE — Completed after Step 4"},{s:"done",i:"✅",n:"4. Ingredient Weighing — Batch Record",t:"COMPLETE · 08:18:02"},{s:"alert",i:"⚠️",n:"Step 3 completed at 08:31 — AFTER Step 4",t:"SEQUENCE DEVIATION LOGGED"},{s:"pending",i:"○",n:"5. Mixing Step",t:"PENDING — Deviation review required"},{s:"pending",i:"○",n:"6–7. Subsequent Steps",t:"PENDING"}],alert:"⚠️ SEQUENCE DEVIATION — Steps 3 and 4 Reversed",msg:"Environmental verification (Step 3) was recorded after ingredient weighing (Step 4). GMP requires environmental conditions to be confirmed before materials are introduced. This sequence deviation has been logged as a formal deviation event. Batch 2241 is on hold pending quality management review of whether the temperature/humidity conditions were acceptable at the time of ingredient weighing."},
+  timeout:{steps:[{s:"done",i:"✅",n:"1. Raw Material Verification Scan",t:"COMPLETE · 08:02:14"},{s:"done",i:"✅",n:"2. Equipment Sterilization Confirmed",t:"COMPLETE · 08:14:33"},{s:"done",i:"✅",n:"3. Environmental Check",t:"COMPLETE · 08:16:01"},{s:"done",i:"✅",n:"4. Ingredient Weighing",t:"COMPLETE · 08:31:44"},{s:"alert",i:"⚠️",n:"5. Mixing Step — Elapsed: 8 min (Expected: 45 min)",t:"TIMEOUT ALERT — Step ended prematurely"},{s:"pending",i:"○",n:"6. In-Line pH Test",t:"PENDING — Not yet reached"},{s:"pending",i:"○",n:"7. Fill and Seal",t:"PENDING"}],alert:"⚠️ TIMING DEVIATION — Step 5 Completed in 8 of Required 45 Minutes",msg:"Mixing Step 5 was logged as complete after only 8 minutes — 37 minutes short of the validated 45-minute mixing duration. This may indicate the timer was prematurely closed, the equipment stopped, or the batch record was incorrectly updated. The shorter mixing time may result in inadequate ingredient homogeneity. Batch 2241 is flagged. Operator must verify actual mixing conditions before proceeding."}
+};
+
+function setWorkflow(key,btn){
+  document.querySelectorAll(".ws-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  const w=workflows[key];
+  document.getElementById("wsSteps").innerHTML=w.steps.map(s=>`<div class="ws-step ${s.s}"><span class="ws-step-icon">${s.i}</span><span class="ws-step-name">${s.n}</span><span class="ws-step-status">${s.t}</span></div>`).join("");
+  const alertBox=document.getElementById("wsAlert");
+  if(w.alert==="none"){alertBox.innerHTML=`<div class="ws-alert-none">${w.msg}</div>`;}
+  else{alertBox.innerHTML=`<div class="ws-alert-box"><div class="ws-alert-title">${w.alert}</div><div class="ws-alert-msg">${w.msg}</div></div>`;}
+}
+setWorkflow("normal",document.querySelector(".ws-btn.active"));
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
