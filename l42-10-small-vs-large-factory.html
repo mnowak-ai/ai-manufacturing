@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Small Factory vs. Large Factory: How Resource Management Looks Different Depending on Where You Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* factory profile cards */
+.factory-profiles{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0;}
+.fp{flex:1;min-width:200px;border-radius:22px;overflow:hidden;border:2px solid;}
+.fp.small{border-color:var(--green);}
+.fp.mid{border-color:var(--orange);}
+.fp.large{border-color:var(--blue);}
+.fp-head{padding:18px 22px;}
+.fp.small .fp-head{background:var(--green-pale);}
+.fp.mid   .fp-head{background:var(--orange-pale);}
+.fp.large .fp-head{background:var(--blue-pale);}
+.fp-icon{font-size:28px;margin-bottom:6px;}
+.fp-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;}
+.fp.small .fp-title{color:var(--green);}
+.fp.mid   .fp-title{color:var(--orange);}
+.fp.large .fp-title{color:var(--blue);}
+.fp-sub{font-size:12px;margin-top:2px;}
+.fp.small .fp-sub{color:#5A8A72;}
+.fp.mid   .fp-sub{color:#A16207;}
+.fp.large .fp-sub{color:#1E3A8A;}
+.fp-body{padding:14px 22px 18px;background:var(--white);}
+.fp-stat{font-size:12px;line-height:1.8;color:var(--gray-text);padding:3px 0;border-bottom:1px solid var(--gray-soft);}
+.fp-stat:last-child{border-bottom:none;}
+.fp-stat strong{color:var(--purple-dark);}
+
+/* dimension comparison */
+.dim-compare{display:flex;flex-direction:column;gap:18px;margin:28px 0;}
+.dc-row{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:18px;overflow:hidden;}
+.dc-row-head{background:var(--purple-dark);padding:10px 20px;}
+.dc-row-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:#fff;}
+.dc-cells{display:flex;gap:0;}
+.dc-cell{flex:1;padding:14px 18px;border-right:1px solid var(--purple-mid);}
+.dc-cell:last-child{border-right:none;}
+.dc-cell-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px;}
+.dc-cell.s .dc-cell-label{color:var(--green);}
+.dc-cell.m .dc-cell-label{color:var(--orange);}
+.dc-cell.l .dc-cell-label{color:var(--blue);}
+.dc-cell-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* a day in the life */
+.day-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.day-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;}
+.day-card-head{padding:12px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;}
+.day-card-head-text{flex:1;}
+.day-card-who{font-size:13px;font-weight:700;color:var(--purple-dark);}
+.day-card-factory{font-size:11px;color:var(--gray-muted);}
+.day-card-toggle{font-size:16px;color:var(--gray-muted);transition:transform .25s;}
+.day-card-toggle.open{transform:rotate(45deg);}
+.day-card-body{display:none;padding:0 20px 16px;}
+.day-card-body.open{display:block;}
+.day-task{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-soft);align-items:flex-start;}
+.day-task:last-child{border-bottom:none;}
+.day-task-time{font-size:11px;font-weight:700;color:var(--purple);min-width:65px;flex-shrink:0;margin-top:2px;}
+.day-task-text{font-size:13px;line-height:1.6;color:var(--gray-text);}
+.day-task-tag{display:inline-flex;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;margin-left:6px;vertical-align:middle;}
+.day-task-tag.ai{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.day-task-tag.manual{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+
+/* scenario quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>Small Factory vs. Large Factory: How Resource Management Looks Different Depending on Where You Work</h1>
+  <p class="hero-sub">The Nike case study is a global corporation with AI demand sensing, thousands of SKUs, and factories across multiple continents. Most manufacturing workers work somewhere much smaller. This article grounds you in the full range of environments — and what resource management actually looks like in each one.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Range Is Wider Than You Think</h2>
+  <p>When this lesson discusses AI resource management, the examples often come from large, well-resourced manufacturers — Nike, PrecisionTech, companies with dedicated IT departments, ERP systems, and data scientists. Those examples are instructive, but they don't represent where most manufacturing workers spend their careers.</p>
+  <p>According to U.S. manufacturing data, <mark>more than 75% of all manufacturing establishments have fewer than 50 employees</mark>. Most people entering manufacturing will work in a shop that feels nothing like Nike's global supply chain operation — and that's not a disadvantage. Smaller facilities have their own advantages, their own resource management challenges, and increasingly, their own AI tools designed specifically for their scale.</p>
+  <div class="pull-quote"><p>Understanding where you might work — and what resource management actually looks like at that scale — is one of the most practical things this lesson can give you.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Three Factory Profiles: A Spectrum of Scale</h2>
+  <p>Manufacturing facilities exist across a wide spectrum. Here are three profiles representing the range — from a small local job shop to a large enterprise plant — and what life looks like at each scale.</p>
+
+  <div class="factory-profiles">
+    <div class="fp small">
+      <div class="fp-head">
+        <div class="fp-icon">🔧</div>
+        <div class="fp-title">Small Job Shop</div>
+        <div class="fp-sub">The Local Specialist</div>
+      </div>
+      <div class="fp-body">
+        <div class="fp-stat"><strong>Workers:</strong> 12–45 people</div>
+        <div class="fp-stat"><strong>Products:</strong> Custom work — different jobs each week</div>
+        <div class="fp-stat"><strong>Tech stack:</strong> QuickBooks, Excel, maybe a basic ERP</div>
+        <div class="fp-stat"><strong>AI tools:</strong> Limited or none; or newer low-cost AI tools</div>
+        <div class="fp-stat"><strong>Planning done by:</strong> Owner-operator or single production manager</div>
+        <div class="fp-stat"><strong>Inventory tracking:</strong> Visual checks, bin counts, memory</div>
+        <div class="fp-stat"><strong>Examples:</strong> Metal fabrication shop, machine shop, custom woodworking, small plastics molder</div>
+      </div>
+    </div>
+    <div class="fp mid">
+      <div class="fp-head">
+        <div class="fp-icon">🏭</div>
+        <div class="fp-title">Mid-Size Manufacturer</div>
+        <div class="fp-sub">The Regional Producer</div>
+      </div>
+      <div class="fp-body">
+        <div class="fp-stat"><strong>Workers:</strong> 50–300 people</div>
+        <div class="fp-stat"><strong>Products:</strong> Repeat products + some custom runs</div>
+        <div class="fp-stat"><strong>Tech stack:</strong> ERP (Epicor, Microsoft Dynamics), MES</div>
+        <div class="fp-stat"><strong>AI tools:</strong> Growing — scheduling and inventory tools</div>
+        <div class="fp-stat"><strong>Planning done by:</strong> Production planner + operations manager</div>
+        <div class="fp-stat"><strong>Inventory tracking:</strong> ERP-based with some scanning</div>
+        <div class="fp-stat"><strong>Examples:</strong> Precision components supplier, food manufacturer, packaging producer, automotive Tier 2 supplier</div>
+      </div>
+    </div>
+    <div class="fp large">
+      <div class="fp-head">
+        <div class="fp-icon">🏢</div>
+        <div class="fp-title">Large Enterprise Plant</div>
+        <div class="fp-sub">The Industrial Operation</div>
+      </div>
+      <div class="fp-body">
+        <div class="fp-stat"><strong>Workers:</strong> 300–5,000+ people</div>
+        <div class="fp-stat"><strong>Products:</strong> High-volume standard products</div>
+        <div class="fp-stat"><strong>Tech stack:</strong> SAP, Oracle, full MES, IoT sensors</div>
+        <div class="fp-stat"><strong>AI tools:</strong> Extensive — demand sensing, predictive maintenance, AI scheduling</div>
+        <div class="fp-stat"><strong>Planning done by:</strong> Dedicated teams: planners, analysts, data scientists</div>
+        <div class="fp-stat"><strong>Inventory tracking:</strong> RFID, smart scales, real-time ERP</div>
+        <div class="fp-stat"><strong>Examples:</strong> Automotive OEM, aerospace manufacturer, large food & beverage, consumer goods producer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How Resource Management Looks at Each Scale</h2>
+  <p>The core challenges of resource management are the same at every size — you need the right materials, equipment, and people available at the right time. But how those challenges are addressed, what tools are used, and who does the work looks completely different across these three profiles.</p>
+
+  <div class="dim-compare">
+
+    <div class="dc-row">
+      <div class="dc-row-head"><div class="dc-row-title">Materials Tracking</div></div>
+      <div class="dc-cells">
+        <div class="dc-cell s"><div class="dc-cell-label">🔧 Small</div><div class="dc-cell-text">The owner or shop supervisor does a visual walkthrough of the material storage area before major jobs. Reorders happen when someone notices a bin is getting low. Stock counts are done from memory or a handwritten log. Works fine for a small shop with limited SKUs — but relies heavily on one person's attention.</div></div>
+        <div class="dc-cell m"><div class="dc-cell-label">🏭 Mid-Size</div><div class="dc-cell-text">ERP tracks inventory as materials are logged in and out. Workers scan barcodes when pulling material for jobs. Production planner reviews inventory reports weekly, or gets automated alerts when stock falls below a set minimum. Some AI tools are beginning to appear at this level for reorder prediction.</div></div>
+        <div class="dc-cell l"><div class="dc-cell-label">🏢 Large</div><div class="dc-cell-text">Real-time inventory tracking through RFID, smart scales, and IoT sensors feeding continuously into ERP. AI resource management tools calculate reorder points dynamically, monitor usage rates against production schedules, and generate shortage alerts days or weeks in advance. Dedicated materials analysts review AI outputs daily.</div></div>
+      </div>
+    </div>
+
+    <div class="dc-row">
+      <div class="dc-row-head"><div class="dc-row-title">Machine Scheduling and Utilization</div></div>
+      <div class="dc-cells">
+        <div class="dc-cell s"><div class="dc-cell-label">🔧 Small</div><div class="dc-cell-text">The production manager (often also the owner) holds the schedule in their head and in a whiteboard. Machine assignments are made based on experience and available orders. Utilization isn't formally tracked — you either have work on the machine or you don't. Scheduling is reactive and personal.</div></div>
+        <div class="dc-cell m"><div class="dc-cell-label">🏭 Mid-Size</div><div class="dc-cell-text">Schedules are built in a combination of ERP and spreadsheets. A production planner manages machine loading and tries to balance capacity across the floor. Utilization may be tracked in the ERP — but analysis is periodic, not real-time. AI scheduling tools are increasingly accessible at this level through cloud-based SaaS platforms.</div></div>
+        <div class="dc-cell l"><div class="dc-cell-label">🏢 Large</div><div class="dc-cell-text">AI scheduling systems generate optimized machine assignments across hundreds of machines, monitor utilization in real time, and flag underloaded or overloaded machines automatically. Predictive maintenance tools analyze sensor data to schedule maintenance before breakdowns. Dedicated operations analysts review dashboards continuously.</div></div>
+      </div>
+    </div>
+
+    <div class="dc-row">
+      <div class="dc-row-head"><div class="dc-row-title">Workforce Scheduling and Skills Management</div></div>
+      <div class="dc-cells">
+        <div class="dc-cell s"><div class="dc-cell-label">🔧 Small</div><div class="dc-cell-text">The shop owner or foreman knows every worker personally — their skills, their certifications, which jobs they're best on. Scheduling is done informally. Cross-training happens through mentorship and necessity, not formal programs. When a key worker is absent, everyone feels it immediately.</div></div>
+        <div class="dc-cell m"><div class="dc-cell-label">🏭 Mid-Size</div><div class="dc-cell-text">HR maintains certification records. The production planner cross-references worker availability with job requirements when building the schedule — manually or with ERP support. AI workforce scheduling tools at this level can flag certification mismatches and suggest assignments, but adoption is still growing.</div></div>
+        <div class="dc-cell l"><div class="dc-cell-label">🏢 Large</div><div class="dc-cell-text">Skills matrices and certification databases are maintained in the HR system. AI scheduling tools automatically match jobs to workers based on certifications, flag single-point-of-failure risks, and suggest cross-training priorities. Dedicated workforce planners manage the system with AI as their primary decision-support tool.</div></div>
+      </div>
+    </div>
+
+    <div class="dc-row">
+      <div class="dc-row-head"><div class="dc-row-title">When Things Go Wrong</div></div>
+      <div class="dc-cells">
+        <div class="dc-cell s"><div class="dc-cell-label">🔧 Small</div><div class="dc-cell-text">The owner makes a phone call. Everyone hears about it. Recovery is informal, personal, and fast if the team is tight. The flexibility of a small team is a genuine advantage — three people can redirect quickly without bureaucracy. But there's less redundancy and no formal playbook.</div></div>
+        <div class="dc-cell m"><div class="dc-cell-label">🏭 Mid-Size</div><div class="dc-cell-text">A defined escalation path: operator tells foreman, foreman tells shift supervisor, supervisor contacts planner. Re-planning may involve ERP updates and schedule revisions. Some AI tools help with recovery options. Communication across the facility is more structured but slower than a small shop.</div></div>
+        <div class="dc-cell l"><div class="dc-cell-label">🏢 Large</div><div class="dc-cell-text">AI monitoring detects the problem before humans do in many cases. Recovery options are generated automatically. Communication flows through digital systems to all affected workers simultaneously. The formality and scale mean recovery is systematic — but complexity can slow decision-making when rapid human judgment is needed.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>A Day in the Life — Three Different Realities</h2>
+  <p>The same job title — "production manager" — looks completely different depending on facility size. Click each profile to see what resource management actually looks like on a typical Tuesday.</p>
+
+  <div class="day-cards" id="day-container"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Where AI Is Heading at Each Scale</h2>
+  <p>A reasonable question after this comparison: does learning about AI resource management matter if you end up working at a 30-person job shop that uses Excel and a whiteboard? The answer is yes — and for a few reasons.</p>
+  <p>First, <strong>AI tools are scaling down rapidly</strong>. What required a full SAP implementation and a data science team five years ago is increasingly available as affordable SaaS software designed specifically for small and mid-size manufacturers. Tools like Fishbowl, Prodsmart, Katana, and dozens of others bring AI-assisted inventory management and scheduling to shops with 15–50 employees at price points under $300/month. Many small shops are beginning to adopt these tools now.</p>
+  <p>Second, <strong>supply chains connect facilities of all sizes</strong>. A 25-person stamping shop that supplies parts to a Tier 1 automotive supplier is increasingly expected to provide real-time production data, meet JIT delivery requirements, and demonstrate process capability that large customers monitor digitally. Understanding the resource management principles that large manufacturers run on makes you a better supplier, partner, and employee in the connected manufacturing ecosystem.</p>
+  <p>Third, <strong>you may move between scales</strong>. Many manufacturing careers involve working at multiple facilities of different sizes over time. Someone who starts at a small job shop and understands AI resource management concepts is well-positioned to move into a mid-size or large facility as those skills become more valued — and to bring a practical floor perspective that complements the enterprise system knowledge already in those organizations.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Advantage of Starting Small</h2>
+  <p>There's something worth saying directly: starting a manufacturing career at a small facility often produces better foundational knowledge than starting at a large one. At a 30-person shop, a new employee is closer to every part of the operation. They understand why materials matter because they've watched a job stop when the bin was empty. They understand scheduling because they've seen the owner juggle three customers' priorities on a whiteboard. They understand equipment because there's no "maintenance department" to call — you learn what the machines need.</p>
+  <p>Workers who come up through small facilities and then move to larger operations bring an integrated understanding of manufacturing that can be harder to develop when you start in a large company where your role is narrow and specialized. The AI tools at the large facility are more sophisticated — but the underlying problems they're solving are the same ones a small shop owner is solving mentally every morning before the crew arrives.</p>
+  <p>The resource management concepts in this lesson — materials, equipment, people, waste, inventory, BOMs, reorder points — are universal. The tools that manage them scale with the organization. But the human judgment required to work with those tools effectively doesn't come from the size of the facility. It comes from understanding the fundamentals deeply enough to apply them anywhere.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A student is considering two entry-level manufacturing positions: one at a 25-person custom metal fabrication shop, and one at a 600-person regional automotive parts manufacturer. Both offer comparable starting pay. From a career development standpoint, what is the main advantage of the smaller facility?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">There is no advantage — larger facilities always provide better career development because of their more advanced technology and formal training programs</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">At a small facility, a new worker is exposed to the full production cycle — quoting, scheduling, materials management, quality, and customer communication — often within the first year. This broad exposure builds foundational manufacturing knowledge and judgment faster than a narrow, specialized role at a large facility. The larger facility may have more formal advancement paths later — but the foundation built in a small shop is genuinely valuable.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Small facilities are always preferable because they are less likely to use AI tools, which means workers develop "real" skills instead of relying on technology</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The larger facility is always better for a first job because AI experience on a large-scale system is more transferable than anything learned in a small shop</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Both environments develop real, valuable skills — but the type of skills differs. A small facility forces exposure to the full manufacturing operation in ways a specialized role at a large plant often doesn't. Someone who has experienced a material shortage shutting down a small shop, watched the owner make overtime decisions, and handled customer delivery calls understands the stakes of resource management decisions at a gut level that's harder to develop when those functions are handled by separate departments you rarely interact with. The smaller start often builds more integrated judgment. The larger system may offer more advanced AI exposure later. Many successful manufacturing careers involve both.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Both facility sizes develop real and valuable skills — they just develop different ones. Larger facilities are not universally better or worse for career development; they offer different advantages. The key advantage of a smaller facility is breadth: exposure to the full production cycle, direct visibility into business decisions, and the kind of integrated manufacturing understanding that develops when you can't pass a problem to a different department. That foundation is genuinely valuable and is often cited by experienced manufacturing professionals as what made them effective when they later moved into larger organizations.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">More than 75% of U.S. manufacturing establishments have fewer than 50 employees. Most manufacturing workers will spend at least part of their career in a small or mid-size facility — not a Nike-scale global operation.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Resource management challenges are universal across facility sizes — materials, equipment, and people all require management at every scale. What differs is the tools used, the formality of the systems, and who does each piece of the work.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Small shops manage resources through experience, relationships, and direct floor knowledge. Mid-size facilities use ERP systems with growing AI tool adoption. Large enterprises deploy sophisticated AI resource management with dedicated analyst teams.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI tools are scaling down rapidly — affordable SaaS solutions are bringing AI-assisted inventory and scheduling to small and mid-size manufacturers at accessible price points. Understanding these tools matters regardless of where you start your career.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Starting at a small facility often builds broader foundational manufacturing knowledge faster than a narrow specialized role at a large plant. The concepts in this lesson — BOMs, reorder points, resource categories, waste costs — are the same at every scale. The judgment to apply them well is universal.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var profiles=[
+  {
+    icon:'🔧',
+    who:'Marcus — Production Manager / Shop Owner',
+    factory:'Hartwell Metal Fab — 28 employees, custom work',
+    tasks:[
+      {time:'6:30 AM',text:'Walks the floor before anyone else arrives. Checks material bins by eye — the stainless sheet is getting low. Makes a mental note to call the supplier this morning.',tag:'manual'},
+      {time:'7:00 AM',text:'Shift starts. Reviews the day\'s four jobs written on the whiteboard. Assigns Alex to the plasma cutter, Maria to the press brake, and the two newest workers to deburring. Does this from memory of each person\'s skills.',tag:'manual'},
+      {time:'8:15 AM',text:'A customer calls asking if their order can ship Thursday instead of Friday. Marcus checks his board, does the math in his head, says yes. He knows exactly where every job is without looking it up.',tag:'manual'},
+      {time:'10:00 AM',text:'Alex\'s plasma cutter is cutting slow — a nozzle is wearing. Marcus hears the sound change, walks over, checks it. Replaces the nozzle himself. Back to the office in 15 minutes.',tag:'manual'},
+      {time:'1:30 PM',text:'Calls Midwest Steel Supply to order more 4mm stainless. Uses his running purchase log — a spiral notebook — to confirm the last order quantity and delivery date.',tag:'manual'},
+      {time:'3:00 PM',text:'Walks the floor again — checks progress on the four jobs, adjusts the afternoon priority order, has a five-minute conversation with Maria about a fit issue on the bracket job.',tag:'manual'}
+    ]
+  },
+  {
+    icon:'🏭',
+    who:'Priya — Production Planner',
+    factory:'Ridgeline Manufacturing — 180 employees, automotive components',
+    tasks:[
+      {time:'6:45 AM',text:'Logs into Epicor ERP. Reviews the overnight production reports — two jobs completed, one behind by 40 minutes. Flags the delay for the 8 AM shift meeting.',tag:'ai'},
+      {time:'7:30 AM',text:'Builds tomorrow\'s shift schedule in a combination of ERP output and Excel. Checks worker certifications for three jobs that require specific qualifications — pulls from HR records in ERP.',tag:'ai'},
+      {time:'8:00 AM',text:'Shift meeting with supervisors. Reviews today\'s priorities, discusses the delayed job from yesterday, and confirms material availability for the three afternoon jobs.',tag:'manual'},
+      {time:'9:30 AM',text:'ERP sends a low-inventory alert for M6 bolts. Priya reviews the report, confirms the reorder point has been crossed, and sends a purchase order request to the purchasing team.',tag:'ai'},
+      {time:'11:00 AM',text:'A machine goes down. Priya updates the schedule in ERP, re-sequences the affected jobs, and notifies the three workers whose assignments changed via the floor terminal system.',tag:'ai'},
+      {time:'2:00 PM',text:'Prepares the end-of-day summary for the operations manager: on-time completion rate, machine utilization numbers, material flags for tomorrow. Data from ERP, narrative from Priya.',tag:'manual'}
+    ]
+  },
+  {
+    icon:'🏢',
+    who:'Diego — Resource Planning Analyst',
+    factory:'Cascade Automotive Systems — 1,400 employees, high-volume production',
+    tasks:[
+      {time:'6:30 AM',text:'AI resource dashboard auto-refreshes. Three material alerts were generated overnight. Reviews each one: two are valid shortage predictions, one is a sensor anomaly. Investigates the anomaly before flagging it.',tag:'ai'},
+      {time:'7:00 AM',text:'AI scheduling system has auto-generated today\'s machine assignments and flagged two workers with certification conflicts. Diego reviews the assignments and approves 94% as-is; adjusts the two flagged situations.',tag:'ai'},
+      {time:'8:30 AM',text:'Meets with the AI system implementation team on a new predictive maintenance module being rolled out on the stamping line. Reviews test data and signs off on the alert threshold calibration.',tag:'ai'},
+      {time:'10:00 AM',text:'The demand planning team shares updated next-quarter forecasts. Diego runs the new demand numbers through the material requirements planning model — AI calculates revised order quantities for 47 materials.',tag:'ai'},
+      {time:'1:00 PM',text:'A machine fault triggers an automatic alert. AI has already generated three recovery options. Diego reviews them, consults with the floor supervisor about option 2\'s feasibility, and approves it.',tag:'ai'},
+      {time:'3:30 PM',text:'Prepares the weekly resource performance report for the VP of Operations. Pulls AI dashboard metrics, writes a narrative analysis of the week\'s exceptions and what they indicate about upcoming risk.',tag:'manual'}
+    ]
+  }
+];
+var openDay=null;
+var dayC=document.getElementById('day-container');
+profiles.forEach(function(p,i){
+  var div=document.createElement('div');div.className='day-card';
+  var tagColors={ai:'color:var(--purple)',manual:'color:var(--orange)'};
+  var tasksHTML=p.tasks.map(function(t){
+    return '<div class="day-task"><div class="day-task-time">'+t.time+'</div><div class="day-task-text">'+t.text+'<span class="day-task-tag '+t.tag+'">'+(t.tag==='ai'?'AI-assisted':'Manual')+'</span></div></div>';
+  }).join('');
+  div.innerHTML='<div class="day-card-head" onclick="toggleDay('+i+')">'
+    +'<div style="font-size:22px;margin-right:2px;">'+p.icon+'</div>'
+    +'<div class="day-card-head-text"><div class="day-card-who">'+p.who+'</div><div class="day-card-factory">'+p.factory+'</div></div>'
+    +'<div class="day-card-toggle" id="dct'+i+'">+</div></div>'
+    +'<div class="day-card-body" id="dcb'+i+'">'+tasksHTML+'</div>';
+  dayC.appendChild(div);
+});
+function toggleDay(i){
+  var body=document.getElementById('dcb'+i),tog=document.getElementById('dct'+i);
+  if(openDay===i){body.classList.remove('open');tog.classList.remove('open');openDay=null;return;}
+  if(openDay!==null){document.getElementById('dcb'+openDay).classList.remove('open');document.getElementById('dct'+openDay).classList.remove('open');}
+  body.classList.add('open');tog.classList.add('open');openDay=i;
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation: AI Says We're Running Low — What Do You Do?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* dashboard */
+.dashboard{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px;margin:28px 0;}
+.db-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.db-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff;}
+.db-time{font-size:12px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.08);padding:4px 12px;border-radius:100px;}
+.db-alerts{display:flex;flex-direction:column;gap:10px;}
+.db-alert{background:rgba(255,255,255,.07);border-radius:14px;padding:16px 20px;border:1px solid rgba(255,255,255,.1);}
+.db-alert.critical{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.12);}
+.db-alert.warning{border-color:rgba(217,119,6,.5);background:rgba(217,119,6,.1);}
+.db-alert.sensor{border-color:rgba(59,130,246,.5);background:rgba(59,130,246,.1);}
+.db-alert-row{display:flex;align-items:flex-start;gap:12px;}
+.db-alert-icon{font-size:20px;flex-shrink:0;}
+.db-alert-body{flex:1;}
+.db-alert-title{font-weight:700;font-size:14px;color:#fff;margin-bottom:3px;}
+.db-alert-detail{font-size:12px;line-height:1.65;color:rgba(255,255,255,.7);}
+.db-bar-wrap{height:8px;background:rgba(255,255,255,.1);border-radius:4px;margin-top:8px;overflow:hidden;}
+.db-bar-fill{height:100%;border-radius:4px;}
+.db-bar-fill.crit{background:var(--red);}
+.db-bar-fill.warn{background:var(--orange);}
+.db-bar-fill.sens{background:#3B82F6;}
+.db-bar-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;}
+
+/* scenario panels */
+.scenario-wrap{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.sw-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sw-title{font-family:"Fraunces",serif;font-size:22px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sw-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sw-progress{font-size:12px;color:var(--gray-muted);margin-bottom:14px;}
+.sw-scenario-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;margin-bottom:14px;}
+.sw-scenario-alert{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;padding:10px 14px;border-radius:10px;}
+.sw-scenario-alert.c{background:var(--red-pale);border:1px solid var(--red);}
+.sw-scenario-alert.w{background:var(--orange-pale);border:1px solid #FCD34D;}
+.sw-scenario-alert.s{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.sw-alert-icon{font-size:18px;flex-shrink:0;}
+.sw-alert-text{font-size:13px;font-weight:700;line-height:1.55;}
+.sw-alert.c .sw-alert-text{color:var(--red);}
+.sw-alert.w .sw-alert-text{color:var(--orange);}
+.sw-alert.s .sw-alert-text{color:var(--blue);}
+.sw-scenario-context{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;}
+.sw-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.sw-opts{display:flex;flex-direction:column;gap:9px;}
+.sw-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:11px;padding:13px 17px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.sw-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.sw-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.sw-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.sw-opt.partial{background:var(--orange-pale);border-color:var(--orange);color:#92400E;}
+.sw-fb{margin-top:12px;padding:14px 18px;border-radius:12px;font-size:13px;line-height:1.75;display:none;}
+.sw-fb.show{display:block;}
+.sw-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.sw-fb.warn{background:var(--orange-pale);border:1px solid var(--orange);color:#92400E;}
+.sw-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.sw-next{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;display:none;}
+.sw-next.show{display:inline-block;}
+.sw-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:16px;padding:24px;display:none;margin-top:14px;}
+.sw-score.show{display:block;}
+.sw-score-num{font-family:"Fraunces",serif;font-size:30px;font-weight:900;color:var(--purple-dark);}
+.sw-score-text{font-size:14px;line-height:1.75;color:var(--gray-text);margin-top:8px;}
+
+/* consequence tracker */
+.consequence-tracker{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin:12px 0;display:none;}
+.consequence-tracker.show{display:block;}
+.ct-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ct-items{display:flex;flex-direction:column;gap:6px;}
+.ct-item{display:flex;gap:8px;font-size:13px;line-height:1.6;align-items:flex-start;}
+.ct-arrow{color:var(--purple-mid);flex-shrink:0;}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Hands-On Activity</div>
+  <h1>Simulation: AI Says We're Running Low — What Do You Do?</h1>
+  <p class="hero-sub">You're the materials manager. Your AI dashboard is showing three alerts: one material in critical shortage, one approaching its reorder point, and one sensor flag that might or might not be real. Work through each one and make the call.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Your Role and the Situation</h2>
+  <p>It's Tuesday morning, 7:15 AM. You're the materials planning manager at Ridgeline Manufacturing. The AI resource management system has flagged three alerts overnight. Your shift supervisor needs to know what action is being taken on each before the 8 AM production meeting.</p>
+  <p>This is real decision-making work. The AI has identified the issues and surfaced them — but it cannot make the calls. That's your job. Each decision has consequences that affect production, cost, and customer delivery. Work through the dashboard below, then tackle each scenario one at a time.</p>
+
+  <div class="dashboard">
+    <div class="db-hdr">
+      <div class="db-title">&#x1F4CA; Material Usage Dashboard — Ridgeline Manufacturing</div>
+      <div class="db-time">Tuesday 07:15 AM &bull; 3 Active Alerts</div>
+    </div>
+    <div class="db-alerts">
+      <div class="db-alert critical">
+        <div class="db-alert-row">
+          <div class="db-alert-icon">&#x1F534;</div>
+          <div class="db-alert-body">
+            <div class="db-alert-title">CRITICAL: 4mm Stainless Steel Sheet</div>
+            <div class="db-alert-detail">Current: 18 sq ft &bull; Daily usage: 85 sq ft &bull; Lead time: 3 days &bull; Reorder point: 255 sq ft<br>Projected stockout: <strong>TODAY at approximately 11:30 AM</strong>. Three active work orders depend on this material.</div>
+          </div>
+        </div>
+        <div class="db-bar-wrap"><div class="db-bar-fill crit" style="width:7%"></div></div>
+        <div class="db-bar-label"><span>0 sq ft</span><span>Reorder point: 255 sq ft</span><span>Full: 340 sq ft</span></div>
+      </div>
+      <div class="db-alert warning">
+        <div class="db-alert-row">
+          <div class="db-alert-icon">&#x1F7E1;</div>
+          <div class="db-alert-body">
+            <div class="db-alert-title">WARNING: Zinc Primer Coating</div>
+            <div class="db-alert-detail">Current: 22 gallons &bull; Daily usage: 8 gal &bull; Lead time: 4 days &bull; Reorder point: 32 gal<br>Projected stockout: <strong>In approximately 6 days</strong> if no order placed. Standard order would need to go out by Thursday.</div>
+          </div>
+        </div>
+        <div class="db-bar-wrap"><div class="db-bar-fill warn" style="width:28%"></div></div>
+        <div class="db-bar-label"><span>0</span><span>Reorder point: 32 gal</span><span>Full: 80 gal</span></div>
+      </div>
+      <div class="db-alert sensor">
+        <div class="db-alert-row">
+          <div class="db-alert-icon">&#x26A0;&#xFE0F;</div>
+          <div class="db-alert-body">
+            <div class="db-alert-title">SENSOR ALERT: M6 Bolt Consumption Rate — Anomaly Detected</div>
+            <div class="db-alert-detail">System shows bolt usage spiked 340% overnight (11 PM–4 AM). Current count: 8 boxes. Projected stockout: <strong>2 days</strong> if spike is real. However: no production was scheduled overnight. The production floor was idle.</div>
+          </div>
+        </div>
+        <div class="db-bar-wrap"><div class="db-bar-fill sens" style="width:55%"></div></div>
+        <div class="db-bar-label"><span>0</span><span>Reorder point: 4 boxes</span><span>Full: 15 boxes</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Work Through the Scenarios</h2>
+  <p>Three alerts, three decisions. Start with the most urgent and work your way through. Each scenario gives you the full context — you decide the best response. Every decision has real consequences that play out.</p>
+
+  <div class="scenario-wrap">
+    <div class="sw-label">&#x1F3AF; Interactive Simulation</div>
+    <div class="sw-title">Three Alerts — You Make the Calls</div>
+    <div class="sw-sub">Read the full context for each alert, then choose the best response. Pay attention to timing, cost, and downstream consequences.</div>
+    <div class="sw-progress" id="sw-prog">Scenario 1 of 3</div>
+
+    <div class="sw-scenario-card">
+      <div class="sw-scenario-alert c">
+        <div class="sw-alert-icon">&#x1F534;</div>
+        <div class="sw-alert-text" id="sw-alert-text"></div>
+      </div>
+      <div class="sw-scenario-context" id="sw-context"></div>
+      <div class="sw-q" id="sw-q"></div>
+      <div class="sw-opts" id="sw-opts"></div>
+      <div class="sw-fb good"  id="sw-good"></div>
+      <div class="sw-fb warn"  id="sw-warn"></div>
+      <div class="sw-fb bad"   id="sw-bad"></div>
+      <div class="consequence-tracker" id="sw-conseq">
+        <div class="ct-label">&#x1F4A1; What Happens If You Choose This</div>
+        <div class="ct-items" id="ct-items"></div>
+      </div>
+      <button class="sw-next" id="sw-next" onclick="nextSW()">Next Alert &#x2192;</button>
+      <div class="sw-score" id="sw-score">
+        <div class="sw-score-num" id="sw-score-num"></div>
+        <div class="sw-score-text" id="sw-score-text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Sensor Error Lesson</h2>
+  <p>The third alert in this simulation — the overnight bolt consumption spike — was a <mark>sensor error</mark>. This is one of the most important failure modes in AI-assisted resource management, and it's worth understanding deeply.</p>
+  <p>AI inventory systems can only report what their sensors and data inputs tell them. If a sensor malfunctions, produces an erroneous reading, or gets physically disturbed (someone knocked the scale, the RFID reader lost connection), the AI will report the bad data as if it's real. It has no way to know the difference between a real consumption event and a sensor glitch.</p>
+  <p>The signal that something was wrong in this scenario was context that the AI didn't have: the production floor was idle overnight. No production = no consumption. A 340% bolt usage spike during idle hours is physically impossible under normal circumstances. A human reviewing the alert with that context immediately recognizes the anomaly.</p>
+  <div class="pull-quote"><p>AI alerts are starting points for investigation — not automatic commands to action. The most important skill in working with AI resource tools is knowing when an alert makes sense given the full context, and when it doesn't.</p></div>
+  <p>In practice, sensor errors are more common than people realize. Scales drift, RFID readers lose sync, barcode scans get duplicated or skipped. A good materials manager reviews alerts with two questions: does this number make sense given what I know about the floor? And what's the simplest explanation for this reading?</p>
+  <p>When the simplest explanation is "sensor error" — because the physics don't support the reading — the correct action is to investigate the sensor before spending money on an emergency order that isn't needed.</p>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What This Simulation Teaches</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Critical alerts (projected stockout within hours) require immediate escalation — not standard reorder processes. An expedited order to a local supplier, a production rescheduling decision, and direct customer communication may all need to happen simultaneously.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Warning alerts (days away from reorder point) allow time for a standard response — but acting promptly while options are still available is much better than waiting until the alert becomes critical.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Sensor anomalies must be investigated before being acted on. Context is everything — a 340% consumption spike during idle hours is a sensor problem, not a real shortage. Placing an emergency order based on bad data wastes money and erodes trust in the AI system.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI alerts are not orders — they're information that requires human judgment. The right response to each alert depends on urgency, cost, production impact, and real-world context that the sensor data alone can't provide.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The cost of emergency sourcing (2–5x standard pricing, expedite fees) is almost always higher than the cost of maintaining good reorder discipline. Stockouts happen when reorder points are ignored or when unexpected spikes aren't anticipated — both of which human oversight of AI alerts helps prevent.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var scenarios=[
+  {
+    alertClass:'c',
+    alertText:'CRITICAL — 4mm Stainless Steel Sheet: Projected stockout TODAY at ~11:30 AM. Three work orders affected.',
+    context:'The AI has calculated that at current usage rates, the 18 sq ft of stainless steel on hand will be exhausted by approximately 11:30 AM today. Three active work orders — WO-4401, WO-4408, and WO-4415 — require stainless sheet. WO-4401 is the most time-critical: it\'s due for customer pickup at 3 PM today. WO-4408 and WO-4415 are both due tomorrow. The standard supplier (Midwest Steel Supply) has a 3-day lead time. You have an emergency contact at a local steel service center (QuickMetal) who can deliver same-day for approximately 2.8x the standard price.',
+    q:'It is 7:15 AM. What is the most appropriate response?',
+    opts:[
+      'Place a standard order with Midwest Steel Supply right now — a 3-day lead time means delivery by Friday, which works for WO-4408 and WO-4415',
+      'Do nothing yet — the stockout isn\'t predicted until 11:30 AM, which gives plenty of time to decide later in the morning',
+      'Call QuickMetal immediately for a same-day delivery quote on enough stainless to cover all three work orders. Simultaneously, contact the customer for WO-4401 to confirm whether the 3 PM pickup is firm or has any flexibility. Use the next 45 minutes to decide between expediting all three orders, rescheduling WO-4408 and WO-4415, or a combination',
+      'Reschedule all three work orders until standard delivery arrives — the premium cost of same-day sourcing is never worth it'
+    ],
+    correct:2,
+    good:'Correct. This is the right multi-track response to a critical shortage. A standard order doesn\'t solve today\'s problem — WO-4401 ships at 3 PM and the steel runs out at 11:30 AM. Doing nothing until 11:30 collapses your response window to less than an hour. The right move is immediately pursuing the expedite option while also confirming which deadlines are actually firm — because if WO-4401\'s customer has a 2-hour window of flexibility, that changes the calculus significantly. Acting early gives you choices. Waiting until 11 AM gives you a crisis.',
+    warn:'',
+    bad:'Placing a standard order doesn\'t solve the 11:30 AM stockout — the delivery won\'t arrive for 3 days. Waiting until 11:30 AM leaves you with less than an hour to respond to a crisis. Rescheduling everything might be the right call for WO-4408 and WO-4415, but it doesn\'t address WO-4401\'s 3 PM customer pickup. The correct response tackles all dimensions simultaneously: expedite sourcing, customer communication, and triage of which jobs can flex.',
+    conseq:'Calling QuickMetal immediately: confirms whether same-day delivery is available and at what cost → gives you a real number to compare against the cost of a missed customer deadline → allows a confident decision by 8 AM instead of a scramble at 11 AM. Contacting the WO-4401 customer: if they have even 2 hours of flexibility, a 1 PM delivery from QuickMetal might work at lower emergency pricing → preserves the relationship by communicating proactively rather than missing the deadline silently.'
+  },
+  {
+    alertClass:'w',
+    alertText:'WARNING — Zinc Primer Coating: Currently 22 gallons. Standard order needed by Thursday to avoid stockout.',
+    context:'The AI projects that zinc primer will fall below the 32-gallon reorder point in approximately 6 days. With a 4-day supplier lead time, a standard order placed by Thursday will result in delivery arriving right around the reorder point — tight but manageable. If you wait until Friday, the delivery arrives after the reorder point is crossed, potentially creating a shortage during the following week. The primer is used on the coating step of most finished jobs — no primer means no coated output from the coating line.',
+    q:'It is Tuesday 7:15 AM. You have until Thursday to place the standard order. What is the right action right now?',
+    opts:[
+      'Place the order immediately this morning — acting early costs nothing and eliminates any risk of forgetting or being distracted',
+      'Wait until Thursday to place the order — that\'s what the AI\'s timeline says, and acting earlier just ties up the purchasing team unnecessarily',
+      'This alert can be safely ignored — 6 days is plenty of time to deal with this later in the week',
+      'Order triple the standard quantity as a buffer — this situation shows the reorder point is set too low'
+    ],
+    correct:0,
+    good:'Correct. Thursday is the last possible moment, not the optimal moment. Acting Tuesday morning costs nothing extra — the price is the same, the delivery time is the same. What changes by acting today: you eliminate the risk that this task gets buried under more urgent issues by Thursday, you give the supplier a little extra lead time in case they\'re busy, and you confirm early if there\'s any supply constraint. "The AI says I have until Thursday" is a deadline, not a target. Best practice is to act when the alert surfaces, not when the deadline arrives.',
+    warn:'',
+    bad:'Waiting until Thursday is the minimum viable response — but it leaves no margin for anything going wrong: a supplier delay, a Thursday morning full of other crises, or simply forgetting in a busy shift. Ignoring the alert entirely risks a stockout that would shut down the coating line — a critical step for most finished goods. Ordering triple quantity wastes cash and storage space; the right fix for a too-low reorder point is to recalibrate the reorder point, not panic-order.',
+    conseq:'Ordering Tuesday morning: purchasing team places the order with the standard supplier → delivery confirmed for Friday or Saturday → primer arrives before the reorder point is crossed → coating line continues uninterrupted all of next week → zero premium cost, zero stockout risk. Waiting until Thursday: any Thursday disruption (sick purchasing manager, system downtime, supplier delay) pushes delivery into the following week → coating line may stop → finished goods output drops → customer deliveries are at risk.'
+  },
+  {
+    alertClass:'s',
+    alertText:'SENSOR ALERT — M6 Bolt Consumption: 340% spike detected overnight (11 PM – 4 AM). Current count: 8 boxes. Projected stockout: 2 days IF spike is real.',
+    context:'The AI detected a 340% surge in M6 bolt usage between 11 PM and 4 AM last night — based on weight sensor data from the bolt storage bin. Current inventory shows 8 boxes (4,000 units). At the overnight usage rate, the AI projects stockout in 2 days. HOWEVER: The production floor was completely idle from 10 PM to 6 AM last night. No jobs were scheduled. No workers were clocked in. The facility\'s security system shows no entries after 10:15 PM. A 340% bolt consumption spike during idle hours, with no production and no personnel, is physically unexplainable under normal circumstances.',
+    q:'Before placing an emergency order, what should your first action be?',
+    opts:[
+      'Place an emergency expedite order immediately — a 2-day projected stockout is too risky to investigate first when production starts at 7 AM',
+      'Investigate the weight sensor on the bolt bin before taking any sourcing action. A 340% consumption spike during verified idle hours most likely indicates a sensor malfunction, not a real shortage. Conduct a physical count of the bolt inventory first.',
+      'Assume the bolts were stolen overnight and file a security incident report before doing anything else',
+      'Ignore the alert entirely — sensor alerts are often wrong and this one doesn\'t need attention'
+    ],
+    correct:1,
+    good:'Correct. This is the critical sensor error recognition scenario. The context makes a real consumption event impossible: idle facility, no workers, no production, no entries. The simplest explanation for a consumption reading during those conditions is sensor malfunction — a drift, a connectivity issue, or a physical disturbance of the scale. The right first action is to physically count the bolt inventory. If the count confirms 8 boxes, then figure out why the sensor showed a spike. If the count shows significantly fewer boxes than expected, then investigate further. Placing an emergency order based on a sensor reading that defies the laws of physics wastes money and signals to leadership that you\'re reacting without thinking.',
+    warn:'',
+    bad:'Placing an emergency order without investigating a clearly anomalous reading is a judgment failure. The sensor data directly contradicts the physical context — production was idle, no one was there, nothing was running. A 340% consumption spike under those conditions is a sensor problem until proven otherwise. Acting on bad data costs money (emergency pricing, minimum order quantities) and creates a false narrative about actual stock levels. The right response is always: does this alert make physical sense given what I know? If not, investigate the data source first.',
+    conseq:'Investigating the sensor: physical count confirms 8 boxes in the bin → scale sensor shows slight calibration drift (scale was moved during afternoon cleaning) → sensor recalibrated by maintenance → no emergency order needed → $0 additional cost → accurate data going forward. Ignoring entirely: if the sensor is actually right about 8 boxes AND usage is genuinely elevated, a real stockout could hit in 2 days → but 8 boxes is still above the 4-box reorder point, so there IS time to do a quick physical count before deciding.'
+  }
+];
+
+var swIdx=0,swScore=0,swAnswered=false;
+function renderSW(){
+  var s=scenarios[swIdx];
+  document.getElementById('sw-prog').textContent='Alert '+(swIdx+1)+' of 3';
+  var alertEl=document.getElementById('sw-alert-text');
+  alertEl.textContent=s.alertText;
+  var alertWrap=alertEl.closest('.sw-scenario-alert');
+  alertWrap.className='sw-scenario-alert '+s.alertClass;
+  document.getElementById('sw-context').textContent=s.context;
+  document.getElementById('sw-q').textContent=s.q;
+  var opts=document.getElementById('sw-opts');opts.innerHTML='';
+  s.opts.forEach(function(o,i){
+    var btn=document.createElement('button');btn.className='sw-opt';btn.textContent=o;
+    btn.onclick=function(){answerSW(i);};opts.appendChild(btn);
+  });
+  document.getElementById('sw-good').className='sw-fb good';
+  document.getElementById('sw-warn').className='sw-fb warn';
+  document.getElementById('sw-bad').className='sw-fb bad';
+  document.getElementById('sw-conseq').className='consequence-tracker';
+  document.getElementById('sw-next').className='sw-next';
+  document.getElementById('sw-score').className='sw-score';
+  swAnswered=false;
+}
+function answerSW(i){
+  if(swAnswered)return;swAnswered=true;
+  var s=scenarios[swIdx];
+  var btns=document.querySelectorAll('#sw-opts .sw-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  var correct=i===s.correct;
+  if(correct){
+    btns[i].classList.add('correct');
+    document.getElementById('sw-good').textContent='\u2705 '+s.good;
+    document.getElementById('sw-good').classList.add('show');
+    swScore++;
+  }else{
+    btns[i].classList.add('wrong');
+    document.getElementById('sw-bad').textContent='\u274C '+s.bad;
+    document.getElementById('sw-bad').classList.add('show');
+  }
+  if(s.conseq){
+    var ct=document.getElementById('ct-items');ct.innerHTML='';
+    s.conseq.split('\n').forEach(function(line){
+      if(!line.trim())return;
+      var div=document.createElement('div');div.className='ct-item';
+      div.innerHTML='<span class="ct-arrow">&#x2192;</span><span>'+line.trim()+'</span>';
+      ct.appendChild(div);
+    });
+    document.getElementById('sw-conseq').classList.add('show');
+  }
+  if(swIdx<scenarios.length-1)document.getElementById('sw-next').classList.add('show');
+  else showSWScore();
+}
+function nextSW(){swIdx++;renderSW();}
+function showSWScore(){
+  document.getElementById('sw-score').classList.add('show');
+  document.getElementById('sw-score-num').textContent=swScore+' / 3';
+  var t=swScore===3?'Perfect performance. You escalated the crisis, acted on the warning proactively, and correctly identified the sensor error before wasting money on an unnecessary emergency order — exactly the decision-making pattern that protects production and builds credibility with leadership.':swScore===2?'Strong work. Review the scenario you missed and focus on whether the decision prioritized investigation before action in ambiguous situations.':'These scenarios test decision discipline under pressure. Review each one: the critical alert required multi-track action, the warning required acting early rather than waiting for the deadline, and the sensor alert required investigation before sourcing.';
+  document.getElementById('sw-score-text').textContent=t;
+}
+renderSW();
+</script>
+</body>
+</html>

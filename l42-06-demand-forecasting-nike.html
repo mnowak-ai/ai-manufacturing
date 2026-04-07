@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Demand Forecasting and Why Does Nike Use AI to Do It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height;6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* core concept */
+.concept-card{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:#fff;}
+.concept-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.concept-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:16px;}
+.concept-grid{display:flex;flex-direction:column;gap:10px;}
+.concept-row{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 16px;display:flex;gap:10px;}
+.concept-row-icon{font-size:20px;flex-shrink:0;}
+.concept-row-body{}
+.concept-row-title{font-weight:700;font-size:13px;margin-bottom:3px;color:#fff;}
+.concept-row-text{font-size:12px;line-height:1.65;color:rgba(255,255,255,.75);}
+
+/* error cost */
+.error-cards{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.ec{flex:1;min-width:200px;border-radius:16px;padding:20px;}
+.ec.low{background:var(--red-pale);border:1.5px solid var(--red);}
+.ec.high{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.ec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.ec.low .ec-label{color:var(--red);}
+.ec.high .ec-label{color:var(--orange);}
+.ec-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.ec-items{display:flex;flex-direction:column;gap:4px;}
+.ec-item{font-size:12px;line-height:1.65;padding:2px 0;}
+.ec-item::before{margin-right:5px;}
+.ec.low .ec-item::before{content:"&#x26A0;&#xFE0F;";}
+.ec.high .ec-item::before{content:"&#x1F4B8;";}
+
+/* signal types */
+.signals-grid{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.sig{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.sig-icon{font-size:22px;flex-shrink:0;}
+.sig-body{}
+.sig-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.sig-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.sig-example{margin-top:6px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+
+/* Nike case study */
+.case-study{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;overflow:hidden;margin:28px 0;}
+.cs-header{background:var(--purple-dark);padding:16px 24px;display:flex;align-items:center;gap:14px;}
+.cs-icon{font-size:28px;}
+.cs-head-text{}
+.cs-head-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff;}
+.cs-head-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px;}
+.cs-body{padding:22px 24px;}
+.cs-body p{font-size:14px;line-height:1.85;margin-bottom:12px;}
+.cs-body p:last-child{margin-bottom:0;}
+.cs-results{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0;}
+.cs-result{flex:1;min-width:150px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px;text-align:center;}
+.cs-result-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--purple-dark);}
+.cs-result-label{font-size:12px;color:var(--gray-muted);margin-top:4px;line-height:1.5;}
+.cs-what-it-means{background:var(--purple-pale);border-radius:14px;padding:16px 20px;margin-top:14px;}
+.cs-what-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.cs-what-text{font-size:13px;line-height:1.8;color:var(--gray-text);}
+
+/* forecasting vs sensing */
+.vs-grid{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.vs-card{flex:1;min-width:200px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.vs-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:8px;}
+.vs-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.vs-example{margin-top:8px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>What Is Demand Forecasting and Why Does Nike Use AI to Do It?</h1>
+  <p class="hero-sub">The lesson references Nike's AI demand sensing without explaining what demand forecasting actually is. This article starts from scratch: what it means, why getting it wrong is expensive in both directions, how AI improves it, and what Nike's approach actually did for their manufacturing operation.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Core Problem: You Have to Plan Before You Know</h2>
+  <p>Here's the fundamental challenge of manufacturing: you have to buy materials, schedule workers, and commit production capacity <em>before</em> you know exactly how many products customers will want. If you wait until every customer order is confirmed before you start planning, you'll always be too late. Products take time to make. Materials take time to arrive. Machines take time to set up.</p>
+  <p>So manufacturing companies are constantly making a bet about the future: how many units of each product will customers want next month? Next quarter? Next year? They have to start producing to meet that demand now — based on their best prediction — before the actual orders fully materialize.</p>
+  <div class="pull-quote"><p>Demand forecasting is the art and science of predicting how much of each product customers will want — so manufacturing can plan materials, capacity, and labor to meet that demand without massive overproduction or embarrassing shortages.</p></div>
+  <p>Get the forecast right and the facility runs efficiently — materials arrive when needed, machines run at high utilization, workers have steady work, and customers get their orders on time. Get it wrong in either direction and you're dealing with either a costly stockout or a warehouse full of products nobody ordered.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What Demand Forecasting Actually Is</h2>
+
+  <div class="concept-card">
+    <div class="concept-label">&#x1F4D0; Core Concept</div>
+    <div class="concept-title">Demand Forecasting — Four Things You Need to Know</div>
+    <div class="concept-grid">
+      <div class="concept-row">
+        <div class="concept-row-icon">&#x1F4CA;</div>
+        <div class="concept-row-body">
+          <div class="concept-row-title">It's a prediction about future customer demand</div>
+          <div class="concept-row-text">Not a confirmed order — a prediction. "We expect to sell approximately 12,000 units of Model X next quarter." Manufacturing uses this prediction to plan production volume, material purchases, and workforce needs before firm orders arrive.</div>
+        </div>
+      </div>
+      <div class="concept-row">
+        <div class="concept-row-icon">&#x1F4C5;</div>
+        <div class="concept-row-body">
+          <div class="concept-row-title">It uses historical patterns as a starting point</div>
+          <div class="concept-row-text">Last year we sold X units in Q3. The year before, Y units. What's the trend? Are sales growing, shrinking, or flat? Seasonality matters too — some products sell more in summer, some in winter. Historical data is the foundation of any forecast.</div>
+        </div>
+      </div>
+      <div class="concept-row">
+        <div class="concept-row-icon">&#x1F30D;</div>
+        <div class="concept-row-body">
+          <div class="concept-row-title">External signals can sharpen the prediction</div>
+          <div class="concept-row-text">Economic conditions, competitor moves, weather patterns, social media trends, and even search data can all be signals that demand is about to increase or decrease. AI-powered forecasting tools incorporate many of these signals simultaneously.</div>
+        </div>
+      </div>
+      <div class="concept-row">
+        <div class="concept-row-icon">&#x26A0;&#xFE0F;</div>
+        <div class="concept-row-body">
+          <div class="concept-row-title">Every forecast is wrong — the goal is to be less wrong</div>
+          <div class="concept-row-text">No one can predict the future perfectly. Forecast accuracy is measured in percentages — a 90% accurate forecast is excellent. The goal isn't perfection. It's reducing the error enough that the cost of being wrong is smaller than the cost of not forecasting at all.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Cost of Getting It Wrong — Both Ways</h2>
+  <p>Demand forecasting errors hurt in two opposite directions. Too low a forecast and you can't meet demand — customers go without and may switch to competitors permanently. Too high a forecast and you've over-produced — resources wasted, storage consumed, and products may have to be discounted or scrapped.</p>
+
+  <div class="error-cards">
+    <div class="ec low">
+      <div class="ec-label">&#x274C; Forecast Too Low (Under-forecast)</div>
+      <div class="ec-title">Demand Exceeds Capacity</div>
+      <div class="ec-items">
+        <div class="ec-item">Stockouts — customers can't get what they want</div>
+        <div class="ec-item">Lost sales to competitors during the shortage</div>
+        <div class="ec-item">Rush production at premium cost (overtime, expedited materials)</div>
+        <div class="ec-item">Long-term customer relationships damaged</div>
+        <div class="ec-item">Revenue opportunity permanently missed (can't go back and sell last month's peak)</div>
+      </div>
+    </div>
+    <div class="ec high">
+      <div class="ec-label">&#x1F4B8; Forecast Too High (Over-forecast)</div>
+      <div class="ec-title">Capacity Exceeds Demand</div>
+      <div class="ec-items">
+        <div class="ec-item">Excess inventory — products made but not sold</div>
+        <div class="ec-item">Materials purchased but not used (cash tied up)</div>
+        <div class="ec-item">Markdowns and discounts to clear overstock</div>
+        <div class="ec-item">Worker overtime paid without corresponding revenue</div>
+        <div class="ec-item">Obsolescence risk — products sitting unsold may become outdated</div>
+      </div>
+    </div>
+  </div>
+
+  <p>For a company like Nike — which manages thousands of product models, dozens of factories across multiple countries, and millions of customers globally — even a small improvement in forecast accuracy translates into hundreds of millions of dollars. A 2% improvement in forecast accuracy at Nike's scale is not a minor efficiency gain. It's transformative.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Can See That Old Methods Couldn't</h2>
+  <p>Traditional demand forecasting was largely statistical: take historical sales data, apply a trend analysis, adjust for seasonality, and produce a forecast number. It worked — but it was slow, backward-looking, and couldn't incorporate signals that weren't already in the sales database.</p>
+  <p>AI-powered forecasting tools changed this by adding what Nike calls <mark>demand sensing</mark> — the ability to incorporate real-time signals from many sources simultaneously, not just historical sales data. Here's what AI-driven forecasting can see that traditional methods couldn't:</p>
+
+  <div class="signals-grid">
+    <div class="sig">
+      <div class="sig-icon">&#x1F6CD;&#xFE0F;</div>
+      <div class="sig-body">
+        <div class="sig-title">Point-of-Sale and Real-Time Sales Data</div>
+        <div class="sig-desc">Traditional forecasting waited for weekly or monthly sales reports. AI systems can connect to point-of-sale data from retail partners and their own stores, updating demand signals in near real time. If a specific shoe model started selling 40% faster than expected at stores in the Northeast this week, that signal feeds into the forecast immediately — not in next month's report.</div>
+        <div class="sig-example">Nike example: Sales velocity data from thousands of retail partners updated daily, feeding continuously into the AI forecast model.</div>
+      </div>
+    </div>
+    <div class="sig">
+      <div class="sig-icon">&#x1F4F1;</div>
+      <div class="sig-body">
+        <div class="sig-title">Social Media and Search Trend Signals</div>
+        <div class="sig-desc">When a product gets mentioned heavily on social media — especially by influential accounts — demand often spikes within days. AI tools monitor social engagement, search volume trends, and product discussion patterns as early-warning signals of demand changes before they show up in actual sales data.</div>
+        <div class="sig-example">Nike example: A celebrity wears a specific Air Max colorway on Instagram. Search volume for that model spikes 300%. AI adjusts the demand forecast and production signals for that model before the next regular review cycle would have caught it.</div>
+      </div>
+    </div>
+    <div class="sig">
+      <div class="sig-icon">&#x26BD;</div>
+      <div class="sig-body">
+        <div class="sig-title">Events and Seasonal Patterns</div>
+        <div class="sig-desc">Sports seasons, holidays, back-to-school periods, and major events (the Olympics, a World Cup) all drive predictable demand spikes for specific product categories. AI systems can incorporate event calendars and model the expected demand lift from each event — with much more granularity than a generic seasonal adjustment factor.</div>
+        <div class="sig-example">Nike example: Soccer cleats demand spikes during the World Cup cycle. Basketball shoes spike around the NBA season and during sneaker release events. AI models each event's historical impact by product category and adjusts the forecast accordingly.</div>
+      </div>
+    </div>
+    <div class="sig">
+      <div class="sig-icon">&#x1F30E;</div>
+      <div class="sig-body">
+        <div class="sig-title">Economic and Geographic Signals</div>
+        <div class="sig-desc">Consumer spending patterns are influenced by economic conditions — consumer confidence, employment rates, and inflation all affect how much people spend on discretionary products like athletic footwear. AI forecasting tools can incorporate macroeconomic indicators as adjustment factors in the demand model.</div>
+        <div class="sig-example">Nike example: If consumer confidence in a key market drops significantly, the forecast for premium-priced products in that region adjusts downward. Production schedules for those markets are scaled back before the signal appears in actual sales data — avoiding overproduction.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Nike's AI Demand Sensing — What Actually Happened</h2>
+
+  <div class="case-study">
+    <div class="cs-header">
+      <div class="cs-icon">&#x1F45F;</div>
+      <div class="cs-head-text">
+        <div class="cs-head-title">Nike: AI Demand Sensing at Global Scale</div>
+        <div class="cs-head-sub">Lesson 4.2 Case Study &bull; Consumer Goods Manufacturing</div>
+      </div>
+    </div>
+    <div class="cs-body">
+      <p>Nike operates one of the most complex manufacturing and distribution networks in consumer goods: thousands of product SKUs (stock-keeping units — each color and size combination is a separate SKU), production across factories in Vietnam, China, Indonesia, and other countries, and distribution to retail partners globally. The lag time between deciding to produce a shoe model and having it on store shelves can be 6–18 months.</p>
+      <p>That lead time means Nike has to make production decisions based on forecasts that are many months ahead of actual customer purchases. A small forecasting error, multiplied across millions of units and hundreds of SKUs, is an enormously expensive problem. Nike historically dealt with significant overstock situations (too many of the wrong products) and stockout situations (not enough of the right products) simultaneously — different models, different regions.</p>
+      <p>Nike's AI demand sensing initiative — built as part of their broader digital transformation — specifically targeted this forecast accuracy problem. Instead of traditional statistical forecasting based primarily on historical sales data and sales team judgment, the AI system ingests dozens of demand signals simultaneously: sell-through rates from retail partners, social media engagement by product and geography, search trend data, consumer sentiment analysis, regional event calendars, and economic indicators.</p>
+      <p>The AI processes these signals continuously and generates updated demand forecasts at a product-and-region level — not just "we expect to sell X shoes globally" but "we expect to sell Y units of Air Max in size 10 in Western Europe, driven by this specific trend signal, with this confidence interval." This granularity is what allows production planning to be much more precisely calibrated to actual expected demand.</p>
+
+      <div class="cs-results">
+        <div class="cs-result">
+          <div class="cs-result-num">~30%</div>
+          <div class="cs-result-label">Reduction in overstock situations in key product categories</div>
+        </div>
+        <div class="cs-result">
+          <div class="cs-result-num">15–20%</div>
+          <div class="cs-result-label">Improvement in forecast accuracy for demand sensing products</div>
+        </div>
+        <div class="cs-result">
+          <div class="cs-result-num">Faster</div>
+          <div class="cs-result-label">Response to emerging demand trends — weeks faster than traditional methods</div>
+        </div>
+      </div>
+
+      <div class="cs-what-it-means">
+        <div class="cs-what-label">What These Numbers Mean for Workers on the Floor</div>
+        <div class="cs-what-text">A 30% reduction in overstock means fewer last-minute production cutbacks that leave workers with less work than expected. A 15–20% improvement in forecast accuracy means production runs are sized more correctly — fewer situations where a factory gets a sudden order for 50,000 additional units that require emergency overtime, or a sudden production halt because demand was overestimated and warehouses are full. More accurate demand signals make factory scheduling more stable and predictable. That stability directly improves working conditions and reduces the pressure on production planners who are constantly adjusting to forecast errors.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Demand Forecasting vs. Demand Sensing — The Difference</h2>
+  <p>The lesson slides mention "demand sensing" specifically. It's worth understanding how this differs from traditional demand forecasting, because they're related but not the same thing.</p>
+
+  <div class="vs-grid">
+    <div class="vs-card">
+      <div class="vs-title">&#x1F4C8; Traditional Demand Forecasting</div>
+      <div class="vs-desc">Uses historical sales data and statistical models to predict future demand. Typically operates on weekly or monthly cycles — the forecast is updated infrequently. Good for long-term production planning (the next 3–12 months). Slower to respond to sudden changes in market conditions.</div>
+      <div class="vs-example">Example: "Based on the last 3 years of data, we expect to sell approximately 50,000 units of this model in Q3." Decision: schedule Q3 production runs now.</div>
+    </div>
+    <div class="vs-card">
+      <div class="vs-title">&#x26A1; AI Demand Sensing</div>
+      <div class="vs-desc">Uses real-time signals (sales velocity, social media, search trends, point-of-sale data) to detect demand changes as they're happening and update forecasts in near real time. Best for short-term adjustments (days to weeks). Detects trend breaks faster than traditional methods, allowing production to pivot earlier.</div>
+      <div class="vs-example">Example: "Sell-through on this model is running 35% above the Q3 forecast this week across three regions. The AI signals: produce 12,000 additional units this month." Decision: adjust the production run now, before the shortage hits.</div>
+    </div>
+  </div>
+
+  <p>Nike uses both together: traditional forecasting for long-horizon production planning (ordering raw materials 6 months out, scheduling factory capacity for next quarter), and demand sensing for short-horizon adjustments (responding to a viral trend, adjusting a production run that's been overestimated). The two methods complement each other rather than replacing one another.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What This Means for Manufacturing Beyond Nike</h2>
+  <p>Nike is an extreme example — their scale, product variety, and global supply chain make demand forecasting more complex than almost any other manufacturer. But the underlying principles apply everywhere:</p>
+  <p>A custom metal fabrication shop doesn't need to monitor Instagram for trends. But it does need to forecast which customer accounts are likely to place large orders next quarter — and whether current raw material inventory and machine capacity can support that demand. A regional food manufacturer needs to forecast seasonal demand spikes for certain products before ordering ingredients and scheduling production runs. An automotive parts supplier needs to forecast how many of each component their car manufacturer customers will need based on the vehicles they've announced they're building.</p>
+  <p>In every case, the core challenge is the same: commit resources now, based on a prediction about future demand. Get the prediction right and the operation is efficient. Get it wrong and you're either scrambling or sitting on expensive excess. AI tools are making those predictions more accurate — and faster to update when reality diverges from the forecast.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">Nike's AI demand sensing system detects that a specific running shoe is selling 45% faster than forecast in Southeast Asia over the past two weeks, driven by a regional marathon event that generated significant social media coverage. The traditional quarterly forecast didn't account for this. What should happen next in the manufacturing planning process?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Wait until the next quarterly forecast review to adjust production — demand sensing data is too volatile to act on immediately</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Produce the maximum possible quantity of this model immediately — if demand is up 45%, produce 45% more regardless of lead time or capacity constraints</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Update the short-term demand signal for this model and region, evaluate whether current production runs and material inventory can support additional output, assess lead times realistically, and make an informed decision about an incremental production increase — understanding that the 45% spike may be a temporary event-driven surge, not a permanent trend shift</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Ignore the AI signal — AI demand sensing is not reliable enough to influence production decisions</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. The AI signal is valuable and should be acted on — but thoughtfully. A 45% spike over two weeks driven by a specific event may partially normalize once the event's momentum fades. The right response is to update the demand signal, evaluate what incremental production is realistically possible given lead times (if the event-driven surge is fading by the time new production arrives, the additional inventory becomes overstock), and make a calibrated decision. Demand sensing gives you earlier information — it doesn't replace the judgment needed to decide how much to act on it.</div>
+    <div class="quiz-fb bad" id="q1-bad">&#x274C; Demand sensing signals are exactly what should influence short-term production adjustments — that\'s the point of the system. Waiting for a quarterly review means the opportunity is missed by the time the adjustment is made. But producing maximum output immediately without considering whether the surge is event-driven and temporary, or whether lead times allow the product to reach shelves while demand is still elevated, turns a good signal into bad decision-making. The right response is to act on the signal with appropriate calibration — not ignore it and not overreact to it.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Demand forecasting is predicting how much of each product customers will want in the future, so manufacturing can plan materials, capacity, and labor in advance — before confirmed orders fully arrive.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Forecast errors hurt in both directions: too low creates stockouts and lost sales; too high creates excess inventory, wasted resources, and discounting to clear overstock. Both are expensive.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI-powered demand sensing incorporates real-time signals — sell-through velocity, social media trends, search data, events, economic indicators — allowing much faster detection of demand changes than traditional statistical forecasting.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Nike's AI demand sensing reduced overstock situations by approximately 30% and improved forecast accuracy by 15–20% in key categories — making production scheduling more stable and reducing the costly emergency adjustments that cascade to factory workers.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Traditional forecasting and AI demand sensing are complementary: traditional methods handle long-horizon planning, AI sensing handles short-horizon adjustments when reality diverges from the forecast. Acting on demand signals requires human judgment about how much and how quickly to respond.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Inventory Management and Why Does It Affect Everything?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* inventory types */
+.inv-types{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.inv-type{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 24px;margin-bottom:12px;position:relative;overflow:hidden;}
+.inv-type::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;}
+.inv-type.raw::before{background:var(--blue);}
+.inv-type.wip::before{background:var(--orange);}
+.inv-type.fg::before{background:var(--green);}
+.inv-type.con::before{background:var(--purple);}
+.inv-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;margin-bottom:10px;}
+.inv-type.raw .inv-badge{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.inv-type.wip .inv-badge{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.inv-type.fg  .inv-badge{background:var(--green-pale);color:var(--green);border:1px solid #6EE7B7;}
+.inv-type.con .inv-badge{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.inv-name{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.inv-desc{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:8px;}
+.inv-example{font-size:13px;font-style:italic;color:var(--gray-muted);}
+
+/* stockout vs overstock visual */
+.balance-visual{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.bv-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.bv-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.bv-row{display:flex;gap:14px;flex-wrap:wrap;}
+.bv-card{flex:1;min-width:200px;border-radius:16px;padding:20px;}
+.bv-card.bad-low{background:var(--red-pale);border:2px solid var(--red);}
+.bv-card.good{background:var(--green-pale);border:2px solid var(--green);}
+.bv-card.bad-high{background:var(--orange-pale);border:2px solid var(--orange);}
+.bv-card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.bv-card.bad-low .bv-card-label{color:var(--red);}
+.bv-card.good   .bv-card-label{color:var(--green);}
+.bv-card.bad-high .bv-card-label{color:var(--orange);}
+.bv-card-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.bv-card-items{display:flex;flex-direction:column;gap:4px;}
+.bv-card-item{font-size:12px;line-height:1.6;padding:3px 0;}
+.bv-card.bad-low  .bv-card-item::before{content:"&#x26A0;&#xFE0F; ";}
+.bv-card.good     .bv-card-item::before{content:"&#x2705; ";}
+.bv-card.bad-high .bv-card-item::before{content:"&#x1F4B8; ";}
+
+/* level gauge */
+.level-gauge{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.lg-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.lg-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.lg-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.lg-material{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:12px;}
+.lg-mat-name{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.lg-mat-meta{font-size:12px;color:var(--gray-muted);margin-bottom:10px;}
+.lg-bar-wrap{height:24px;background:var(--gray-soft);border-radius:8px;overflow:hidden;position:relative;margin-bottom:6px;}
+.lg-bar{height:100%;border-radius:8px;transition:width .8s ease;}
+.lg-bar.critical{background:var(--red);}
+.lg-bar.warning{background:var(--orange);}
+.lg-bar.good{background:var(--green);}
+.lg-bar.full{background:var(--blue);}
+.lg-markers{display:flex;justify-content:space-between;font-size:10px;color:var(--gray-muted);}
+.lg-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:100px;margin-top:6px;}
+.lg-status.critical{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.lg-status.warning{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.lg-status.good{background:var(--green-pale);color:var(--green);border:1px solid #6EE7B7;}
+.lg-status.full{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+
+/* cost explainer */
+.cost-cards{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.cc{flex:1;min-width:180px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.cc-icon{font-size:26px;margin-bottom:8px;}
+.cc-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.cc-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>What Is Inventory Management and Why Does It Affect Everything?</h1>
+  <p class="hero-sub">Inventory is the foundation of everything that happens on a production floor. Too little and machines stop. Too much and money is trapped in a warehouse. This article explains what inventory actually is, the four types every manufacturer tracks, and why AI resource management starts here.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Inventory Is Not Just "Stuff in a Warehouse"</h2>
+  <p>When most people hear "inventory," they picture shelves full of products waiting to be sold — like a store's stockroom. Manufacturing inventory is different. It's not just the finished product sitting in a warehouse. It's every material, component, and partially-finished item at every stage of the production process.</p>
+  <p>A manufacturing facility might have steel sheets arriving at the loading dock, partially machined brackets waiting for their next step, finished housings staged for quality inspection, and boxed products ready to ship — all at the same moment, all in different places, all requiring tracking. That entire collection — everything flowing through the facility — is inventory.</p>
+  <div class="pull-quote"><p>Inventory is money in physical form. Too little stops production. Too much ties up cash that could be used for equipment, workers, or growth. Getting it right is one of the hardest and most important challenges in manufacturing.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Four Types of Manufacturing Inventory</h2>
+  <p>Manufacturing inventory exists in four distinct forms, each at a different stage of the production journey. AI resource management tools track all four simultaneously.</p>
+  <div class="inv-types">
+    <div class="inv-type raw">
+      <div class="inv-badge">Type 1</div>
+      <div class="inv-name">Raw Materials Inventory</div>
+      <div class="inv-desc">Raw materials are the inputs that production transforms into products. They arrive from suppliers, are stored in the warehouse, and are pulled to the production floor as jobs begin. This is the most actively managed inventory type — planners need to know exactly how much is on hand, how fast it's being consumed, and when the next shipment arrives.</div>
+      <div class="inv-example">Examples: Steel sheets, aluminum rod stock, plastic resin pellets, copper wire, timber boards, raw fabric. Anything that arrives from a supplier and hasn't been worked on yet.</div>
+    </div>
+    <div class="inv-type wip">
+      <div class="inv-badge">Type 2</div>
+      <div class="inv-name">Work-in-Process (WIP) Inventory</div>
+      <div class="inv-desc">Work-in-process — often just called "WIP" — is everything that has been started but not yet finished. A bracket that's been cut and pressed but not yet welded is WIP. A housing that's been machined and is waiting for inspection is WIP. WIP inventory sits between machines or between shifts, waiting for its next step. Too much WIP suggests bottlenecks — places in the process where work piles up faster than it flows through.</div>
+      <div class="inv-example">Examples: Partially machined parts awaiting the next step, welded assemblies awaiting coating, coated parts awaiting inspection. Anything mid-process.</div>
+    </div>
+    <div class="inv-type fg">
+      <div class="inv-badge">Type 3</div>
+      <div class="inv-name">Finished Goods Inventory</div>
+      <div class="inv-desc">Finished goods are completed products that have passed all inspections and are ready to ship to customers. Maintaining some finished goods inventory provides a buffer — if a customer needs something quickly, you can ship from stock rather than making them wait for a new production run. But too much finished goods inventory means the company has spent money making products that customers haven't ordered yet, with no guarantee they'll sell before they become obsolete or damaged.</div>
+      <div class="inv-example">Examples: Boxed and labeled brackets awaiting pickup, palletized housing assemblies in the shipping area, inspected and packaged components staged for delivery.</div>
+    </div>
+    <div class="inv-type con">
+      <div class="inv-badge">Type 4</div>
+      <div class="inv-name">MRO Inventory (Maintenance, Repair &amp; Operations)</div>
+      <div class="inv-desc">MRO inventory is everything the facility uses to keep itself running that doesn't go into the product directly — spare machine parts, cutting tools, lubricants, safety equipment, cleaning supplies, and packaging materials. MRO often gets overlooked in inventory management discussions, but running out of a critical spare part can shut down a machine just as effectively as running out of raw material. And MRO items can be surprisingly expensive — a single high-precision bearing might cost $400.</div>
+      <div class="inv-example">Examples: Replacement bearings, cutting inserts for CNC machines, hydraulic fluid, welding wire, safety gloves, machine calibration tools.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Two Inventory Failure Modes: Stockout and Overstock</h2>
+  <p>Every inventory management decision is a balancing act between two costly extremes. Lean too far in one direction and production stops. Lean too far in the other and money is wasted. AI inventory management tools are fundamentally trying to keep every material in the sweet spot between these two failures.</p>
+
+  <div class="balance-visual">
+    <div class="bv-label">The Inventory Balance Problem</div>
+    <div class="bv-title">Two Wrong Answers — One Right Zone</div>
+    <div class="bv-row">
+      <div class="bv-card bad-low">
+        <div class="bv-card-label">&#x274C; Too Little — Stockout</div>
+        <div class="bv-card-title">Running Out</div>
+        <div class="bv-card-items">
+          <div class="bv-card-item">Production stops mid-job</div>
+          <div class="bv-card-item">Workers and machines sit idle</div>
+          <div class="bv-card-item">Emergency orders cost 2–5x normal price</div>
+          <div class="bv-card-item">Customer deadlines missed</div>
+          <div class="bv-card-item">Reputation damage with accounts</div>
+          <div class="bv-card-item">Cascading delays through the schedule</div>
+        </div>
+      </div>
+      <div class="bv-card good">
+        <div class="bv-card-label">&#x2705; Just Right</div>
+        <div class="bv-card-title">Optimal Level</div>
+        <div class="bv-card-items">
+          <div class="bv-card-item">Production flows without interruption</div>
+          <div class="bv-card-item">Capital not tied up in excess stock</div>
+          <div class="bv-card-item">Ordered at standard lead times</div>
+          <div class="bv-card-item">Warehouse space used efficiently</div>
+          <div class="bv-card-item">No spoilage or obsolescence risk</div>
+          <div class="bv-card-item">Cash available for other needs</div>
+        </div>
+      </div>
+      <div class="bv-card bad-high">
+        <div class="bv-card-label">&#x1F4B8; Too Much — Overstock</div>
+        <div class="bv-card-title">Excess Inventory</div>
+        <div class="bv-card-items">
+          <div class="bv-card-item">Cash tied up in unused material</div>
+          <div class="bv-card-item">Warehouse space consumed</div>
+          <div class="bv-card-item">Material may expire, corrode, or go obsolete</div>
+          <div class="bv-card-item">Insurance and storage costs</div>
+          <div class="bv-card-item">Harder to find what you need</div>
+          <div class="bv-card-item">May have ordered at wrong time, wrong price</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What a Stockout Looks and Feels Like</h2>
+  <p>A <mark>stockout</mark> is when a material reaches zero — or falls so low that production must halt. The word sounds technical. The reality is stressful and expensive. Here's what actually happens in a facility when a key material stocks out:</p>
+  <p>At 8:20 AM, a machine operator walks to the material staging area to begin their next job. The bin for 4mm stainless steel sheet is empty. They look around — nothing nearby. They tell the foreman. The foreman checks with the warehouse. The warehouse team checks the system: according to the ERP, there should be 18 square feet in Bay 7. They check Bay 7. Nothing. Turns out, 18 square feet was used three days ago by a different shift, and the system wasn't updated when the material was pulled. The actual count is zero.</p>
+  <p>Now the machine sits idle. The operator can't start the job. The foreman is trying to figure out what this worker should do instead (and whether that alternative job's materials are actually available). The shift supervisor is calling the purchasing team. Purchasing is calling the supplier: earliest delivery — Thursday. Today is Tuesday. Every job that depends on that material — not just this one — is now at risk.</p>
+  <p>This is a stockout. It happens when inventory management fails — when the reorder didn't happen on time, when the system count was wrong, or when usage spiked unexpectedly and nobody saw it coming.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What Overstock Actually Costs</h2>
+  <p>Overstock is a less dramatic problem than a stockout — nothing stops, no alarm sounds — but it's expensive in a quieter way. Here's where the cost of carrying too much inventory actually shows up:</p>
+
+  <div class="cost-cards">
+    <div class="cc">
+      <div class="cc-icon">&#x1F4B0;</div>
+      <div class="cc-title">Capital Tied Up</div>
+      <div class="cc-desc">Every dollar spent on materials that sit in the warehouse is a dollar not available for new equipment, workforce training, or growth opportunities. Excess inventory is essentially an interest-free loan the company gave to its warehouse shelves.</div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">&#x1F3ED;</div>
+      <div class="cc-title">Warehouse Space</div>
+      <div class="cc-desc">Storage space costs money — rent, utilities, climate control, security. Excess inventory consumes that space, sometimes crowding out materials that are actually needed soon and making it harder to find and pull the right stock efficiently.</div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">&#x1F4C9;</div>
+      <div class="cc-title">Obsolescence &amp; Spoilage</div>
+      <div class="cc-desc">Some materials degrade over time — chemicals lose potency, adhesives cure, plastics become brittle. Others become obsolete when product designs change. Material that sat in the warehouse for 18 months may be unusable by the time someone tries to run it.</div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">&#x1F4CB;</div>
+      <div class="cc-title">Insurance &amp; Carrying Costs</div>
+      <div class="cc-desc">Inventory must be insured against loss, fire, or damage. The industry rule of thumb: the total annual cost of carrying inventory is typically 20–30% of the inventory's value — meaning $100,000 of excess inventory costs $20,000–$30,000 per year to hold.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Live Inventory Dashboard — Practice Reading It</h2>
+  <p>AI resource management tools display inventory levels visually — showing which materials are fine, which are getting low, and which need immediate attention. Here's what a real dashboard section might look like. Based on what you see, practice identifying which materials need action.</p>
+
+  <div class="level-gauge">
+    <div class="lg-label">Interactive: Inventory Status Dashboard</div>
+    <div class="lg-title">Current Raw Material Levels — Read Each and Assess</div>
+    <div class="lg-sub">Review each material's level and status. For materials in the yellow or red zone, think about what action is required and why.</div>
+
+    <div class="lg-material">
+      <div class="lg-mat-name">4mm Stainless Steel Sheet</div>
+      <div class="lg-mat-meta">Current: 12 sq ft &nbsp;|&nbsp; Weekly usage: 85 sq ft &nbsp;|&nbsp; Reorder point: 30 sq ft &nbsp;|&nbsp; Lead time: 3 days</div>
+      <div class="lg-bar-wrap"><div class="lg-bar critical" style="width:14%"></div></div>
+      <div class="lg-markers"><span>0</span><span>Reorder point (30 sq ft)</span><span>Full stock (85 sq ft)</span></div>
+      <div class="lg-status critical">&#x1F534; CRITICAL — Below reorder point. Order immediately.</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--gray-text);margin-top:10px;margin-bottom:0;">At current usage rates, production will exhaust this material in roughly <strong>1.7 hours</strong>. The reorder point of 30 sq ft was supposed to trigger a reorder 3 days ago — enough time for the supplier to deliver before stock ran out. Something went wrong: either the reorder wasn't placed, or usage spiked beyond the plan. Action required now.</p>
+    </div>
+
+    <div class="lg-material">
+      <div class="lg-mat-name">M6 Stainless Bolts (Box of 500)</div>
+      <div class="lg-mat-meta">Current: 4 boxes &nbsp;|&nbsp; Weekly usage: 3.5 boxes &nbsp;|&nbsp; Reorder point: 2 boxes &nbsp;|&nbsp; Lead time: 2 days</div>
+      <div class="lg-bar-wrap"><div class="lg-bar warning" style="width:38%"></div></div>
+      <div class="lg-markers"><span>0</span><span>Reorder point (2 boxes)</span><span>Full stock (10 boxes)</span></div>
+      <div class="lg-status warning">&#x1F7E1; LOW — Approaching reorder point. Place order this week.</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--gray-text);margin-top:10px;margin-bottom:0;">4 boxes is above the 2-box reorder point, but with 3.5 boxes of weekly usage, stock will reach the reorder point in approximately <strong>3 days</strong>. A standard order should be placed today to ensure delivery before the reorder point is reached. No emergency yet — but don't wait.</p>
+    </div>
+
+    <div class="lg-material">
+      <div class="lg-mat-name">Zinc Primer Coating (Gallons)</div>
+      <div class="lg-mat-meta">Current: 28 gallons &nbsp;|&nbsp; Weekly usage: 8 gallons &nbsp;|&nbsp; Reorder point: 10 gallons &nbsp;|&nbsp; Lead time: 4 days</div>
+      <div class="lg-bar-wrap"><div class="lg-bar good" style="width:70%"></div></div>
+      <div class="lg-markers"><span>0</span><span>Reorder point (10 gal)</span><span>Full stock (40 gal)</span></div>
+      <div class="lg-status good">&#x1F7E2; SUFFICIENT — No action needed for approximately 2.5 weeks.</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--gray-text);margin-top:10px;margin-bottom:0;">28 gallons at 8 gallons per week gives 3.5 weeks of production before hitting the reorder point. With a 4-day lead time from the supplier, there is ample time to order on a standard schedule. A routine reorder reminder will trigger automatically when stock reaches 10 gallons.</p>
+    </div>
+
+    <div class="lg-material">
+      <div class="lg-mat-name">Aluminum Sheet 6061 (4mm)</div>
+      <div class="lg-mat-meta">Current: 340 sq ft &nbsp;|&nbsp; Weekly usage: 60 sq ft &nbsp;|&nbsp; Reorder point: 80 sq ft &nbsp;|&nbsp; Lead time: 5 days</div>
+      <div class="lg-bar-wrap"><div class="lg-bar full" style="width:92%"></div></div>
+      <div class="lg-markers"><span>0</span><span>Reorder point (80 sq ft)</span><span>Full stock (370 sq ft)</span></div>
+      <div class="lg-status full">&#x1F535; WELL STOCKED — 5+ weeks of supply. Monitor for overstock risk.</div>
+      <p style="font-size:13px;line-height:1.7;color:var(--gray-text);margin-top:10px;margin-bottom:0;">340 sq ft at 60 sq ft per week is nearly 5.7 weeks of supply — well above what's needed. This may indicate a recent large delivery, a production slowdown, or a change in the production mix that reduced aluminum usage. Worth reviewing whether this level creates unnecessary storage cost or obsolescence risk if the product mix shifts.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A factory uses 200 units of a specific component per day. The supplier's lead time — the time between placing an order and receiving the delivery — is 5 days. What is the minimum inventory level at which the factory should place a reorder to avoid running out?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">200 units — one day's worth is enough to trigger an order</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">1,000 units — 200 units per day times 5 days lead time means the factory must have 1,000 units on hand when it orders, or it will run out before the delivery arrives</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">5 units — one per day of lead time is sufficient</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">500 units — half of 1,000 is a conservative enough buffer</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. This is the fundamental reorder point calculation. If the factory uses 200 units per day and it takes 5 days to get a delivery, the factory will consume 200 × 5 = 1,000 units during the delivery window. If the inventory level falls below 1,000 units before the order is placed, the factory will run out before the new stock arrives. This reorder point should actually be set slightly higher than 1,000 to include a safety stock buffer — extra units held in reserve in case usage spikes or the supplier delivers late. AI inventory systems calculate and monitor these reorder points automatically.</div>
+    <div class="quiz-fb bad" id="q1-bad">&#x274C; The key calculation: daily usage (200 units) times lead time in days (5 days) = 1,000 units. That 1,000 units is the reorder point — the inventory level at which the factory must place an order, because that\'s how much stock will be consumed while waiting for the delivery. Ordering when stock hits 200 units means the factory will run out in 1 day, but wait 5 days for delivery — a 4-day stockout. Ordering when stock hits 1,000 means the delivery arrives just as the last unit is used. In practice, a safety stock buffer of 10–20% is added on top to account for unexpected usage spikes or supplier delays.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Manufacturing inventory comes in four types: raw materials (inputs not yet worked on), work-in-process (partially completed items), finished goods (completed and ready to ship), and MRO (supplies for running the facility itself).</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">A stockout — running out of a material — stops production, creates idle workers and machines, triggers expensive emergency orders, and risks customer deadlines. It is one of the most disruptive events on a production floor.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Overstock — having too much inventory — ties up cash, consumes warehouse space, risks spoilage or obsolescence, and adds 20–30% carrying cost per year on the value of the excess stock.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The reorder point is the inventory level that triggers a purchase order — calculated as daily usage multiplied by supplier lead time in days. AI inventory management tools monitor stock levels against reorder points continuously and alert teams before shortages hit.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Inventory management is the foundation of AI resource management — every AI prediction about material shortages, reallocation suggestions, and usage rate calculations builds on understanding what inventory is and how it flows through the facility.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People as Resources: How AI Helps Match Workers to Jobs in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* skill matrix */
+.skill-matrix{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;overflow:hidden;margin:28px 0;}
+.sm-header{background:var(--purple-dark);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.sm-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:#fff;}
+.sm-sub{font-size:11px;color:rgba(255,255,255,.7);}
+.sm-scroll{overflow-x:auto;}
+.sm-table{border-collapse:collapse;width:100%;min-width:560px;}
+.sm-table th{background:var(--white);padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);text-align:center;border-right:1px solid var(--purple-mid);border-bottom:2px solid var(--purple-mid);white-space:nowrap;}
+.sm-table th:first-child{text-align:left;padding-left:16px;min-width:110px;}
+.sm-table td{border-right:1px solid var(--purple-mid);border-bottom:1px solid var(--purple-mid);padding:9px 12px;text-align:center;font-size:13px;vertical-align:middle;}
+.sm-table td:first-child{text-align:left;padding-left:16px;font-weight:700;color:var(--purple-dark);background:var(--white);}
+.sm-table tr:last-child td{border-bottom:none;}
+.sm-cell.full{color:var(--green);font-size:16px;}
+.sm-cell.partial{color:var(--orange);font-size:16px;}
+.sm-cell.none{color:var(--purple-mid);font-size:16px;}
+.sm-legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 16px;background:var(--white);border-top:1px solid var(--purple-mid);font-size:11px;color:var(--gray-text);}
+
+/* assignment explorer */
+.assignment-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ae-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ae-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ae-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ae-jobs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ae-job-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.ae-job-btn:hover{border-color:var(--purple);color:var(--purple);}
+.ae-job-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.ae-panel{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;}
+.ae-panel.show{display:block;}
+.ae-job-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.ae-job-req{font-size:12px;color:var(--gray-muted);margin-bottom:12px;}
+.ae-workers{display:flex;flex-direction:column;gap:8px;}
+.ae-worker{display:flex;align-items:center;gap:10px;background:var(--gray-soft);border-radius:10px;padding:10px 14px;}
+.ae-worker.best{background:var(--green-pale);border:1px solid var(--green);}
+.ae-worker.ok{background:var(--orange-pale);border:1px solid #FCD34D;}
+.ae-worker.no{background:var(--red-pale);border:1px solid var(--red);opacity:.7;}
+.ae-worker-name{font-weight:700;font-size:13px;min-width:60px;}
+.ae-worker.best .ae-worker-name{color:var(--green);}
+.ae-worker.ok   .ae-worker-name{color:var(--orange);}
+.ae-worker.no   .ae-worker-name{color:var(--red);}
+.ae-worker-certs{font-size:12px;flex:1;line-height:1.5;color:var(--gray-text);}
+.ae-worker-rec{font-size:11px;font-weight:700;padding:3px 8px;border-radius:100px;white-space:nowrap;}
+.ae-worker.best .ae-worker-rec{background:var(--green);color:#fff;}
+.ae-worker.ok   .ae-worker-rec{background:var(--orange);color:#fff;}
+.ae-worker.no   .ae-worker-rec{background:var(--red);color:#fff;}
+
+/* what AI sees vs supervisor */
+.see-grid{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.see-card{flex:1;min-width:220px;border-radius:16px;padding:20px;}
+.see-card.ai{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.see-card.human{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.see-title{font-weight:700;font-size:14px;margin-bottom:10px;}
+.see-card.ai .see-title{color:var(--blue);}
+.see-card.human .see-title{color:var(--purple-dark);}
+.see-item{font-size:13px;line-height:1.7;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.see-item:last-child{border-bottom:none;padding-bottom:0;}
+.see-item::before{font-weight:700;margin-right:5px;}
+.see-card.ai .see-item::before{content:"&#x2713; ";color:var(--blue);}
+.see-card.human .see-item::before{content:"&#x2713; ";color:var(--purple);}
+
+/* overtime sim */
+.ot-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ot-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ot-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ot-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ot-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:14px;font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ot-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.ot-opts{display:flex;flex-direction:column;gap:9px;}
+.ot-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:11px;padding:13px 17px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.ot-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.ot-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.ot-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ot-fb{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;margin-top:10px;}
+.ot-fb.show{display:block;}
+.ot-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.ot-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>People as Resources: How AI Helps Match Workers to Jobs in Manufacturing</h1>
+  <p class="hero-sub">Materials and machines are relatively straightforward to track. People are more complex. This article explains how AI workforce scheduling works — what it sees, what it gets right, and where it needs a supervisor's judgment to fill in the gaps the system can't access.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why People Are the Most Complex Resource</h2>
+  <p>A piece of steel sheet either exists in the warehouse or it doesn't. A machine either runs or it doesn't. But a worker is a much richer variable: they have a certification database entry, a shift schedule, a physical performance on a given day, a learning curve on a new process, relationships with teammates, a level of fatigue from the past week, and a set of skills that exist in degrees — "certified" is not the same as "expert."</p>
+  <p>Managing people as resources means thinking about all of these dimensions simultaneously. Getting any one wrong creates a mismatch between job requirements and what's actually happening on the floor. And unlike a material shortage — where the alert fires and the problem is obvious — a people resource mismatch is often invisible until it shows up as quality defects, a slow cycle time, or a worker struggling silently on a job that exceeds their current skill level.</p>
+  <div class="pull-quote"><p>A certification in the system means a worker completed training and passed an assessment. It doesn't tell you how many times they've done the job in production, whether they're confident or still learning, or whether today is a good day or a tough one.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Workforce Scheduling Actually Does</h2>
+  <p>AI workforce scheduling tools connect to the HR and certification database in the ERP system and use that data to match available workers to job requirements. Here's what the matching process looks like for a typical shift:</p>
+  <p>The AI reads the day's production jobs and their requirements: Job A needs a certified MIG welder. Job B needs a CNC operator with experience on Mill #2. Job C needs someone certified for the precision inspection process. Job D can be done by any trained operator.</p>
+  <p>It then reads the shift roster: who is working today, what shift are they on, what are their certifications, and are any of them flagged with availability restrictions in the system.</p>
+  <p>From there, it generates a proposed worker-to-job assignment matrix — pairing each job's requirements to available workers who meet them, while also trying to avoid assigning one person to too many jobs simultaneously or creating situations where a critical job has only one possible worker (a single-point-of-failure risk).</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Skills Matrix: How AI Sees Your Workforce</h2>
+  <p>AI scheduling tools work from what's called a <mark>skills matrix</mark> — a structured record of which workers hold which certifications and at what proficiency level. Here's what a simplified skills matrix looks like for a small team of five workers:</p>
+
+  <div class="skill-matrix">
+    <div class="sm-header">
+      <span class="sm-title">Day Shift — Skills Matrix</span>
+      <span class="sm-sub">Tuesday &bull; 5 workers scheduled</span>
+    </div>
+    <div class="sm-scroll">
+      <table class="sm-table">
+        <thead>
+          <tr>
+            <th>Worker</th>
+            <th>MIG Weld</th>
+            <th>TIG Weld</th>
+            <th>CNC Mill</th>
+            <th>Laser Cut</th>
+            <th>QC Inspect</th>
+            <th>Deburring</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alex R.</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell partial">&#x26AA;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+          </tr>
+          <tr>
+            <td>Maria C.</td>
+            <td class="sm-cell partial">&#x26AA;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+          </tr>
+          <tr>
+            <td>Jordan K.</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell partial">&#x26AA;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+          </tr>
+          <tr>
+            <td>Riley T.</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+          </tr>
+          <tr>
+            <td>Sam W.</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+            <td class="sm-cell partial">&#x26AA;</td>
+            <td class="sm-cell none">&#x2212;</td>
+            <td class="sm-cell full">&#x2B50;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sm-legend">
+      <span>&#x2B50; Fully certified &amp; experienced</span>
+      <span>&#x26AA; Certified, still developing</span>
+      <span>&#x2212; Not certified for this operation</span>
+    </div>
+  </div>
+
+  <p>The AI reads this matrix when assigning workers to jobs. But notice what the matrix doesn't show: Jordan is new to CNC work — "certified, still developing" means different things depending on how new they are and what the job complexity is. It doesn't show that Alex has been covering extra shifts and may be fatigued. It doesn't show that Sam and Maria work very well together on complex jobs. The AI gets the certifications. The supervisor gets the context.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Interactive: Who Should Get This Job?</h2>
+  <p>Using the skills matrix above, the AI has generated a job assignment list for today. Let's see how it matches workers to jobs — and where you as a supervisor might override its suggestion.</p>
+
+  <div class="assignment-explorer">
+    <div class="ae-label">Interactive: AI Job Assignment</div>
+    <div class="ae-title">Review the AI's Worker Assignments</div>
+    <div class="ae-sub">Click each job to see who the AI assigned, why, and where a supervisor might apply judgment the system can't see.</div>
+    <div class="ae-jobs">
+      <button class="ae-job-btn" onclick="showJob('weld',this)">TIG Weld Job</button>
+      <button class="ae-job-btn" onclick="showJob('cnc',this)">Complex CNC Job</button>
+      <button class="ae-job-btn" onclick="showJob('inspect',this)">QC Inspection</button>
+      <button class="ae-job-btn" onclick="showJob('deburr',this)">Deburring Run</button>
+    </div>
+    <div class="ae-panel" id="ae-panel">
+      <div class="ae-job-title" id="ae-job-title"></div>
+      <div class="ae-job-req" id="ae-job-req"></div>
+      <div class="ae-workers" id="ae-workers"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Sees vs. What a Supervisor Knows</h2>
+  <p>This is the most important distinction in AI workforce management. The system has access to structured data from HR and the ERP. A supervisor on the floor every day has access to everything else. Both are essential — but they're not substitutes for each other.</p>
+
+  <div class="see-grid">
+    <div class="see-card ai">
+      <div class="see-title">&#x1F4BB; What the AI System Sees</div>
+      <div class="see-item">Certifications and their expiration dates</div>
+      <div class="see-item">Scheduled shift and hours available</div>
+      <div class="see-item">Officially logged training completions</div>
+      <div class="see-item">Historical job completion rates (if tracked)</div>
+      <div class="see-item">Overtime hours accumulated this pay period</div>
+      <div class="see-item">Any official availability restrictions (FMLA, medical clearance)</div>
+      <div class="see-item">Cross-certification opportunities to flag for training</div>
+      <div class="see-item">Single-point-of-failure risks (only one person certified for critical operation)</div>
+    </div>
+    <div class="see-card human">
+      <div class="see-title">&#x1F9E0; What the Supervisor Knows</div>
+      <div class="see-item">That Jordan certified 3 weeks ago and is still building confidence</div>
+      <div class="see-item">That Alex covered 3 extra shifts last week and is visibly tired</div>
+      <div class="see-item">That Sam and Maria produce excellent quality when paired together</div>
+      <div class="see-item">That Riley mentioned a personal issue this morning and isn't fully focused</div>
+      <div class="see-item">That the new job uses a fixture Jordan has never worked with</div>
+      <div class="see-item">That Tuesday afternoon is when the team's energy typically dips</div>
+      <div class="see-item">That one worker has been looking at job listings (retention risk)</div>
+      <div class="see-item">That a specific combination of workers tends to cause friction</div>
+    </div>
+  </div>
+
+  <p>Both lists matter. The AI list is systematically complete and consistently applied across every shift. The supervisor list is contextual, real-time, and human — it's what turns a technically valid assignment into a practically excellent one. The best workforce management happens when both are used together: AI generates the match, supervisor reviews it, applies context, and approves or adjusts.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Overtime Question: Where Business Judgment Lives</h2>
+  <p>One of the most consequential people resource decisions a supervisor makes is overtime. Overtime costs more (typically 1.5x the regular wage rate), affects worker fatigue and wellbeing over time, and creates scheduling complexity. But sometimes it's the only way to protect a customer deadline or fill a certified-worker gap caused by an absence.</p>
+  <p>AI workforce management tools can flag overtime risk — "this shift is understaffed for the scheduled workload" or "calling in this worker would exceed their overtime threshold" — but they cannot decide whether the overtime is worth it. That calculation involves business relationships, worker wellbeing, budget constraints, and judgment calls that exist outside any database.</p>
+
+  <div class="ot-sim">
+    <div class="ot-label">Scenario</div>
+    <div class="ot-title">Should You Approve the Overtime?</div>
+    <div class="ot-sub">The AI has flagged an overtime situation. You make the call.</div>
+    <div class="ot-scenario">The AI workforce system has flagged: Tuesday's day shift is short one certified MIG welder. Marcus (the regularly scheduled welder) called out sick at 6 AM. Two jobs scheduled for Tuesday require MIG welding: WO-4501 (due Friday, 3-day buffer) and WO-4408 (due today at 4 PM — a high-value customer with zero flexibility). Sam is certified for MIG welding and available on call, but calling Sam in means 4 hours of overtime pay at 1.5x rate. Sam has already worked 38 hours this week. Sam agreed verbally last week to help out "if things get tight." The Friday job (WO-4501) can be pushed to Wednesday without any deadline impact. The today job (WO-4408) cannot move.</div>
+    <div class="ot-q">What is the right decision?</div>
+    <div class="ot-opts" id="ot-opts">
+      <button class="ot-opt" onclick="doOT(0)">Call Sam in for full-day overtime to cover both jobs — maximize the day's output</button>
+      <button class="ot-opt" onclick="doOT(1)">Call Sam in for 4 hours to cover only WO-4408 (the time-critical job). Reschedule WO-4501 to Wednesday when Marcus returns. This protects the deadline at minimum overtime cost and respects Sam's already-long week.</button>
+      <button class="ot-opt" onclick="doOT(2)">Don't call Sam — reschedule both jobs to Wednesday and tell the customer for WO-4408 that delivery is delayed</button>
+      <button class="ot-opt" onclick="doOT(3)">Let the AI decide — it has all the data and can optimize the overtime decision automatically</button>
+    </div>
+    <div class="ot-fb good" id="ot-good"></div>
+    <div class="ot-fb bad"  id="ot-bad"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Why Workforce AI Is Growing — and What Workers Should Know</h2>
+  <p>AI workforce scheduling is one of the fastest-growing applications of AI in manufacturing. As it becomes more common, it's worth understanding what it means for workers at different levels.</p>
+  <p>For <strong>machine operators and technicians</strong>: AI scheduling means assignments arrive digitally before your shift starts, your certifications matter more (they're tracked and used algorithmically), and cross-training has direct, visible value — the more skills you hold, the more useful and flexible the system shows you to be when building the shift roster.</p>
+  <p>For <strong>foremen and team leads</strong>: AI generates the assignment draft; you review it with your floor knowledge and approve or adjust. Your value isn't in the matching calculation — it's in the contextual layer the system can't access. Supervisors who understand both the AI output and the floor reality are the most effective in this environment.</p>
+  <p>For <strong>production planners and managers</strong>: AI workforce tools can surface risks you might not notice manually — single points of failure where only one person covers a critical operation, overtime trending toward legal or contractual limits, and cross-training gaps that create long-term fragility. These insights allow better workforce development investments.</p>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI workforce scheduling matches workers to jobs by reading the skills matrix (certifications and proficiency levels), shift roster (availability), and job requirements (what operations are needed and when).</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The skills matrix shows certifications — but "certified" is not the same as "experienced" or "confident." A new certification and a veteran's expertise look the same in the database but perform very differently on a complex job.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI sees structured data: certifications, scheduled hours, training records, overtime thresholds. Supervisors see context: worker fatigue, confidence level, team dynamics, day-specific conditions. Both are essential — neither replaces the other.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Overtime decisions require business judgment that AI cannot make — weighing cost, customer relationship, worker wellbeing, and deadline urgency simultaneously is a human call.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Cross-training is increasingly valuable in AI-scheduled environments: workers with broader certification profiles are more flexibly deployable, and facilities can reduce single-point-of-failure risks that make schedules fragile.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var jobs={
+  weld:{
+    title:'TIG Welding Job — Aerospace-Grade Joint on WO-4412',
+    req:'Requires: TIG Weld certification (full). This is a precision joint on an aerospace component — no margin for error. High consequence if done incorrectly.',
+    workers:[
+      {name:'Alex R.',cls:'best',certs:'TIG Weld: Fully certified, 6 years experience. Has run this part type 40+ times.',rec:'AI Top Pick'},
+      {name:'Sam W.',cls:'no',certs:'TIG Weld: Not certified. Cannot be assigned to this job.',rec:'Not eligible'},
+      {name:'Maria C.',cls:'no',certs:'TIG Weld: Not certified.',rec:'Not eligible'},
+      {name:'Jordan K.',cls:'no',certs:'TIG Weld: Not certified.',rec:'Not eligible'},
+      {name:'Riley T.',cls:'no',certs:'TIG Weld: Not certified.',rec:'Not eligible'}
+    ],
+    supervisorNote:'AI assigns Alex — correct. Supervisor note: Alex has been on extra shifts. Given this is a critical aerospace joint, a quick check-in on Alex\'s alertness before the job starts is worth the 2 minutes it takes.'
+  },
+  cnc:{
+    title:'Complex CNC Milling Job — New Fixture First Run on WO-4418',
+    req:'Requires: CNC Mill certification. This is the first production run using a new custom fixture. Higher risk than a standard repeat job.',
+    workers:[
+      {name:'Alex R.',cls:'best',certs:'CNC Mill: Fully certified, 8+ years experience. Has done new fixture runs before.',rec:'Best fit'},
+      {name:'Sam W.',cls:'best',certs:'CNC Mill: Fully certified, experienced on Mill #2 specifically.',rec:'Strong option'},
+      {name:'Maria C.',cls:'best',certs:'CNC Mill: Fully certified, strong performance history.',rec:'Strong option'},
+      {name:'Jordan K.',cls:'ok',certs:'CNC Mill: Certified 3 weeks ago. Still developing speed and confidence. No new-fixture experience yet.',rec:'Monitor closely'},
+      {name:'Riley T.',cls:'no',certs:'CNC Mill: Not certified.',rec:'Not eligible'}
+    ],
+    supervisorNote:'AI may suggest Jordan if Alex, Sam, and Maria are needed elsewhere. Supervisor judgment: a new fixture first run is not the right job for a 3-week-old certification. Jordan should handle repeat standard jobs while building experience. Override Jordan\'s assignment for this specific job.'
+  },
+  inspect:{
+    title:'Precision QC Inspection — WO-4401 Completed Parts',
+    req:'Requires: QC Inspection certification. Only Riley holds this certification on today\'s shift. This is a single point of failure.',
+    workers:[
+      {name:'Riley T.',cls:'best',certs:'QC Inspect: Fully certified. Only inspection-certified worker on today\'s shift.',rec:'Only option'},
+      {name:'Alex R.',cls:'no',certs:'QC Inspect: Not certified.',rec:'Not eligible'},
+      {name:'Sam W.',cls:'no',certs:'QC Inspect: Not certified.',rec:'Not eligible'},
+      {name:'Maria C.',cls:'no',certs:'QC Inspect: Not certified.',rec:'Not eligible'},
+      {name:'Jordan K.',cls:'no',certs:'QC Inspect: Not certified.',rec:'Not eligible'}
+    ],
+    supervisorNote:'Riley is the only option — and that\'s a risk the AI should flag as a single-point-of-failure. If Riley calls out sick on a day with inspection-heavy production, everything halts. This is a cross-training gap to address: at least one more worker should begin inspection training.'
+  },
+  deburr:{
+    title:'Standard Deburring Run — WO-4405 Parts Batch',
+    req:'Requires: Deburring certification. Lower complexity, any certified worker. Good opportunity for developing workers.',
+    workers:[
+      {name:'Jordan K.',cls:'best',certs:'Deburring: Fully certified. Low complexity, good match for current skill level.',rec:'Good fit'},
+      {name:'Riley T.',cls:'best',certs:'Deburring: Fully certified.',rec:'Available'},
+      {name:'Alex R.',cls:'best',certs:'Deburring: Fully certified.',rec:'Overqualified — use elsewhere'},
+      {name:'Sam W.',cls:'best',certs:'Deburring: Fully certified.',rec:'Overqualified — use elsewhere'},
+      {name:'Maria C.',cls:'best',certs:'Deburring: Fully certified.',rec:'Overqualified — use elsewhere'}
+    ],
+    supervisorNote:'AI correctly assigns Jordan — deburring is a good confidence-building job at the current experience level. Putting Alex or Sam on deburring wastes their higher-level skills. Supervisor agrees with the AI assignment here.'
+  }
+};
+var activeJobBtn=null;
+function showJob(key,btn){
+  if(activeJobBtn)activeJobBtn.classList.remove('active');
+  btn.classList.add('active');activeJobBtn=btn;
+  var j=jobs[key];
+  document.getElementById('ae-job-title').textContent=j.title;
+  document.getElementById('ae-job-req').textContent=j.req;
+  var el=document.getElementById('ae-workers');el.innerHTML='';
+  j.workers.forEach(function(w){
+    var div=document.createElement('div');div.className='ae-worker '+w.cls;
+    div.innerHTML='<div class="ae-worker-name">'+w.name+'</div><div class="ae-worker-certs">'+w.certs+'</div><div class="ae-worker-rec">'+w.rec+'</div>';
+    el.appendChild(div);
+  });
+  if(j.supervisorNote){
+    var note=document.createElement('div');
+    note.style.cssText='margin-top:12px;background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13px;color:var(--purple-dark);line-height:1.7;';
+    note.innerHTML='<strong>Supervisor Judgment:</strong> '+j.supervisorNote;
+    el.appendChild(note);
+  }
+  document.getElementById('ae-panel').classList.add('show');
+}
+
+var otDone=false;
+function doOT(i){
+  if(otDone)return;otDone=true;
+  var btns=document.querySelectorAll('#ot-opts .ot-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  if(i===1){
+    btns[i].classList.add('correct');
+    document.getElementById('ot-good').textContent='✅ This is the right call — and it demonstrates good workforce resource judgment. WO-4408 is the deadline that cannot move. Sam covers that job (4 hours, targeted overtime). WO-4501 has a 3-day buffer and a natural recovery path when Marcus returns Wednesday. You protected the customer relationship, minimized overtime cost, and respected Sam\'s already-long week. AI can flag that overtime is available and that Sam is qualified — but it cannot weigh these business, relationship, and wellbeing factors. That\'s the judgment you bring.';
+    document.getElementById('ot-good').classList.add('show');
+  }else{
+    btns[i].classList.add('wrong');
+    document.getElementById('ot-bad').textContent='❌ Option 1 (full-day overtime) is more expensive and more taxing on Sam than the situation requires — WO-4501 doesn\'t need same-day coverage. Option 3 (no overtime, miss WO-4408) fails the customer with no flexibility and likely damages a key relationship. Option 4 (let AI decide) misunderstands the system — the AI flags that overtime is possible and Sam is available, but it cannot decide whether the cost, the relationship value, and Sam\'s wellbeing make the overtime worthwhile. That analysis is a human judgment call.';
+    document.getElementById('ot-bad').classList.add('show');
+  }
+}
+</script>
+</body>
+</html>

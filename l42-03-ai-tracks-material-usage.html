@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Tracks and Predicts Material Usage on a Factory Floor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* tracking methods */
+.track-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.tc{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;}
+.tc-row{display:flex;gap:14px;align-items:flex-start;}
+.tc-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+.tc-body{}
+.tc-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.tc-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.tc-how{margin-top:8px;background:var(--white);border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.7;color:var(--gray-muted);border:1px solid var(--purple-mid);}
+.tc-how strong{color:var(--purple-dark);}
+
+/* reorder point calc */
+.calc-box{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:#fff;}
+.cb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.cb-title{font-family:"Fraunces",serif;font-size:22px;font-weight:700;margin-bottom:6px;}
+.cb-sub{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:22px;line-height:1.6;}
+.cb-formula{background:rgba(255,255,255,.08);border-radius:14px;padding:20px 24px;margin-bottom:20px;}
+.cb-formula-line{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;font-family:"Fraunces",serif;}
+.cb-formula-desc{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;}
+.cb-example{display:flex;flex-direction:column;gap:10px;}
+.cb-step{background:rgba(255,255,255,.06);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;}
+.cb-step-num{width:24px;height:24px;border-radius:50%;background:var(--purple);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cb-step-text{font-size:13px;line-height:1.65;color:rgba(255,255,255,.85);}
+.cb-step-text strong{color:#fff;}
+.cb-result{background:rgba(123,47,190,.4);border:1.5px solid var(--purple);border-radius:12px;padding:16px 20px;margin-top:14px;}
+.cb-result-title{font-weight:700;font-size:14px;color:var(--purple-mid);margin-bottom:6px;}
+.cb-result-text{font-size:14px;line-height:1.7;color:rgba(255,255,255,.9);}
+
+/* interactive calc */
+.interactive-calc{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ic-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ic-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ic-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ic-inputs{display:flex;flex-direction:column;gap:14px;margin-bottom:18px;}
+.ic-field{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;}
+.ic-field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:6px;}
+.ic-field-input{display:flex;align-items:center;gap:10px;}
+.ic-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;border-radius:3px;background:var(--purple-mid);outline:none;margin-bottom:4px;}
+.ic-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--purple);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.ic-value{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);min-width:70px;text-align:right;}
+.ic-result{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;}
+.ic-result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.ic-result-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple-dark);line-height:1;}
+.ic-result-unit{font-size:14px;color:var(--gray-muted);margin-top:4px;}
+.ic-result-explain{margin-top:12px;font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* AI prediction pipeline */
+.predict-pipeline{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.pp-step{display:flex;gap:14px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;}
+.pp-num{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;font-family:"Fraunces",serif;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pp-body{}
+.pp-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.pp-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>How AI Tracks and Predicts Material Usage on a Factory Floor</h1>
+  <p class="hero-sub">The lesson video says AI can "track material usage" and "predict shortages." This article opens the hood and shows exactly how — from the sensors in the bins to the math behind reorder alerts. Understanding this makes you much better at evaluating AI resource suggestions.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Old Way vs. the AI Way</h2>
+  <p>Before AI-connected inventory systems, tracking material usage on a factory floor was mostly manual and mostly backward-looking. A warehouse worker would walk the floor, count what was in each bin, write it down on a clipboard, and hand it to a planner who would compare the count to last week's count to estimate usage. This process happened once or twice a week — which meant the planner's data was always at least a few days old.</p>
+  <p>If something was being used faster than expected — because a machine was running hot, a batch had higher scrap rates, or a new product mix required more material — the planner wouldn't know until the next manual count. By then, a stockout might be hours away.</p>
+  <div class="pull-quote"><p>AI inventory tracking doesn't just count faster than a person with a clipboard — it counts continuously, in real time, and calculates what that means for tomorrow before anyone asks.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Actually Tracks Material Usage</h2>
+  <p>AI inventory systems don't rely on one tracking method — they typically combine several data sources to build an accurate, real-time picture of what's in stock and how fast it's being consumed. Here are the main methods:</p>
+
+  <div class="track-cards">
+    <div class="tc">
+      <div class="tc-row">
+        <div class="tc-icon">&#x2696;&#xFE0F;</div>
+        <div class="tc-body">
+          <div class="tc-title">Smart Scales and Weight Sensors in Bins</div>
+          <div class="tc-desc">The simplest and most accurate physical tracking method for many raw materials. A scale is built into the base of a material bin or storage rack. When material is pulled for production, the weight decreases. The system records the weight change and calculates how much material was used.</div>
+          <div class="tc-how"><strong>In practice:</strong> A bin of M6 bolts sits on a scale platform. Full = 22 kg. Each box of 500 bolts weighs 2 kg. When workers pull a box, the scale reads 20 kg — the system records that 500 bolts were consumed at that timestamp. As the weight trends down through the shift, the AI calculates the usage rate and projects when the bin will be empty.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tc">
+      <div class="tc-row">
+        <div class="tc-icon">&#x1F4F7;</div>
+        <div class="tc-body">
+          <div class="tc-title">Barcode and RFID Scanning</div>
+          <div class="tc-desc">When materials are pulled from the warehouse and when finished or scrapped parts are recorded, workers scan barcodes or RFID tags. Each scan updates the inventory count in the ERP system in real time. This creates an audit trail — every material movement is recorded with a timestamp, a quantity, and often a worker ID.</div>
+          <div class="tc-how"><strong>In practice:</strong> A forklift operator scans a pallet of steel sheet when moving it from the warehouse to the production staging area. The ERP records the move instantly — the warehouse count decreases, the staging area count increases. When the machinist pulls sheet for a job, they scan it again. Every physical movement is digitally tracked.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tc">
+      <div class="tc-row">
+        <div class="tc-icon">&#x1F4CA;</div>
+        <div class="tc-body">
+          <div class="tc-title">Production Data Integration</div>
+          <div class="tc-desc">The most powerful tracking method: the AI reads the production schedule and calculates theoretical material consumption. If 100 brackets are scheduled today and each bracket requires 0.45 sq ft of stainless sheet, the AI expects 45 sq ft of stainless consumption today. It then compares this theoretical usage to actual usage (from scales or scans) to spot discrepancies — potentially revealing scrap rates, setup waste, or theft.</div>
+          <div class="tc-how"><strong>In practice:</strong> The AI reads the schedule: 3 jobs today, requiring specific quantities of steel, aluminum, and primer. It calculates the expected consumption of each material across the shift. By end of shift, actual usage is compared to expected. If actual aluminum consumption was 35% higher than expected, that's a signal — possibly higher scrap than planned, or a machine setting that's using more material than standard.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tc">
+      <div class="tc-row">
+        <div class="tc-icon">&#x1F4F6;</div>
+        <div class="tc-body">
+          <div class="tc-title">IoT Sensors on Machines and Flow Lines</div>
+          <div class="tc-desc">For liquid or gas materials — cutting fluid, coating chemicals, compressed air, welding gas — IoT (Internet of Things) sensors on pipes and tanks measure flow rates continuously. The system knows exactly how much fluid is flowing through a cutting machine per hour. This catches leaks, overuse, or equipment inefficiency in real time without anyone walking the floor to check.</div>
+          <div class="tc-how"><strong>In practice:</strong> A flow sensor on the cutting fluid supply line for CNC Mill #4 normally reads 2.2 liters per hour during operation. On Tuesday afternoon it suddenly reads 4.1 liters per hour with no corresponding increase in production speed. The AI flags a potential leak. Maintenance investigates and finds a fitting that has loosened — stopping what would have been a significant material waste and potential machine damage.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Reorder Point: The Math Behind the Alert</h2>
+  <p>Once the AI knows how fast a material is being used, it can calculate the most important number in inventory management: the <mark>reorder point</mark>. The reorder point is the inventory level at which a purchase order must be placed — not because the material has run out, but because it will run out before a new shipment arrives if you wait any longer.</p>
+  <p>The logic is simple: if you use material at a known rate and your supplier takes a known number of days to deliver, you can calculate exactly when you need to order. This is the core calculation that AI inventory systems automate — and that human planners used to do manually, often getting it wrong under time pressure.</p>
+
+  <div class="calc-box">
+    <div class="cb-label">&#x1F4D0; The Core Calculation</div>
+    <div class="cb-title">How to Calculate a Reorder Point</div>
+    <div class="cb-sub">This is the formula AI inventory tools use. Once you understand it, you can evaluate any AI reorder suggestion intelligently.</div>
+    <div class="cb-formula">
+      <div class="cb-formula-line">Reorder Point = Daily Usage Rate &times; Supplier Lead Time (days)</div>
+      <div class="cb-formula-desc">Add a Safety Stock buffer on top to protect against usage spikes or late deliveries: Reorder Point = (Daily Usage &times; Lead Time) + Safety Stock</div>
+    </div>
+    <div class="cb-example">
+      <div class="cb-step"><div class="cb-step-num">1</div><div class="cb-step-text"><strong>Know your daily usage rate.</strong> The factory uses 200 units of this component per day on average. (AI calculates this from historical production data — no manual counting required.)</div></div>
+      <div class="cb-step"><div class="cb-step-num">2</div><div class="cb-step-text"><strong>Know your supplier's lead time.</strong> This supplier consistently delivers in 5 days from the time an order is placed.</div></div>
+      <div class="cb-step"><div class="cb-step-num">3</div><div class="cb-step-text"><strong>Calculate base reorder point.</strong> 200 units/day &times; 5 days = <strong>1,000 units</strong>. When inventory hits 1,000 units, place the order immediately or you'll run out.</div></div>
+      <div class="cb-step"><div class="cb-step-num">4</div><div class="cb-step-text"><strong>Add safety stock.</strong> Usage sometimes spikes. Suppliers sometimes deliver late. A 20% safety buffer: 200 units. Final reorder point = 1,000 + 200 = <strong>1,200 units</strong>.</div></div>
+    </div>
+    <div class="cb-result">
+      <div class="cb-result-title">What This Means in Practice</div>
+      <div class="cb-result-text">When the AI monitoring system sees inventory drop to 1,200 units, it automatically generates a purchase order request or sends an alert to the purchasing team. The team reviews and approves it. The order goes out. Five days later, the delivery arrives — with approximately 200 units of safety stock still in the warehouse as a cushion. No stockout. No scramble. No emergency premium pricing from the supplier.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Try It: Reorder Point Calculator</h2>
+  <p>Adjust the sliders below to change the usage rate, lead time, and safety stock days for a hypothetical material. Watch how the reorder point changes — and think about what situations might call for a larger or smaller safety buffer.</p>
+
+  <div class="interactive-calc">
+    <div class="ic-label">Interactive Calculator</div>
+    <div class="ic-title">Build Your Own Reorder Point</div>
+    <div class="ic-sub">Slide the controls to set usage, lead time, and safety stock. The calculator shows the reorder point in real time.</div>
+    <div class="ic-inputs">
+      <div class="ic-field">
+        <div class="ic-field-label">Daily Usage Rate (units per day)</div>
+        <div class="ic-field-input">
+          <input type="range" class="ic-slider" id="sl-usage" min="10" max="500" value="200" oninput="calcROP()">
+          <div class="ic-value" id="val-usage">200</div>
+        </div>
+      </div>
+      <div class="ic-field">
+        <div class="ic-field-label">Supplier Lead Time (days)</div>
+        <div class="ic-field-input">
+          <input type="range" class="ic-slider" id="sl-lead" min="1" max="21" value="5" oninput="calcROP()">
+          <div class="ic-value" id="val-lead">5 days</div>
+        </div>
+      </div>
+      <div class="ic-field">
+        <div class="ic-field-label">Safety Stock (extra days of supply)</div>
+        <div class="ic-field-input">
+          <input type="range" class="ic-slider" id="sl-safety" min="0" max="14" value="1" oninput="calcROP()">
+          <div class="ic-value" id="val-safety">1 day</div>
+        </div>
+      </div>
+    </div>
+    <div class="ic-result">
+      <div class="ic-result-label">Reorder Point</div>
+      <div class="ic-result-num" id="rop-result">1,200</div>
+      <div class="ic-result-unit" id="rop-unit">units (= 1,000 base + 200 safety stock)</div>
+      <div class="ic-result-explain" id="rop-explain">At 200 units per day with a 5-day lead time, you consume 1,000 units while waiting for delivery. Adding 1 day of safety stock (200 units) gives a reorder point of 1,200 units. Place the order when inventory hits this level.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>From Tracking to Prediction: How AI Forecasts Shortages</h2>
+  <p>Tracking usage rate is step one. But what makes AI tools genuinely valuable is what they do with that data: they <em>predict</em> when a shortage will occur and how far in advance it needs to be flagged to prevent it. Here's the prediction pipeline:</p>
+
+  <div class="predict-pipeline">
+    <div class="pp-step">
+      <div class="pp-num">1</div>
+      <div class="pp-body">
+        <div class="pp-title">Calculate current usage rate</div>
+        <div class="pp-desc">From sensor data, scan history, and production data, the AI determines the current usage rate for each material — not just the historical average, but the rate today, right now, adjusted for the current production mix and schedule.</div>
+      </div>
+    </div>
+    <div class="pp-step">
+      <div class="pp-num">2</div>
+      <div class="pp-body">
+        <div class="pp-title">Project forward using the production schedule</div>
+        <div class="pp-desc">The AI reads the upcoming production schedule and calculates how much of each material will be needed in the next 1, 3, 7, and 14 days. If a large order is coming next week that requires 3x the usual aluminum consumption, the AI accounts for that spike — it doesn't just assume tomorrow will look like today.</div>
+      </div>
+    </div>
+    <div class="pp-step">
+      <div class="pp-num">3</div>
+      <div class="pp-body">
+        <div class="pp-title">Compare projected demand to current inventory</div>
+        <div class="pp-desc">The AI subtracts projected consumption from current inventory to calculate how many days of supply remain. It also factors in any scheduled incoming deliveries and when they're expected to arrive.</div>
+      </div>
+    </div>
+    <div class="pp-step">
+      <div class="pp-num">4</div>
+      <div class="pp-body">
+        <div class="pp-title">Check against lead time and reorder point</div>
+        <div class="pp-desc">The AI compares the "days of supply remaining" figure to the supplier's lead time. If inventory will hit the reorder point sooner than the lead time allows, it generates an alert. The alert says not just "low inventory" but "order by [specific date] or you will run out on [specific date]."</div>
+      </div>
+    </div>
+    <div class="pp-step">
+      <div class="pp-num">5</div>
+      <div class="pp-body">
+        <div class="pp-title">Surface the alert with recommended action</div>
+        <div class="pp-desc">The AI presents the shortage prediction to the purchasing team or production planner — with the projected stockout date, the recommended order quantity, and (if possible) direct integration to generate the purchase order draft. A human reviews, adjusts if needed, and approves. The order goes out.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Can't See in Material Tracking</h2>
+  <p>AI material tracking is powerful, but it's only as accurate as the data it receives. There are several important gaps between what the system knows and what's actually in the warehouse:</p>
+  <p><strong>System counts vs. physical counts.</strong> If a material is pulled but the scan is skipped, the system still shows the old (higher) quantity. AI predictions based on inflated system counts will be optimistic — and dangerously wrong. Regular physical cycle counts (periodic manual spot checks of actual vs. system inventory) are essential even in AI-tracked facilities.</p>
+  <p><strong>Quality-rejected materials.</strong> If a delivery of raw material arrives with defects and is quarantined, it may show as "in stock" in the system even though it can't be used. The AI would count it as available supply that isn't actually available.</p>
+  <p><strong>Informal material use.</strong> On busy production floors, workers sometimes pull materials informally — taking a few bolts from a nearby bin for a quick fix without logging it. These small unofficial pulls accumulate and gradually erode the accuracy of system counts.</p>
+  <p>None of these gaps eliminate the value of AI material tracking — they just mean that human verification, regular cycle counts, and good floor discipline around scanning are essential partners to the technology. The AI is dramatically better than no system. But it isn't infallible, and the humans working with it need to know where to look for discrepancies.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI inventory system shows stainless steel sheet at 340 sq ft — above the 300 sq ft reorder point, so no alert has triggered. However, a large custom order just came in that requires 280 sq ft of stainless over the next 3 days. The supplier lead time is 5 days. Should a reorder be placed now, even though the system shows no alert?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">No — the system says we're above the reorder point, so the AI would have alerted if action was needed</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Yes — the new order changes the consumption projection significantly. At 280 sq ft in 3 days, the inventory will drop to 60 sq ft by Day 3, which is far below the reorder point. A delivery ordered today won't arrive for 5 days, meaning 2 days of stockout. The order should be placed immediately and possibly expedited.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Wait until the system alert triggers — that is what the reorder point system is designed to do</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Order only when inventory falls below 100 sq ft as an extra conservative measure</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. This is a critical scenario. The AI alert system was calibrated for normal usage rates — the reorder point of 300 sq ft was set based on historical daily consumption. A sudden large order that consumes 280 sq ft in 3 days blows past that assumption. By Day 3, inventory is at 60 sq ft. A new delivery ordered that day won't arrive until Day 8. That's a 5-day stockout. In this situation, the planner who understands the math overrides the system's silence and places the order proactively — ideally with an expedite request to the supplier for faster delivery. This is exactly why human review of AI outputs matters: the AI only knows what it was calibrated for.</div>
+    <div class="quiz-fb bad" id="q1-bad">&#x274C; The AI reorder point system was calibrated assuming normal usage rates — not a 280 sq ft spike in 3 days. At that consumption rate, inventory drops to 60 sq ft on Day 3. A delivery ordered then won't arrive until Day 8 at the earliest. That\'s 5 days of stockout, covering a period where the large custom order is mid-production. The reorder point system's silence doesn't mean you're safe — it means the system hasn't been updated to reflect the new order. This is the kind of situation where a planner who understands the math behind reorder points catches what the system missed and acts proactively.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI tracks material usage through four main methods: weight sensors in bins, barcode and RFID scanning, production data integration (calculating theoretical consumption from the schedule), and IoT sensors on fluid and gas supply lines.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The reorder point is the inventory level at which a purchase order must be placed. It's calculated as: (Daily Usage Rate × Lead Time in days) + Safety Stock. AI systems monitor all materials against their reorder points continuously.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI shortage prediction goes beyond current levels — it projects forward using the production schedule to anticipate demand spikes and alert the team early enough to act before a stockout occurs.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI material tracking has important blind spots: skipped scans, quarantined materials counted as available, and informal material pulls all degrade system accuracy. Regular physical cycle counts and good scanning discipline are essential complements to the technology.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Understanding the reorder point calculation means you can evaluate AI shortage alerts critically — and catch situations, like a large unexpected order, where the system's calibration doesn't match the new reality.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+function calcROP(){
+  var usage=parseInt(document.getElementById('sl-usage').value);
+  var lead=parseInt(document.getElementById('sl-lead').value);
+  var safety=parseInt(document.getElementById('sl-safety').value);
+  document.getElementById('val-usage').textContent=usage+' units';
+  document.getElementById('val-lead').textContent=lead+' day'+(lead===1?'':'s');
+  document.getElementById('val-safety').textContent=safety+' day'+(safety===1?'':'s');
+  var base=usage*lead;
+  var ss=usage*safety;
+  var rop=base+ss;
+  document.getElementById('rop-result').textContent=rop.toLocaleString();
+  document.getElementById('rop-unit').textContent='units (= '+base.toLocaleString()+' base + '+ss.toLocaleString()+' safety stock)';
+  document.getElementById('rop-explain').textContent='At '+usage+' units per day with a '+lead+'-day lead time, you consume '+base.toLocaleString()+' units while waiting for delivery. Adding '+safety+' day'+(safety===1?'':'s')+' of safety stock ('+ss.toLocaleString()+' units) gives a reorder point of '+rop.toLocaleString()+' units. Place the order when inventory hits this level.';
+}
+calcROP();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

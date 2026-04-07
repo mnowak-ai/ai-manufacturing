@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Bill of Materials (BOM) and How Does It Connect to Resource Planning?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* BOM table */
+.bom-display{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;overflow:hidden;margin:28px 0;}
+.bom-header{background:var(--purple-dark);padding:14px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.bom-header-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:#fff;}
+.bom-header-sub{font-size:12px;color:rgba(255,255,255,.7);}
+.bom-scroll{overflow-x:auto;}
+.bom-table{border-collapse:collapse;width:100%;min-width:540px;}
+.bom-table th{background:var(--white);padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);border-bottom:2px solid var(--purple-mid);text-align:left;}
+.bom-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--purple-mid);line-height:1.55;vertical-align:middle;}
+.bom-table tr:last-child td{border-bottom:none;}
+.bom-table tr:nth-child(even) td{background:rgba(243,234,255,.35);}
+.bom-table td:first-child{font-weight:600;color:var(--purple-dark);}
+.bom-level{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:middle;font-size:10px;font-weight:700;text-align:center;line-height:14px;color:#fff;}
+.bom-level.l0{background:var(--purple-dark);}
+.bom-level.l1{background:var(--blue);}
+.bom-level.l2{background:var(--green);}
+.bom-type{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
+.bom-type.raw{background:var(--blue-pale);color:var(--blue);}
+.bom-type.comp{background:var(--green-pale);color:var(--green);}
+.bom-type.sub{background:var(--orange-pale);color:var(--orange);}
+.bom-note{font-size:11px;color:var(--gray-muted);}
+
+/* scaling calc */
+.scaling-calc{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sc-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sc-slider-wrap{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:14px;}
+.sc-slider-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:8px;}
+.sc-slider-row{display:flex;align-items:center;gap:12px;}
+.sc-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;border-radius:3px;background:var(--purple-mid);outline:none;}
+.sc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--purple);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.sc-slider-val{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--purple-dark);min-width:80px;text-align:right;}
+.sc-results{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;overflow:hidden;}
+.sc-results-hdr{background:var(--purple-dark);padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;}
+.sc-result-rows{display:flex;flex-direction:column;}
+.sc-result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--purple-mid);font-size:13px;}
+.sc-result-row:last-child{border-bottom:none;}
+.sc-result-name{color:var(--gray-text);}
+.sc-result-qty{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);}
+.sc-result-unit{font-size:11px;color:var(--gray-muted);margin-left:4px;}
+
+/* bom error */
+.bom-error-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.bec{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;}
+.bec-icon{font-size:20px;flex-shrink:0;}
+.bec-body{}
+.bec-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.bec-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.bec-result{margin-top:6px;background:var(--red-pale);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--red);line-height:1.65;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>What Is a Bill of Materials (BOM) and How Does It Connect to Resource Planning?</h1>
+  <p class="hero-sub">A Bill of Materials is the recipe for every manufactured product — every part, every material, every quantity. AI resource management depends entirely on accurate BOMs to know what to track. This article explains what a BOM is, what it looks like, and why one wrong number in it can break the whole supply chain.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Recipe Analogy</h2>
+  <p>If you've ever followed a recipe to bake something, you already understand the concept behind a Bill of Materials. A recipe tells you exactly what ingredients you need, in what quantities, and in what order to combine them. Without the recipe, you're guessing — and guessing in a commercial kitchen costs money.</p>
+  <p>A <mark>Bill of Materials (BOM)</mark> is the manufacturing equivalent of a recipe. It lists every single component, material, sub-assembly, and consumable required to build one unit of a product — with exact quantities, specifications, and units of measure. Every manufactured product has a BOM. A simple metal bracket might have a BOM with 4 line items. A commercial aircraft has a BOM with hundreds of thousands of line items.</p>
+  <div class="pull-quote"><p>A BOM is the foundation that every other part of manufacturing resource planning is built on. Without an accurate BOM, AI resource management is guessing. With an accurate BOM, AI can calculate exactly what materials need to be on hand before a job even starts.</p></div>
+  <p>When you see an AI system predict a material shortage or calculate how much steel to order for next week's production, it's doing so by multiplying the BOM quantities for every scheduled job by the number of units planned. That calculation is only as accurate as the BOM itself.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>A Real BOM: The Stainless Steel Mounting Bracket</h2>
+  <p>Let's look at what a real BOM looks like for a practical manufacturing product. This is a simplified BOM for a custom stainless steel mounting bracket used in industrial equipment — the kind of product a mid-size metal fabrication shop might produce every week.</p>
+
+  <div class="bom-display">
+    <div class="bom-header">
+      <span class="bom-header-title">Bill of Materials — SS Mounting Bracket Assembly (P/N: MB-4412)</span>
+      <span class="bom-header-sub">Effective: Rev. C &bull; 1 unit = 1 complete bracket assembly</span>
+    </div>
+    <div class="bom-scroll">
+      <table class="bom-table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Part / Material</th>
+            <th>Type</th>
+            <th>Qty per Unit</th>
+            <th>Unit</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="bom-level l0">0</span>SS Mounting Bracket Assembly</td>
+            <td><span class="bom-type sub">Finished Good</span></td>
+            <td>1</td>
+            <td>each</td>
+            <td>Top-level product</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>Bracket Body — 4mm Stainless 316L Sheet</td>
+            <td><span class="bom-type raw">Raw Material</span></td>
+            <td>0.45</td>
+            <td>sq ft</td>
+            <td>Includes cutting waste. Must be 316L grade — not 304.</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>Gusset Plate — 3mm Stainless Sheet</td>
+            <td><span class="bom-type raw">Raw Material</span></td>
+            <td>0.12</td>
+            <td>sq ft</td>
+            <td>Laser cut to template GUS-4412</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>M8 Hex Bolt, Stainless 316 (12mm)</td>
+            <td><span class="bom-type comp">Component</span></td>
+            <td>4</td>
+            <td>each</td>
+            <td>Must be 316 grade, not zinc-plated</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>M8 Stainless Lock Nut</td>
+            <td><span class="bom-type comp">Component</span></td>
+            <td>4</td>
+            <td>each</td>
+            <td>Nylon insert type only</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>M8 Stainless Flat Washer</td>
+            <td><span class="bom-type comp">Component</span></td>
+            <td>8</td>
+            <td>each</td>
+            <td>2 per bolt position</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l1">1</span>Zinc Phosphate Primer Coating</td>
+            <td><span class="bom-type raw">Raw Material</span></td>
+            <td>0.03</td>
+            <td>gallons</td>
+            <td>Applied to interior faces only per spec QC-21</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l2">2</span>MIG Welding Wire (ER316L)</td>
+            <td><span class="bom-type raw">Raw Material</span></td>
+            <td>0.06</td>
+            <td>lbs</td>
+            <td>Consumable for gusset weld seams — 4 seams per unit</td>
+          </tr>
+          <tr>
+            <td><span class="bom-level l2">2</span>Shielding Gas (Argon-CO2 mix)</td>
+            <td><span class="bom-type raw">Raw Material</span></td>
+            <td>18</td>
+            <td>cubic ft</td>
+            <td>Estimated usage at standard flow rate for 4 welds</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p>Notice what the BOM captures: not just "stainless steel" but specifically <em>316L grade</em>, not 304. Not just "bolts" but M8, 316 grade, 12mm length, hex head. These specifications aren't arbitrary — using the wrong grade of steel or the wrong bolt type could cause the product to fail in its application or fail a quality inspection. The BOM is the authoritative record of exactly what's required.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Interactive: How the BOM Scales a Production Order</h2>
+  <p>Here's where BOM connects directly to resource management. When a production order for multiple units of a product comes in, every resource requirement scales proportionally with the BOM quantities. AI resource management systems do this multiplication automatically across every job in the schedule — but the math is simple enough to see clearly.</p>
+  <p>Use the slider below to change the production quantity and watch how material requirements scale from the BOM above.</p>
+
+  <div class="scaling-calc">
+    <div class="sc-label">Interactive: BOM Scaling</div>
+    <div class="sc-title">How Many Brackets Are We Making?</div>
+    <div class="sc-sub">Move the slider to set the production quantity. The calculator shows exactly what materials AI would flag as needed — derived directly from the BOM above.</div>
+    <div class="sc-slider-wrap">
+      <div class="sc-slider-label">Production Quantity — SS Mounting Brackets (WO-4412)</div>
+      <div class="sc-slider-row">
+        <input type="range" class="sc-slider" id="qty-slider" min="10" max="500" value="100" oninput="calcBOM()">
+        <div class="sc-slider-val" id="qty-val">100 units</div>
+      </div>
+    </div>
+    <div class="sc-results">
+      <div class="sc-results-hdr">Material Requirements — Calculated from BOM × Quantity</div>
+      <div class="sc-result-rows" id="bom-results"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Happens When the BOM Is Wrong</h2>
+  <p>An accurate BOM is not just nice to have — it's a prerequisite for any reliable resource planning. Every AI material prediction, every purchase order quantity, every inventory check is based on BOM data. An error in the BOM doesn't just cause one problem — it causes the same problem on every job that uses that product, for as long as the error exists.</p>
+
+  <div class="bom-error-cards">
+    <div class="bec">
+      <div class="bec-icon">🔢</div>
+      <div class="bec-body">
+        <div class="bec-title">Wrong Quantity</div>
+        <div class="bec-desc">The BOM says 0.45 sq ft of stainless sheet per bracket — but the actual cutting template uses 0.52 sq ft when cutting waste is accounted for. The BOM was never updated after the template was revised.</div>
+        <div class="bec-result">Result: For a 200-unit order, AI calculates 90 sq ft needed. Actual requirement: 104 sq ft. The facility runs short mid-job by 14 sq ft — a production stop that feels like a material shortage but is actually a BOM data error.</div>
+      </div>
+    </div>
+    <div class="bec">
+      <div class="bec-icon">📋</div>
+      <div class="bec-body">
+        <div class="bec-title">Wrong Specification</div>
+        <div class="bec-desc">The BOM shows "M8 Stainless Bolt" without specifying grade. The purchasing team orders 304 grade (cheaper and readily available). The product requires 316 grade for corrosion resistance in its marine application.</div>
+        <div class="bec-result">Result: Bolts arrive, pass receiving inspection (they look correct), get installed. Quality inspection later catches the specification mismatch. All completed brackets must be disassembled, the wrong bolts removed, and the correct bolts re-installed. Rework cost: 4–6 labor hours per bracket.</div>
+      </div>
+    </div>
+    <div class="bec">
+      <div class="bec-icon">❌</div>
+      <div class="bec-body">
+        <div class="bec-title">Missing Line Item</div>
+        <div class="bec-desc">The welding wire and shielding gas were added to the assembly process 18 months ago but never added to the BOM. They've been purchased informally, tracked as a general consumable.</div>
+        <div class="bec-result">Result: AI resource planning never includes these materials in shortage predictions or purchase planning. When a large order comes in, the purchasing team is surprised by how much welding wire is needed — because the BOM never told them to plan for it. An informal emergency order is placed. No one realizes the root cause is a BOM gap.</div>
+      </div>
+    </div>
+    <div class="bec">
+      <div class="bec-icon">🔄</div>
+      <div class="bec-body">
+        <div class="bec-title">Outdated Version</div>
+        <div class="bec-desc">Engineering updated the bracket design 3 months ago — changing from M8 to M10 bolts to improve load capacity. The engineering BOM was updated. The manufacturing BOM in the ERP was not updated because the engineer forgot to submit the change order to the production system.</div>
+        <div class="bec-result">Result: The production floor is making brackets with M8 bolts (from the old BOM). The customer receives brackets with M8 bolts. Their engineering drawings specify M10. An entire production run fails final customer inspection. The error is traced back to the BOM version mismatch — a process failure, not a worker failure.</div>
+      </div>
+    </div>
+  </div>
+
+  <p>These scenarios illustrate why BOM accuracy is treated as a high-priority discipline in well-run manufacturing facilities. Some companies assign a specific role — a <mark>BOM administrator</mark> or <mark>data integrity analyst</mark> — whose job is specifically to keep BOM records current, accurate, and aligned with actual engineering drawings and production processes.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>BOM and AI Resource Management: The Connection</h2>
+  <p>Every time an AI resource management system answers a question — "How much stainless steel do we need for next week's production?" — it does so by running this calculation:</p>
+  <p style="text-align:center;font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--purple-dark);background:var(--purple-pale);padding:16px 24px;border-radius:14px;margin:20px 0;">BOM quantity per unit × planned production units = total material required</p>
+  <p>It runs this calculation for every material in every BOM for every job in the schedule — simultaneously. Then it compares those totals to current inventory levels to identify shortages, generate purchase order recommendations, and calculate reorder alerts.</p>
+  <p>If the BOM has a wrong quantity, the calculation produces a wrong answer. If the BOM has a missing line item, the AI doesn't know to track that material at all. The AI's intelligence is entirely dependent on the quality of the BOM data it reads. This is why manufacturing professionals often say: <strong>garbage in, garbage out.</strong></p>
+  <p>Understanding BOMs also helps you interpret AI resource alerts intelligently. When the AI flags a material shortage, one of the first questions worth asking is: is the BOM for this product current and accurate? Sometimes what looks like a resource planning failure is actually a data quality problem hiding inside a BOM that nobody has reviewed in two years.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI resource planning system flags a shortage of M8 stainless bolts for next week's bracket production run of 300 units. The production manager orders 1,200 additional bolts based on the BOM (4 per unit × 300 units). When the production run starts, workers discover they actually need 6 bolts per bracket — the BOM was outdated from a design change 4 months ago. What is the most likely result?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">No problem — the manager ordered 1,200 extra bolts, and 300 units × 4 = 1,200, which is exactly enough</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">The production run runs short by 600 bolts. The BOM said 4 per unit, so the purchase was based on that number. Actual need is 6 per unit × 300 = 1,800 bolts. Only 1,200 were ordered. The run stops mid-job when bolts run out — not because of a supply chain failure, but because the BOM was wrong.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Workers can substitute M6 bolts from another bin — the exact specification never matters in practice</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The AI system would have automatically detected the BOM error and corrected the order quantity</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The AI resource system did exactly what it was supposed to do — it calculated requirements correctly from the BOM and triggered a purchase. But the BOM had wrong data, so the correct process produced the wrong answer. 4 × 300 = 1,200 ordered; 6 × 300 = 1,800 needed; 600 bolts short. This is a textbook BOM data quality failure, and it illustrates why "garbage in, garbage out" is such an important principle in resource management. The AI cannot know the BOM is wrong unless someone tells it — or unless the system has a validation process that compares BOM quantities to actual usage rates and flags significant discrepancies.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The key number: actual need is 6 bolts per unit × 300 units = 1,800 bolts. The BOM said 4 per unit, so only 1,200 were purchased. That leaves 600 bolts short. The run stops when the bolt bins are empty at unit 200 — two-thirds of the way through a 300-unit order. AI systems cannot detect BOM errors on their own; they calculate exactly what the BOM says. A wrong BOM produces a confidently calculated wrong answer — and the production stop it causes looks like a supply chain problem until someone traces it back to the data.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A Bill of Materials (BOM) is the complete list of every material, component, and consumable required to build one unit of a product — with exact quantities, specifications, and units of measure. It's the recipe that manufacturing runs on.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">BOMs can have multiple levels: the finished product at Level 0, major components and materials at Level 1, and sub-assembly materials (like welding consumables) at Level 2. Each level matters for resource planning.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI resource management calculates material requirements by multiplying BOM quantities per unit by planned production volume — for every job in the schedule simultaneously. This is how it generates purchase order suggestions and shortage alerts.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">BOM errors — wrong quantities, wrong specifications, missing items, or outdated versions — directly corrupt every AI resource calculation that depends on them. BOM accuracy is a prerequisite for reliable AI resource planning, not an optional nicety.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">When evaluating an AI resource alert, one of the first sanity checks is whether the BOM for that product is current, accurate, and aligned with the actual engineering drawing and production process in use today.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var bomItems=[
+  {name:'4mm Stainless 316L Sheet',perUnit:0.45,unit:'sq ft'},
+  {name:'3mm Stainless Gusset Sheet',perUnit:0.12,unit:'sq ft'},
+  {name:'M8 Hex Bolt, SS316 (12mm)',perUnit:4,unit:'each'},
+  {name:'M8 Stainless Lock Nut',perUnit:4,unit:'each'},
+  {name:'M8 Stainless Flat Washer',perUnit:8,unit:'each'},
+  {name:'Zinc Phosphate Primer',perUnit:0.03,unit:'gallons'},
+  {name:'MIG Welding Wire ER316L',perUnit:0.06,unit:'lbs'},
+  {name:'Shielding Gas (Ar-CO2)',perUnit:18,unit:'cu ft'}
+];
+function calcBOM(){
+  var qty=parseInt(document.getElementById('qty-slider').value);
+  document.getElementById('qty-val').textContent=qty+' units';
+  var el=document.getElementById('bom-results');el.innerHTML='';
+  bomItems.forEach(function(item){
+    var total=(item.perUnit*qty);
+    var disp=Number.isInteger(total)?total.toLocaleString():total.toFixed(1);
+    var row=document.createElement('div');row.className='sc-result-row';
+    row.innerHTML='<div class="sc-result-name">'+item.name+'</div><div><span class="sc-result-qty">'+disp+'</span><span class="sc-result-unit">'+item.unit+'</span></div>';
+    el.appendChild(row);
+  });
+}
+calcBOM();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

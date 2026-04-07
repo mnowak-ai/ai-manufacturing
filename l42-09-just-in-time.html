@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Just-in-Time Manufacturing and Why Did It Create Supply Chain Problems?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.tl-event{display:flex;gap:0;align-items:stretch;}
+.tl-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.tl-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;margin-top:16px;}
+.tl-dot.era0{background:var(--gray-muted);}
+.tl-dot.era1{background:var(--blue);}
+.tl-dot.era2{background:var(--green);}
+.tl-dot.era3{background:var(--red);}
+.tl-dot.era4{background:var(--purple);}
+.tl-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.tl-event:last-child .tl-line{display:none;}
+.tl-card{flex:1;border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;margin-bottom:12px;background:var(--white);}
+.tl-year{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:3px;}
+.tl-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:5px;}
+.tl-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* comparison */
+.compare{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.cmp-card{flex:1;min-width:200px;border-radius:18px;padding:20px;}
+.cmp-card.traditional{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.cmp-card.jit{background:var(--green-pale);border:1.5px solid var(--green);}
+.cmp-card.smart{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.cmp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.cmp-card.traditional .cmp-label{color:var(--orange);}
+.cmp-card.jit .cmp-label{color:var(--green);}
+.cmp-card.smart .cmp-label{color:var(--purple);}
+.cmp-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.cmp-item{font-size:13px;line-height:1.65;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.cmp-item:last-child{border-bottom:none;}
+.cmp-item::before{margin-right:5px;}
+.cmp-card.traditional .cmp-item::before{content:"📦";}
+.cmp-card.jit .cmp-item::before{content:"✅";}
+.cmp-card.smart .cmp-item::before{content:"🔹";}
+
+/* covid case */
+.case-study{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;overflow:hidden;margin:28px 0;}
+.cs-header{background:var(--red);padding:16px 24px;display:flex;align-items:center;gap:14px;}
+.cs-icon{font-size:28px;}
+.cs-head-text{}
+.cs-head-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff;}
+.cs-head-sub{font-size:12px;color:rgba(255,255,255,.8);margin-top:2px;}
+.cs-body{padding:22px 24px;}
+.cs-body p{font-size:14px;line-height:1.85;margin-bottom:12px;}
+.cs-body p:last-child{margin-bottom:0;}
+.cs-chain{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+.cs-chain-step{display:flex;gap:10px;align-items:flex-start;background:var(--white);border-radius:10px;padding:10px 14px;}
+.cs-chain-num{width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cs-chain-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+/* risk slider */
+.risk-slider{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.rs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.rs-slider-wrap{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:14px;}
+.rs-slider-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:8px;}
+.rs-slider-row{display:flex;align-items:center;gap:12px;}
+.rs-slider{width:100%;height:8px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;}
+.rs-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--purple);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.rs-val{font-family:"Fraunces",serif;font-size:18px;font-weight:900;color:var(--purple-dark);min-width:90px;text-align:right;}
+.rs-outcome{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:16px 20px;}
+.rs-outcome-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.rs-outcome-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:8px;}
+.rs-outcome-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>What Is Just-in-Time Manufacturing and Why Did It Create Supply Chain Problems?</h1>
+  <p class="hero-sub">JIT promised to eliminate waste by having materials arrive exactly when needed. For decades it worked brilliantly. Then COVID-19 exposed a fragility nobody had stress-tested. This article explains the philosophy, the achievement, the failure, and where AI fits in what comes next.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Core Idea: Stop Storing What You Don't Need Yet</h2>
+  <p>Imagine a factory in 1970 trying to never run out of anything. Their solution: keep enormous quantities of every material in a warehouse on-site. Steel? Buy six months' worth. Bolts? Keep thousands of boxes. Resin pellets? Fill the silo. This felt safe — but it was enormously expensive. Warehouses cost money. Inventory costs money. Materials sitting in bins for months tie up cash that could fund better equipment or more workers.</p>
+  <p><mark>Just-in-Time manufacturing (JIT)</mark> flipped this logic. Developed in Japan by Toyota in the 1970s — and eventually adopted by manufacturers worldwide — JIT is the philosophy that materials should arrive at the production line precisely when they're needed, in exactly the quantity needed, and not a moment (or unit) before.</p>
+  <p>The goal: eliminate the waste of excess inventory entirely. No giant warehouses. No cash tied up in sitting stock. Materials flow in from suppliers just as production needs them, and finished goods flow out to customers just as orders arrive. Everything moves. Nothing sits.</p>
+  <div class="pull-quote"><p>Just-in-Time worked like an elegant machine — when the supply chain was a calm, predictable river. COVID-19 turned it into a flood, and facilities built for a calm river had no flood walls.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How JIT Developed: A Brief History</h2>
+
+  <div class="timeline">
+    <div class="tl-event">
+      <div class="tl-spine"><div class="tl-dot era0"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="tl-year">Pre-1970s — The Old Way</div>
+        <div class="tl-title">Mass Inventory as Insurance</div>
+        <div class="tl-desc">Manufacturing facilities kept months of inventory on hand as a buffer against supply disruptions. Warehouses were large and always full. The cost of storage and tied-up capital was treated as a necessary cost of doing business — the price of never running out.</div>
+      </div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-spine"><div class="tl-dot era1"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="tl-year">1970s — Toyota's Innovation</div>
+        <div class="tl-title">Toyota Production System (TPS) and the Birth of JIT</div>
+        <div class="tl-desc">Toyota engineer Taiichi Ohno developed the Toyota Production System — a comprehensive approach to eliminating waste. JIT was a core pillar: synchronize supplier deliveries to production demand, keep minimal inventory on the production floor, and treat excess stock as waste rather than insurance. Toyota's results were extraordinary: lower costs, faster production, and dramatically reduced defects.</div>
+      </div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-spine"><div class="tl-dot era2"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="tl-year">1980s–2000s — Global Adoption</div>
+        <div class="tl-title">JIT Spreads Worldwide</div>
+        <div class="tl-desc">Toyota's results inspired manufacturers globally. JIT principles spread to automotive, electronics, aerospace, consumer goods, and medical device manufacturing. Supply chains became increasingly optimized for efficiency — single-source suppliers, lean inventory levels, just-in-time delivery windows. Companies that mastered JIT achieved significant cost advantages over competitors still running traditional inventory-heavy operations.</div>
+      </div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-spine"><div class="tl-dot era3"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="tl-year">2020–2021 — The Stress Test</div>
+        <div class="tl-title">COVID-19 Exposes JIT's Fragility</div>
+        <div class="tl-desc">Global pandemic shutdowns disrupted supply chains that were optimized for a world where disruptions didn't happen. Factories with zero inventory buffer had nothing to produce with when suppliers couldn't deliver. Single-source supplier relationships meant no alternative when a factory in one country shut down. The semiconductor shortage alone shut down automotive plants worldwide — not because of demand changes, but because a perfectly JIT-optimized supply chain had no slack when one link broke.</div>
+      </div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-spine"><div class="tl-dot era4"></div><div class="tl-line"></div></div>
+      <div class="tl-card">
+        <div class="tl-year">2022–Present — The New Balance</div>
+        <div class="tl-title">JIT Evolves: Resilience Meets Efficiency</div>
+        <div class="tl-desc">Post-COVID, manufacturers are rebuilding supply chains with more resilience: dual-source supplier relationships, strategic safety stock for critical components, regional sourcing to reduce geographic risk, and AI-powered demand sensing to detect disruptions earlier. The goal is no longer pure JIT efficiency — it's the best balance of efficiency and resilience that AI-assisted resource planning can help optimize continuously.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What JIT Got Right — and What It Got Wrong</h2>
+
+  <div class="compare">
+    <div class="cmp-card traditional">
+      <div class="cmp-label">The Old Way — Before JIT</div>
+      <div class="cmp-title">Mass Inventory</div>
+      <div class="cmp-item">Large warehouses full of months of stock</div>
+      <div class="cmp-item">Cash tied up in sitting inventory</div>
+      <div class="cmp-item">High carrying costs every year</div>
+      <div class="cmp-item">Materials expired or became obsolete in storage</div>
+      <div class="cmp-item">Resilient to supply disruptions (big buffer)</div>
+    </div>
+    <div class="cmp-card jit">
+      <div class="cmp-label">JIT at Its Peak</div>
+      <div class="cmp-title">Just-in-Time</div>
+      <div class="cmp-item">Minimal on-site inventory — days or hours of supply</div>
+      <div class="cmp-item">Cash freed up for equipment and growth</div>
+      <div class="cmp-item">Dramatically lower carrying costs</div>
+      <div class="cmp-item">Less obsolescence and waste</div>
+      <div class="cmp-item">Fragile — zero buffer when anything disrupts delivery</div>
+    </div>
+    <div class="cmp-card smart">
+      <div class="cmp-label">The AI-Assisted Middle Ground</div>
+      <div class="cmp-title">Dynamic Optimization</div>
+      <div class="cmp-item">Inventory levels calibrated to actual risk by material</div>
+      <div class="cmp-item">Higher safety stock for critical, hard-to-source items</div>
+      <div class="cmp-item">Lower stock for commodities with multiple suppliers</div>
+      <div class="cmp-item">Real-time monitoring flags supply risk early</div>
+      <div class="cmp-item">Efficiency and resilience balanced continuously</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The COVID Supply Chain Collapse: A Case Study in JIT Failure</h2>
+
+  <div class="case-study">
+    <div class="cs-header">
+      <div class="cs-icon">⚠️</div>
+      <div class="cs-head-text">
+        <div class="cs-head-title">2020–2021: When JIT Met COVID-19</div>
+        <div class="cs-head-sub">The Global Supply Chain Stress Test — and What It Revealed</div>
+      </div>
+    </div>
+    <div class="cs-body">
+      <p>The automotive industry's experience with semiconductor shortages during COVID-19 is the clearest case study of JIT's vulnerability. Modern vehicles contain hundreds of computer chips — for engine management, safety systems, infotainment, and dozens of other functions. The automotive industry had optimized its semiconductor supply chain to JIT precision: chips were ordered from suppliers and delivered directly to assembly lines days before they were needed, with almost no on-site inventory buffer.</p>
+      <p>Here's what happened when the chain broke:</p>
+      <div class="cs-chain">
+        <div class="cs-chain-step"><div class="cs-chain-num">1</div><div class="cs-chain-text">Early COVID lockdowns in early 2020 caused automakers to <strong>cancel semiconductor orders</strong> — they expected vehicle demand to collapse and didn't want to accumulate chip inventory.</div></div>
+        <div class="cs-chain-step"><div class="cs-chain-num">2</div><div class="cs-chain-text">Semiconductor factories <strong>redirected their capacity</strong> to consumer electronics — laptops, tablets, and gaming consoles, whose demand surged as people worked and schooled from home.</div></div>
+        <div class="cs-chain-step"><div class="cs-chain-num">3</div><div class="cs-chain-text">Vehicle demand <strong>recovered faster than expected</strong> in late 2020. Automakers rushed back to semiconductor suppliers with new orders — but chip fabrication takes months, and factory capacity was already committed.</div></div>
+        <div class="cs-chain-step"><div class="cs-chain-num">4</div><div class="cs-chain-text">With <strong>no inventory buffer</strong> — because JIT had eliminated it — automakers couldn't bridge the gap. Assembly lines stopped. Plants sat idle with workers unable to work, not because the cars couldn't be assembled, but because they were each missing specific chips.</div></div>
+        <div class="cs-chain-step"><div class="cs-chain-num">5</div><div class="cs-chain-text">The global automotive industry <strong>lost an estimated $210 billion</strong> in revenue in 2021 alone from the semiconductor shortage — a direct consequence of a supply chain optimized for efficiency with no resilience buffer.</div></div>
+      </div>
+      <p>The automotive semiconductor shortage was extreme, but similar dynamics played out across electronics, medical devices, consumer goods, and industrial equipment. JIT's core assumption — that supply chains are predictable — was shattered by a global event that was, in hindsight, always a possible risk that nobody had stress-tested.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Trade-Off: Efficiency vs. Resilience</h2>
+  <p>JIT's problem isn't that it's a bad idea. It's a brilliant idea — for a world where supply chains are predictable. The problem is that the real world isn't always predictable. Floods, fires, pandemics, labor strikes, port congestion, geopolitical disruptions — these events happen. A supply chain optimized purely for efficiency treats these events as impossible. A supply chain optimized for resilience treats them as unlikely but plannable.</p>
+  <p>The right answer for most manufacturers isn't to abandon JIT and go back to warehouses full of six months of inventory. The costs of that approach are real and substantial. It's to find the right balance — and that balance is different for every material based on its criticality, its supplier alternatives, its lead time, and the consequences of running out.</p>
+
+  <div class="risk-slider">
+    <div class="rs-label">The Inventory Balance Spectrum</div>
+    <div class="rs-title">How Much Buffer Stock Do You Keep?</div>
+    <div class="rs-sub">This isn't a question with one right answer — it depends on how critical the material is and how reliable the supply chain is. Slide to explore the trade-offs at different inventory levels.</div>
+    <div class="rs-slider-wrap">
+      <div class="rs-slider-label">Days of Safety Stock on Hand</div>
+      <div class="rs-slider-row">
+        <input type="range" class="rs-slider" id="rs-sl" min="0" max="90" value="14" oninput="calcRS()"
+          style="background:linear-gradient(to right, #276749 0%, #7B2FBE 50%, #D97706 100%);">
+        <div class="rs-val" id="rs-val">14 days</div>
+      </div>
+    </div>
+    <div class="rs-outcome">
+      <div class="rs-outcome-label">What This Means in Practice</div>
+      <div class="rs-outcome-title" id="rs-title"></div>
+      <div class="rs-outcome-desc" id="rs-desc"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Where AI Fits in the Post-JIT World</h2>
+  <p>The shift from pure JIT to a more resilient model creates exactly the kind of problem AI resource management tools are well-suited to solve. The question is no longer "how do we minimize inventory?" — it's "how do we hold exactly the right amount of each material, based on its unique risk profile, and adjust that amount dynamically as conditions change?"</p>
+  <p>That's a calculation too complex for spreadsheets when you're managing hundreds of materials across dozens of suppliers with varying lead times, different disruption risk profiles, and a production schedule that changes weekly. AI tools can do this calculation continuously — adjusting recommended safety stock levels for each material based on recent supplier performance, current lead time data, and upcoming production demand signals.</p>
+  <p>AI doesn't eliminate the JIT vs. resilience trade-off. But it makes it possible to optimize that trade-off more precisely and more dynamically than any human team working from spreadsheets could manage. A material with a reliable single-source domestic supplier and a 2-day lead time can stay lean. A material with a single overseas supplier, a 6-week lead time, and a history of port congestion issues should carry significantly more buffer stock. AI can track and calibrate both simultaneously — and flag when the risk profile of either one changes.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A manufacturer uses a single overseas supplier for a critical electronic component with an 8-week lead time. Following COVID-era supply chain lessons, their supply chain director proposes keeping 12 weeks of safety stock for this component. The CFO pushes back: "That's expensive. Why not use JIT principles and keep only 2 weeks of buffer?" Who has the stronger argument, and why?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The CFO — 12 weeks of safety stock is always excessive. JIT principles should apply uniformly to all materials regardless of lead time or supplier risk</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">The supply chain director — for this specific material, 12 weeks is defensible. With an 8-week lead time from a single overseas source, a 2-week buffer means the facility runs out in 2 weeks if any disruption hits. By the time a new order arrives, production has been stopped for 6 weeks. A component this critical with this lead time and this supplier profile warrants significant buffer stock. JIT principles should be applied selectively by risk profile, not uniformly.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Neither — the company should find a domestic supplier regardless of cost and then JIT applies normally</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The CFO — carrying cost is always more expensive than supply disruption risk for electronic components</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. This is exactly the kind of material that the post-COVID supply chain rethink identified as requiring strategic buffer stock rather than JIT minimization. The combination of: single overseas supplier (no backup), 8-week lead time (long exposure window), and critical component (production stops without it) creates a risk profile that justifies significantly more safety stock than JIT would prescribe. The carrying cost of 12 weeks of extra inventory is almost certainly less than the revenue impact of a 6-week production stoppage. The right approach — exactly what AI resource management tools support — is calibrating inventory strategy to each material's risk profile rather than applying JIT or traditional inventory rules uniformly.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The post-COVID supply chain rethink is precisely about recognizing that JIT principles shouldn't be applied uniformly to all materials regardless of risk. For a commodity material with multiple local suppliers and a 3-day lead time, JIT with minimal buffer makes perfect sense. For a critical single-source component with an 8-week overseas lead time, 2 weeks of buffer means any disruption causes a 6-week production stop before a replacement order can arrive. The carrying cost of extra inventory for high-risk, long-lead-time materials is almost always less than the cost of the production stoppage it prevents. Applying JIT selectively by risk profile — not universally — is the key insight from the COVID supply chain crisis.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Just-in-Time manufacturing is the philosophy of having materials arrive exactly when needed, with minimal inventory buffer. Developed by Toyota in the 1970s, JIT dramatically reduced manufacturing costs and waste for companies that adopted it well.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">JIT works brilliantly when supply chains are predictable. Its core vulnerability: zero inventory buffer means zero resilience when any supply link breaks. COVID-19's global supply chain disruptions exposed this fragility at massive scale — costing the automotive industry alone an estimated $210 billion in 2021.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The post-COVID lesson is not "go back to mass inventory." It's "calibrate inventory strategy to each material's risk profile" — lean on commodities with multiple fast suppliers, more buffer on critical components with long lead times and single sources.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI resource management tools support this nuanced approach: monitoring supplier performance and lead times continuously, adjusting recommended safety stock levels as risk profiles change, and flagging materials whose supply chains have become more fragile before a disruption hits.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var levels=[
+  {max:0,title:'Pure JIT — Zero Buffer',desc:'Materials arrive the day they are needed, with no on-site safety stock. Maximum cash efficiency — zero carrying cost on safety stock. Maximum fragility: any delivery delay immediately stops production. Appropriate only for commodity materials with multiple local suppliers and same-day or next-day delivery capability.'},
+  {max:3,title:'Minimal Buffer (1–3 days)',desc:'A very small safety cushion provides minimal protection. Works for low-criticality materials from reliable local suppliers. Still vulnerable to any meaningful disruption — a weather event, a freight delay, or a supplier quality hold can exhaust the buffer within a day or two and stop production.'},
+  {max:7,title:'Short Buffer (4–7 days)',desc:'One week of safety stock is a reasonable baseline for most standard materials from reliable suppliers with 1–5 day lead times. Provides protection against short-term disruptions and delivery variability without significant carrying cost. This is a common post-COVID baseline for non-critical materials.'},
+  {max:21,title:'Moderate Buffer (8–21 days)',desc:'2–3 weeks of safety stock is appropriate for materials with longer lead times (5–14 days from supplier), moderate criticality, or suppliers with occasional delivery variability. The carrying cost is real but manageable — and the protection against disruption is meaningful.'},
+  {max:45,title:'Extended Buffer (22–45 days)',desc:'One to six weeks of buffer stock is appropriate for critical components with long international lead times or single-source suppliers. The carrying cost is significant but is justified by the potential production stoppage cost if supply fails. Post-COVID, many manufacturers moved critical components into this range.'},
+  {max:90,title:'Strategic Reserve (46–90 days)',desc:'Holding 6 weeks to 3 months of a material is typically reserved for geopolitically sensitive or extremely difficult-to-source components where supply disruption risk is high and production consequences are severe. Very expensive in carrying cost but can be a strategic necessity for business continuity during extended disruptions.'}
+];
+function calcRS(){
+  var val=parseInt(document.getElementById('rs-sl').value);
+  document.getElementById('rs-val').textContent=val+' day'+(val===1?'':'s');
+  var level=levels[levels.length-1];
+  for(var i=0;i<levels.length;i++){if(val<=levels[i].max){level=levels[i];break;}}
+  document.getElementById('rs-title').textContent=level.title;
+  document.getElementById('rs-desc').textContent=level.desc;
+}
+calcRS();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

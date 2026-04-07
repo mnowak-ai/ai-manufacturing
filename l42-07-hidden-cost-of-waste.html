@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hidden Cost of Waste in Manufacturing: What Overstock and Understock Really Cost</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* cost meter */
+.cost-meter{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:#fff;}
+.cm-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.cm-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:20px;}
+.cm-rows{display:flex;flex-direction:column;gap:14px;}
+.cm-row{display:flex;align-items:center;gap:14px;}
+.cm-row-label{font-size:13px;color:rgba(255,255,255,.85);min-width:180px;line-height:1.5;}
+.cm-bar-wrap{flex:1;height:18px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;}
+.cm-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;}
+.cm-bar-text{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
+.cm-amount{font-family:"Fraunces",serif;font-size:15px;font-weight:700;min-width:80px;text-align:right;color:#fff;}
+
+/* waste category cards */
+.waste-cards{display:flex;flex-direction:column;gap:20px;margin:24px 0;}
+.wc{border-radius:20px;border:2px solid var(--purple-mid);overflow:hidden;}
+.wc-head{padding:18px 24px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;}
+.wc-icon{font-size:26px;flex-shrink:0;}
+.wc-head-text{flex:1;}
+.wc-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);}
+.wc-subtitle{font-size:12px;color:var(--gray-muted);margin-top:2px;}
+.wc-toggle{font-size:18px;color:var(--gray-muted);transition:transform .25s;}
+.wc-toggle.open{transform:rotate(45deg);}
+.wc-body{display:none;padding:0 24px 20px;}
+.wc-body.open{display:block;}
+.wc-body p{font-size:14px;line-height:1.85;margin-bottom:10px;}
+.wc-math{background:var(--gray-soft);border-radius:12px;padding:14px 18px;margin:10px 0;}
+.wc-math-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.wc-math-line{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.wc-math-line strong{color:var(--purple-dark);}
+.wc-math-result{background:var(--purple-pale);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:13px;font-weight:700;color:var(--purple-dark);}
+.wc-ai{margin-top:10px;background:var(--green-pale);border:1px solid var(--green);border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.7;color:var(--green);}
+.wc-ai strong{display:block;margin-bottom:3px;}
+
+/* the iceberg */
+.iceberg{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.iceberg-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.iceberg-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.iceberg-visible{background:var(--red-pale);border:2px solid var(--red);border-radius:14px;padding:18px 22px;margin-bottom:10px;}
+.iceberg-hidden{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;}
+.iceberg-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.iceberg-visible .iceberg-section-label{color:var(--red);}
+.iceberg-hidden .iceberg-section-label{color:var(--purple);}
+.iceberg-item{font-size:13px;line-height:1.7;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.iceberg-item:last-child{border-bottom:none;}
+
+/* running total sim */
+.total-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ts-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ts-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ts-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ts-event{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;cursor:pointer;transition:all .2s;}
+.ts-event:hover:not(.revealed){border-color:var(--purple);background:var(--purple-pale);}
+.ts-event.revealed{cursor:default;}
+.ts-event-left{}
+.ts-event-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px;}
+.ts-event.overstock .ts-event-type{color:var(--orange);}
+.ts-event.understock .ts-event-type{color:var(--red);}
+.ts-event-desc{font-size:14px;font-weight:600;color:var(--gray-text);}
+.ts-event-right{text-align:right;flex-shrink:0;margin-left:14px;}
+.ts-event-cost{font-family:"Fraunces",serif;font-size:20px;font-weight:900;}
+.ts-event.overstock .ts-event-cost{color:var(--orange);}
+.ts-event.understock .ts-event-cost{color:var(--red);}
+.ts-event-detail{font-size:11px;color:var(--gray-muted);margin-top:3px;line-height:1.5;display:none;}
+.ts-event.revealed .ts-event-detail{display:block;}
+.ts-total-bar{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-top:14px;}
+.ts-total-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.ts-total-num{font-family:"Fraunces",serif;font-size:34px;font-weight:900;color:var(--purple-dark);}
+.ts-total-sub{font-size:13px;color:var(--gray-muted);margin-top:4px;}
+.ts-reveal-btn{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.2 &middot; Resource Management</div>
+  <h1>The Hidden Cost of Waste in Manufacturing: What Overstock and Understock Really Cost</h1>
+  <p class="hero-sub">The lesson mentions "reduced overstock" and "excess waste" but not what those actually mean in dollars. This article makes it real: warehouse space, expired materials, idle machines, emergency orders, and rushed overtime all have price tags. AI resource management is valuable precisely because these costs are enormous and preventable.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Nobody Talks About Waste Costs Directly</h2>
+  <p>If you ask a manufacturing company how much waste costs them each year, most won't give you a clean number. That's not because they're hiding something — it's because waste costs are scattered across dozens of budget lines, each looking small in isolation. Warehouse rent is in facilities. Expired material write-offs are in materials. Emergency overtime is in labor. Idle machine time is in operations. Nobody adds them up and calls the total "waste."</p>
+  <p>But when you do add them up, the number is almost always shocking. Industry research consistently finds that total waste-related costs in manufacturing — overstock, understock, idle capacity, scrap, emergency sourcing, rework — typically run between <mark>15% and 30% of total production cost</mark>. For a facility doing $5 million in annual production, that's $750,000 to $1.5 million in preventable costs every year.</p>
+  <div class="pull-quote"><p>Waste in manufacturing isn't usually dramatic — no explosion, no visible disaster. It's a hundred small inefficiencies, each costing a little, all adding up to a number that would fund new machines, raises, or expanded capacity if it were recovered.</p></div>
+  <p>This is exactly why AI resource management has real business value: not because it's impressive technology, but because it attacks costs that are genuinely enormous and largely invisible in the day-to-day running of the facility.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Five Categories of Manufacturing Waste Cost</h2>
+  <p>Let's break down each major category of waste — and put real numbers to each one, using a hypothetical mid-size facility as the example. Click each category to see where the money actually goes.</p>
+
+  <div class="waste-cards" id="waste-container"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What a Bad Month Actually Costs: Running the Numbers</h2>
+  <p>Abstract cost categories are hard to feel. Let's run through a bad month at a real mid-size manufacturing facility — one where several common waste events pile up together — and total up the actual dollar damage. Click each event to reveal the cost and how it compounds.</p>
+
+  <div class="total-sim">
+    <div class="ts-label">&#x1F4B8; Cost Builder</div>
+    <div class="ts-title">A Bad Month at Ridgeline Manufacturing</div>
+    <div class="ts-sub">Seven things went wrong this month. Click each one to see the cost, then watch the total grow. This is a realistic representation of what poor resource management costs a mid-size facility.</div>
+    <div id="ts-events"></div>
+    <div class="ts-total-bar">
+      <div class="ts-total-label">Running Total — Waste Cost This Month</div>
+      <div class="ts-total-num" id="ts-total">$0</div>
+      <div class="ts-total-sub" id="ts-total-sub">Click events above to reveal costs</div>
+    </div>
+    <button class="ts-reveal-btn" id="ts-reveal-btn" onclick="revealAll()">Reveal All Costs</button>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Waste Iceberg: Visible vs. Hidden Costs</h2>
+  <p>One reason waste is so persistent in manufacturing is that the costs most visible to management are often not the largest ones. The machine breakdown is visible — maintenance shows up, production stops, everyone notices. But the 23% of idle machine time that happened on a Tuesday afternoon because materials weren't pre-staged? That disappears silently into utilization statistics nobody reviews.</p>
+  <p>Understanding the iceberg helps explain why AI resource management creates such significant value: it makes the hidden costs visible. Alerts for approaching stockouts, utilization dashboards showing underloaded machines, inventory carrying cost calculations — these surface the costs that used to be invisible until the year-end accounting revealed a troubling margin.</p>
+
+  <div class="iceberg">
+    <div class="iceberg-label">The Waste Iceberg</div>
+    <div class="iceberg-title">Most Visible vs. Most Costly</div>
+    <div class="iceberg-visible">
+      <div class="iceberg-section-label">&#x1F440; Above the Surface — Easy to See</div>
+      <div class="iceberg-item">A machine breaks down and stops the line — everyone sees it</div>
+      <div class="iceberg-item">A material stockout causes workers to stand idle for an hour</div>
+      <div class="iceberg-item">An emergency expedite order arrives with a 3x price premium on the invoice</div>
+      <div class="iceberg-item">A batch of parts is scrapped due to a quality defect</div>
+    </div>
+    <div style="text-align:center;padding:8px 0;font-size:22px;">&#x1F4A7;</div>
+    <div class="iceberg-hidden">
+      <div class="iceberg-section-label">&#x1F30A; Below the Surface — Invisible but Expensive</div>
+      <div class="iceberg-item">Machine running at 61% utilization instead of 82% — every hour for three months</div>
+      <div class="iceberg-item">$80,000 of aluminum sheet sitting in the warehouse for 7 months, tying up capital and accumulating $16,000 in annual carrying cost</div>
+      <div class="iceberg-item">Workers spending 35 minutes per shift searching for materials that weren't pre-staged</div>
+      <div class="iceberg-item">Insurance and storage premiums on excess finished goods inventory</div>
+      <div class="iceberg-item">Three finished products written off because the design changed and the overstock became obsolete</div>
+      <div class="iceberg-item">Opportunity cost: the cash tied up in excess inventory couldn't fund the new laser cutter that would have increased capacity by 18%</div>
+      <div class="iceberg-item">Manager hours spent manually re-planning after every disruption instead of working on process improvement</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Resource Management Cuts These Costs</h2>
+  <p>Now that the costs are visible, AI resource management's value becomes concrete. It doesn't cut all of these costs equally — some categories benefit far more than others. But the combined impact is significant:</p>
+  <p><strong>Inventory carrying costs:</strong> AI tracking and reorder point management keeps inventory levels closer to optimal — reducing overstock and the carrying costs that come with it. For a facility with $500,000 of average inventory, reducing excess by 20% saves $20,000–$30,000 per year in carrying cost alone.</p>
+  <p><strong>Emergency sourcing premiums:</strong> Early shortage prediction gives the purchasing team time to use standard suppliers at standard prices instead of emergency sourcing at 2–5x premiums. One avoided emergency order can pay for months of AI system subscription costs.</p>
+  <p><strong>Machine idle time:</strong> Better job sequencing, pre-staged materials, and real-time schedule adjustments reduce the gaps between jobs — the idle minutes that accumulate into significant lost utilization. A 5% improvement in utilization on a $300,000 machine is $15,000 of recovered capacity per year.</p>
+  <p><strong>Overtime from understock:</strong> Predictive shortage alerts eliminate most of the "we ran out of material and now need to rush the job on Saturday" overtime events. Planned overtime (chosen) is almost always cheaper than crisis overtime (forced).</p>
+  <p><strong>Obsolescence write-offs:</strong> More accurate demand-driven production means less finished goods sitting long enough to become obsolete. What doesn't get overproduced doesn't need to be written off.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A production manager reviews last quarter's numbers and notices that inventory carrying costs were $45,000 — significantly higher than planned. The manager suggests ordering materials in smaller, more frequent batches to reduce the amount of inventory held at any given time. What is the main trade-off of this approach?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">There is no trade-off — ordering smaller batches always reduces costs without any downside</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Smaller, more frequent orders reduce carrying costs but increase ordering costs (more purchase orders, more receiving labor, potentially higher per-unit pricing from suppliers who offer discounts for larger orders) and increase stockout risk if any delivery is delayed. The goal is finding the right order size — not simply making orders smaller</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Smaller orders will always result in stockouts because there isn't enough material to cover demand</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Suppliers always refuse smaller orders, so this approach isn't practically possible</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. This is the core tension in inventory optimization — carrying costs vs. ordering costs vs. stockout risk. Smaller, more frequent orders reduce carrying costs (less inventory in the warehouse at any time) but increase transaction costs (more orders to process, more deliveries to receive, potentially higher per-unit cost from losing volume discounts). They also reduce the safety buffer against supplier delays. AI inventory management helps find the right balance point — what's called the Economic Order Quantity (EOQ) — by modeling all these cost factors simultaneously rather than optimizing just one of them.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Ordering smaller batches reduces carrying costs but creates trade-offs on the other side: more frequent orders means more purchasing and receiving labor, potential loss of supplier volume discounts, and a smaller safety buffer if any delivery runs late. The goal isn't simply to minimize carrying cost — it's to minimize total inventory cost, which includes carrying cost, ordering cost, and stockout risk combined. AI inventory optimization tools model all three simultaneously to find the right balance point for each material.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Total waste-related costs in manufacturing typically run 15–30% of production cost — a figure that's almost never visible in any single budget line because it's scattered across facilities, materials, labor, and operations.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The five major categories of manufacturing waste cost are: inventory carrying costs (20–30% annually on the value held), emergency sourcing premiums (2–5x standard pricing), machine idle time (every idle hour has a computable cost), overtime from material shortage, and obsolescence write-offs when overstock outlasts its usefulness.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The waste iceberg: the most visible costs (machine breakdowns, stockout emergencies, scrap batches) are rarely the largest costs. Chronic underutilization, excess carrying costs, and invisible idle time accumulate far more value than the dramatic events everyone notices.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI resource management attacks waste cost in multiple categories simultaneously: earlier shortage prediction (fewer emergency orders), better inventory level management (lower carrying costs), tighter scheduling (less idle time), and demand-driven production (less obsolescence). The combined savings justify the investment.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var wasteData=[
+  {icon:'🏭',title:'Inventory Carrying Costs',subtitle:'The silent tax on everything sitting in your warehouse',body:'Every piece of inventory in a warehouse or on a shelf costs money every single day it sits there — even if nobody is touching it. This cost is called the <strong>carrying cost</strong> (also called the holding cost), and it includes several components that are easy to forget about because they\'re not on a separate invoice. Warehouse space has rent or mortgage cost. Inventory must be insured against fire, theft, or damage. Some materials require climate control. Someone has to manage and count the stock. Money tied up in inventory is money that can\'t be used for anything else.',math:'The rule of thumb across manufacturing: annual carrying cost = 20–30% of the inventory\'s value.\n\nExample: A facility holds $400,000 of raw material inventory on average.\n$400,000 × 25% = <strong>$100,000 per year in carrying cost</strong>.\nIf they could reduce average inventory by 20% (to $320,000), annual savings = $20,000.',ai:'AI Impact: Tighter reorder point management keeps inventory levels closer to the minimum needed, reducing average inventory value. A 20% reduction in excess inventory at this facility = $20,000 per year recovered.'},
+  {icon:'🚨',title:'Emergency Sourcing Premiums',subtitle:'What you pay when you run out and need it today',body:'When a material stocks out and production is stopping, the purchasing team has to find it fast. "Fast" means paying a premium. Emergency or spot-market sourcing — buying material outside the normal supplier relationship, often from distributors who maintain emergency stock specifically for situations like this — typically costs <strong>2 to 5 times</strong> the standard contracted price. Add in expedite fees from freight carriers who prioritize your shipment over others, and the premium compounds further. One emergency order for $8,000 of material might cost $20,000–$40,000 under emergency conditions.',math:'Standard price: $4.20 per unit for stainless brackets, 2,000 units needed = $8,400.\nEmergency spot market price (3x): $12.60 per unit × 2,000 = $25,200.\nExpedite freight: $800.\n<strong>Premium paid for one emergency: $17,600 above standard cost.</strong>\n\nA facility with 3–4 emergency sourcing events per year is potentially spending $50,000–$70,000 above what good inventory management would have cost.',ai:'AI Impact: Early shortage alerts give the purchasing team time to use standard suppliers at standard prices. Avoiding two emergency events per year at this facility: $35,200 saved. That number pays for an AI inventory system subscription with money to spare.'},
+  {icon:'⚙️',title:'Machine Idle Time',subtitle:'Every hour a machine isn\'t running, money isn\'t being made',body:'A manufacturing machine sitting idle is one of the most expensive forms of waste because the cost is invisible — no alarm sounds, no invoice arrives. But the machine still has a fully loaded cost rate: depreciation on the purchase price, facility space it occupies, electricity for climate systems, and the labor of workers assigned to it who are waiting for work. A CNC milling machine with a fully loaded cost rate of $180/hour running at 60% utilization instead of a target of 82% means 22% of potential production time is lost. That\'s not just inefficiency — it\'s cash.',math:'Fully loaded machine cost rate: $180/hour.\nTarget utilization: 82% of an 8-hour shift = 6.56 hours of productive time.\nActual utilization: 60% = 4.8 hours productive time.\nDifference: 1.76 hours idle per shift.\n\n1.76 hours × $180/hour × 250 operating days = <strong>$79,200 of lost production value per year</strong>, from one machine running 22% below target.',ai:'AI Impact: Better job sequencing, pre-staged materials, and real-time schedule updates reduce inter-job gaps. Improving one machine\'s utilization from 60% to 72% (still below target, but improved) recovers $43,200 of the $79,200 gap — on a single machine.'},
+  {icon:'🕐',title:'Overtime from Shortage-Driven Rush',subtitle:'The expensive labor scramble when materials arrive late',body:'When a material shortage causes a production stop and then the material finally arrives, there\'s often intense pressure to catch up on missed output. That catch-up happens on overtime — typically at 1.5x the standard labor rate. Even worse: this kind of crisis overtime isn\'t planned, which means it often involves workers who weren\'t expecting to stay, managers scrambling to arrange coverage, and rushed work that produces higher defect rates. Planned overtime (decided in advance, with full worker consent and preparation) is almost always more productive and less expensive than crisis overtime triggered by a supply failure.',math:'Standard labor rate: $26/hour × 1.5 = $39/hour overtime.\nA 4-hour catch-up session: 8 workers × 4 hours × $39 = $1,248.\nDefect rate in rushed overtime often 1.5–2x normal. If 8% of parts fail QC instead of 4%, rework adds another $600–$900.\n\n<strong>One shortage-driven overtime event: ~$1,800–$2,200.</strong> At 12 events per year: $21,600–$26,400.',ai:'AI Impact: Predictive shortage alerts eliminate most surprise shortages. Each avoided shortage-driven overtime event saves $1,800–$2,200. Reducing these from 12/year to 2/year saves $18,000–$22,000 annually.'},
+  {icon:'📦',title:'Obsolescence and Write-Offs',subtitle:'The cost of materials and products that outlive their usefulness',body:'Some overstock doesn\'t just cost carrying fees — it eventually becomes worthless. Materials can degrade: adhesives cure, chemicals lose potency, plastics become brittle, metal develops corrosion in humid storage. Finished goods can become obsolete: a product design changes, the customer changes specifications, or the market moves on. When this happens, the inventory is written off — a direct charge to the company\'s profit. Unlike other waste costs that drain cash slowly, write-offs hit the books as a sudden loss, and they can be large.',math:'A manufacturer overproduces 3,000 units of a component based on an optimistic demand forecast. The customer revises their design 8 months later. The existing components don\'t fit the new design.\n\nMaterial cost per unit: $18. Total write-off: 3,000 × $18 = <strong>$54,000 in a single write-off event.</strong>\nPlus: 8 months of carrying cost on $54,000 inventory = ~$9,000.\n<strong>Total cost of that forecast error: ~$63,000.</strong>',ai:'AI Impact: Better demand-driven production and more accurate forecasting reduces overproduction. Avoiding even one $54,000 write-off event per year has an enormous impact on annual profitability.'}
+];
+var openWaste=null;
+var wc=document.getElementById('waste-container');
+wasteData.forEach(function(w,i){
+  var div=document.createElement('div');div.className='wc';
+  div.innerHTML='<div class="wc-head" onclick="toggleWC('+i+')">'
+    +'<div class="wc-icon">'+w.icon+'</div>'
+    +'<div class="wc-head-text"><div class="wc-title">'+w.title+'</div><div class="wc-subtitle">'+w.subtitle+'</div></div>'
+    +'<div class="wc-toggle" id="wct'+i+'">+</div></div>'
+    +'<div class="wc-body" id="wcb'+i+'">'
+    +'<p>'+w.body+'</p>'
+    +'<div class="wc-math"><div class="wc-math-label">The Math</div>'
+    +w.math.split('\n').map(function(l){return '<div class="wc-math-line">'+l+'</div>';}).join('')
+    +'</div>'
+    +'<div class="wc-ai"><strong>💡 AI Resource Management Impact</strong>'+w.ai+'</div>'
+    +'</div>';
+  wc.appendChild(div);
+});
+function toggleWC(i){
+  var body=document.getElementById('wcb'+i),tog=document.getElementById('wct'+i);
+  if(openWaste===i){body.classList.remove('open');tog.classList.remove('open');openWaste=null;return;}
+  if(openWaste!==null){document.getElementById('wcb'+openWaste).classList.remove('open');document.getElementById('wct'+openWaste).classList.remove('open');}
+  body.classList.add('open');tog.classList.add('open');openWaste=i;
+}
+
+var events=[
+  {cls:'overstock',type:'Overstock',desc:'$180,000 of aluminum sheet ordered in January sits mostly unused through Q1 — product mix shifted',cost:9000,detail:'8 months × $180,000 × 25% carrying rate / 12 months = $3,750 in carrying cost. But the real hit: $180,000 couldn\'t be used for other purposes during Q1, missing a supplier discount on steel that would have saved $5,250. Total opportunity cost: ~$9,000.'},
+  {cls:'understock',type:'Understock',desc:'Stainless steel stockout — emergency sourcing from spot market for 2,000 units',cost:17600,detail:'Standard cost: $8,400. Emergency spot price: $25,200. Expedite freight: $800. Premium above standard: $17,600. Could have been avoided if the reorder point alert had been acted on 4 days earlier.'},
+  {cls:'understock',type:'Idle Machine Time',desc:'CNC Mill #4 ran at 55% utilization for 6 weeks due to poor job sequencing',cost:21600,detail:'Fully loaded rate $180/hr. 27% below 82% target = 2.16 hours idle per 8-hr shift × 5 days × 6 weeks × $180/hr = $11,664 in lost production. Add in 6 weeks of operator downtime wait time: ~$9,936. Total: ~$21,600.'},
+  {cls:'understock',type:'Crisis Overtime',desc:'Three shortage-driven overtime events to catch up after material delays',cost:6300,detail:'3 events × average $2,100 per event (including labor premium + elevated defect rate rework). Each event involved 6–10 workers at 1.5x rate for 3–4 hours. Defect-related rework added $400–600 per event.'},
+  {cls:'overstock',type:'Overstock',desc:'Zinc primer (22 gallons) expired in storage — product reformulated, old stock unusable',cost:1980,detail:'22 gallons × $90/gallon = $1,980 written off. Carrying cost on that inventory for 11 months: $450. Disposal and documentation: $120. Total: $2,550 — from one can of primer that should have been used before it sat too long.'},
+  {cls:'understock',type:'Missed Deadline',desc:'WO-4312 delivered 2 days late due to material delay — customer imposed 8% penalty on the order',cost:4400,detail:'Order value: $55,000. 8% late delivery penalty: $4,400. This was contractual — the customer had specified on-time delivery as a condition of the purchase agreement. The penalty was non-negotiable.'},
+  {cls:'overstock',type:'Obsolescence Write-Off',desc:'900 custom brackets overproduced for a customer who reduced their order — design changed',cost:16200,detail:'900 units × $18 materials + $6/unit labor = $21,600 production cost. Customer accepted 450 units at original price, refused remaining 450 at any price. 450 × $24 cost = $10,800 written off. Plus: 6 months carrying cost on the refused inventory = $1,350. Plus: disposal cost $350. Net write-off: ~$12,500. But the remaining 450 units also absorbed overhead that generated no revenue: ~$3,700 lost contribution margin.'}
+];
+var totalCost=0,revealedCount=0;
+var tsC=document.getElementById('ts-events');
+events.forEach(function(e,i){
+  var div=document.createElement('div');div.className='ts-event '+e.cls;div.id='tse'+i;
+  div.innerHTML='<div class="ts-event-left"><div class="ts-event-type">'+e.type+'</div><div class="ts-event-desc">'+e.desc+'</div><div class="ts-event-detail" id="tsed'+i+'">'+e.detail+'</div></div>'
+    +'<div class="ts-event-right"><div class="ts-event-cost" id="tsec'+i+'">Click to reveal</div></div>';
+  div.onclick=function(){revealEvent(i,e.cost);};
+  tsC.appendChild(div);
+});
+function revealEvent(i,cost){
+  var ev=document.getElementById('tse'+i);
+  if(ev.classList.contains('revealed'))return;
+  ev.classList.add('revealed');
+  document.getElementById('tsec'+i).textContent='$'+cost.toLocaleString();
+  document.getElementById('tsed'+i).style.display='block';
+  totalCost+=cost;revealedCount++;
+  document.getElementById('ts-total').textContent='$'+totalCost.toLocaleString();
+  document.getElementById('ts-total-sub').textContent=revealedCount+' of '+events.length+' events revealed';
+  if(revealedCount===events.length){document.getElementById('ts-reveal-btn').style.display='none';document.getElementById('ts-total-sub').textContent='Total waste cost for one month — from events that felt minor in isolation';}
+}
+function revealAll(){events.forEach(function(e,i){revealEvent(i,e.cost);});}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
