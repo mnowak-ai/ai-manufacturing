@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Difference Between a Compliance Violation and a Safety Violation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Side by side comparison */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.comp-col{border-radius:18px;padding:22px;border:2px solid;}
+.comp-col.safety{background:var(--red-pale);border-color:var(--red);}
+.comp-col.compliance{background:var(--orange-pale);border-color:var(--orange);}
+.comp-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.safety .comp-label{color:var(--red);}
+.compliance .comp-label{color:#92400E;}
+.comp-col h3{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.safety h3{color:var(--red);}
+.compliance h3{color:#92400E;}
+.comp-col p{font-size:14px;line-height:1.7;color:var(--gray-text);margin-bottom:8px;}
+.comp-examples{margin-top:12px;}
+.comp-ex{font-size:13px;line-height:1.6;display:flex;gap:8px;margin-bottom:5px;}
+@media(max-width:560px){.compare-grid{grid-template-columns:1fr;}}
+
+/* Scenario sorter */
+.scenario-sorter{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:28px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:12px;}
+.ss-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:16px;}
+.ss-scenario{background:white;border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;margin-bottom:12px;}
+.ss-desc{font-size:15px;color:var(--gray-text);margin-bottom:12px;}
+.ss-btns{display:flex;gap:10px;}
+.ss-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid;font-size:13px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.ss-btn.safety-btn{border-color:var(--red);color:var(--red);background:var(--red-pale);}
+.ss-btn.compliance-btn{border-color:var(--orange);color:#92400E;background:var(--orange-pale);}
+.ss-btn.both-btn{border-color:var(--purple);color:var(--purple);background:var(--purple-pale);}
+.ss-btn:hover{opacity:.8;}
+.ss-btn.selected-correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.ss-btn.selected-wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ss-feedback{font-size:13px;line-height:1.6;margin-top:10px;padding:10px 14px;border-radius:8px;display:none;}
+.ss-feedback.show{display:block;}
+.ss-feedback.correct{background:var(--green-pale);color:var(--green);}
+.ss-feedback.wrong{background:var(--red-pale);color:var(--red);}
+
+/* How AI monitors each type */
+.ai-monitor{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.aim-card{border-radius:16px;padding:20px;border:1.5px solid;}
+.aim-card.safety{background:var(--red-pale);border-color:var(--red);}
+.aim-card.compliance{background:var(--orange-pale);border-color:var(--orange);}
+.aim-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.safety .aim-label{color:var(--red);}
+.compliance .aim-label{color:#92400E;}
+.aim-card h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.safety h3{color:var(--red);}
+.compliance h3{color:#92400E;}
+.aim-item{font-size:13px;line-height:1.6;display:flex;gap:8px;margin-bottom:6px;}
+@media(max-width:560px){.compare-grid,.ai-monitor{grid-template-columns:1fr;}}
+
+/* Both matter callout */
+.both-matter{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:20px;padding:28px;margin:28px 0;color:white;}
+.bm-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple-mid);margin-bottom:10px;}
+.bm-title{font-family:"Fraunces",serif;font-size:20px;margin-bottom:12px;}
+.bm-text{font-size:15px;color:rgba(255,255,255,.82);line-height:1.75;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>Compliance Violation vs. Safety Violation</h1>
+  <p class="hero-sub">Students often treat these as the same thing. They're not. Understanding the difference — and knowing that AI monitors each one differently — is a foundational skill for anyone working in manufacturing compliance or safety.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Two Different Problems, Both Important</h2>
+    <p>The words "compliance" and "safety" get used almost interchangeably in manufacturing — but they refer to different things, and conflating them causes real problems. A compliance violation that isn't a safety risk still matters. A safety hazard that isn't a technical compliance violation still matters. Understanding where they overlap and where they diverge is essential for responding to each one correctly.</p>
+
+    <div class="compare-grid">
+      <div class="comp-col safety">
+        <div class="comp-label">🚨 Safety Violation</div>
+        <h3>An Immediate Physical Hazard</h3>
+        <p>Something that could directly cause physical harm to a worker — right now or in the near term. The hazard is physical, the potential harm is physical, and the urgency is immediate. Fix it now.</p>
+        <div class="comp-examples">
+          <div class="comp-ex"><span>→</span><span>Worker without hard hat in overhead crane zone</span></div>
+          <div class="comp-ex"><span>→</span><span>Exposed electrical wiring near a walkway</span></div>
+          <div class="comp-ex"><span>→</span><span>Blocked emergency exit door</span></div>
+          <div class="comp-ex"><span>→</span><span>Spill in a main pedestrian corridor</span></div>
+          <div class="comp-ex"><span>→</span><span>Machine running without required guard in place</span></div>
+        </div>
+      </div>
+      <div class="comp-col compliance">
+        <div class="comp-label">⚠️ Compliance Violation</div>
+        <h3>A Failure to Follow a Required Rule</h3>
+        <p>A specific documented requirement was not followed — regulatory, standard, or procedural. The violation may or may not involve immediate physical risk. The urgency is regulatory and operational, not always immediate physical danger.</p>
+        <div class="comp-examples">
+          <div class="comp-ex"><span>→</span><span>Equipment inspection overdue by two days</span></div>
+          <div class="comp-ex"><span>→</span><span>Batch record step not signed off correctly</span></div>
+          <div class="comp-ex"><span>→</span><span>Worker performed task without up-to-date training documentation</span></div>
+          <div class="comp-ex"><span>→</span><span>Calibration certificate expired on a quality test instrument</span></div>
+          <div class="comp-ex"><span>→</span><span>Required environmental monitoring not performed on schedule</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>A compliance violation might not hurt anyone today. But it represents a gap in the systems designed to prevent future harm — which is why both types of violations require a response.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where They Overlap — And Where They Don't</h2>
+    <p>Many violations are both a safety and a compliance issue simultaneously. Others are clearly one or the other. This matters because the urgency and the response path differ.</p>
+    <p><strong>When something is both:</strong> A worker operating a machine without the required machine guard is both a safety violation (immediate injury risk) and a compliance violation (OSHA machine guarding standard not followed). The safety urgency drives immediate response; the compliance aspect requires documentation, investigation, and corrective action. Both happen — the safety response first, the compliance documentation following immediately after.</p>
+    <p><strong>When it's mainly safety:</strong> A floor spill in a high-traffic corridor that appeared 5 minutes ago. Immediate hazard, but not necessarily a compliance violation yet — the violation would come if the spill weren't cleaned up and a required spill response procedure weren't followed. The primary response is the physical hazard; compliance concerns follow from how the response is handled.</p>
+    <p><strong>When it's mainly compliance:</strong> A batch record with a missing supervisor signature. No immediate physical hazard. No worker in danger. But a clear compliance gap that must be addressed — in pharmaceutical manufacturing, an unsigned batch record step is a GMP violation that affects whether the batch can be legally released. The response is administrative and quality-focused, not an emergency shutdown.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Scenario Sorter — Safety, Compliance, or Both?</h2>
+    <p>Classify each scenario. There are no trick questions — but some genuinely are both.</p>
+
+    <div class="scenario-sorter">
+      <div class="ss-label">🎮 Practice: Classify Each Situation</div>
+      <div class="ss-title">Is this primarily a Safety Violation, a Compliance Violation, or Both?</div>
+
+      <div class="ss-scenario">
+        <div class="ss-desc">A forklift operator is driving through a pedestrian corridor without a warning alarm active — the alarm system malfunctioned. No workers are in the corridor currently, but it's a high-traffic area.</div>
+        <div class="ss-btns"><button class="ss-btn safety-btn" onclick="sortAnswer(this,'correct','✅ Primarily a safety violation. There\'s no immediate injury because no pedestrians are present, but the malfunction creates an immediate hazard — the next worker to enter the corridor won\'t be warned. This needs immediate physical response (take the forklift offline or manually escort) before compliance documentation.')">🚨 Safety</button><button class="ss-btn compliance-btn" onclick="sortAnswer(this,'wrong','❌ It\'s not primarily a compliance issue — there\'s an active physical hazard. While equipment malfunction does create a compliance record requirement, the urgent response is eliminating the safety risk, not paperwork.')">⚠️ Compliance</button><button class="ss-btn both-btn" onclick="sortAnswer(this,'partial','✓ You\'re not wrong that there are compliance implications (equipment malfunction must be documented, investigated, and corrected per maintenance procedures). But the primary classification is safety — there\'s an active, immediate hazard that requires the first response to be physical, not administrative.')">⚡ Both</button></div>
+        <div class="ss-feedback" id="sf1"></div>
+      </div>
+
+      <div class="ss-scenario">
+        <div class="ss-desc">A quality technician in a pharmaceutical plant completed a product testing step using a calibration instrument that expired 4 days ago. The product test results were all within specification.</div>
+        <div class="ss-btns"><button class="ss-btn safety-btn" onclick="sortAnswer2(this,'wrong','❌ This isn\'t primarily a safety violation — no worker is in immediate physical danger. It\'s a quality and regulatory compliance issue.')">🚨 Safety</button><button class="ss-btn compliance-btn" onclick="sortAnswer2(this,'correct','✅ Primarily a compliance violation. The calibration requirement is a GMP/FDA regulation — any measurement taken with an expired calibration instrument is potentially invalid, regardless of the result. The correct response is to: (1) stop using the instrument, (2) recalibrate it immediately, (3) conduct a risk assessment of whether the batch tested with the expired instrument can still be released, (4) document the deviation and investigation. This may ultimately require re-testing the batch.')">⚠️ Compliance</button><button class="ss-btn both-btn" onclick="sortAnswer2(this,'wrong','❌ There\'s no safety component here — no one is in physical danger. This is a compliance-only scenario, focused on product quality integrity and regulatory requirements.')">⚡ Both</button></div>
+        <div class="ss-feedback" id="sf2"></div>
+      </div>
+
+      <div class="ss-scenario">
+        <div class="ss-desc">An OSHA inspection finds that a chemical storage area has no required eyewash station, workers aren't wearing required chemical splash goggles, and the chemical hazard log hasn't been updated in 8 months.</div>
+        <div class="ss-btns"><button class="ss-btn safety-btn" onclick="sortAnswer3(this,'wrong','❌ The missing PPE and eyewash station are genuine safety violations, but the outdated hazard log is a compliance-only issue. Categorizing this as safety-only misses the compliance component.')">🚨 Safety</button><button class="ss-btn compliance-btn" onclick="sortAnswer3(this,'wrong','❌ The missing PPE and eyewash station aren\'t just paperwork problems — they\'re active safety hazards. Workers handling chemicals without splash goggles and without a functioning eyewash station are in genuine physical danger.')">⚠️ Compliance</button><button class="ss-btn both-btn" onclick="sortAnswer3(this,'correct','✅ Correct — this scenario contains both. Missing PPE (goggles) and a missing eyewash station are active safety violations — workers handling chemicals face real injury risk right now. The outdated hazard log is a compliance violation — OSHA requires current hazard communication records. The immediate response addresses the physical hazards; the documentation compliance is corrected in parallel. Both require corrective action, and the OSHA citation will likely cover both.')">⚡ Both</button></div>
+        <div class="ss-feedback" id="sf3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Monitors Each Type Differently</h2>
+    <div class="ai-monitor">
+      <div class="aim-card safety">
+        <div class="aim-label">🚨 Safety Violation Monitoring</div>
+        <h3>Computer Vision + Sensor Alerts</h3>
+        <div class="aim-item"><span>→</span><span>Camera-based PPE detection triggers immediate alerts</span></div>
+        <div class="aim-item"><span>→</span><span>Zone monitoring flags unauthorized entry in real time</span></div>
+        <div class="aim-item"><span>→</span><span>Proximity sensors detect vehicle-pedestrian conflicts</span></div>
+        <div class="aim-item"><span>→</span><span>Chemical and environmental sensors flag hazardous conditions</span></div>
+        <div class="aim-item"><span>→</span><span>Alert delivery: seconds from detection to supervisor</span></div>
+        <div class="aim-item"><span>→</span><span>Goal: prevent the physical injury from happening</span></div>
+      </div>
+      <div class="aim-card compliance">
+        <div class="aim-label">⚠️ Compliance Violation Monitoring</div>
+        <h3>Schedule Tracking + Record Analysis</h3>
+        <div class="aim-item"><span>→</span><span>Maintenance scheduling systems flag overdue inspections</span></div>
+        <div class="aim-item"><span>→</span><span>Training management tracks certification expiration</span></div>
+        <div class="aim-item"><span>→</span><span>Document management systems flag incomplete records</span></div>
+        <div class="aim-item"><span>→</span><span>Workflow AI detects when required steps are skipped</span></div>
+        <div class="aim-item"><span>→</span><span>Alert delivery: often days or hours before deadline, not seconds</span></div>
+        <div class="aim-item"><span>→</span><span>Goal: prevent the regulatory violation before it occurs</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="both-matter">
+    <div class="bm-label">📌 Key Takeaway</div>
+    <div class="bm-title">Why Both Types Matter — Even When One Seems More Urgent</div>
+    <div class="bm-text">Safety violations demand immediate physical response — someone could get hurt right now. Compliance violations demand systematic response — the process or record gap needs to be corrected and documented. But "compliance-only" violations aren't trivial. An overdue inspection or an unsigned batch record represents a crack in the system designed to prevent the next safety incident. Compliance maintains the infrastructure that keeps safety hazards from developing in the first place. AI monitoring both simultaneously — one in real time, one through continuous schedule and record tracking — is what allows a facility to catch both types of failures before they escalate.</div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical quality manager receives two alerts simultaneously: (1) a worker has entered a chemical handling zone without the required respirator; (2) a required equipment calibration is overdue by 2 days. She has staff available to address one issue immediately. Which should she address first, and why?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The worker without a respirator in the chemical zone is an active safety violation — someone is in physical danger right now. Chemical exposure can cause immediate harm. This demands the immediate physical response: get the worker out of the zone or equipped with the right respirator immediately. The overdue calibration, while a real compliance violation that needs to be addressed urgently, is not causing immediate physical harm in this moment. It gets addressed next — immediately after the safety issue is resolved. Both need corrective action; physical safety urgency drives the sequence.')">Address the respirator violation first — a worker is in immediate physical danger in the chemical zone, which requires immediate physical response before any administrative action</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The calibration issue is important and must be addressed — but a 2-day overdue calibration, while a compliance violation, is not causing someone to be in physical danger right now. A worker without a respirator in a chemical zone is in immediate physical danger. Safety urgency governs the response sequence.')">Address the calibration violation first — it has been unaddressed for 2 days and compliance deadlines should take priority</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ This misclassifies the respirator violation as compliance-only. Yes, PPE requirements are part of OSHA compliance — but a worker currently in a chemical zone without required respiratory protection is also in immediate physical danger. The distinction between compliance-only and active safety violations should drive a different response urgency, and this scenario clearly has an active safety component.')">Both are compliance violations — address them in whichever order is more convenient</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Both need to be addressed urgently — the calibration violation must be resolved as soon as the active safety situation is handled. Waiting "until tomorrow" for either item is not appropriate: the safety violation needs immediate response, and the compliance violation should be resolved same-day to prevent further validity concerns with any testing done with the overdue instrument.')">Address the safety issue first, then wait until tomorrow to deal with the calibration compliance issue</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Safety violations involve an immediate physical hazard that could harm someone now. Compliance violations involve a failure to follow a required rule — which may or may not create immediate physical risk. Many incidents are both; some are clearly one or the other.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI monitors each type differently: safety violations use camera-based real-time detection with second-level alert response; compliance violations use schedule tracking and record analysis with hours-to-days alert windows to prevent regulatory deadlines from passing.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>When both types exist simultaneously, physical safety urgency drives the response sequence — address the immediate hazard first, then document and correct the compliance gap. Both require responses; the order is driven by physical harm urgency.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>"Compliance-only" violations are not trivial — they represent gaps in the systems designed to prevent future safety incidents. Compliance maintains the infrastructure that keeps safety hazards from developing.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function sortAnswer(btn,result,msg){const sc=btn.closest(".ss-scenario");if(sc.querySelector(".selected-correct,.selected-wrong"))return;btn.classList.add(result==="correct"?"selected-correct":result==="partial"?"selected-correct":"selected-wrong");const fb=document.getElementById("sf1");fb.className="ss-feedback show "+(result==="wrong"?"wrong":"correct");fb.textContent=msg;}
+function sortAnswer2(btn,result,msg){const sc=btn.closest(".ss-scenario");if(sc.querySelector(".selected-correct,.selected-wrong"))return;btn.classList.add(result==="correct"?"selected-correct":"selected-wrong");const fb=document.getElementById("sf2");fb.className="ss-feedback show "+(result==="correct"?"correct":"wrong");fb.textContent=msg;}
+function sortAnswer3(btn,result,msg){const sc=btn.closest(".ss-scenario");if(sc.querySelector(".selected-correct,.selected-wrong"))return;btn.classList.add(result==="correct"?"selected-correct":"selected-wrong");const fb=document.getElementById("sf3");fb.className="ss-feedback show "+(result==="correct"?"correct":"wrong");fb.textContent=msg;}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Makes the Rules? A Beginner's Guide to Manufacturing Regulatory Bodies</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Agency cards */
+.agency-card{border-radius:20px;padding:28px;margin-bottom:18px;border:2px solid;}
+.agency-card.gov{background:var(--blue-pale);border-color:var(--blue-mid);}
+.agency-card.std{background:var(--purple-pale);border-color:var(--purple-mid);}
+.ac-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:14px;}
+.ac-badge{background:white;border-radius:12px;padding:8px 14px;font-size:13px;font-weight:700;flex-shrink:0;line-height:1;}
+.gov .ac-badge{color:var(--blue);}
+.std .ac-badge{color:var(--purple);}
+.ac-info h3{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:4px;}
+.ac-info .ac-full{font-size:13px;color:var(--gray-muted);}
+.ac-body p{font-size:15px;line-height:1.75;color:var(--gray-text);margin-bottom:10px;}
+.ac-governs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.ac-governs-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-right:4px;display:flex;align-items:center;}
+.ac-tag{font-size:12px;padding:4px 10px;border-radius:6px;font-weight:600;}
+.gov .ac-tag{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.std .ac-tag{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.ac-power{background:white;border-radius:10px;padding:10px 14px;font-size:13px;color:var(--gray-text);line-height:1.6;}
+.ac-power strong{color:var(--red);}
+
+/* Industry map */
+.industry-map{margin:28px 0;}
+.im-header{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:12px;}
+.im-row{display:flex;gap:10px;align-items:stretch;margin-bottom:8px;}
+.im-industry{background:var(--purple-dark);color:white;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;min-width:130px;display:flex;align-items:center;}
+.im-agencies{display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex:1;}
+.im-ag{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;}
+.im-ag.blue{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.im-ag.purple{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.im-ag.green{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.im-ag.orange{background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;}
+@media(max-width:560px){.im-row{flex-direction:column;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>Who Makes the Rules?</h1>
+  <p class="hero-sub">A beginner's guide to manufacturing regulatory bodies — who they are, what they govern, what happens when factories ignore them, and why AI compliance monitoring is built around the rules they write.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Two Types of Rule-Makers</h2>
+    <p>Manufacturing compliance rules come from two fundamentally different types of organizations, and understanding the difference matters for how you interpret compliance requirements on the job.</p>
+    <p><strong>Government agencies</strong> write legally binding regulations. Violating them means violating the law — with fines, shutdowns, recalls, and criminal liability as potential consequences. Companies don't choose whether to comply; they're required to by law.</p>
+    <p><strong>Standards organizations</strong> write voluntary standards — frameworks for how things should be done. Technically no law requires ISO 9001 certification. But practically, many industries, customers, and regulators treat these standards as de facto requirements. A company that isn't ISO 9001 certified often can't win contracts with major manufacturers. The "voluntary" nature is largely theoretical.</p>
+
+    <div class="pull-quote"><p>Government agencies write the floor — the legal minimum. Standards organizations write the ceiling — the professional best practice. Serious manufacturers aim to meet both.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Major Regulatory Agencies</h2>
+
+    <div class="agency-card gov">
+      <div class="ac-top">
+        <div class="ac-badge">🏛️ GOV</div>
+        <div class="ac-info"><h3>OSHA — Occupational Safety and Health Administration</h3><div class="ac-full">U.S. Department of Labor · Founded 1971</div></div>
+      </div>
+      <p>OSHA is the federal agency that protects workers from workplace hazards. It sets standards for PPE, machine guarding, chemical handling, fall protection, noise exposure, and dozens of other safety areas. Every manufacturing facility in the US is subject to OSHA — regardless of size or industry.</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Worker safety</span><span class="ac-tag">PPE requirements</span><span class="ac-tag">Hazard communication</span><span class="ac-tag">Machine safety</span><span class="ac-tag">Recordkeeping</span></div>
+      <div class="ac-power">⚖️ <strong>Enforcement power:</strong> Unannounced inspections, fines up to $161,323 per willful violation, facility shutdowns, criminal prosecution for deaths caused by willful violations</div>
+    </div>
+
+    <div class="agency-card gov">
+      <div class="ac-top">
+        <div class="ac-badge">🏛️ GOV</div>
+        <div class="ac-info"><h3>FDA — Food and Drug Administration</h3><div class="ac-full">U.S. Department of Health and Human Services · Founded 1906</div></div>
+      </div>
+      <p>The FDA regulates the safety and effectiveness of food, drugs, medical devices, cosmetics, and biologics manufactured in or imported into the United States. For manufacturing, this primarily means pharmaceutical plants, food processing facilities, and medical device makers must follow FDA's Good Manufacturing Practice (GMP) regulations. FDA inspections are unannounced and can result in Warning Letters, product recalls, and import bans.</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Drug manufacturing</span><span class="ac-tag">Food processing</span><span class="ac-tag">Medical devices</span><span class="ac-tag">Product labeling</span><span class="ac-tag">Batch records</span></div>
+      <div class="ac-power">⚖️ <strong>Enforcement power:</strong> Warning Letters (public), product seizures, import bans, mandatory recalls, facility shutdowns, criminal prosecution of executives</div>
+    </div>
+
+    <div class="agency-card gov">
+      <div class="ac-top">
+        <div class="ac-badge">🏛️ GOV</div>
+        <div class="ac-info"><h3>EPA — Environmental Protection Agency</h3><div class="ac-full">U.S. Environmental Protection Agency · Founded 1970</div></div>
+      </div>
+      <p>The EPA sets and enforces standards for air quality, water quality, and waste disposal that manufacturing facilities must follow. Factories that emit pollutants into the air or discharge into waterways must have EPA permits with specific limits they cannot exceed. The EPA also regulates how hazardous waste is stored, handled, and disposed of — a critical compliance area for chemical and pharmaceutical manufacturers.</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Air emissions</span><span class="ac-tag">Wastewater</span><span class="ac-tag">Hazardous waste</span><span class="ac-tag">Chemical storage</span><span class="ac-tag">Spill prevention</span></div>
+      <div class="ac-power">⚖️ <strong>Enforcement power:</strong> Fines up to $70,000/day per violation, facility cleanup orders, criminal charges, civil lawsuits from affected communities</div>
+    </div>
+
+    <div class="agency-card gov">
+      <div class="ac-top">
+        <div class="ac-badge">🏛️ GOV</div>
+        <div class="ac-info"><h3>NIST — National Institute of Standards and Technology</h3><div class="ac-full">U.S. Department of Commerce · Founded 1901</div></div>
+      </div>
+      <p>NIST develops measurement standards and technical guidelines used across manufacturing and technology. In manufacturing, NIST standards govern calibration — how test and measurement equipment is verified to be accurate. If a factory uses measuring instruments to test product quality, those instruments must ultimately trace back to NIST-certified standards. NIST also develops cybersecurity frameworks increasingly applied to connected manufacturing systems.</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Measurement standards</span><span class="ac-tag">Calibration traceability</span><span class="ac-tag">Cybersecurity frameworks</span><span class="ac-tag">Testing methods</span></div>
+      <div class="ac-power">⚖️ <strong>Enforcement power:</strong> NIST itself doesn't enforce — but FDA and DOD contracts require NIST-traceable calibration. Non-compliance affects contract eligibility and product testing validity</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Major Standards Organizations</h2>
+
+    <div class="agency-card std">
+      <div class="ac-top">
+        <div class="ac-badge">📋 STD</div>
+        <div class="ac-info"><h3>ISO — International Organization for Standardization</h3><div class="ac-full">Geneva, Switzerland · Founded 1947 · 167 member countries</div></div>
+      </div>
+      <p>ISO is the world's largest developer of voluntary international standards. Their standards cover virtually every aspect of manufacturing and industry — quality management, environmental management, safety management, energy management, and more. ISO standards are developed by committees of industry experts from around the world and represent the consensus on how things should be done professionally.</p>
+      <p>The three ISO standards most important in manufacturing are: <strong>ISO 9001</strong> (quality management systems — how to consistently make products that meet customer requirements), <strong>ISO 45001</strong> (occupational health and safety management — how to systematically prevent worker injuries), and <strong>ISO 14001</strong> (environmental management — how to minimize environmental impact).</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Quality management (9001)</span><span class="ac-tag">Safety management (45001)</span><span class="ac-tag">Environmental (14001)</span><span class="ac-tag">Energy (50001)</span><span class="ac-tag">Many more</span></div>
+      <div class="ac-power">⚖️ <strong>Practical power:</strong> No legal enforcement, but major manufacturers (automotive, aerospace, pharma) require ISO certification from all suppliers. Without certification, many contracts are inaccessible</div>
+    </div>
+
+    <div class="agency-card std">
+      <div class="ac-top">
+        <div class="ac-badge">📋 STD</div>
+        <div class="ac-info"><h3>GMP — Good Manufacturing Practice</h3><div class="ac-full">Regulated by FDA (US), EMA (Europe), WHO (Global)</div></div>
+      </div>
+      <p>GMP is a system of rules that governs how pharmaceutical, food, and medical device products are manufactured. Unlike most ISO standards, GMP is not truly voluntary — it's codified into FDA regulations (called cGMP, where the "c" stands for "current"). The core principle of GMP is quality by design: every step of production is controlled, documented, and verifiable, so that the quality of the final product is the predictable result of following the process correctly.</p>
+      <p>GMP touches everything: the cleanliness of facilities, the qualification of equipment, the training of personnel, the testing of raw materials, the documentation of every production step, and the testing of finished product before release.</p>
+      <div class="ac-governs"><span class="ac-governs-label">Governs:</span><span class="ac-tag">Pharma manufacturing</span><span class="ac-tag">Food processing</span><span class="ac-tag">Medical devices</span><span class="ac-tag">Facilities</span><span class="ac-tag">Batch records</span></div>
+      <div class="ac-power">⚖️ <strong>Practical power:</strong> In pharma and food, GMP compliance is required by FDA law. Non-compliance results in Warning Letters, product recalls, and facility shutdowns</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Which Agencies Govern Which Industries</h2>
+    <p>Different manufacturing sectors face different regulatory bodies. Understanding which agencies apply to a specific industry is a core skill for anyone working in compliance.</p>
+
+    <div class="industry-map">
+      <div class="im-header">📍 Industry → Primary Regulatory Bodies</div>
+      <div class="im-row"><div class="im-industry">Pharmaceutical</div><div class="im-agencies"><span class="im-ag blue">FDA (cGMP)</span><span class="im-ag blue">OSHA</span><span class="im-ag blue">EPA</span><span class="im-ag purple">ISO 9001</span><span class="im-ag purple">ISO 45001</span></div></div>
+      <div class="im-row"><div class="im-industry">Food & Beverage</div><div class="im-agencies"><span class="im-ag blue">FDA</span><span class="im-ag blue">USDA</span><span class="im-ag blue">OSHA</span><span class="im-ag purple">ISO 22000</span><span class="im-ag green">GMP</span></div></div>
+      <div class="im-row"><div class="im-industry">Automotive</div><div class="im-agencies"><span class="im-ag blue">OSHA</span><span class="im-ag blue">EPA</span><span class="im-ag purple">IATF 16949</span><span class="im-ag purple">ISO 9001</span><span class="im-ag purple">ISO 14001</span></div></div>
+      <div class="im-row"><div class="im-industry">Aerospace</div><div class="im-agencies"><span class="im-ag blue">FAA</span><span class="im-ag blue">OSHA</span><span class="im-ag purple">AS9100</span><span class="im-ag purple">ISO 9001</span><span class="im-ag orange">NADCAP</span></div></div>
+      <div class="im-row"><div class="im-industry">Chemical</div><div class="im-agencies"><span class="im-ag blue">EPA</span><span class="im-ag blue">OSHA</span><span class="im-ag blue">DOT</span><span class="im-ag purple">ISO 14001</span><span class="im-ag purple">ISO 45001</span></div></div>
+      <div class="im-row"><div class="im-industry">Electronics</div><div class="im-agencies"><span class="im-ag blue">OSHA</span><span class="im-ag blue">EPA (e-waste)</span><span class="im-ag purple">ISO 9001</span><span class="im-ag orange">RoHS</span><span class="im-ag orange">REACH</span></div></div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Insight</div>
+      <div class="vocab-def">Most manufacturing facilities are simultaneously subject to <strong>multiple agencies</strong>. A pharmaceutical plant must follow FDA (product), OSHA (workers), EPA (environment), and ISO standards (quality systems) — all at once, all the time. This complexity is exactly why AI-powered compliance management tools have real value: the number of overlapping requirements is genuinely difficult to track manually.</div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical company is cited by the FDA for failing to maintain proper batch records. Their quality manager says: "We meet all OSHA requirements — we should be fine." What is wrong with this reasoning?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ OSHA compliance is relevant to worker safety, not to pharmaceutical production quality or documentation. These are different regulatory domains governed by different agencies. Meeting OSHA requirements has no bearing on an FDA citation for batch record failures.')">OSHA and FDA have the same requirements, so meeting OSHA automatically satisfies FDA</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. OSHA and FDA are completely separate agencies with completely separate regulatory mandates. OSHA governs worker safety — PPE, machine guarding, chemical exposure. FDA governs pharmaceutical product quality and documentation — batch records, GMP compliance, product testing. Meeting OSHA requirements does nothing to address an FDA citation. The quality manager is confusing two entirely separate regulatory frameworks.')">OSHA governs worker safety; FDA governs pharmaceutical product quality and documentation — they are completely separate regulatory domains and OSHA compliance doesn\'t address FDA requirements</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ FDA has very real and significant enforcement power — Warning Letters, product seizures, facility shutdowns, criminal prosecution of executives. The FDA is one of the most powerful regulatory agencies in US manufacturing, particularly in the pharmaceutical sector.')">FDA doesn\'t have real enforcement power, so the citation doesn\'t matter</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While both OSHA and FDA do require documentation in their respective areas, they require documentation of completely different things for completely different reasons. OSHA recordkeeping covers workplace injuries and safety training. FDA documentation covers pharmaceutical production processes, material testing, and product release. These are not interchangeable.')">OSHA and FDA both require documentation, so the same records satisfy both</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Two types of rule-makers: government agencies (legally binding — OSHA, FDA, EPA, NIST) and standards organizations (practically required — ISO, GMP). Government agencies write the legal floor; standards organizations write the professional best practice.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Each agency governs a specific domain: OSHA (worker safety), FDA (food/drugs/medical devices), EPA (environment), NIST (measurement standards), ISO (quality/safety/environmental management systems), GMP (pharmaceutical and food manufacturing processes).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Most manufacturing facilities are subject to multiple agencies simultaneously. A pharmaceutical plant must follow FDA, OSHA, EPA, and ISO standards all at once. This complexity is exactly why AI compliance monitoring tools have real value.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Different industries face different regulatory bodies — pharma (FDA + OSHA + EPA), automotive (OSHA + IATF 16949 + ISO), aerospace (FAA + AS9100), chemical (EPA + OSHA + DOT). Knowing which agencies govern a sector is a fundamental career skill in manufacturing compliance.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

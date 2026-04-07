@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Predictive Maintenance and Why Does It Matter?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Three strategies */
+.strategy-cards{display:flex;flex-direction:column;gap:14px;margin:28px 0;}
+.sc{border-radius:20px;padding:26px;border:2px solid;position:relative;overflow:hidden;}
+.sc.reactive{background:var(--red-pale);border-color:var(--red);}
+.sc.preventive{background:var(--orange-pale);border-color:var(--orange);}
+.sc.predictive{background:var(--green-pale);border-color:var(--green);}
+.sc-badge{position:absolute;top:20px;right:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:6px;}
+.reactive .sc-badge{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.preventive .sc-badge{background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;}
+.predictive .sc-badge{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.sc h3{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+.reactive h3{color:var(--red);}
+.preventive h3{color:#92400E;}
+.predictive h3{color:var(--green);}
+.sc .sc-tagline{font-size:14px;font-style:italic;margin-bottom:14px;}
+.reactive .sc-tagline{color:#B91C1C;}
+.preventive .sc-tagline{color:#92400E;}
+.predictive .sc-tagline{color:var(--green);}
+.sc p{font-size:15px;line-height:1.75;color:var(--gray-text);margin-bottom:10px;}
+.sc-pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.sc-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.reactive .sc-col h4:first-child{color:var(--green);}
+.reactive .sc-col:last-child h4{color:var(--red);}
+.preventive .sc-col h4:first-child{color:var(--green);}
+.preventive .sc-col:last-child h4{color:var(--red);}
+.predictive .sc-col h4:first-child{color:var(--green);}
+.predictive .sc-col:last-child h4{color:#D97706;}
+.sc-item{font-size:13px;line-height:1.6;color:var(--gray-text);display:flex;gap:6px;margin-bottom:4px;}
+@media(max-width:560px){.sc-pros-cons{grid-template-columns:1fr;}}
+
+/* Sensor dashboard */
+.sensor-dash{background:#0F0A1A;border-radius:24px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.sd-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sd-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;}
+.sd-live{display:flex;align-items:center;gap:6px;font-size:12px;color:#6EE7B7;font-family:var(--mono);}
+.sd-live-dot{width:8px;height:8px;background:#6EE7B7;border-radius:50%;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.sensor-card{background:#1A0A2E;border-radius:14px;padding:16px;border:1.5px solid;}
+.sensor-card.ok{border-color:#6EE7B7;}
+.sensor-card.warn{border-color:#FDE68A;}
+.sensor-card.alert{border-color:#FCA5A5;}
+.s-name{font-size:11px;color:#8B7FA0;font-family:var(--mono);margin-bottom:6px;letter-spacing:.06em;}
+.s-val{font-size:22px;font-weight:700;font-family:var(--mono);}
+.ok .s-val{color:#6EE7B7;}
+.warn .s-val{color:#FDE68A;}
+.alert .s-val{color:#FCA5A5;}
+.s-status{font-size:11px;font-family:var(--mono);margin-top:4px;}
+.ok .s-status{color:rgba(110,231,183,.6);}
+.warn .s-status{color:rgba(253,230,138,.6);}
+.alert .s-status{color:rgba(252,165,165,.6);}
+.s-bar-track{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:8px;overflow:hidden;}
+.s-bar{height:100%;border-radius:2px;}
+.ok .s-bar{background:#6EE7B7;}
+.warn .s-bar{background:#FDE68A;}
+.alert .s-bar{background:#FCA5A5;}
+.sd-prediction{background:#1A0A2E;border-radius:14px;padding:16px;border:1.5px solid var(--purple-mid);}
+.sd-pred-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:10px;}
+.sd-pred-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sd-pred-name{font-size:13px;color:#E2D9F3;font-family:var(--mono);}
+.sd-pred-val{font-size:12px;font-weight:700;font-family:var(--mono);}
+.pred-ok{color:#6EE7B7;}
+.pred-warn{color:#FDE68A;}
+.pred-alert{color:#FCA5A5;}
+@media(max-width:560px){.sensor-grid{grid-template-columns:1fr;}}
+
+/* Compliance angle */
+.compliance-angle{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:26px;margin:28px 0;}
+.ca-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:12px;}
+.ca-item{display:flex;gap:12px;margin-bottom:12px;}
+.ca-icon{font-size:22px;flex-shrink:0;}
+.ca-item h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.ca-item p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* Cost comparison */
+.cost-compare{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0;}
+.cc-box{border-radius:16px;padding:18px;text-align:center;border:2px solid;}
+.cc-box.reactive{background:var(--red-pale);border-color:var(--red);}
+.cc-box.preventive{background:var(--orange-pale);border-color:var(--orange);}
+.cc-box.predictive{background:var(--green-pale);border-color:var(--green);}
+.cc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.reactive .cc-label{color:var(--red);}
+.preventive .cc-label{color:#92400E;}
+.predictive .cc-label{color:var(--green);}
+.cc-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;}
+.reactive .cc-num{color:var(--red);}
+.preventive .cc-num{color:#92400E;}
+.predictive .cc-num{color:var(--green);}
+.cc-desc{font-size:12px;color:var(--gray-muted);margin-top:6px;line-height:1.5;}
+@media(max-width:560px){.cost-compare{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.2 — Compliance Checks</div>
+  <h1>What Is Predictive Maintenance and Why Does It Matter?</h1>
+  <p class="hero-sub">The slides show maintenance scheduling as a key AI compliance use case — but what is maintenance scheduling actually solving? This article explains the three strategies for maintaining equipment, why predictive maintenance changes everything, and how it connects to regulatory compliance.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why Machines Break Down — And Why It Matters</h2>
+    <p>Every piece of manufacturing equipment has parts that wear out over time — bearings that lose lubrication, filters that clog, belts that stretch, seals that degrade. This is normal. The question isn't whether equipment will wear out; it's <mark>whether you find out about it before or after something goes wrong</mark>.</p>
+    <p>In manufacturing, an unexpected equipment failure doesn't just mean a repair bill. It means production stops. Product in the middle of a run may need to be discarded. In pharmaceutical or food manufacturing, a failed piece of equipment might mean an entire batch is contaminated or out of specification — triggering a compliance investigation and potential recall. The stakes of equipment failure are high enough that how facilities manage maintenance is itself a compliance requirement.</p>
+
+    <div class="pull-quote"><p>A machine that breaks unexpectedly costs roughly 3–5× more to fix than the same repair done proactively. In regulated industries, add a potential compliance violation to that cost.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Three Maintenance Strategies</h2>
+    <p>Manufacturing facilities use one of three fundamental approaches to equipment maintenance. Understanding the difference is essential for understanding why AI-powered predictive maintenance is such a significant shift.</p>
+
+    <div class="strategy-cards">
+      <div class="sc reactive">
+        <div class="sc-badge">⚠️ Old Approach</div>
+        <h3>Reactive Maintenance</h3>
+        <div class="sc-tagline">"Fix it when it breaks"</div>
+        <p>The simplest approach: do nothing until equipment fails, then repair it. No planning required. No schedule to maintain. No cost until something actually goes wrong.</p>
+        <p>The problem: failures always happen at the worst possible time — during peak production, in the middle of a regulated batch, when parts aren't in stock. Unplanned downtime costs far more than planned maintenance, and in regulated environments, unexpected failures trigger mandatory investigations.</p>
+        <div class="sc-pros-cons">
+          <div class="sc-col"><h4>✅ Pros</h4><div class="sc-item"><span>→</span><span>Zero upfront maintenance cost</span></div><div class="sc-item"><span>→</span><span>No maintenance overhead when equipment runs fine</span></div></div>
+          <div class="sc-col"><h4>❌ Cons</h4><div class="sc-item"><span>→</span><span>Failures happen at worst times</span></div><div class="sc-item"><span>→</span><span>Emergency repairs cost 3–5× more</span></div><div class="sc-item"><span>→</span><span>Unplanned downtime stops production</span></div><div class="sc-item"><span>→</span><span>May trigger compliance investigations</span></div></div>
+        </div>
+      </div>
+
+      <div class="sc preventive">
+        <div class="sc-badge">📅 Better Approach</div>
+        <h3>Preventive Maintenance</h3>
+        <div class="sc-tagline">"Fix it on a schedule before it breaks"</div>
+        <p>Equipment is maintained on a regular schedule — regardless of its actual condition. Change the oil every 3 months. Inspect the filters every 500 operating hours. Replace the belt every year. This approach eliminates many unexpected failures because components are replaced before they reach the end of their typical lifespan.</p>
+        <p>The problem: schedules are built on averages. Some equipment that could have run fine for another 3 months gets replaced early — wasting money and causing unnecessary downtime. Other equipment running in harsh conditions reaches failure before the next scheduled maintenance.</p>
+        <div class="sc-pros-cons">
+          <div class="sc-col"><h4>✅ Pros</h4><div class="sc-item"><span>→</span><span>Eliminates many unexpected failures</span></div><div class="sc-item"><span>→</span><span>Plannable, schedulable, budgetable</span></div><div class="sc-item"><span>→</span><span>Demonstrable to regulators</span></div></div>
+          <div class="sc-col"><h4>⚠️ Limitations</h4><div class="sc-item"><span>→</span><span>Some maintenance done too early (waste)</span></div><div class="sc-item"><span>→</span><span>Some equipment fails between schedules</span></div><div class="sc-item"><span>→</span><span>Doesn't account for actual equipment condition</span></div></div>
+        </div>
+      </div>
+
+      <div class="sc predictive">
+        <div class="sc-badge">🤖 AI-Powered</div>
+        <h3>Predictive Maintenance</h3>
+        <div class="sc-tagline">"Fix it right before it actually needs it"</div>
+        <p>Equipment is fitted with sensors that continuously measure real-time performance indicators — temperature, vibration, pressure, electrical draw, acoustic emissions. AI analyzes this data stream and detects the early warning signs of wear or failure — before any performance problem is visible or audible to humans.</p>
+        <p>The result: maintenance is scheduled based on the actual condition of each individual piece of equipment, not on a fixed calendar. Equipment that's running well doesn't get touched unnecessarily. Equipment that's showing stress signals gets scheduled for maintenance before it fails.</p>
+        <div class="sc-pros-cons">
+          <div class="sc-col"><h4>✅ Pros</h4><div class="sc-item"><span>→</span><span>Prevents failures before they happen</span></div><div class="sc-item"><span>→</span><span>Eliminates unnecessary early maintenance</span></div><div class="sc-item"><span>→</span><span>Maintenance scheduled when convenient</span></div><div class="sc-item"><span>→</span><span>Generates compliance documentation automatically</span></div></div>
+          <div class="sc-col"><h4>⚠️ Limitations</h4><div class="sc-item"><span>→</span><span>Requires sensor infrastructure investment</span></div><div class="sc-item"><span>→</span><span>AI needs training data to predict accurately</span></div><div class="sc-item"><span>→</span><span>New failure modes may not be predicted</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Sensors Does Predictive Maintenance Use?</h2>
+    <p>The data that AI analyzes for predictive maintenance comes from sensors installed on or near equipment. Here's a simplified view of what a real predictive maintenance monitoring system looks like during a shift:</p>
+
+    <div class="sensor-dash">
+      <div class="sd-header">
+        <span class="sd-title">PREDICTIVE MAINTENANCE MONITOR · PUMP STATION 3</span>
+        <span class="sd-live"><span class="sd-live-dot"></span>LIVE</span>
+      </div>
+      <div class="sensor-grid">
+        <div class="sensor-card ok">
+          <div class="s-name">BEARING TEMPERATURE</div>
+          <div class="s-val">142°F</div>
+          <div class="s-status">Normal range: 120–165°F</div>
+          <div class="s-bar-track"><div class="s-bar" style="width:55%;"></div></div>
+        </div>
+        <div class="sensor-card warn">
+          <div class="s-name">VIBRATION (RMS)</div>
+          <div class="s-val">7.2 mm/s</div>
+          <div class="s-status">⚠️ Elevated — threshold: 6.0 mm/s</div>
+          <div class="s-bar-track"><div class="s-bar" style="width:72%;"></div></div>
+        </div>
+        <div class="sensor-card ok">
+          <div class="s-name">OIL PRESSURE</div>
+          <div class="s-val">48 PSI</div>
+          <div class="s-status">Normal range: 40–60 PSI</div>
+          <div class="s-bar-track"><div class="s-bar" style="width:40%;"></div></div>
+        </div>
+        <div class="sensor-card alert">
+          <div class="s-name">CURRENT DRAW</div>
+          <div class="s-val">18.4 A</div>
+          <div class="s-status">🚨 Above spec — baseline: 15.2 A</div>
+          <div class="s-bar-track"><div class="s-bar" style="width:84%;"></div></div>
+        </div>
+      </div>
+      <div class="sd-prediction">
+        <div class="sd-pred-label">🤖 AI PREDICTIVE ANALYSIS</div>
+        <div class="sd-pred-item"><span class="sd-pred-name">Bearing wear pattern</span><span class="sd-pred-val pred-warn">EARLY STAGE</span></div>
+        <div class="sd-pred-item"><span class="sd-pred-name">Estimated days to failure</span><span class="sd-pred-val pred-warn">12–18 days</span></div>
+        <div class="sd-pred-item"><span class="sd-pred-name">Recommended action</span><span class="sd-pred-val pred-warn">Schedule bearing inspection</span></div>
+        <div class="sd-pred-item"><span class="sd-pred-name">Confidence</span><span class="sd-pred-val pred-ok">81%</span></div>
+        <div class="sd-pred-item"><span class="sd-pred-name">Compliance record updated</span><span class="sd-pred-val pred-ok">✓ LOGGED 08:14:03</span></div>
+      </div>
+    </div>
+
+    <p>Notice that last line: <mark>Compliance record updated — logged automatically</mark>. Every sensor reading, every AI prediction, and every maintenance action becomes part of the equipment's compliance record — automatically, with timestamps, without anyone having to fill out a form.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Compliance Angle: Why Maintenance Is a Regulatory Issue</h2>
+    <p>Maintenance compliance might seem like a purely operational concern — keep machines running efficiently. But in regulated manufacturing, equipment maintenance is a formal compliance requirement with specific documentation demands.</p>
+
+    <div class="compliance-angle">
+      <div class="ca-label">⚖️ How Maintenance Connects to Compliance</div>
+      <div class="ca-item">
+        <div class="ca-icon">📋</div>
+        <div>
+          <h3>Regulatory Inspection Requirements</h3>
+          <p>Many pieces of equipment in regulated industries must be formally inspected on schedule by certified personnel — and those inspections must be documented. Using equipment past its inspection date is a compliance violation even if the equipment is working perfectly. AI systems flag overdue inspections automatically.</p>
+        </div>
+      </div>
+      <div class="ca-item">
+        <div class="ca-icon">🔬</div>
+        <div>
+          <h3>Calibration Traceability</h3>
+          <p>In pharmaceutical and food manufacturing, any measuring instrument used in quality testing must be calibrated on a regular schedule — and that calibration must trace back to national standards (NIST). An out-of-calibration instrument makes every measurement taken with it suspect, potentially invalidating entire batches.</p>
+        </div>
+      </div>
+      <div class="ca-item">
+        <div class="ca-icon">🏭</div>
+        <div>
+          <h3>Equipment Qualification</h3>
+          <p>In FDA-regulated facilities, equipment doesn't just need to be maintained — it needs to be formally validated as performing consistently within specifications. This validation must be re-confirmed after major repairs or modifications. AI tracking systems monitor equipment performance over time, providing the data needed for ongoing validation.</p>
+        </div>
+      </div>
+      <div class="ca-item">
+        <div class="ca-icon">📊</div>
+        <div>
+          <h3>Deviation Investigation</h3>
+          <p>When a piece of equipment fails unexpectedly in a regulated facility, the failure must be formally investigated — was any product affected? Did the failure create a quality or safety risk? AI maintenance records provide the timeline data that makes these investigations faster and more accurate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Financial Case: Why Predictive Maintenance Pays</h2>
+    <div class="cost-compare">
+      <div class="cc-box reactive">
+        <div class="cc-label">Reactive Maintenance</div>
+        <div class="cc-num">$500K+</div>
+        <div class="cc-desc">Estimated cost of one major unplanned equipment failure in a pharmaceutical plant, including investigation, batch loss, and downtime</div>
+      </div>
+      <div class="cc-box preventive">
+        <div class="cc-label">Preventive Maintenance</div>
+        <div class="cc-num">$50K</div>
+        <div class="cc-desc">Estimated annual maintenance cost for same equipment — some unnecessary, but eliminates most failures</div>
+      </div>
+      <div class="cc-box predictive">
+        <div class="cc-label">Predictive Maintenance</div>
+        <div class="cc-num">$25K</div>
+        <div class="cc-desc">Estimated annual cost — maintenance only when needed, failures prevented before they happen, compliance documentation automatic</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--gray-muted);text-align:center;margin-top:-12px;">Illustrative estimates — actual costs vary significantly by facility, equipment type, and product value</p>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical plant's AI monitoring system detects that a critical mixing vessel is showing unusual vibration patterns — significantly higher than its historical baseline. The AI predicts potential bearing failure in 10–15 days and recommends scheduling maintenance. The production manager wants to delay the maintenance by 3 weeks to finish the current production run first. What are the risks of this decision?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ This response treats a 10-15 day failure prediction as essentially no risk. The AI\'s prediction is probabilistic — failure could happen on day 10, day 12, or day 17. Waiting 21 days when failure is predicted at 10–15 days is a significant gamble with potentially severe operational and compliance consequences.')">No real risk — the AI gave a 10-15 day estimate, and 3 weeks is close enough to be fine</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While the bearing replacement itself may be straightforward, the consequences of waiting until after failure in a pharmaceutical environment are much more complex. An unexpected failure during production may invalidate the current batch, trigger a mandatory deviation investigation, and require FDA notification if product quality was affected.')">The only risk is the bearing replacement, which is a simple repair</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Waiting 21 days when the AI predicts failure at 10–15 days carries multiple serious risks: (1) the bearing may fail during the production run, stopping it mid-batch; (2) an unexpected failure in a pharmaceutical manufacturing process triggers a mandatory deviation investigation and may invalidate the batch; (3) if the failure causes any product quality issue, FDA notification may be required; (4) the investigation and batch loss would far exceed the cost of the scheduled maintenance. This is a case where following the AI\'s recommendation — even at operational inconvenience — is clearly the right call.')">Multiple risks: the bearing may fail during the run (invalidating the batch), unexpected failure triggers a mandatory compliance deviation investigation, and batch loss plus investigation costs far exceed the maintenance cost</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The AI\'s recommendation should absolutely be considered seriously. In this context — a pharmaceutical manufacturing environment with compliance implications — delaying maintenance past the predicted failure window is a significant risk management failure, not a reasonable operational tradeoff. The AI\'s prediction should be discussed with maintenance and quality staff, not dismissed.')">The AI recommendation should be ignored since production schedules take priority over predictive data</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Three maintenance strategies: Reactive (fix when broken — expensive and unpredictable), Preventive (fix on schedule — better but wastes resources), Predictive (fix based on actual equipment condition — uses AI sensor analysis to catch problems before failure).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Predictive maintenance uses sensors (temperature, vibration, pressure, current draw) to monitor equipment in real time. AI analyzes the data to detect early warning signs and predict failure before it occurs — enabling maintenance to be scheduled at a convenient time, not in an emergency.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>In regulated industries, maintenance is a compliance requirement — not just an operational one. Equipment must be inspected and calibrated on schedule, with documentation proving it was done. AI maintenance systems automatically create and log these compliance records.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Unexpected equipment failure in regulated manufacturing triggers mandatory deviation investigations, potential batch invalidation, and possible regulatory notification — making predictive maintenance a risk management tool, not just a cost-saving one.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
