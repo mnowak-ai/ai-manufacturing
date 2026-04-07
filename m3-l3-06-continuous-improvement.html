@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How QC Data Feeds Back Into Production: The Continuous Improvement Loop</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* CI loop diagram */
+.ci-loop{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:24px;padding:32px;margin:28px 0;color:white;}
+.ci-nodes{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;}
+.ci-node{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:14px 16px;text-align:center;min-width:110px;}
+.ci-node-icon{font-size:24px;margin-bottom:6px;}
+.ci-node-label{font-size:12px;font-weight:700;color:white;line-height:1.3;}
+.ci-arrow{font-size:20px;color:var(--purple-mid);flex-shrink:0;}
+.ci-insight{background:rgba(255,255,255,.08);border-radius:12px;padding:14px 18px;font-size:14px;color:rgba(255,255,255,.85);line-height:1.65;text-align:center;}
+
+/* Feedback pathways */
+.feedback-paths{display:flex;flex-direction:column;gap:16px;margin:28px 0;}
+.fp-card{border-radius:18px;overflow:hidden;border:2px solid var(--purple-mid);}
+.fp-header{padding:16px 22px;display:flex;align-items:center;gap:12px;background:var(--purple-dark);}
+.fp-num{width:36px;height:36px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:14px;flex-shrink:0;font-family:"Fraunces",serif;}
+.fp-header h3{font-family:"Fraunces",serif;font-size:16px;color:white;}
+.fp-body{padding:18px 22px;}
+.fp-body p{font-size:15px;line-height:1.75;margin-bottom:10px;}
+.fp-example{background:var(--purple-pale);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--purple-dark);font-weight:500;line-height:1.6;}
+
+/* Root cause steps */
+.rca-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.rca-step{background:var(--gray-soft);border-radius:14px;padding:18px;border-top:3px solid var(--purple);}
+.rca-num{font-family:"Fraunces",serif;font-size:24px;font-weight:900;color:var(--purple-mid);margin-bottom:8px;}
+.rca-step h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.rca-step p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.rca-steps{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>How QC Data Feeds Back Into Production</h1>
+  <p class="hero-sub">The continuous improvement loop is where AI QC becomes truly valuable — not just catching defects, but eliminating the process problems that cause them. This article shows how defect data travels from inspection to machine calibration, supplier feedback, and process redesign.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>QC Without Feedback Is Just Sorting</h2>
+    <p>A QC system that only separates good products from bad ones is useful — but limited. Every defect it catches represents waste: wasted material, wasted labor, wasted time. The real value of AI QC comes from using defect data to answer a more important question: <mark>Why are defects happening?</mark></p>
+    <p>When you know why a defect occurs — which machine is drifting, which supplier material is inconsistent, which process step is generating errors — you can fix the cause. Fix the cause, and defects stop happening in the first place. That's the shift from reactive QC (catching problems) to proactive continuous improvement (preventing them).</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Continuous Improvement (CI):</strong> An ongoing effort to improve products, services, or processes through incremental improvements over time. In manufacturing QC, continuous improvement means using defect data to identify and eliminate root causes — so that the production process gets better with every cycle, not just the product sorting. The Japanese term "Kaizen" (change for better) is closely associated with this philosophy.</div>
+    </div>
+
+    <div class="ci-loop">
+      <div class="ci-nodes">
+        <div class="ci-node"><div class="ci-node-icon">🤖</div><div class="ci-node-label">AI Inspects</div></div>
+        <div class="ci-arrow">→</div>
+        <div class="ci-node"><div class="ci-node-icon">📊</div><div class="ci-node-label">Data Logged</div></div>
+        <div class="ci-arrow">→</div>
+        <div class="ci-node"><div class="ci-node-icon">🔍</div><div class="ci-node-label">Pattern Analysis</div></div>
+        <div class="ci-arrow">→</div>
+        <div class="ci-node"><div class="ci-node-icon">🧠</div><div class="ci-node-label">Root Cause Found</div></div>
+        <div class="ci-arrow">→</div>
+        <div class="ci-node"><div class="ci-node-icon">🔧</div><div class="ci-node-label">Process Changed</div></div>
+        <div class="ci-arrow">→</div>
+        <div class="ci-node"><div class="ci-node-icon">📉</div><div class="ci-node-label">Defects Reduce</div></div>
+      </div>
+      <div class="ci-insight">The loop closes when process changes produce measurable improvement in future QC data — then the cycle begins again.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Four Ways QC Data Drives Change</h2>
+    <p>The specific type of process improvement that defect data drives depends on what the data reveals. Here are the four most common feedback pathways from QC insight to process change:</p>
+
+    <div class="feedback-paths">
+      <div class="fp-card">
+        <div class="fp-header"><div class="fp-num">1</div><h3>Machine Calibration Adjustments</h3></div>
+        <div class="fp-body">
+          <p>Manufacturing equipment drifts over time. A CNC machine's cutting bit wears down and begins producing parts slightly out of tolerance. A filling machine's pump loses pressure and starts under-filling containers. An oven's temperature sensor drifts and parts come out 5°C hotter than intended. AI QC data detects the dimensional or quality drift before it becomes a major problem — giving maintenance teams the signal to recalibrate before the defect rate climbs.</p>
+          <div class="fp-example">📍 Ford example: AI paint inspection at Dearborn flags increasing surface texture defects on the same production shift. Investigation finds the spray gun nozzle has partially clogged — reducing droplet atomization quality. Nozzle replaced, defect rate drops immediately. Without the data pattern, the cause would have been harder to isolate.</div>
+        </div>
+      </div>
+      <div class="fp-card">
+        <div class="fp-header"><div class="fp-num">2</div><h3>Supplier Corrective Action Requests</h3></div>
+        <div class="fp-body">
+          <p>Sometimes the defect originates before production even begins — in the raw material or component supplied by a vendor. AI QC data that correlates defect spikes with specific material lot numbers, delivery dates, or supplier sources provides documented evidence for formal Supplier Corrective Action Requests (SCARs). Without this data, supplier conversations are based on anecdotes. With it, the defect pattern is undeniable and the supplier conversation becomes about evidence-based improvement.</p>
+          <div class="fp-example">📍 Electronics example: AI inspection flags a spike in solder joint failures. QC analysis correlates the defect spike with a new batch of solder paste from the same supplier delivered two weeks earlier. The supplier's own analysis confirms a formulation deviation. SCAR issued; supplier changes quality controls; defect spike ends when the next compliant batch arrives.</div>
+        </div>
+      </div>
+      <div class="fp-card">
+        <div class="fp-header"><div class="fp-num">3</div><h3>Process Parameter Optimization</h3></div>
+        <div class="fp-body">
+          <p>AI QC data analyzed over time reveals statistical correlations between process parameters and defect rates — connections that would be invisible in manual data. A specific combination of temperature, humidity, and line speed that produces 3× the average defect rate. A particular shift transition time when defect rates consistently spike (equipment hasn't reached operating temperature). These insights enable process engineers to tighten parameters, adjust procedures, or add monitoring at vulnerable points in the process.</p>
+          <div class="fp-example">📍 Food example: AI fill level inspection data reveals that fill weights are systematically 0.4g below specification on Monday mornings. Investigation finds the filling machine requires a 45-minute warm-up after the weekend shutdown — but the line starts immediately on Mondays. Adding a warm-up check before Monday production starts eliminates the systematic under-fill.</div>
+        </div>
+      </div>
+      <div class="fp-card">
+        <div class="fp-header"><div class="fp-num">4</div><h3>Design for Manufacturability (DfM) Feedback</h3></div>
+        <div class="fp-body">
+          <p>Sometimes QC data reveals that a product design itself creates manufacturing difficulty — a shape that's hard to inspect, a tolerance that's too tight for current equipment capability, a component placement that consistently causes assembly errors. This feedback goes upstream to product engineers, who can redesign the product or component to be easier to manufacture correctly. AI QC data makes this conversation quantitative: not "it's hard to build" but "this specific dimension generates a 4% defect rate with current tooling."</p>
+          <div class="fp-example">📍 Automotive example: AI body panel inspection consistently flags gap defects at one corner of the door assembly — the same location on every unit. Engineering analysis determines the panel geometry creates a "spring-back" effect when stamped that makes the designed gap tolerance nearly impossible to achieve consistently. Panel geometry redesigned in the next model year; defect location eliminated.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Root Cause Analysis: Finding Why, Not Just What</h2>
+    <p>The bridge between QC data and process improvement is root cause analysis (RCA) — the structured process of investigating defects to find their fundamental cause, not just the surface symptom. AI gives RCA teams better data to work with; the analysis itself remains human work.</p>
+
+    <div class="rca-steps">
+      <div class="rca-step"><div class="rca-num">1</div><h3>Define the Defect Precisely</h3><p>What exactly is failing? Where on the product? What defect type? How frequently? AI data provides the precise location, type, and frequency data that makes this definition specific rather than vague.</p></div>
+      <div class="rca-step"><div class="rca-num">2</div><h3>Find the Pattern</h3><p>Does the defect correlate with specific time periods, machines, shifts, operators, suppliers, or environmental conditions? AI-generated defect logs contain the timestamps and production context needed to find these correlations.</p></div>
+      <div class="rca-step"><div class="rca-num">3</div><h3>Ask Why — Repeatedly</h3><p>The "5 Whys" technique asks "why?" repeatedly until the root cause is reached. Why did the part warp? → Because the oven temperature was too high. Why was the oven temperature too high? → Because the thermostat calibration drifted. Why did the calibration drift? → Because the calibration schedule was too infrequent for this oven's usage rate.</p></div>
+      <div class="rca-step"><div class="rca-num">4</div><h3>Implement and Verify</h3><p>Apply the corrective action (recalibrate the thermostat; change the calibration schedule). Monitor AI QC data after the change to verify the defect rate actually dropped. If it didn't, the root cause analysis may have been incomplete.</p></div>
+    </div>
+
+    <div class="pull-quote"><p>Without AI QC data, root cause analysis relies on memory, estimates, and anecdotes. With it, you have timestamps, defect coordinates, production context, and trend data. The human insight still drives the analysis — the AI provides the evidence.</p></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A packaging facility's AI QC system shows that seal defects on one product line have been gradually increasing over the past 6 weeks — from 0.3% defect rate to 1.8%. The defects are distributed randomly across units, not clustered at any specific time of day or shift. What does this pattern most likely indicate?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A gradual increase over 6 weeks without time-of-day clustering doesn\'t suggest a shift-specific problem like insufficient operator training. If training were the issue, you\'d expect worse performance on certain shifts (less experienced operators) or a sudden change, not a slow 6-week drift.')">An operator training issue — seal defect rates increase when newer workers are on shift</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A slow, gradual increase in defect rate over 6 weeks that\'s distributed randomly (not clustering by time or shift) is the signature of equipment wear or drift — the gradual degradation of a component over time. The most likely candidates are: the heat sealing element losing uniform temperature distribution as it ages, the sealing jaw pressure decreasing as a spring or pneumatic component wears, or the sealing material roll producing gradually lower-quality seals as it runs toward the end of an inferior batch. Preventive maintenance check (sealing element replacement, pressure verification) is the appropriate response — triggered by the data trend rather than waiting for the defect rate to reach a crisis level.')">Equipment wear or drift — a gradual increase across all times suggests a component gradually degrading, likely the sealing element or pressure system</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A supplier material issue would more likely show up as a sudden step change (a new material lot arrives) rather than a gradual 6-week drift. If the packaging film quality were consistently getting worse over 6 weeks, that\'s possible — but the pattern more strongly suggests equipment wear, which is inherently gradual.')">A supplier material change — incoming packaging film quality has been slowly deteriorating</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Random noise in QC data produces fluctuating results around a stable mean — not a 6-week, 6× increase from 0.3% to 1.8%. A sustained directional trend of this magnitude is signal, not noise. Treating it as noise would miss a real process problem that will continue to worsen.')">Normal random variation — defect rates fluctuate and this trend is within expected noise</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>QC without feedback is just sorting — separating good from bad. The real value of AI QC is using defect data to find and fix root causes, so defects stop occurring in the first place. This is the shift from reactive inspection to proactive continuous improvement.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The four feedback pathways are: machine calibration (equipment drift detected early), supplier corrective action (defect patterns correlated to material lots), process parameter optimization (identifying the conditions that produce more defects), and Design for Manufacturability feedback (designs that are inherently difficult to make correctly).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Root cause analysis bridges data to improvement. AI provides the timestamps, defect locations, frequency, and production context. Humans analyze the patterns, ask the right questions, and implement the fixes. The improvement loop requires both.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

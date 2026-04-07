@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Quality Control in Manufacturing?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Industry tabs */
+.ind-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.ind-tab{padding:8px 16px;border-radius:100px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-text);transition:all .2s;}
+.ind-tab.active,.ind-tab:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.ind-panel{display:none;background:var(--gray-soft);border-radius:20px;padding:24px;border-left:5px solid var(--purple);}
+.ind-panel.show{display:block;}
+.ip-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.ip-icon{font-size:36px;}
+.ip-meta h3{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);}
+.ip-meta .ip-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.ip-what{font-size:15px;line-height:1.7;margin-bottom:14px;color:var(--gray-text);}
+.ip-defects{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.ip-defect{background:var(--red-pale);border:1px solid #FECACA;border-radius:8px;padding:5px 12px;font-size:13px;color:var(--red);}
+.ip-consequence{background:var(--orange-pale);border:1.5px solid #FCD34D;border-radius:10px;padding:12px 16px;font-size:14px;color:#92400E;line-height:1.6;}
+
+/* Why QC matters numbers */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.stat-card{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:20px;padding:20px;text-align:center;}
+.stat-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple-dark);line-height:1;}
+.stat-label{font-size:13px;color:var(--gray-muted);margin-top:6px;line-height:1.5;}
+@media(max-width:560px){.stats-row{grid-template-columns:1fr 1fr;}}
+
+/* Downstream cascade */
+.cascade{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.cascade-step{display:flex;gap:14px;}
+.casc-left{display:flex;flex-direction:column;align-items:center;width:44px;flex-shrink:0;}
+.casc-circle{width:36px;height:36px;border-radius:50%;background:var(--red);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.casc-line{flex:1;width:2px;background:#FECACA;min-height:12px;}
+.casc-body{background:var(--red-pale);border:1px solid #FECACA;border-radius:0 12px 12px 12px;padding:12px 16px;flex:1;margin-bottom:4px;}
+.casc-body h3{font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.casc-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.6;}
+.cascade-step:last-child .casc-line{display:none;}
+
+/* QC spectrum */
+.qc-spectrum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:28px 0;}
+.qcs-card{border-radius:16px;padding:18px;border:2px solid;}
+.qcs-card.manual{background:#FFF7ED;border-color:#92400E;}
+.qcs-card.statistical{background:var(--blue-pale);border-color:var(--blue);}
+.qcs-card.ai{background:var(--purple-pale);border-color:var(--purple);}
+.qcs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.manual .qcs-label{color:#92400E;}
+.statistical .qcs-label{color:var(--blue);}
+.ai .qcs-label{color:var(--purple);}
+.qcs-card h3{font-size:15px;font-weight:700;margin-bottom:8px;font-family:"Fraunces",serif;}
+.manual h3{color:#92400E;}
+.statistical h3{color:var(--blue);}
+.ai h3{color:var(--purple-dark);}
+.qcs-card p{font-size:12px;line-height:1.65;color:var(--gray-text);margin:0;}
+@media(max-width:560px){.qc-spectrum{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>What Is Quality Control in Manufacturing?</h1>
+  <p class="hero-sub">Quality control is the process of making sure every product that leaves a facility meets a defined standard — every time, not just sometimes. This article explains what QC is, why consistency matters, and what "defect" means across the industries where AI is now doing the checking.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Core Idea: Consistency at Scale</h2>
+    <p>Imagine you order a bottle of ibuprofen. You expect every pill in that bottle to contain exactly 200mg of active ingredient — not 180mg in some and 240mg in others. You expect the bottle to be sealed. You expect the label to be correct. You don't think about any of this when you buy it because <mark>quality control systems have already verified it</mark> — thousands of times over, before the product ever reached the shelf.</p>
+    <p>Quality control (QC) is the set of processes, inspections, and checks that ensure manufactured products meet their defined specifications. It's not just about catching bad products before they ship — it's about understanding why defects happen, fixing the underlying process, and making the next batch better than the last.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Quality Control (QC):</strong> The operational activities and techniques used to verify that a product or output meets defined requirements. QC is typically reactive — inspecting what was made — as opposed to Quality Assurance (QA), which is proactive — designing processes to prevent defects from occurring in the first place. Both work together in modern manufacturing.</div>
+    </div>
+
+    <div class="pull-quote"><p>A product that works 95% of the time sounds good. But if a factory ships 10 million units a year, that's 500,000 defective products reaching customers every year. QC exists to close that gap.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What "Defect" Means Across Industries</h2>
+    <p>A defect isn't always a broken product. It's anything that doesn't meet the defined specification for that product — and what that looks like varies enormously by industry. Click each industry to see what defects AI is trained to find and why they matter.</p>
+
+    <div class="ind-tabs">
+      <button class="ind-tab active" onclick="showInd('auto',this)">🚗 Automotive</button>
+      <button class="ind-tab" onclick="showInd('pharma',this)">💊 Pharmaceutical</button>
+      <button class="ind-tab" onclick="showInd('food',this)">🥫 Food</button>
+      <button class="ind-tab" onclick="showInd('electronics',this)">💻 Electronics</button>
+    </div>
+
+    <div class="ind-panel show" id="panel-auto">
+      <div class="ip-header"><div class="ip-icon">🚗</div><div class="ip-meta"><div class="ip-tag">Automotive Manufacturing</div><h3>Vehicles & Components</h3></div></div>
+      <div class="ip-what">In automotive manufacturing, defects range from cosmetic imperfections (a paint scratch visible at the right angle) to safety-critical failures (a weld that could fail under stress). The tolerance for error varies by part — a door trim gap of 2mm may be acceptable; a brake component that's 0.5mm off specification may not be. Ford's Dearborn Truck Plant uses AI cameras that detect millimeter-scale surface defects invisible to the human eye at production speed.</div>
+      <div class="ip-defects">
+        <div class="ip-defect">Paint surface scratches or orange peel texture</div>
+        <div class="ip-defect">Weld quality — incomplete or porous welds</div>
+        <div class="ip-defect">Panel gap and flush alignment</div>
+        <div class="ip-defect">Missing fasteners or components</div>
+        <div class="ip-defect">Dimensional deviations in structural parts</div>
+      </div>
+      <div class="ip-consequence">⚠️ If bad products ship: Cosmetic defects damage brand reputation and trigger warranty claims. Structural or safety defects can cause accidents, triggering recalls that cost hundreds of millions of dollars and potential criminal liability.</div>
+    </div>
+
+    <div class="ind-panel" id="panel-pharma">
+      <div class="ip-header"><div class="ip-icon">💊</div><div class="ip-meta"><div class="ip-tag">Pharmaceutical Manufacturing</div><h3>Drugs, Biologics & Devices</h3></div></div>
+      <div class="ip-what">In pharmaceutical manufacturing, a "defect" can directly harm or kill a patient. A pill with incorrect dosage, a vial with a crack, a label with the wrong drug name, a capsule with foreign particles — each is a defect with potentially serious health consequences. AI vision systems inspect 100% of units at high speed, looking for deviations that human visual inspection at the required throughput would routinely miss.</div>
+      <div class="ip-defects">
+        <div class="ip-defect">Incorrect dosage (over or under)</div>
+        <div class="ip-defect">Foreign particles or contamination</div>
+        <div class="ip-defect">Cracked or chipped tablets</div>
+        <div class="ip-defect">Broken vial seals</div>
+        <div class="ip-defect">Mislabeled packaging</div>
+        <div class="ip-defect">Missing lot/expiry code</div>
+      </div>
+      <div class="ip-consequence">⚠️ If bad products ship: Direct patient harm or death. FDA Warning Letters, mandatory recalls, facility shutdown. Pharmaceutical recalls are among the most expensive in any industry — with direct costs often exceeding $100M per incident.</div>
+    </div>
+
+    <div class="ind-panel" id="panel-food">
+      <div class="ip-header"><div class="ip-icon">🥫</div><div class="ip-meta"><div class="ip-tag">Food Manufacturing</div><h3>Packaged & Processed Foods</h3></div></div>
+      <div class="ip-what">Food QC covers both safety defects (foreign objects, contamination, under-cooking) and quality defects (wrong fill weight, blemished produce, incorrect color indicating spoilage). AI vision systems are used extensively for sorting — automatically removing blemished fruit, detecting bones in chicken, finding foreign objects like plastic or metal fragments, and verifying fill levels and seal integrity.</div>
+      <div class="ip-defects">
+        <div class="ip-defect">Foreign objects (plastic, metal, bone)</div>
+        <div class="ip-defect">Visual spoilage (discoloration, mold)</div>
+        <div class="ip-defect">Incorrect fill weight</div>
+        <div class="ip-defect">Broken seal or damaged packaging</div>
+        <div class="ip-defect">Undeclared allergen contamination</div>
+      </div>
+      <div class="ip-consequence">⚠️ If bad products ship: Consumer illness or injury. FDA enforcement action, mandatory recall. Allergen contamination incidents have resulted in deaths and billion-dollar brand damage. A single metal fragment recall can affect millions of units.</div>
+    </div>
+
+    <div class="ind-panel" id="panel-electronics">
+      <div class="ip-header"><div class="ip-icon">💻</div><div class="ip-meta"><div class="ip-tag">Electronics Manufacturing</div><h3>Circuit Boards & Consumer Devices</h3></div></div>
+      <div class="ip-what">Electronics QC is driven by extreme miniaturization — solder joints measured in microns, components placed with sub-millimeter precision. A missing capacitor the size of a grain of sand can cause an entire device to fail. AI vision systems and X-ray inspection check circuit boards at speed and resolution far beyond human visual capability, detecting solder defects, misplaced components, and PCB surface damage invisible to the naked eye.</div>
+      <div class="ip-defects">
+        <div class="ip-defect">Solder bridges (unintended connections)</div>
+        <div class="ip-defect">Missing or misplaced components</div>
+        <div class="ip-defect">PCB surface cracks or delamination</div>
+        <div class="ip-defect">Incorrect component polarity</div>
+        <div class="ip-defect">Contamination on contact surfaces</div>
+      </div>
+      <div class="ip-consequence">⚠️ If bad products ship: Device failure in the field — ranging from customer frustration to safety risks (lithium battery fires from short circuits). Electronics recalls are expensive and damage brand trust. Samsung's Galaxy Note 7 battery issue cost over $5 billion.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Consistency Matters More Than People Realize</h2>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">$600B+</div><div class="stat-label">Estimated annual cost of poor quality in US manufacturing</div></div>
+      <div class="stat-card"><div class="stat-num">10×</div><div class="stat-label">More expensive to fix a defect after shipping vs. catching it on the line</div></div>
+      <div class="stat-card"><div class="stat-num">100×</div><div class="stat-label">More expensive to fix a defect discovered by the customer vs. in production</div></div>
+    </div>
+    <p>The numbers above come from a principle called the <mark>Rule of Ten</mark> — each stage a defect passes through multiplies the cost of fixing it by roughly ten times. A defect caught at the production station costs the least. The same defect caught during final inspection costs more. Caught by the customer? Exponentially more. Triggering a recall? The cost can reach hundreds of millions.</p>
+    <p>This is why AI QC systems that can catch defects earlier — at higher speed, with greater accuracy — generate real financial value, not just quality improvement metrics.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Happens When a Defective Product Travels Downstream</h2>
+    <p>One defect that slips through QC doesn't stay contained. It cascades through every step downstream before it's eventually found.</p>
+
+    <div class="cascade">
+      <div class="cascade-step">
+        <div class="casc-left"><div class="casc-circle">1</div><div class="casc-line"></div></div>
+        <div class="casc-body"><h3>Defect Created on the Production Line</h3><p>A dimensional error, contamination, or process failure produces a non-conforming product. If QC catches it here — cost is low. Fix the part, or scrap it. Investigate the cause.</p></div>
+      </div>
+      <div class="cascade-step">
+        <div class="casc-left"><div class="casc-circle">2</div><div class="casc-line"></div></div>
+        <div class="casc-body"><h3>Defect Travels Through Final Assembly</h3><p>If undetected, the defective component gets assembled into a finished product. Now fixing it requires disassembly — multiplying labor cost. Other good parts may be scrapped in the process.</p></div>
+      </div>
+      <div class="cascade-step">
+        <div class="casc-left"><div class="casc-circle">3</div><div class="casc-line"></div></div>
+        <div class="casc-body"><h3>Defect Passes Final Inspection</h3><p>The finished product ships to a distribution center, then to a retailer or directly to the customer. The defect is now out of the facility — in transit, in a warehouse, or in the customer's hands.</p></div>
+      </div>
+      <div class="cascade-step">
+        <div class="casc-left"><div class="casc-circle">4</div><div class="casc-line"></div></div>
+        <div class="casc-body"><h3>Customer Discovers the Defect</h3><p>The customer returns the product, files a complaint, or posts a review. Cost now includes logistics, replacement product, customer service time, and reputation damage. For safety defects, add legal liability.</p></div>
+      </div>
+      <div class="cascade-step">
+        <div class="casc-left"><div class="casc-circle">5</div><div class="casc-line"></div></div>
+        <div class="casc-body"><h3>Recall (Worst Case)</h3><p>If the defect affects a large batch and poses a safety risk, a recall is initiated. Every unit in the affected lot must be located, retrieved, and handled — even units that are fine. This is the most expensive outcome by far.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How QC Has Evolved: Manual → Statistical → AI</h2>
+    <div class="qc-spectrum">
+      <div class="qcs-card manual">
+        <div class="qcs-label">Era 1</div>
+        <h3>Manual Inspection</h3>
+        <p>Workers visually inspect products by hand. Works for low-volume, high-value items. Doesn't scale — inspectors miss defects (fatigue, distraction), inspection itself takes time, and 100% coverage is impractical at high throughput.</p>
+      </div>
+      <div class="qcs-card statistical">
+        <div class="qcs-label">Era 2</div>
+        <h3>Statistical Sampling</h3>
+        <p>Instead of inspecting every unit, a sample is taken and analyzed statistically. If the sample meets quality standards, the batch is approved. Faster than 100% manual inspection — but defects in uninspected units still ship.</p>
+      </div>
+      <div class="qcs-card ai">
+        <div class="qcs-label">Era 3 — Now</div>
+        <h3>AI Vision Inspection</h3>
+        <p>Cameras inspect 100% of units at production speed — faster and more consistently than humans. AI detects defects invisible to the naked eye. Real-time data feeds back to process control. The inspection doesn't slow the line.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A food packaging facility inspects 1 in every 50 boxes of cereal coming off the production line. They find no defects in their sample and approve the batch for shipment. Three days later, a customer finds a small piece of plastic in their cereal. What does this incident reveal about the inspection method?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The inspector\'s performance isn\'t the issue — they checked the boxes they were given. The problem is structural: statistical sampling only guarantees that the sample was inspected, not that the rest of the batch is defect-free. A defect in the 49 uninspected boxes for every 1 inspected box will routinely escape this method.')">The inspector didn't do their job correctly — every box should have been inspected manually</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Statistical sampling can verify quality in the sample but cannot guarantee quality in the uninspected units. This incident reveals the fundamental limitation of sample-based inspection: a defect that only affects a small number of units can easily fall in the uninspected portion of the batch and reach customers. This is exactly why AI vision systems that inspect 100% of units at production speed represent a meaningful QC improvement over statistical sampling — they close the gap that sampling leaves open.')">Statistical sampling has an inherent gap — defects in uninspected units will pass through. 100% AI inspection could have caught this.</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A 1-in-50 sampling rate is a valid statistical QC method used widely in manufacturing. The problem isn\'t that the rate was too low — it\'s that sampling-based methods fundamentally cannot catch defects that only occur in a small number of units unless those units happen to be in the sample.')">The 1-in-50 sampling rate is too low — increasing to 1-in-10 would have caught this defect</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Supplier quality is a possible contributing factor to what caused the plastic to be in the product, but the QC failure described here is specifically about the inspection method — it missed a defect that was present in the facility output. The inspection process, not the supplier, is the relevant issue for this question.')">The supplier sent contaminated ingredients — this is a supply chain problem, not a QC problem</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Quality control verifies that manufactured products meet defined specifications — every unit, every time. A defect is anything that falls outside that specification, ranging from cosmetic imperfections to safety-critical failures depending on the industry.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The cost of a defect multiplies at every downstream stage (the Rule of Ten). Catching defects at the production station is the cheapest option; a customer-discovered defect costs 10–100x more; a recall can cost hundreds of millions.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>QC has evolved from manual inspection (can't scale) → statistical sampling (can't catch every defect) → AI vision inspection (100% coverage at production speed). AI doesn't replace the human judgment required when a defect is flagged — it dramatically improves detection coverage.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showInd(id,btn){document.querySelectorAll(".ind-panel").forEach(p=>p.classList.remove("show"));document.querySelectorAll(".ind-tab").forEach(t=>t.classList.remove("active"));document.getElementById("panel-"+id).classList.add("show");btn.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Vision Systems Inspect Products: Machine Vision Quality Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Pipeline steps */
+.pipeline{display:flex;flex-direction:column;gap:4px;margin:28px 0;}
+.pipe-step{display:flex;gap:16px;}
+.ps-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.ps-num{width:44px;height:44px;border-radius:12px;background:var(--purple);color:white;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:"Fraunces",serif;}
+.ps-line{flex:1;width:2px;background:var(--purple-mid);min-height:12px;}
+.ps-body{background:var(--gray-soft);border-radius:0 16px 16px 16px;padding:18px 22px;flex:1;margin-bottom:8px;}
+.ps-body h3{font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.ps-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.7;}
+.ps-body .ps-tech{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.ps-tech-tag{background:var(--purple-pale);border:1px solid var(--purple-mid);border-radius:6px;padding:3px 10px;font-size:12px;color:var(--purple-dark);}
+.pipe-step:last-child .ps-line{display:none;}
+
+/* Confidence threshold sim */
+.conf-sim{background:#0F0A1A;border-radius:24px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.cs-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;margin-bottom:20px;}
+.conf-slider-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+.conf-label{font-size:13px;color:#8B7FA0;font-family:var(--mono);flex-shrink:0;}
+input[type=range]{flex:1;min-width:120px;accent-color:var(--purple);}
+.conf-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--purple-mid);min-width:44px;}
+.conf-items{display:flex;flex-direction:column;gap:8px;}
+.conf-item{display:flex;align-items:center;gap:12px;background:#1A0A2E;border-radius:10px;padding:10px 14px;}
+.ci-name{font-size:12px;font-family:var(--mono);color:#E2D9F3;flex:1;}
+.ci-bar-wrap{flex:2;background:#0F0A1A;border-radius:4px;height:10px;overflow:hidden;}
+.ci-bar{height:100%;border-radius:4px;transition:width .3s;}
+.ci-score{font-family:var(--mono);font-size:12px;color:#8B7FA0;min-width:36px;text-align:right;}
+.ci-decision{font-size:11px;font-weight:700;font-family:var(--mono);min-width:60px;text-align:right;}
+.conf-summary{margin-top:14px;background:#1A0A2E;border-radius:10px;padding:12px 16px;font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;font-family:var(--mono);}
+
+/* Lighting types */
+.lighting-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:28px 0;}
+.light-card{background:var(--gray-soft);border-radius:12px;padding:14px;text-align:center;border:1.5px solid var(--purple-mid);}
+.light-icon{font-size:24px;margin-bottom:6px;}
+.light-card h3{font-size:12px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;line-height:1.3;}
+.light-card p{font-size:11px;color:var(--gray-muted);margin:0;line-height:1.5;}
+@media(max-width:560px){.lighting-grid{grid-template-columns:1fr 1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>How AI Vision Systems Inspect Products</h1>
+  <p class="hero-sub">A step-by-step walkthrough of how machine vision QC actually works — from camera setup and lighting through image processing, confidence scoring, and the flagging decision. Understanding the mechanics helps you evaluate these systems and explain them to others.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>From Camera to Decision in Milliseconds</h2>
+    <p>When a product moves through an AI inspection station, a lot happens very quickly. A camera captures an image. That image is processed by an AI model. A confidence score is produced. A decision is made — pass or flag. All of this happens in milliseconds, at production speed, for every single unit on the line.</p>
+    <p>To understand how AI QC systems can be both so fast and so reliable — and to understand their limitations — you need to see how each step of this pipeline works.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Machine Vision:</strong> The use of cameras and computer processing to automatically inspect, measure, or identify objects. In manufacturing QC, machine vision systems replace or augment human visual inspection — operating continuously, consistently, and at speeds humans cannot match. The AI component classifies what the camera sees and determines whether it represents a defect.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The 6-Step Machine Vision Pipeline</h2>
+    <p>Every AI vision QC system operates through the same basic pipeline — from physical image capture to final disposition decision. Here's what happens at each stage:</p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">1</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>Image Capture — The Camera Setup</h3>
+          <p>One or more industrial cameras photograph the product as it moves past the inspection station. Camera selection matters: resolution (how many pixels per image), frame rate (how many images per second), and wavelength (visible light, infrared, UV, or X-ray depending on what needs to be detected). Multiple cameras at different angles ensure full coverage — a single camera can't see the underside of a part or the inside of a package.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Line scan cameras</span><span class="ps-tech-tag">Area scan cameras</span><span class="ps-tech-tag">Infrared imaging</span><span class="ps-tech-tag">Multi-angle arrays</span></div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">2</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>Controlled Lighting — The Secret Weapon</h3>
+          <p>Lighting is often more important than the camera itself. The same surface defect can be invisible under one lighting setup and clearly visible under another. AI inspection systems use precisely engineered LED lighting rigs — angled to create shadows that reveal surface texture, or back-lit to reveal density variations, or strobe-synced to freeze motion. Getting the lighting right is often the most technically demanding part of deploying a machine vision system.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Coaxial (direct) lighting</span><span class="ps-tech-tag">Dark field (angled) lighting</span><span class="ps-tech-tag">Backlit illumination</span><span class="ps-tech-tag">Strobe synchronization</span></div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">3</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>Preprocessing — Cleaning the Image</h3>
+          <p>Before the AI model analyzes the image, preprocessing algorithms normalize it — correcting for brightness variation, lens distortion, perspective, and motion blur. A product that's slightly off-center in the camera frame still needs to be compared to reference images correctly. Preprocessing makes the AI's job more consistent by delivering standardized inputs regardless of minor variation in how each unit is positioned.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Geometric correction</span><span class="ps-tech-tag">Brightness normalization</span><span class="ps-tech-tag">Noise filtering</span><span class="ps-tech-tag">Distortion correction</span></div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">4</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>AI Model Analysis — Finding the Defect</h3>
+          <p>The preprocessed image passes through a trained neural network — typically a convolutional neural network (CNN) — that has learned to recognize defects from thousands or millions of labeled example images. The model scans the image, identifies regions of interest, and evaluates whether each region shows normal variation (acceptable) or an actual defect. Different models are trained for different defect types — a model trained to find paint scratches doesn't automatically detect dimensional deviations.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Convolutional neural network</span><span class="ps-tech-tag">Defect localization</span><span class="ps-tech-tag">Anomaly detection</span><span class="ps-tech-tag">Multi-class classification</span></div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">5</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>Confidence Scoring — How Sure Is the AI?</h3>
+          <p>Rather than a binary pass/fail, the AI outputs a <mark>confidence score</mark> — a probability between 0 and 100% representing how certain the model is that a defect is present. A score of 95% means the model is highly confident. A score of 52% means it's barely more likely than not. The system then applies a <mark>threshold</mark>: any score above the threshold is flagged; scores below pass. Adjusting this threshold changes the balance between false positives and false negatives — the core tradeoff in QC system design.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Probability score 0–100%</span><span class="ps-tech-tag">Configurable thresholds</span><span class="ps-tech-tag">Multi-defect scoring</span></div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="ps-left"><div class="ps-num">6</div><div class="ps-line"></div></div>
+        <div class="ps-body">
+          <h3>Decision & Output — Pass, Flag, or Reject</h3>
+          <p>The scored result triggers a physical action: a green light and the unit continues down the line (pass), a yellow alert triggers a human review station (flag for review), or an automated reject mechanism diverts the unit off the line (hard reject). High-confidence defects may be automatically rejected; borderline scores may go to a human inspector for final decision. The output also writes a record — defect type, location, confidence score, timestamp — to the quality database for later analysis.</p>
+          <div class="ps-tech"><span class="ps-tech-tag">Automated divert mechanism</span><span class="ps-tech-tag">Human review routing</span><span class="ps-tech-tag">QC database logging</span><span class="ps-tech-tag">Real-time dashboard</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Lighting Makes or Breaks Everything</h2>
+    <p>Industrial vision engineers joke that machine vision is "90% lighting" — and they're not entirely wrong. The same camera, the same AI model, the same defect can produce completely different results depending on lighting setup. Here's why four different lighting approaches exist for different inspection challenges:</p>
+
+    <div class="lighting-grid">
+      <div class="light-card"><div class="light-icon">💡</div><h3>Coaxial (Direct) Lighting</h3><p>Light hits surface straight-on. Best for flat, reflective surfaces. Reveals color variation and contamination.</p></div>
+      <div class="light-card"><div class="light-icon">🔦</div><h3>Dark Field (Angled) Lighting</h3><p>Light hits at a sharp angle — scratches and surface texture catch the light and glow against a dark background.</p></div>
+      <div class="light-card"><div class="light-icon">🌟</div><h3>Backlit (Silhouette) Lighting</h3><p>Light from behind the product creates a silhouette — ideal for measuring shape, detecting holes, checking fill levels.</p></div>
+      <div class="light-card"><div class="light-icon">🟣</div><h3>UV / Fluorescence</h3><p>Ultraviolet light makes certain materials fluoresce — contamination, adhesives, or coatings become visible that are invisible in normal light.</p></div>
+    </div>
+
+    <div class="pull-quote"><p>An AI model trained perfectly on bad lighting data will perform badly in the real world. The quality of the detection starts with the quality of the image — which starts with the lighting.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Confidence Threshold: Adjusting the Balance</h2>
+    <p>Move the slider below to see how changing the confidence threshold affects which inspection results are flagged as defects — and why this tradeoff is at the heart of every QC system design decision.</p>
+
+    <div class="conf-sim">
+      <div class="cs-title">AI INSPECTION CONFIDENCE MONITOR · AUTOMOTIVE PAINT LINE</div>
+      <div class="conf-slider-row">
+        <span class="conf-label">THRESHOLD:</span>
+        <input type="range" min="40" max="95" value="75" id="confSlider" oninput="updateConf()">
+        <span class="conf-val" id="confVal">75%</span>
+      </div>
+      <div class="conf-items" id="confItems"></div>
+      <div class="conf-summary" id="confSummary"></div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A machine vision QC system inspects automotive door panels. The AI team is debating whether to set the confidence threshold at 70% or 90%. A production manager says: "Set it at 70% — we want to catch every possible defect." A quality engineer pushes back. What is the quality engineer most likely concerned about?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A lower threshold doesn\'t increase inspection speed — the AI processes each image the same way regardless of threshold. The threshold only changes which results trigger an alert, not how quickly the analysis runs.')">A lower threshold will slow down the inspection line because the AI has to analyze images more carefully</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Setting the threshold at 70% means the system will flag units where the AI is only 70% confident — capturing more true defects, but also generating far more false positives (good products flagged as defective). Every false positive requires a human inspector to review it, potentially rework it, and release it — adding significant labor cost and potentially creating bottlenecks that slow the entire production line. The quality engineer is right to push back: a threshold so low that it floods the review queue with false positives can actually make QC less effective by overwhelming the human reviewers responsible for the final judgment call.')">A 70% threshold will generate many false positives — good products flagged as defective — creating unnecessary rework, labor cost, and production bottlenecks</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ AI models don\'t "learn" from threshold adjustments in real time — threshold changes only affect which scored results trigger alerts. The underlying model\'s confidence scores don\'t change based on the threshold setting.')">A 70% threshold will cause the AI to learn incorrect patterns, reducing its accuracy over time</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The production manager\'s goal is understandable — catch every defect. But "higher threshold catches fewer defects" is actually the opposite of what happens. A higher threshold is more selective — only flagging high-confidence results. A lower threshold flags more results, including many false positives. The concern is about false positives, not the number of defects caught.')">A 70% threshold is too high and will miss obvious defects that should be caught</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The 6-step machine vision pipeline is: image capture → controlled lighting → preprocessing → AI model analysis → confidence scoring → decision and output. Each step must be correctly configured for the system to work reliably.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Lighting is as important as the camera — the same defect can be invisible or clearly visible depending on the lighting setup. Different techniques (coaxial, dark field, backlit, UV) are used for different defect types.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The confidence threshold determines the tradeoff between false positives (flagging good products) and false negatives (missing real defects). There is no perfect threshold — every setting involves this tradeoff. Setting it too low floods human reviewers with false alarms; too high and real defects slip through.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const items=[
+  {name:"Unit #2241 — Right panel",score:92,color:"#EF4444"},
+  {name:"Unit #2242 — Left panel",score:34,color:"#6EE7B7"},
+  {name:"Unit #2243 — Hood surface",score:78,color:"#EF4444"},
+  {name:"Unit #2244 — Roof panel",score:21,color:"#6EE7B7"},
+  {name:"Unit #2245 — Door trim",score:61,color:"#F59E0B"},
+  {name:"Unit #2246 — Rear quarter",score:88,color:"#EF4444"},
+];
+function updateConf(){
+  const t=parseInt(document.getElementById("confSlider").value);
+  document.getElementById("confVal").textContent=t+"%";
+  const html=items.map(i=>{
+    const pct=i.score;const above=pct>=t;
+    const barColor=pct>=t?"#EF4444":pct>=t-15?"#F59E0B":"#6EE7B7";
+    const dec=above?"⚠️ FLAG":"✓ PASS";
+    const decColor=above?"#FCA5A5":"#6EE7B7";
+    return`<div class="conf-item"><span class="ci-name">${i.name}</span><div class="ci-bar-wrap"><div class="ci-bar" style="width:${pct}%;background:${barColor};"></div></div><span class="ci-score">${pct}%</span><span class="ci-decision" style="color:${decColor}">${dec}</span></div>`;
+  }).join("");
+  document.getElementById("confItems").innerHTML=html;
+  const flagged=items.filter(i=>i.score>=t).length;
+  const passed=items.length-flagged;
+  let msg=`THRESHOLD: ${t}% · FLAGGED: ${flagged}/6 · PASSED: ${passed}/6`;
+  if(t<=55) msg+=` · ⚠️ Low threshold — expect high false positive rate`;
+  else if(t>=88) msg+=` · ⚠️ High threshold — borderline defects may slip through`;
+  else msg+=` · ✓ Balanced threshold`;
+  document.getElementById("confSummary").textContent=msg;
+}
+updateConf();
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

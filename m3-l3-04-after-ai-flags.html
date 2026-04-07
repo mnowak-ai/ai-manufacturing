@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Happens After AI Flags a Defect? The Human Decision Process in QC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Decision sim */
+.decision-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ds-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:14px;}
+.ds-scenarios{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.ds-btn{padding:8px 14px;border-radius:8px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;cursor:pointer;color:var(--gray-text);transition:all .2s;font-family:"DM Sans",sans-serif;}
+.ds-btn.active,.ds-btn:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.ds-case{background:white;border-radius:16px;padding:20px;border:1.5px solid var(--purple-mid);}
+.ds-ai-finding{background:#0F0A1A;border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+.ds-ai-label{font-size:10px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.1em;margin-bottom:6px;}
+.ds-ai-text{font-size:13px;color:#E2D9F3;font-family:var(--mono);line-height:1.6;}
+.ds-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.ds-opt{padding:12px 16px;border-radius:10px;border:1.5px solid var(--purple-mid);background:var(--gray-soft);font-size:14px;cursor:pointer;text-align:left;color:var(--gray-text);transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.ds-opt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.ds-opt.chosen-right{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.ds-opt.chosen-wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ds-feedback{font-size:14px;line-height:1.7;padding:12px 16px;border-radius:10px;display:none;}
+.ds-feedback.show{display:block;}
+.ds-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.ds-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+
+/* Decision paths */
+.path-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.path-card{border-radius:16px;padding:20px;border:2px solid;}
+.path-card.rework{background:#FFF7ED;border-color:#FCD34D;}
+.path-card.scrap{background:var(--red-pale);border-color:var(--red);}
+.path-card.pass{background:var(--green-pale);border-color:var(--green);}
+.path-card.escalate{background:var(--blue-pale);border-color:var(--blue-mid);}
+.path-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.rework .path-label{color:#D97706;}
+.scrap .path-label{color:var(--red);}
+.pass .path-label{color:var(--green);}
+.escalate .path-label{color:var(--blue);}
+.path-card h3{font-size:16px;font-weight:700;margin-bottom:8px;font-family:"Fraunces",serif;}
+.rework h3{color:#92400E;}
+.scrap h3{color:var(--red);}
+.pass h3{color:var(--green);}
+.escalate h3{color:var(--blue);}
+.path-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.path-cards{grid-template-columns:1fr;}}
+
+/* Who decides */
+.who-grid{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.who-row{display:flex;gap:14px;align-items:flex-start;background:var(--gray-soft);border-radius:14px;padding:18px 20px;}
+.who-icon{font-size:26px;flex-shrink:0;}
+.who-body h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.who-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.3 — Quality Control</div>
+  <h1>What Happens After AI Flags a Defect?</h1>
+  <p class="hero-sub">The slides say "AI flags issues, humans confirm and decide" — but the decision process itself is a black box. This article opens that box: rework, scrap, pass with deviation, escalate to engineering — what each means, when each applies, and who makes the call.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The AI Flag Is the Beginning, Not the End</h2>
+    <p>When an AI QC system flags a unit, it hasn't made a final decision. It's made a recommendation — a high-confidence signal that something may be wrong. What happens next is entirely a human process: reviewing the evidence, applying judgment, weighing options, and making a documented decision that someone takes responsibility for.</p>
+    <p>This matters because the consequences of that decision are real — scrapping a good part wastes money, passing a bad part may harm someone, and the wrong choice can affect hundreds of downstream units if the defect has a systemic cause.</p>
+
+    <div class="pull-quote"><p>The AI has no idea what the defect costs to fix, whether this customer would care, whether a recall would follow, or what the supervisor will say. The human does. That's why humans decide.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Practice: Make the Disposition Decision</h2>
+    <p>Select a scenario and choose the most appropriate QC disposition. Read the AI finding carefully before deciding.</p>
+
+    <div class="decision-sim">
+      <div class="ds-label">⚖️ QC Disposition Simulator</div>
+      <div class="ds-scenarios">
+        <button class="ds-btn active" onclick="loadScenario(0,this)">Auto Paint</button>
+        <button class="ds-btn" onclick="loadScenario(1,this)">Pharma Tablet</button>
+        <button class="ds-btn" onclick="loadScenario(2,this)">Electronics</button>
+        <button class="ds-btn" onclick="loadScenario(3,this)">Food Seal</button>
+      </div>
+      <div class="ds-case" id="dsCase"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Disposition Options Explained</h2>
+    <p>Every QC inspection system uses some version of four core disposition options. Understanding what each means — and when each applies — is essential knowledge for anyone working in a manufacturing quality role.</p>
+
+    <div class="path-cards">
+      <div class="path-card rework">
+        <div class="path-label">Option 1</div>
+        <h3>🔧 Rework</h3>
+        <p>The defect can be fixed. The unit is set aside, corrected (sanded, recoated, adjusted, re-soldered, relabeled), and re-inspected before returning to the line. Rework adds cost and time — and must be carefully tracked so reworked units don't get confused with original-pass units. Rework is only appropriate when the defect is fixable without compromising the product's integrity.</p>
+      </div>
+      <div class="path-card scrap">
+        <div class="path-label">Option 2</div>
+        <h3>🗑️ Scrap</h3>
+        <p>The defect cannot be fixed, or fixing it would cost more than making a new unit. The part is destroyed or recycled. Scrap is always a cost — material, labor, and time are lost. High scrap rates signal a systemic production problem that needs investigation. Tracking scrap by defect type and time period is how QC teams find patterns worth fixing.</p>
+      </div>
+      <div class="path-card pass">
+        <div class="path-label">Option 3</div>
+        <h3>✅ Pass with Deviation (Use As Is)</h3>
+        <p>The defect is real but a qualified engineer determines it doesn't affect function or safety in this application — documented as a formal deviation and approved for release. This disposition requires written justification and sign-off by an authorized engineer. It is NOT the same as ignoring the defect — it is a documented, justified, accountable decision that the defect falls within acceptable limits for this specific context.</p>
+      </div>
+      <div class="path-card escalate">
+        <div class="path-label">Option 4</div>
+        <h3>🔴 Escalate to Engineering</h3>
+        <p>The defect is ambiguous, unusual, potentially systemic, or beyond the QC inspector's authority to disposition. Engineering review is triggered. The unit is placed on hold pending investigation. This disposition is appropriate when: the defect type hasn't been seen before, multiple units show the same defect pattern, the defect might indicate a process problem affecting other batches, or the safety implications are unclear.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Who Has Authority to Make Each Decision?</h2>
+    <p>QC dispositions aren't made by just anyone — authority levels are defined by the severity of the decision. In most manufacturing facilities, a clear chain of escalation exists:</p>
+
+    <div class="who-grid">
+      <div class="who-row"><div class="who-icon">👷</div><div class="who-body"><h3>Line Inspector / QC Technician</h3><p>Authorized to make routine pass/fail and straightforward rework decisions. Can escalate to supervisor for borderline cases. Cannot approve "pass with deviation" on their own. First human in the post-AI decision chain.</p></div></div>
+      <div class="who-row"><div class="who-icon">📋</div><div class="who-body"><h3>QC Supervisor / Team Lead</h3><p>Can approve rework procedures, authorize scrap, and handle moderately ambiguous cases. Has broader context about production patterns and customer requirements. Escalates structurally significant or safety-relevant defects upward.</p></div></div>
+      <div class="who-row"><div class="who-icon">🔬</div><div class="who-body"><h3>Quality Engineer</h3><p>Can approve "use as is" (pass with deviation) after engineering analysis. Has technical authority to determine whether a defect affects product function or safety. Owns the formal deviation documentation and justification. In regulated industries, this sign-off may require additional review.</p></div></div>
+      <div class="who-row"><div class="who-icon">🏢</div><div class="who-body"><h3>Quality Manager / Director</h3><p>Has authority over systemic quality decisions — whether to stop the line, initiate a full batch recall, notify a customer of a quality escape, or trigger a supplier corrective action. Accountable for the facility's overall quality performance to leadership and regulators.</p></div></div>
+    </div>
+
+    <div class="pull-quote"><p>AI gives every level of this chain better information — faster. But the accountability at each level remains human. The AI doesn't sign its name to the disposition record. The engineer does.</p></div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">An AI QC system flags 14 consecutive circuit boards from the same production batch for a similar solder joint irregularity — each with a confidence score between 71–79%. A QC technician inspects the first few under a microscope and can't confirm a clear defect in those specific units. What should happen next?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While individual borderline flags might sometimes be false positives, 14 consecutive flags on units from the same batch is a pattern — not random variation. Releasing the entire batch on the basis that borderline results are likely false positives would bypass the investigation that this pattern warrants.')">Release the entire batch — borderline confidence scores suggest false positives and the technician can\'t confirm defects visually</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While scrapping might eventually be the right outcome, automatically scrapping 14 units before investigating wastes material that may be acceptable. The pattern of flags deserves engineering investigation first to determine: Is there a real solder defect that\'s hard to see visually? Is the process running out of control? Is the AI flagging normal variation?')">Scrap all 14 flagged boards immediately to avoid risk</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A cluster of 14 consecutive flags on the same batch, even at borderline confidence, is a significant pattern that warrants escalation. This is not normal random variation — it suggests something may be systematically different about this batch or this point in the production run. The entire batch should be placed on hold (not released, not scrapped yet), and engineering should investigate: check solder paste volume, reflow oven temperature profile, component placement accuracy. Functional testing of the flagged boards would also help determine whether the solder joints are actually compromised. The AI pattern — 14 consecutive flags — is exactly the kind of signal that should trigger engineering-level investigation, not a line technician\'s individual judgment call.')">Escalate to engineering — the pattern of 14 consecutive flags from the same batch warrants investigation; hold the batch pending review</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Re-training the AI on these boards before investigation would be premature and potentially harmful — if the solder joints are actually defective, re-training the AI to accept them would reduce the system\'s ability to catch similar issues in the future. Investigation must come before any model adjustment.')">Re-train the AI model immediately with these boards as "acceptable" examples</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The four disposition options after an AI flag are: Rework (fix it), Scrap (destroy it), Pass with Deviation (document and justify releasing it), and Escalate to Engineering (investigate further). Each has defined conditions for when it's appropriate.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Authority levels define who can make each disposition decision. Technicians handle routine cases; supervisors handle ambiguous ones; engineers authorize pass-with-deviation; managers handle systemic or safety-critical decisions. The AI flag starts the chain — humans complete it at the appropriate level.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Patterns in AI flags are as important as individual flags. Multiple consecutive flags on the same batch suggest a systemic issue requiring engineering investigation — not just individual unit decisions. AI data analysis that reveals these patterns is one of the most valuable aspects of continuous AI QC monitoring.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+const scenarios=[
+  {title:"Automotive Paint Line — Door Panel",ai:"DEFECT DETECTED · Type: Surface scratch · Location: Lower right quadrant · Size: 4.2mm · Confidence: 91% · Severity: Visual/cosmetic · No structural compromise indicated",opts:[{t:"Rework — sand and repaint the affected area",right:true,fb:"✅ Correct. A 4.2mm surface scratch on a door panel is a textbook rework candidate — it's a visual defect with a clear fix (sand, prime, repaint), no structural implications, and the high confidence score (91%) confirms it's real. After rework, the panel returns for re-inspection before proceeding."},
+  {t:"Scrap the entire door panel",right:false,fb:"❌ Scrapping a door panel over a 4.2mm scratch is disproportionate. The defect is cosmetic, the fix is straightforward, and the material cost of a door panel is significant. Scrap is appropriate when the defect can't be fixed — this one clearly can be."},
+  {t:"Pass with deviation — scratch is small",right:false,fb:"❌ On an automotive exterior panel, a visible 4.2mm scratch would be noticed by customers and is not acceptable under cosmetic specifications. Pass with deviation requires engineering justification that the defect doesn't affect function — for an exterior panel, appearance IS the function."}]},
+  {title:"Pharmaceutical Tablet Line — Capsule Inspection",ai:"DEFECT DETECTED · Type: Capsule breach (small crack visible on shell) · Unit: Batch AMX-2241 · Confidence: 88% · Severity: Potentially critical — seal integrity compromised · Adjacent units: 3 similar flags in last 200 units",opts:[{t:"Rework — reseal the capsule shell",right:false,fb:"❌ Pharmaceutical capsules cannot be 'resealed' and returned to production — once the shell integrity is compromised, the unit must be scrapped. There is no rework option that maintains GMP compliance for a cracked capsule."},
+  {t:"Scrap flagged units and escalate — 3+ similar flags in 200 units suggests a systemic problem",right:true,fb:"✅ Correct. Cracked pharmaceutical capsules cannot be reworked — scrap is the only appropriate disposition for the flagged units. But the more important action here is escalation: 3+ similar flags in 200 units is a pattern that suggests a process issue (encapsulation machine setting? Capsule material quality? Handling damage?) that could be affecting the whole batch. Engineering investigation and potential batch hold are warranted."},
+  {t:"Pass with deviation — crack is small and drug is still enclosed",right:false,fb:"❌ A cracked capsule shell compromises moisture barrier integrity, which can degrade drug stability. More critically, in pharmaceutical manufacturing, any physical integrity defect in a unit requires rejection — there is no engineering justification for releasing a product with a compromised seal."}]},
+  {title:"Electronics — Circuit Board Solder Inspection",ai:"DEFECT DETECTED · Type: Possible solder bridge on IC-4 pin cluster · Confidence: 62% · Severity: Would cause short circuit if confirmed · Note: Confidence below normal threshold — borderline result",opts:[{t:"Pass — 62% confidence is not enough to hold a good board",right:false,fb:"❌ A solder bridge, if real, would cause a short circuit and product failure. While 62% is borderline confidence, the consequence of a false negative (shipping a shorted board) is device failure in the field. The appropriate action is human review — microscope inspection — before a pass/fail decision, not automatic release."},
+  {t:"Human inspector reviews under microscope before disposition",right:true,fb:"✅ Correct. A 62% confidence score means the AI is genuinely uncertain — this is exactly the scenario for human expert review. A microscope inspection can confirm or deny the solder bridge definitively. If the bridge is confirmed → scrap or rework (re-solder). If inspection shows it\'s clear → document as false positive and release. The human review step is what borderline confidence scores are designed to trigger."},
+  {t:"Automatically scrap — any solder flag should be rejected",right:false,fb:"❌ Automatically scrapping all borderline-confidence flags would result in high false positive costs — many good boards scrapped unnecessarily. The system has a human review pathway specifically for borderline scores. Use it before scrapping."}]},
+  {title:"Food Packaging Line — Cereal Bag Seal",ai:"DEFECT DETECTED · Type: Incomplete heat seal · Location: Top seal, right edge · Length of gap: ~8mm · Confidence: 84% · Severity: Seal failure allows air/moisture ingress and contamination risk",opts:[{t:"Pass with deviation — small gap at edge, product is still mostly sealed",right:false,fb:"❌ Any gap in a food package seal creates a pathway for moisture, oxygen, and potential contamination. For food safety, a compromised seal is not a 'mostly sealed' situation — it's a failed seal. There's no engineering justification for releasing food product with a confirmed incomplete seal."},
+  {t:"Scrap the flagged unit, investigate seal machine settings",right:true,fb:"✅ Correct. An incomplete food seal cannot be reworked (you can't 're-seal' a finished package that's already been filled). Scrap is the right disposition for the unit itself. However, the more important action is investigating why the seal is incomplete — seal machine temperature? Pressure? Film material? If the seal machine is running slightly out of spec, other units in the run may have the same issue. A process check should follow the scrap decision."},
+  {t:"Rework — re-run the package through the sealing station",right:false,fb:"❌ While tempting, running a filled food package through a heat seal station again risks product damage, contamination from re-handling, and uncertain seal quality on a re-run. For food packaging, if the seal failed the first time, the unit is typically scrapped rather than re-processed."}]}
+];
+let activeScenario=0;
+function loadScenario(i,btn){activeScenario=i;document.querySelectorAll(".ds-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderScenario();}
+function renderScenario(){const s=scenarios[activeScenario];document.getElementById("dsCase").innerHTML=`<div class="ds-ai-finding"><div class="ds-ai-label">⚠️ AI QC ALERT — ${s.title}</div><div class="ds-ai-text">${s.ai}</div></div><div class="ds-options" id="dsOpts">${s.opts.map((o,i)=>`<button class="ds-opt" onclick="chooseDSOpt(${i})">${o.t}</button>`).join("")}</div><div class="ds-feedback" id="dsFb"></div>`;}
+function chooseDSOpt(i){const opts=document.getElementById("dsOpts");if(opts.querySelector(".chosen-right,.chosen-wrong"))return;const o=scenarios[activeScenario].opts[i];opts.children[i].classList.add(o.right?"chosen-right":"chosen-wrong");const fb=document.getElementById("dsFb");fb.className="ds-feedback show "+(o.right?"good":"bad");fb.textContent=o.fb;}
+loadScenario(0,document.querySelector(".ds-btn.active"));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
