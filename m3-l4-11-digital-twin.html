@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Digital Twin and How Does It Connect to Documentation?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Physical-digital bridge visual */
+.bridge-visual{background:#0F0A1A;border-radius:20px;padding:28px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.bv-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#8B7FA0;font-family:var(--mono);margin-bottom:18px;}
+.bv-sides{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;}
+.bv-side{border-radius:14px;padding:18px;border:2px solid;}
+.bv-physical{background:rgba(96,165,250,.08);border-color:#60A5FA;}
+.bv-digital{background:rgba(123,47,190,.15);border-color:var(--purple);}
+.bv-side h3{font-size:13px;font-weight:700;margin-bottom:10px;}
+.bv-physical h3{color:#93C5FD;}
+.bv-digital h3{color:var(--purple-mid);}
+.bv-item{font-size:12px;display:flex;gap:7px;margin-bottom:5px;line-height:1.55;}
+.bv-physical .bv-item{color:rgba(255,255,255,.6);}
+.bv-digital .bv-item{color:rgba(255,255,255,.6);}
+.bv-arrow{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.bv-arrow-line{width:3px;background:linear-gradient(to bottom,#60A5FA,var(--purple));height:40px;border-radius:2px;}
+.bv-arrow-label{font-size:10px;font-weight:700;color:#8B7FA0;font-family:var(--mono);text-align:center;line-height:1.4;}
+@media(max-width:560px){.bv-sides{grid-template-columns:1fr;}.bv-arrow{flex-direction:row;}.bv-arrow-line{width:40px;height:3px;background:linear-gradient(to right,#60A5FA,var(--purple));}}
+
+/* Three types of twin */
+.twin-types{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.tt-row{display:flex;gap:0;border-radius:16px;overflow:hidden;border:2px solid var(--purple-mid);}
+.tt-label{background:var(--purple-dark);padding:14px 18px;min-width:120px;display:flex;flex-direction:column;justify-content:center;flex-shrink:0;}
+.tt-label h3{font-size:13px;font-weight:700;color:white;margin-bottom:2px;}
+.tt-label .tt-scope{font-size:11px;color:var(--purple-mid);}
+.tt-body{padding:14px 18px;background:white;flex:1;}
+.tt-body p{font-size:14px;color:var(--gray-text);margin:0;line-height:1.65;}
+.tt-body .tt-example{font-size:12px;color:var(--gray-muted);margin-top:5px;font-style:italic;}
+
+/* Documentation connection */
+.doc-connection{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.dc-card{border-radius:14px;padding:16px 18px;border:2px solid var(--purple-mid);background:var(--purple-pale);}
+.dc-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.dc-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.doc-connection{grid-template-columns:1fr;}}
+
+/* Real-world examples */
+.examples{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.ex-row{display:flex;gap:14px;background:var(--gray-soft);border-radius:14px;padding:14px 18px;}
+.ex-icon{font-size:24px;flex-shrink:0;}
+.ex-body h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.ex-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* Horizon card */
+.horizon{background:linear-gradient(135deg,#1A0A2E,#4A1580);border-radius:20px;padding:28px;margin:28px 0;color:white;}
+.horizon h3{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:10px;color:white;}
+.horizon p{font-size:15px;color:rgba(255,255,255,.82);margin-bottom:10px;line-height:1.7;}
+.horizon-items{display:flex;flex-direction:column;gap:6px;}
+.horizon-item{display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>What Is a Digital Twin and How Does It Connect to Documentation?</h1>
+  <p class="hero-sub">Digital twins are one of the most talked-about concepts in advanced manufacturing — and they're built on the same documentation infrastructure this lesson has been covering. This article explains what they are, what they make possible, and where this technology is taking manufacturing documentation.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Core Idea: A Virtual Copy That Stays in Sync</h2>
+    <p>A <mark>digital twin</mark> is a virtual model of a physical object, process, or system — updated in real time with data from the physical counterpart. Think of it less like a photograph (a static snapshot) and more like a mirror: as the physical system changes, the digital model changes with it.</p>
+    <p>The idea started in aerospace. NASA used early versions to simulate spacecraft conditions during missions when physical inspection was impossible. Today, digital twins are being applied to individual machines, entire production lines, and whole manufacturing facilities — and the documentation systems covered in this lesson are what feed them.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Digital Twin:</strong> A virtual representation of a physical object or system that is continuously updated with real-time data from the physical counterpart. Unlike a static diagram or model, a digital twin reflects the current state — and sometimes the predicted future state — of the thing it models. Used for monitoring, simulation, optimization, and predictive maintenance.</div>
+    </div>
+
+    <div class="bridge-visual">
+      <div class="bv-label">PHYSICAL ↔ DIGITAL — THE TWIN RELATIONSHIP</div>
+      <div class="bv-sides">
+        <div class="bv-side bv-physical">
+          <h3>🏭 Physical World</h3>
+          <div class="bv-item"><span>→</span><span>Production equipment running on the floor</span></div>
+          <div class="bv-item"><span>→</span><span>Sensors measuring temperature, vibration, pressure</span></div>
+          <div class="bv-item"><span>→</span><span>Products moving through production stages</span></div>
+          <div class="bv-item"><span>→</span><span>Workers performing operations and logging results</span></div>
+          <div class="bv-item"><span>→</span><span>Equipment wearing and gradually changing performance</span></div>
+        </div>
+        <div class="bv-arrow">
+          <div class="bv-arrow-line"></div>
+          <div class="bv-arrow-label">Real-time<br>data<br>stream</div>
+          <div class="bv-arrow-line"></div>
+        </div>
+        <div class="bv-side bv-digital">
+          <h3>💻 Digital Twin</h3>
+          <div class="bv-item"><span>→</span><span>Virtual model of equipment updated with sensor data</span></div>
+          <div class="bv-item"><span>→</span><span>Current operating state reflected in real time</span></div>
+          <div class="bv-item"><span>→</span><span>Complete history of every state the machine has been in</span></div>
+          <div class="bv-item"><span>→</span><span>Predictions of when maintenance will be needed</span></div>
+          <div class="bv-item"><span>→</span><span>Simulation of "what if" process changes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Three Levels of Digital Twin</h2>
+    <p>Digital twins operate at different scales — from a single machine to an entire factory:</p>
+
+    <div class="twin-types">
+      <div class="tt-row">
+        <div class="tt-label"><h3>Component Twin</h3><div class="tt-scope">Single part or sensor</div></div>
+        <div class="tt-body"><p>A virtual model of a single component — a pump, a valve, a motor — tracking its operating conditions and wear status in real time. Used to predict when that specific component will need replacement before it fails.</p><div class="tt-example">Example: A digital twin of an industrial pump that tracks vibration signature, flow rate, and operating hours — predicting bearing failure 2 weeks before it occurs.</div></div>
+      </div>
+      <div class="tt-row">
+        <div class="tt-label"><h3>Process Twin</h3><div class="tt-scope">Production line or process</div></div>
+        <div class="tt-body"><p>A virtual model of an entire production process — how inputs (materials, energy, time) transform into outputs under various conditions. Used to optimize process parameters and identify bottlenecks without stopping production to experiment.</p><div class="tt-example">Example: A digital twin of a pharmaceutical tablet compression process — simulating how changes in compression force or feed rate affect tablet hardness and weight distribution, before making changes on the real line.</div></div>
+      </div>
+      <div class="tt-row">
+        <div class="tt-label"><h3>Factory Twin</h3><div class="tt-scope">Entire facility</div></div>
+        <div class="tt-body"><p>A virtual model of the whole manufacturing facility — all production lines, storage areas, logistics flows, and utility systems. Used for facility optimization, scenario planning, and training new workers in a safe virtual environment before they work on the physical floor.</p><div class="tt-example">Example: A digital twin of an automotive plant — allowing engineers to test new line configurations, simulate how a breakdown on Line 3 affects downstream production, and plan maintenance windows for minimum disruption.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How Digital Twins Connect to Documentation</h2>
+    <p>Here's the key insight: <mark>a digital twin is only as good as the documentation feeding it</mark>. Every sensor reading, every batch record entry, every inspection result, every maintenance log — these are the data streams that keep the virtual model synchronized with the physical reality. Documentation isn't separate from a digital twin; it's the foundation it runs on.</p>
+
+    <div class="doc-connection">
+      <div class="dc-card"><h3>📋 Inspection Logs → Quality State</h3><p>AI inspection results flowing into the digital twin create a real-time quality map of production — showing which stations are producing the most defects and predicting where the next quality issue will emerge based on drift patterns.</p></div>
+      <div class="dc-card"><h3>🔧 Maintenance Records → Equipment State</h3><p>Equipment calibration dates, parts replacement history, and operating hours feed the twin's equipment health model — enabling predictive maintenance that schedules service before failures occur rather than reacting to breakdowns.</p></div>
+      <div class="dc-card"><h3>📦 Batch Records → Process State</h3><p>Every batch parameter — temperatures, speeds, hold times — feeds the twin's process model. When a process parameter drifts, the twin can simulate whether that drift will affect product quality before the batch completes.</p></div>
+      <div class="dc-card"><h3>🌡️ Environmental Monitoring → Facility State</h3><p>Continuous temperature, humidity, and particulate count readings maintain the twin's facility model — linking storage condition deviations to affected lots and predicting when facility systems need service.</p></div>
+    </div>
+
+    <div class="pull-quote"><p>A digital twin of a manufacturing facility is essentially the world's most sophisticated documentation system — one where every record you create becomes part of a living model that reflects, predicts, and improves the physical operation it represents.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Real-World Examples</h2>
+    <div class="examples">
+      <div class="ex-row"><div class="ex-icon">✈️</div><div class="ex-body"><h3>GE Aviation — Jet Engine Twins</h3><p>GE maintains digital twins of jet engines in service — fed by hundreds of sensors on each engine during every flight. Maintenance teams can see the health state of a specific engine and predict when components need service, allowing airlines to schedule maintenance before failures rather than after. Documentation from every flight feeds the twin's predictive models.</p></div></div>
+      <div class="ex-row"><div class="ex-icon">💊</div><div class="ex-body"><h3>Pharmaceutical Process Twins</h3><p>Several pharmaceutical manufacturers use process digital twins for continuous manufacturing — where instead of batch-by-batch production, product is made in a continuous flow. Real-time sensor data feeds the twin, which monitors whether the process is staying within specification and makes micro-adjustments automatically — generating continuous documentation as it does so.</p></div></div>
+      <div class="ex-row"><div class="ex-icon">🚗</div><div class="ex-body"><h3>BMW — Factory Planning Twins</h3><p>BMW creates digital twins of entire factory floors before new production lines are physically installed — using the twin to test configurations, simulate material flows, and identify bottlenecks. Workers train in the virtual factory before the physical one is complete. The twin becomes a permanent planning tool, updated as the physical factory changes.</p></div></div>
+      <div class="ex-row"><div class="ex-icon">🏗️</div><div class="ex-body"><h3>Siemens — Industrial Equipment Twins</h3><p>Siemens builds digital twins of industrial equipment at point of manufacture — creating a virtual model that goes with the equipment throughout its lifecycle. When the equipment is serviced anywhere in the world, maintenance records feed back into the twin, giving the manufacturer a complete picture of how each specific unit performs in the field compared to its simulated model.</p></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where This Is Heading</h2>
+    <div class="horizon">
+      <h3>🔭 The Next 5–10 Years in Manufacturing Documentation</h3>
+      <p>Digital twins represent where manufacturing documentation is heading — not just recording what happened, but using those records to model, predict, and continuously improve physical operations. Here's what emerging capabilities will look like for workers entering the field today:</p>
+      <div class="horizon-items">
+        <div class="horizon-item"><span>→</span><span><strong>Autonomous documentation:</strong> AI systems that document production steps automatically from sensor and video data, with workers reviewing and confirming rather than creating records from scratch.</span></div>
+        <div class="horizon-item"><span>→</span><span><strong>Predictive compliance:</strong> Documentation systems that flag emerging compliance risks before they become violations — "At the current drift rate, this process will exceed its specification limit in approximately 4 hours."</span></div>
+        <div class="horizon-item"><span>→</span><span><strong>Simulation-based process optimization:</strong> Changes to process parameters tested in the digital twin before being applied to the physical line — with predicted quality outcomes documented before the change is made.</span></div>
+        <div class="horizon-item"><span>→</span><span><strong>Product-level twins:</strong> A digital record tied to every unit of product — tracking its complete production history, storage history, and in some industries (medical devices), its in-use performance history throughout its service life.</span></div>
+        <div class="horizon-item"><span>→</span><span><strong>Regulatory submission twins:</strong> Digital submissions to regulatory agencies that include the twin data behind the records — not just the results, but the complete operating context in which each result was generated.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical manufacturer implements a digital twin of their tablet compression process. The twin is fed by sensor data from the compression equipment and by batch record entries from workers. After two weeks, the twin's AI model identifies a pattern: tablet weight consistently drifts upward during the last 2 hours of each 10-hour production run. The pattern is subtle — tablets are still within specification — but the trend is consistent. What is the most valuable action this enables?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Reducing run lengths to 8 hours might avoid the drift window, but it reduces production capacity and doesn\'t address the root cause. The digital twin has identified a pattern — the appropriate response is to investigate why the drift occurs at that point in the run (tool wear? temperature accumulation? hopper level?) and fix the root cause, not work around it by shortening runs.')">Reduce production run lengths to 8 hours to avoid the drift window</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. The digital twin has identified a pattern that would be extremely difficult for humans to detect from individual batch records — a consistent upward weight drift in the final 2 hours of long production runs. This enables proactive investigation: what causes this drift? It might be tool wear accumulating heat over the run, hopper level changes affecting feed rate, or operator behavior changing as shifts approach end time. By identifying the pattern before tablets go out of specification — which they haven\'t yet — the quality team can investigate and address the root cause before it becomes a product quality problem. This is the core value of a digital twin connected to documentation: moving from reactive (catching problems after they occur) to proactive (identifying drift trends before they cause defects), which is exactly the direction all modern QC systems are moving.')">Proactively investigate the root cause of the weight drift pattern before tablets go out of specification — enabling process correction before a quality problem occurs</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Widening the specification limit to accommodate the observed drift would lower product quality standards rather than addressing the root cause. The value of identifying the drift pattern is that it can be investigated and fixed — not that it should be accepted by adjusting the acceptable range.')">Widen the tablet weight specification to accommodate the observed drift pattern</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Increasing sampling frequency in the last 2 hours would catch out-of-spec tablets sooner if the drift eventually crosses the limit — but it doesn\'t prevent the drift from occurring. The digital twin has identified that there\'s a systematic cause of this drift; the appropriate response is to find and fix that cause, not just monitor it more closely while it continues.')">Increase inspection sampling frequency during the last 2 hours of each production run</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary · Lesson 3.4 Complete</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A digital twin is a virtual model of a physical object or system, continuously updated with real-time data from its physical counterpart. They exist at three levels — component (single machine), process (production line), and factory (entire facility) — each fed by the same documentation streams this lesson covered.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Digital twins are built on documentation: inspection logs create quality state data, maintenance records create equipment health data, batch records create process state data, and environmental monitoring creates facility state data. A digital twin is only as accurate as the records feeding it — which is exactly why the documentation skills in this lesson matter.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>The trajectory of manufacturing documentation is toward real-time, AI-generated, predictive systems — autonomous documentation, predictive compliance, and simulation-based process changes. Workers entering manufacturing today will spend their careers in facilities moving toward these capabilities. Understanding where the technology is heading is a genuine career advantage.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

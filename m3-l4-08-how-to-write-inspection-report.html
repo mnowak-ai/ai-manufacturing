@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Write a Clear Inspection Report: A Practical Guide for Manufacturing Workers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Before/after report */
+.ba-compare{display:flex;flex-direction:column;gap:16px;margin:28px 0;}
+.ba-block{border-radius:20px;overflow:hidden;border:2px solid;}
+.ba-block.weak{border-color:#FECACA;}
+.ba-block.strong{border-color:#86EFAC;}
+.ba-head{padding:13px 20px;display:flex;align-items:center;gap:10px;}
+.weak .ba-head{background:var(--red-pale);}
+.strong .ba-head{background:var(--green-pale);}
+.ba-head-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.weak .ba-head-label{color:var(--red);}
+.strong .ba-head-label{color:var(--green);}
+.ba-text{padding:16px 20px;font-family:var(--mono);font-size:13px;line-height:1.8;background:white;color:var(--gray-text);}
+.ba-annotations{padding:12px 20px;display:flex;flex-direction:column;gap:6px;}
+.ann{font-size:12px;line-height:1.6;display:flex;gap:8px;}
+.ann.bad{color:var(--red);}
+.ann.good{color:var(--green);}
+
+/* Five elements */
+.five-elements{display:flex;flex-direction:column;gap:10px;margin:28px 0;}
+.fe-row{display:flex;gap:14px;background:var(--gray-soft);border-radius:14px;padding:16px 18px;border-left:4px solid var(--purple);}
+.fe-num{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--purple);width:32px;flex-shrink:0;line-height:1;}
+.fe-body h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.fe-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+.fe-example{font-family:var(--mono);font-size:11px;background:var(--purple-pale);border-radius:5px;padding:4px 8px;margin-top:6px;color:var(--purple-dark);display:inline-block;}
+
+/* Defect description guide */
+.defect-guide{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.dg-card{border-radius:14px;padding:14px 16px;border:2px solid;}
+.dg-card.dim-card{background:var(--purple-pale);border-color:var(--purple-mid);}
+.dg-card h3{font-size:13px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.dg-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+.dg-ex{font-family:var(--mono);font-size:11px;background:white;padding:4px 8px;border-radius:4px;margin-top:5px;display:block;color:var(--purple-dark);}
+@media(max-width:560px){.defect-guide{grid-template-columns:1fr;}}
+
+/* AI review guide */
+.ai-review{background:#0F0A1A;border-radius:20px;padding:24px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.ar-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#8B7FA0;margin-bottom:14px;}
+.ar-draft{font-family:var(--mono);font-size:12px;line-height:1.8;color:rgba(255,255,255,.75);background:#1A0A2E;border-radius:12px;padding:16px;margin-bottom:14px;}
+.ar-flag{display:flex;gap:10px;font-size:12px;margin-bottom:6px;line-height:1.6;}
+.ar-flag.ok{color:#6EE7B7;}
+.ar-flag.warn{color:#FDE68A;}
+.ar-flag.bad{color:#FCA5A5;}
+
+/* Language standards */
+.lang-table{border-radius:16px;overflow:hidden;border:2px solid var(--purple-mid);margin:28px 0;}
+.lt-header{display:grid;grid-template-columns:1fr 1fr;background:var(--purple-dark);}
+.lt-hcell{padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:white;}
+.lt-hcell.avoid{background:rgba(220,38,38,.2);}
+.lt-hcell.use{background:rgba(39,103,73,.2);}
+.lt-row{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--purple-mid);}
+.lt-row:nth-child(even){background:var(--gray-soft);}
+.lt-cell{padding:11px 16px;font-size:13px;line-height:1.6;}
+.lt-cell.avoid{color:var(--red);font-family:var(--mono);font-size:12px;}
+.lt-cell.use{color:var(--green);font-family:var(--mono);font-size:12px;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>How to Write a Clear Inspection Report</h1>
+  <p class="hero-sub">Writing a clear inspection report is one of the most directly useful skills in any manufacturing QC role — and it's teachable. This guide covers what goes in a good report, how to describe a defect with precision, the language standards that matter, and how to review an AI draft for accuracy.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why Report Quality Matters</h2>
+    <p>An inspection report is used by more people than the person who wrote it. The QA manager reads it to make release decisions. The process engineer reads it to investigate root causes. The regulatory auditor reads it to assess compliance. If the report is vague, ambiguous, or incomplete, every one of those readers is working with less information than they need.</p>
+    <p><mark>A clear inspection report turns a quality event into a usable record.</mark> A poor one buries the event in ambiguity — or worse, creates a record that misleads the people depending on it.</p>
+
+    <div class="pull-quote"><p>Your report is the only version of what happened that most people will ever see. Write it for someone who wasn't there and knows nothing about what you found.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Weak vs. Strong — Before and After</h2>
+    <p>Here's the same inspection event written two ways. Read both carefully, then look at the annotations explaining what makes the difference.</p>
+
+    <div class="ba-compare">
+      <div class="ba-block weak">
+        <div class="ba-head"><span>❌</span><span class="ba-head-label">Weak Report — What Not to Write</span></div>
+        <div class="ba-text">Inspected line 4 today second shift. Found some scratches on several units. Looks like a surface issue. Removed the bad ones. Everything else seemed okay. Will monitor.</div>
+        <div class="ba-annotations">
+          <div class="ann bad">❌ "Today" — no date. "Second shift" — no time. This record can't be verified or cross-referenced.</div>
+          <div class="ann bad">❌ "Some scratches on several units" — how many? How large? On what surface? "Some" and "several" are meaningless in a quality record.</div>
+          <div class="ann bad">❌ "Looks like a surface issue" — opinion without evidence. What did you actually observe?</div>
+          <div class="ann bad">❌ "Removed the bad ones" — which units? How many? Were they tagged, logged, held for review?</div>
+          <div class="ann bad">❌ "Everything else seemed okay" — "seemed" is not a quality determination. What did you check? What was the result?</div>
+          <div class="ann bad">❌ "Will monitor" — what specifically? At what frequency? Who is responsible?</div>
+        </div>
+      </div>
+      <div class="ba-block strong">
+        <div class="ba-head"><span>✅</span><span class="ba-head-label">Strong Report — What to Write</span></div>
+        <div class="ba-text">Date/Time: 2024-03-14, 15:42
+Station: Line 4, Post-Paint Inspection (Station 7)
+Inspector: A. Chen, QC Technician III
+Product: Metformin 500mg Tablet, Batch BTH-2024-1143
+Units Inspected: 847 (sequential units 44,201–45,047)
+
+Findings:
+Defect type: Linear surface scratches on tablet face
+Count: 23 units (2.72% of sample)
+Location: Top face, center, running parallel to imprint
+Dimension: Approximately 1.5–2.0 mm in length, less than 0.1 mm depth
+Pattern: Defects clustered on units 44,580–44,720 (consistent with tooling interval)
+
+Disposition: 23 flagged units removed and placed in quarantine bin Q-4-B, tagged with NCR reference NCR-2024-0848. Remaining 824 units passed inspection.
+
+Next step: NCR-2024-0848 opened. Compression tooling on Station 5 flagged for maintenance review before next production run. QA Supervisor notified at 15:55.</div>
+        <div class="ba-annotations">
+          <div class="ann good">✅ Exact date, time, station, and inspector — this record can be placed precisely in the production timeline.</div>
+          <div class="ann good">✅ Specific count, location, dimensions, and pattern — someone who wasn't there knows exactly what was found and where.</div>
+          <div class="ann good">✅ Clear disposition with traceability — specific quarantine location and NCR reference number.</div>
+          <div class="ann good">✅ Action-oriented close — who was notified, what happens next, who is responsible.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Five Elements of Every Inspection Report</h2>
+    <div class="five-elements">
+      <div class="fe-row"><div class="fe-num">1</div><div class="fe-body"><h3>When and Where</h3><p>Date, exact time, production line or station, shift. These four fields anchor the record in the production timeline — without them, nothing can be cross-referenced against equipment logs, batch records, or other inspections.</p><div class="fe-example">2024-03-14 · 15:42 · Line 4, Station 7 (Post-Paint Inspection) · Second Shift</div></div></div>
+      <div class="fe-row"><div class="fe-num">2</div><div class="fe-body"><h3>What Was Inspected</h3><p>Product name, batch or lot number, unit range inspected. Enough information that someone six months later can link your report to the specific product, batch, and units you examined.</p><div class="fe-example">Metformin 500mg Tablet · Batch BTH-2024-1143 · Units 44,201–45,047 (847 units)</div></div></div>
+      <div class="fe-row"><div class="fe-num">3</div><div class="fe-body"><h3>What Was Found</h3><p>Defect type, count, location, dimensions, and pattern — written in objective, measurable language. This is the core of the report. Each element (type, count, location, size) answers a different question that investigators, engineers, and auditors will ask.</p><div class="fe-example">Linear scratch · 23 units · Top face, center, parallel to imprint · 1.5–2.0mm length · Clustered at units 44,580–44,720</div></div></div>
+      <div class="fe-row"><div class="fe-num">4</div><div class="fe-body"><h3>What Was Done</h3><p>Disposition of affected units — removed, reworked, held, released with deviation. Include the specific quarantine location, NCR number opened, or release authorization. "Removed the bad ones" is never sufficient; "23 units placed in quarantine bin Q-4-B, tagged NCR-2024-0848" is.</p><div class="fe-example">23 units quarantined in bin Q-4-B · NCR-2024-0848 opened · 824 remaining units released to next station</div></div></div>
+      <div class="fe-row"><div class="fe-num">5</div><div class="fe-body"><h3>What Happens Next</h3><p>Who was notified, what follow-up action is triggered, and who is responsible for it. Reports that end without a clear next step leave investigations without a starting point and accountabilities without owners.</p><div class="fe-example">QA Supervisor notified 15:55 · Compression tooling Station 5 flagged for review before next run · NCR-2024-0848 owner: Process Engineering</div></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How to Describe a Defect Precisely</h2>
+    <p>The hardest part of inspection report writing is defect description. Here's a framework for each dimension of a clear defect description:</p>
+
+    <div class="defect-guide">
+      <div class="dg-card dim-card"><h3>📍 Location</h3><p>Use anatomical or spatial references — not "on the side" but "on the leading edge of the top face, approximately 3mm from the center imprint." Use the product's features as landmarks.</p><div class="dg-ex">Top face · Upper-right corner · Adjacent to dosage imprint · Inner surface at weld seam</div></div>
+      <div class="dg-card dim-card"><h3>📐 Dimensions</h3><p>Measure and record actual dimensions when possible — length, width, depth, diameter, area. "Small" means nothing; "2.3mm × 0.8mm, depth &lt;0.1mm" can be compared against specifications and tracked over time.</p><div class="dg-ex">1.5–2.0mm length · &lt;0.1mm depth · Approximately 4mm diameter · 0.3mm wall thickness at thinnest point</div></div>
+      <div class="dg-card dim-card"><h3>🎨 Appearance</h3><p>Describe what you see — color, texture, shape, orientation. Use concrete terms: "linear scratch running parallel to the imprint," not "mark on the tablet." For visual defects, describe what makes it different from a conforming unit.</p><div class="dg-ex">Silver metallic streak · Linear, 2mm, parallel to seam · Irregular discoloration, cream to light brown · Surface depression, no sharp edges</div></div>
+      <div class="dg-card dim-card"><h3>📊 Pattern</h3><p>Note whether defects are random or clustered. Clustering — specific unit ranges, specific times, specific shifts — is the single biggest clue for root cause investigation. "Random across batch" and "clustered on units 44,580–44,720" lead to completely different investigations.</p><div class="dg-ex">Clustered units 44,580–44,720 · Random across full sample · All defects on same surface orientation · Concentrated in first 200 units of shift</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Language Standards: What to Use and What to Avoid</h2>
+
+    <div class="lang-table">
+      <div class="lt-header"><div class="lt-hcell avoid">❌ Avoid — Subjective or Vague</div><div class="lt-hcell use">✅ Use Instead — Objective and Specific</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Some," "several," "a few," "many"</div><div class="lt-cell use">"23 units," "4 of 50 sampled," "3.2% of batch"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Looks like," "seems to be," "appears"</div><div class="lt-cell use">"Measured 42.1°C," "confirmed via visual inspection," "classified as [defect type]"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Bad," "damaged," "defective" (without description)</div><div class="lt-cell use">"Surface scratch 2mm × 0.1mm on top face," "coating void 3mm diameter"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Today," "this morning," "earlier"</div><div class="lt-cell use">"2024-03-14 at 14:32," "second shift, 15:00–15:45"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Removed the bad ones," "set aside"</div><div class="lt-cell use">"23 units quarantined in bin Q-4-B, tagged NCR-2024-0848"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Will monitor," "should be fine," "probably okay"</div><div class="lt-cell use">"QA Supervisor notified. NCR opened. Next action: tooling review before next run."</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"Normal," "acceptable" (without reference)</div><div class="lt-cell use">"Within specification per SOP-QC-114 (limit: ±0.5mm)" or "exceeds specification by 0.3mm"</div></div>
+      <div class="lt-row"><div class="lt-cell avoid">"I think," "in my opinion," "maybe"</div><div class="lt-cell use">State what you observed, measured, or confirmed. If uncertain, write "flagged for QA review — classification pending."</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How to Review an AI-Drafted Inspection Report</h2>
+    <p>AI systems can generate draft inspection reports from inspection data. Here's how to review one using the principles above.</p>
+
+    <div class="ai-review">
+      <div class="ar-label">🤖 AI DRAFT — REVIEW FOR ACCURACY</div>
+      <div class="ar-draft">INSPECTION REPORT — AI DRAFT (Pending Human Review)<br><br>
+Date: 2024-03-14 · Shift: Second<br>
+Station: Line 4, Post-Paint Inspection<br>
+Inspector: VISION-AI-03<br>
+Product: Metformin 500mg Tablet · Batch: BTH-2024-1143<br>
+Units inspected: 847<br><br>
+AI FINDINGS:<br>
+23 units flagged with surface defects (confidence: 94–97%)<br>
+Defect classification: Linear surface scratches, top face<br>
+Estimated dimensions: 1–2mm length<br>
+Distribution: Units approximately 44,500–44,750<br><br>
+Recommended disposition: Quarantine pending human review<br>
+AI-generated NCR reference: NCR-2024-0848 [AUTO-DRAFT]<br>
+Next action: Supervisor notification recommended</div>
+      <div class="ar-flag good">✅ Date, station, batch, and unit count confirmed correct against production log.</div>
+      <div class="ar-flag warn">⚠️ "Estimated dimensions: 1–2mm length" — AI didn't capture depth measurement. Human reviewer should add: "&lt;0.1mm depth" from physical inspection notes before finalizing.</div>
+      <div class="ar-flag warn">⚠️ "Units approximately 44,500–44,750" — cross-check against inspection data. Actual range per raw data: 44,580–44,720. Tighten this range in the final report — precision matters for root cause analysis.</div>
+      <div class="ar-flag warn">⚠️ "Supervisor notification recommended" — verify this actually happened, with time logged. Replace with: "QA Supervisor A. Rodriguez notified at 15:55."</div>
+      <div class="ar-flag good">✅ NCR reference number correctly generated and cross-referenced. Verify NCR-2024-0848 is actually open in the NCR system before the report is finalized.</div>
+      <div class="ar-flag warn">⚠️ Missing from AI draft: specific quarantine bin location. Add: "units placed in bin Q-4-B" before approving.</div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A QC technician writes the following in an inspection report after finding an issue with incoming raw materials: "Received powder lot from supplier. Color looks a little off compared to normal. Put the suspicious bags aside. Think it might be a moisture issue but not sure. Will check again tomorrow." Which TWO problems are most critical from a documentation standpoint?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While "tomorrow" is vague, the most critical documentation failures are elsewhere. The use of informal language is a style issue — the fundamental problems are about missing information (no quantity of bags, no specific observations) and lack of disposition (the product status is unclear and untracked).')">The language is too informal and the follow-up timeline is vague</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct on both counts. First, no count or specific observation: "a little off," "suspicious bags," and "might be a moisture issue" provide no objective, measurable information. How many bags? What specific color deviation (describe it)? What moisture reading or test was done? "Think it might be" is not a documented finding. Second, no formal disposition: "put the suspicious bags aside" is not a traceable action. How many bags? Where specifically? Under what hold status? Was an NCR opened? Are the bags properly tagged and segregated? Without a formal disposition, the suspect material is in an unknown status — it could be accidentally used in production before tomorrow\'s follow-up check. These two failures — no objective observations and no formal disposition — are the most consequential because they leave both the finding and the product status unresolvable from the record alone.')">No objective observations or measurements, and no formal documented disposition of the suspect material</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Moisture testing would certainly be valuable, but this isn\'t a documentation failure — the technician may have appropriate reasons for not conducting a full moisture test immediately. The documentation failures are in what was written (or not written) about what was observed and what was done with the material.')">No moisture test was conducted and no test results are included</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The supplier name and lot number are definitely missing and should be included — but these are recoverable omissions (the information still exists and can be added). The two most critical failures are the lack of objective observations (making the finding unverifiable) and the lack of formal disposition (leaving the suspect material status untracked and potentially creating a safety risk if used accidentally).')">The supplier name and lot number are not recorded</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Every inspection report needs five elements: When and Where (date, time, station), What Was Inspected (product, batch, unit range), What Was Found (defect type, count, location, dimensions, pattern), What Was Done (disposition with specific location and NCR reference), and What Happens Next (who was notified, what follows).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Replace vague language with specific, measurable terms: "some" → "23 units," "looks like" → "confirmed as," "set aside" → "quarantined in bin Q-4-B per NCR-2024-0848." Opinion language ("I think," "seems to be") has no place in a quality record — state what you observed and measured.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>When reviewing an AI-drafted report, check specifically for: missing measurements the AI didn't capture, approximate ranges that need to be tightened from raw data, recommended actions that need to be confirmed as actually completed, and disposition information with specific locations that AI systems often omit.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

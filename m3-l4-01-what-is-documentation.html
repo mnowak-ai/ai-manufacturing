@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Manufacturing Documentation and Why Does It Exist?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Document type explorer */
+.doc-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.doc-tab{padding:8px 16px;border-radius:100px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-text);transition:all .2s;}
+.doc-tab.active,.doc-tab:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.doc-panel{display:none;border-radius:20px;padding:26px;border:2px solid var(--purple-mid);background:var(--gray-soft);}
+.doc-panel.show{display:block;}
+.dp-header{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;}
+.dp-icon{font-size:38px;}
+.dp-meta h3{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);margin-bottom:3px;}
+.dp-meta .dp-tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);}
+.dp-body p{font-size:15px;line-height:1.75;margin-bottom:10px;}
+.dp-fields{margin-top:12px;}
+.dp-fields-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-muted);margin-bottom:8px;}
+.dp-field-row{display:flex;gap:8px;align-items:baseline;font-size:13px;margin-bottom:6px;line-height:1.5;}
+.dp-field-row .field-name{font-family:var(--mono);font-size:11px;background:var(--purple-pale);color:var(--purple-dark);border-radius:4px;padding:2px 7px;flex-shrink:0;}
+.dp-field-row .field-desc{color:var(--gray-text);}
+.dp-why{margin-top:14px;padding:12px 16px;background:var(--purple-pale);border-radius:10px;font-size:13px;color:var(--purple-dark);line-height:1.65;border-left:3px solid var(--purple);}
+
+/* Why documentation matters */
+.why-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.why-card{border-radius:16px;padding:18px;border:2px solid var(--purple-mid);}
+.why-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:7px;}
+.why-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.why-cards{grid-template-columns:1fr;}}
+
+/* AI vs manual */
+.ai-manual{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.am-card{border-radius:16px;padding:18px;border:2px solid;}
+.am-card.manual{background:var(--orange-pale);border-color:#FDE68A;}
+.am-card.ai{background:var(--purple-pale);border-color:var(--purple-mid);}
+.am-card h3{font-size:14px;font-weight:700;margin-bottom:10px;}
+.manual h3{color:#92400E;}
+.ai h3{color:var(--purple-dark);}
+.am-item{font-size:13px;color:var(--gray-text);display:flex;gap:8px;margin-bottom:5px;line-height:1.55;}
+@media(max-width:560px){.ai-manual{grid-template-columns:1fr;}}
+
+/* Mock document */
+.mock-doc{background:white;border:2px solid #E2D9F3;border-radius:16px;padding:24px;margin:28px 0;font-family:var(--mono);box-shadow:0 4px 20px rgba(0,0,0,.06);}
+.md-header{border-bottom:2px solid var(--purple-mid);padding-bottom:12px;margin-bottom:16px;}
+.md-title{font-size:13px;font-weight:700;color:var(--purple-dark);text-transform:uppercase;letter-spacing:.08em;}
+.md-subtitle{font-size:11px;color:var(--gray-muted);margin-top:4px;}
+.md-row{display:flex;gap:12px;font-size:11px;margin-bottom:8px;flex-wrap:wrap;}
+.md-field{flex:1;min-width:140px;}
+.md-label{color:var(--gray-muted);margin-bottom:2px;text-transform:uppercase;font-size:10px;letter-spacing:.05em;}
+.md-value{color:var(--gray-text);background:var(--gray-soft);border-radius:4px;padding:4px 8px;}
+.md-value.highlight{background:var(--purple-pale);color:var(--purple-dark);}
+.md-value.alert{background:var(--red-pale);color:var(--red);}
+.md-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:11px;}
+.md-table th{background:var(--purple-dark);color:white;padding:7px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;}
+.md-table td{padding:6px 10px;border-bottom:1px solid var(--purple-mid);color:var(--gray-text);}
+.md-table tr:last-child td{border-bottom:none;}
+.md-table .pass{color:var(--green);font-weight:700;}
+.md-table .fail{color:var(--red);font-weight:700;}
+.md-table .ai-flag{background:var(--purple-pale);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>What Is Manufacturing Documentation and Why Does It Exist?</h1>
+  <p class="hero-sub">Every inspection, every test result, every maintenance task, every decision about a defective product — all of it gets written down in a factory. This article explains what gets documented, why it can't just live in people's heads, and how AI is starting to do the writing automatically.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why "We'll Remember It" Doesn't Work in Manufacturing</h2>
+    <p>Imagine a pharmaceutical plant that makes 500,000 tablets a day across three shifts with 200 workers. Something goes wrong — a batch of medication tests slightly outside specification six months later. Who was working that line at 2 AM on a Tuesday in March? What did the temperature in the mixing room read? Was the equipment calibrated? Did anyone check?</p>
+    <p>Without documentation, no one can answer those questions. The investigation stalls. The root cause goes unfound. The problem recurs. The FDA auditor arrives and finds no records — and shuts down the facility.</p>
+    <p><mark>Manufacturing documentation exists because memory fails, people change jobs, and regulatory agencies require proof</mark> — not just assertions — that products were made correctly. A quality system without documentation is just a set of good intentions.</p>
+
+    <div class="pull-quote"><p>In manufacturing, if it wasn't documented, it didn't happen. That's not cynicism — it's the standard every regulated factory is held to.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Five Core Document Types — Explore Each One</h2>
+    <p>Most manufacturing facilities use the same core set of document types, regardless of industry. Select each one to understand what it captures and why it matters.</p>
+
+    <div class="doc-tabs">
+      <button class="doc-tab active" onclick="showDoc('ilr',this)">📋 Inspection Log</button>
+      <button class="doc-tab" onclick="showDoc('maint',this)">🔧 Maintenance Record</button>
+      <button class="doc-tab" onclick="showDoc('ncr',this)">⚠️ NCR</button>
+      <button class="doc-tab" onclick="showDoc('batch',this)">📦 Batch Record</button>
+      <button class="doc-tab" onclick="showDoc('audit',this)">🔍 Audit Trail</button>
+    </div>
+
+    <div class="doc-panel show" id="panel-ilr">
+      <div class="dp-header"><div class="dp-icon">📋</div><div class="dp-meta"><div class="dp-tag">Document Type</div><h3>Inspection Log / Inspection Report</h3></div></div>
+      <div class="dp-body">
+        <p>An inspection log records the results of quality inspections — what was checked, when, by whom, and what was found. Every inspection point on a production line generates entries: did the product pass? What was the measured value? Was anything flagged?</p>
+        <p>In a paper-based system, an inspector fills out a form at a workstation every 30–60 minutes. In an AI-assisted system, the AI inspection camera logs every result automatically — every unit, every measurement, in real time — with a timestamp and machine identifier on each entry.</p>
+      </div>
+      <div class="dp-fields">
+        <div class="dp-fields-label">Typical Fields Captured</div>
+        <div class="dp-field-row"><span class="field-name">DATE/TIME</span><span class="field-desc">When the inspection occurred — to the minute (or second in AI systems)</span></div>
+        <div class="dp-field-row"><span class="field-name">UNIT_ID</span><span class="field-desc">Which specific product or batch was inspected</span></div>
+        <div class="dp-field-row"><span class="field-name">STATION</span><span class="field-desc">Which inspection point on the line performed the check</span></div>
+        <div class="dp-field-row"><span class="field-name">RESULT</span><span class="field-desc">Pass / Fail / Requires Review</span></div>
+        <div class="dp-field-row"><span class="field-name">MEASUREMENT</span><span class="field-desc">Actual value recorded (e.g., 500.3mg, 24.97mm, "scratch 0.8mm door panel")</span></div>
+        <div class="dp-field-row"><span class="field-name">INSPECTOR</span><span class="field-desc">Human inspector ID or AI system identifier — who/what performed the check</span></div>
+      </div>
+      <div class="dp-why">🔑 <strong>Why it exists:</strong> Provides a complete record that every product was inspected, what the results were, and who is accountable for each check. Required for regulatory audits and essential for tracing defects back to their source.</div>
+    </div>
+
+    <div class="doc-panel" id="panel-maint">
+      <div class="dp-header"><div class="dp-icon">🔧</div><div class="dp-meta"><div class="dp-tag">Document Type</div><h3>Maintenance Record</h3></div></div>
+      <div class="dp-body">
+        <p>A maintenance record documents every service action taken on production equipment — scheduled preventive maintenance, corrective repairs, calibrations, and component replacements. This record establishes whether a machine was properly maintained before a quality problem occurred, and helps identify whether a quality problem is caused by equipment issues.</p>
+        <p>Calibration records — a subset of maintenance records — are especially critical in regulated industries. A pharmaceutical scale that hasn't been calibrated on schedule produces weight data that can't be trusted — and regulators can invalidate all inspection results recorded by that equipment.</p>
+      </div>
+      <div class="dp-fields">
+        <div class="dp-fields-label">Typical Fields Captured</div>
+        <div class="dp-field-row"><span class="field-name">EQUIP_ID</span><span class="field-desc">Which specific machine received service</span></div>
+        <div class="dp-field-row"><span class="field-name">TASK</span><span class="field-desc">What was done (oil change, calibration, belt replacement, sensor cleaning)</span></div>
+        <div class="dp-field-row"><span class="field-name">PERFORMED_BY</span><span class="field-desc">Which technician performed the work</span></div>
+        <div class="dp-field-row"><span class="field-name">DATE</span><span class="field-desc">When maintenance occurred and when next service is due</span></div>
+        <div class="dp-field-row"><span class="field-name">PARTS_USED</span><span class="field-desc">Components replaced, with lot numbers (critical for traceability)</span></div>
+        <div class="dp-field-row"><span class="field-name">SIGN_OFF</span><span class="field-desc">Supervisor verification that maintenance was completed correctly</span></div>
+      </div>
+      <div class="dp-why">🔑 <strong>Why it exists:</strong> Proves equipment was maintained to schedule. Enables root cause analysis when defects appear — "did the problem start after the last maintenance cycle?" Critical for establishing that inspection equipment (scales, gauges, cameras) was in calibration when it produced its results.</div>
+    </div>
+
+    <div class="doc-panel" id="panel-ncr">
+      <div class="dp-header"><div class="dp-icon">⚠️</div><div class="dp-meta"><div class="dp-tag">Document Type</div><h3>Non-Conformance Report (NCR)</h3></div></div>
+      <div class="dp-body">
+        <p>An NCR is opened whenever a product, material, or process fails to meet a defined specification. It's the formal document that tracks what the problem was, what was done about it, and what was put in place to prevent recurrence. Think of it as the paper trail for every quality failure.</p>
+        <p>NCRs are critical because they create accountability and closure — they're not closed until a corrective action is verified as effective. In regulated industries, open NCRs (not yet resolved) are a major red flag during audits.</p>
+      </div>
+      <div class="dp-fields">
+        <div class="dp-fields-label">Typical Fields Captured</div>
+        <div class="dp-field-row"><span class="field-name">DESCRIPTION</span><span class="field-desc">What specifically didn't meet specification</span></div>
+        <div class="dp-field-row"><span class="field-name">PRODUCT/LOT</span><span class="field-desc">Which product, batch, or component is affected</span></div>
+        <div class="dp-field-row"><span class="field-name">DISPOSITION</span><span class="field-desc">What was decided: rework, scrap, use-as-is with deviation, return to supplier</span></div>
+        <div class="dp-field-row"><span class="field-name">ROOT_CAUSE</span><span class="field-desc">Investigation findings — why the non-conformance occurred</span></div>
+        <div class="dp-field-row"><span class="field-name">CORRECTIVE_ACTION</span><span class="field-desc">What was changed to prevent recurrence</span></div>
+        <div class="dp-field-row"><span class="field-name">VERIFICATION</span><span class="field-desc">Evidence that the corrective action worked</span></div>
+      </div>
+      <div class="dp-why">🔑 <strong>Why it exists:</strong> Creates an accountable, closed-loop record for every quality failure. Regulators check NCRs to see if a facility identifies problems AND resolves them. A facility with no NCRs looks suspicious — it suggests problems aren't being reported. A facility with many open, unresolved NCRs has a serious process management problem.</div>
+    </div>
+
+    <div class="doc-panel" id="panel-batch">
+      <div class="dp-header"><div class="dp-icon">📦</div><div class="dp-meta"><div class="dp-tag">Document Type</div><h3>Production Batch Record</h3></div></div>
+      <div class="dp-body">
+        <p>A batch record is the complete documented history of one production batch — from raw materials received through finished product released. It captures every step of the production process, every measurement, every operator action, and every approval. In pharmaceutical manufacturing under FDA GMP regulations, a batch record must be completed before any product from that batch is released for sale.</p>
+        <p>A full batch record for a pharmaceutical product can run 50–200 pages. A batch record for an automotive component is simpler but follows the same principle: a complete, verifiable record that the product was made as specified.</p>
+      </div>
+      <div class="dp-fields">
+        <div class="dp-fields-label">Typical Fields Captured</div>
+        <div class="dp-field-row"><span class="field-name">RAW_MATERIALS</span><span class="field-desc">Lot numbers and supplier records for every input material</span></div>
+        <div class="dp-field-row"><span class="field-name">PROCESS_PARAMS</span><span class="field-desc">Temperature, pressure, speed, time for every production step</span></div>
+        <div class="dp-field-row"><span class="field-name">IN-PROCESS TESTS</span><span class="field-desc">Quality check results at each production checkpoint</span></div>
+        <div class="dp-field-row"><span class="field-name">EQUIPMENT_IDS</span><span class="field-desc">Which specific machines were used (links to their calibration records)</span></div>
+        <div class="dp-field-row"><span class="field-name">OPERATORS</span><span class="field-desc">Who performed each step, with timestamps</span></div>
+        <div class="dp-field-row"><span class="field-name">RELEASE_SIGNOFF</span><span class="field-desc">QA manager approval that the batch meets all specifications for release</span></div>
+      </div>
+      <div class="dp-why">🔑 <strong>Why it exists:</strong> The batch record is the legal proof that a product was made as specified. If a product causes harm and a lawsuit follows, the batch record is the primary evidence about how it was made. In a recall, batch records determine exactly which products are affected — enabling targeted recalls instead of pulling everything from the market.</div>
+    </div>
+
+    <div class="doc-panel" id="panel-audit">
+      <div class="dp-header"><div class="dp-icon">🔍</div><div class="dp-meta"><div class="dp-tag">Document Type</div><h3>Audit Trail</h3></div></div>
+      <div class="dp-body">
+        <p>An audit trail is an automatically generated, chronological record of every action taken in a system — who did what, when, and what changed. Unlike other document types which are intentionally created, an audit trail runs silently in the background, recording everything without requiring anyone to decide to document it.</p>
+        <p>In electronic systems, audit trails are generated automatically and are tamper-evident — you can see if someone tried to change or delete entries. This makes them the most reliable documentation in a digital system, and the backbone of regulatory compliance in industries like pharmaceuticals and medical devices.</p>
+      </div>
+      <div class="dp-fields">
+        <div class="dp-fields-label">What an Audit Trail Captures Automatically</div>
+        <div class="dp-field-row"><span class="field-name">TIMESTAMP</span><span class="field-desc">Exact date, time, and sometimes timezone of every action</span></div>
+        <div class="dp-field-row"><span class="field-name">USER_ID</span><span class="field-desc">Who performed the action (login credentials)</span></div>
+        <div class="dp-field-row"><span class="field-name">ACTION</span><span class="field-desc">What was done: entry created, field modified, record approved, access attempt</span></div>
+        <div class="dp-field-row"><span class="field-name">BEFORE/AFTER</span><span class="field-desc">For any change: what the value was before and what it became after</span></div>
+        <div class="dp-field-row"><span class="field-name">SYSTEM_ID</span><span class="field-desc">Which computer, device, or AI system generated the entry</span></div>
+      </div>
+      <div class="dp-why">🔑 <strong>Why it exists:</strong> Audit trails answer the questions: "Did this actually happen?" and "Did someone change the record afterward?" They're the tool that turns documentation from a trust-based system into a verifiable one. Regulators in pharma (FDA 21 CFR Part 11) and other industries require that electronic systems maintain audit trails that can't be altered or deleted.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What a Real Document Looks Like</h2>
+    <p>Here's a simplified example of what an AI-generated inspection log entry looks like in a modern manufacturing documentation system. Notice what's captured automatically versus what requires human review.</p>
+
+    <div class="mock-doc">
+      <div class="md-header">
+        <div class="md-title">Inspection Log — Production Line 4</div>
+        <div class="md-subtitle">Document ID: IL-2024-L4-0847 · Generated by: VISION-AI-03 · Reviewed by: [PENDING HUMAN REVIEW]</div>
+      </div>
+      <div class="md-row">
+        <div class="md-field"><div class="md-label">Date</div><div class="md-value">2024-03-14</div></div>
+        <div class="md-field"><div class="md-label">Shift</div><div class="md-value">Second (14:00–22:00)</div></div>
+        <div class="md-field"><div class="md-label">Product</div><div class="md-value">Metformin HCl 500mg Tablet</div></div>
+        <div class="md-field"><div class="md-label">Batch No.</div><div class="md-value highlight">BTH-2024-1143</div></div>
+      </div>
+      <div class="md-row">
+        <div class="md-field"><div class="md-label">Units Inspected</div><div class="md-value">142,650</div></div>
+        <div class="md-field"><div class="md-label">Units Passed</div><div class="md-value">142,538</div></div>
+        <div class="md-field"><div class="md-label">Units Flagged</div><div class="md-value alert">112 (0.08%)</div></div>
+        <div class="md-field"><div class="md-label">AI System</div><div class="md-value">VISION-AI-03 v2.4.1</div></div>
+      </div>
+      <table class="md-table">
+        <tr><th>Flag #</th><th>Time</th><th>Defect Type</th><th>Location</th><th>Confidence</th><th>Disposition</th></tr>
+        <tr><td>001</td><td>14:23:07</td><td>Surface chip</td><td>Top face, edge</td><td>97%</td><td class="fail">REJECT</td></tr>
+        <tr><td>002</td><td>14:23:51</td><td>Color variation</td><td>Coating — full</td><td>84%</td><td class="ai-flag">REVIEW REQ'D</td></tr>
+        <tr><td>003</td><td>14:47:12</td><td>Weight deviation</td><td>—</td><td>99%</td><td class="fail">REJECT</td></tr>
+        <tr><td>004</td><td>15:02:38</td><td>Missing imprint</td><td>Bottom face</td><td>96%</td><td class="fail">REJECT</td></tr>
+        <tr><td>005</td><td>15:18:44</td><td>Surface scratch</td><td>Side face</td><td>71%</td><td class="ai-flag">REVIEW REQ'D</td></tr>
+      </table>
+      <div style="margin-top:12px;font-size:10px;color:var(--gray-muted);">⚠️ Items marked REVIEW REQ'D require human verification before disposition is finalized. AI confidence below 85% triggers mandatory review per SOP-QC-114.</div>
+    </div>
+
+    <p>Notice that the AI system logged 142,650 inspection events automatically — something a human inspector team could never match in speed or completeness. But items with confidence below 85% are flagged for human review before a final disposition decision is made. The AI does the documentation volume; the human does the judgment calls.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Documentation Matters: Four Reasons</h2>
+    <div class="why-cards">
+      <div class="why-card"><h3>⚖️ Legal Protection</h3><p>When a product causes harm, documentation is the evidence that determines legal liability. Batch records, inspection logs, and maintenance records prove how a product was made — or reveal where a process broke down. Without documentation, a manufacturer has no defense.</p></div>
+      <div class="why-card"><h3>🔍 Regulatory Compliance</h3><p>FDA, OSHA, ISO, EPA, and other regulatory bodies require documentation as the proof that compliance standards are being met. Inspectors don't just look at the facility — they read the records. Missing, incomplete, or altered documentation is itself a violation, separate from any quality issue.</p></div>
+      <div class="why-card"><h3>🧩 Root Cause Investigation</h3><p>When a quality problem appears, documentation is how you trace it back to its source. Which batch? Which machine? Which shift? Which material lot? Thorough documentation turns a mystery into an investigation — and an investigation into a preventable pattern.</p></div>
+      <div class="why-card"><h3>📈 Continuous Improvement</h3><p>Documentation generates the data that drives improvement. Defect trends across batches, maintenance intervals versus quality outcomes, operator-to-operator consistency — none of this analysis is possible without the underlying records. AI systems are particularly effective at analyzing documentation at scale.</p></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Changes Documentation</h2>
+    <div class="ai-manual">
+      <div class="am-card manual">
+        <h3>📝 Manual Documentation</h3>
+        <div class="am-item"><span>→</span><span>Inspector walks to station, samples product, fills out form by hand</span></div>
+        <div class="am-item"><span>→</span><span>30–60 minute documentation gaps between manual entries</span></div>
+        <div class="am-item"><span>→</span><span>Handwriting errors, missing fields, illegible entries</span></div>
+        <div class="am-item"><span>→</span><span>Paper forms get lost, damaged, or degraded over time</span></div>
+        <div class="am-item"><span>→</span><span>Retroactive documentation — filling in records after the fact</span></div>
+        <div class="am-item"><span>→</span><span>Requires a person to decide what's worth writing down</span></div>
+      </div>
+      <div class="am-card ai">
+        <h3>🤖 AI-Assisted Documentation</h3>
+        <div class="am-item"><span>→</span><span>Every inspection event logged automatically, in real time</span></div>
+        <div class="am-item"><span>→</span><span>100% coverage — no gaps between entries</span></div>
+        <div class="am-item"><span>→</span><span>Structured data fields — no handwriting, no missing required fields</span></div>
+        <div class="am-item"><span>→</span><span>Digital records stored securely with automatic backup</span></div>
+        <div class="am-item"><span>→</span><span>Timestamped at point of action — retroactive entries are flagged</span></div>
+        <div class="am-item"><span>→</span><span>Everything is recorded — humans review and approve the summary</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A food manufacturer is audited by the FDA after a customer complaint about a foreign object found in their product. The FDA auditor asks to see the inspection logs for the production day in question. The quality manager says: "Our inspectors checked the line every hour that day — they just didn't write it down because we were busy." How does the FDA auditor interpret this?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While the FDA auditor might accept an explanation in some contexts, "we were busy" is not a valid justification for skipping required documentation. More importantly, the core principle of regulatory documentation is that undocumented actions are treated as if they did not occur — regardless of the explanation offered.')">The auditor accepts the explanation — being busy is an understandable reason for incomplete records</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. In regulated manufacturing, the foundational principle is: if it wasn\'t documented, it didn\'t happen. The FDA auditor treats the absence of inspection records as evidence that inspections did not occur — not as a minor paperwork oversight. This is a regulatory violation in its own right, separate from the foreign object complaint. The auditor will now investigate why documentation procedures weren\'t followed, whether this is a systemic documentation failure, and whether other records from the facility can be trusted. "We were busy" demonstrates exactly the attitude toward documentation that regulatory frameworks are designed to prevent.')">The auditor treats the absence of records as evidence that inspections did not occur — "if it wasn\'t documented, it didn\'t happen" is the regulatory standard, and this is a violation separate from the foreign object complaint</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The auditor\'s role is not primarily to determine fault in the foreign object incident — it\'s to assess the facility\'s quality systems. The missing documentation is a compliance violation regardless of whether the inspections actually happened. The auditor will treat it as evidence of a systemic documentation failure.')">The auditor focuses only on the foreign object complaint, not on the missing paperwork</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Inspector testimony can be documented and considered, but it cannot substitute for contemporaneous records in a regulatory context. The value of documentation is precisely that it is created at the time of the action — memory reconstructed after the fact is not the same as a record made in real time, and regulators treat them very differently.')">The auditor accepts verbal testimony from inspectors confirming the checks were done</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Manufacturing documentation exists because memory fails, people change jobs, and regulatory agencies require proof — not assertions — that products were made correctly. The core principle: if it wasn't documented, it didn't happen.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Five core document types carry most of the load: inspection logs (what was checked and found), maintenance records (equipment service history), NCRs (quality failure tracking), batch records (complete production history), and audit trails (automatic record of every system action).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI dramatically improves documentation by logging every event automatically at 100% coverage with no gaps. But humans remain essential — reviewing AI-generated records, approving final disposition decisions, and verifying that the AI captured everything accurately.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showDoc(id,btn){document.querySelectorAll(".doc-panel").forEach(p=>p.classList.remove("show"));document.querySelectorAll(".doc-tab").forEach(t=>t.classList.remove("active"));document.getElementById("panel-"+id).classList.add("show");btn.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

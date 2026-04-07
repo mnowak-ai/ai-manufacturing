@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Non-Conformance Report (NCR)?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Mock NCR */
+.mock-ncr{background:white;border:3px solid var(--red);border-radius:20px;overflow:hidden;margin:28px 0;box-shadow:0 4px 20px rgba(220,38,38,.1);}
+.ncr-header{background:var(--red);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.ncr-title{font-family:var(--mono);font-size:13px;font-weight:700;color:white;}
+.ncr-status{background:rgba(255,255,255,.2);color:white;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;font-family:var(--mono);}
+.ncr-body{padding:20px 24px;}
+.ncr-section{margin-bottom:18px;border-bottom:1px solid var(--purple-mid);padding-bottom:14px;}
+.ncr-section:last-child{border-bottom:none;margin-bottom:0;}
+.ncr-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:10px;font-family:var(--mono);}
+.ncr-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+.ncr-field-label{font-size:10px;color:var(--gray-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-family:var(--mono);}
+.ncr-field-value{font-size:13px;color:var(--gray-text);background:var(--gray-soft);padding:6px 10px;border-radius:6px;line-height:1.5;}
+.ncr-field-value.highlight{background:var(--red-pale);color:var(--red);}
+.ncr-field-value.pending{background:var(--orange-pale);color:#92400E;font-style:italic;}
+.ncr-full{margin-bottom:8px;}
+.disposition-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.disp-btn{padding:8px 14px;border-radius:8px;border:1.5px solid var(--purple-mid);background:white;font-size:12px;cursor:pointer;color:var(--gray-text);font-family:"DM Sans",sans-serif;transition:all .2s;}
+.disp-btn:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.disp-btn.selected{background:var(--purple-dark);border-color:var(--purple-dark);color:white;}
+.disp-result{margin-top:10px;padding:12px;border-radius:8px;font-size:13px;line-height:1.65;display:none;}
+.disp-result.show{display:block;}
+.disp-rework{background:var(--orange-pale);border:1px solid #FDE68A;color:#92400E;}
+.disp-scrap{background:var(--red-pale);border:1px solid #FECACA;color:var(--red);}
+.disp-uai{background:var(--green-pale);border:1px solid #86EFAC;color:var(--green);}
+.disp-return{background:var(--blue-pale);border:1px solid var(--blue-mid);color:var(--blue);}
+
+/* NCR lifecycle */
+.lifecycle{display:flex;gap:0;margin:28px 0;overflow-x:auto;}
+.lc-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:90px;}
+.lc-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid;}
+.lc-step.open .lc-circle{background:var(--red-pale);border-color:var(--red);}
+.lc-step.investigate .lc-circle{background:var(--orange-pale);border-color:var(--orange);}
+.lc-step.disposition .lc-circle{background:var(--blue-pale);border-color:var(--blue);}
+.lc-step.corrective .lc-circle{background:var(--purple-pale);border-color:var(--purple);}
+.lc-step.verify .lc-circle{background:var(--green-pale);border-color:var(--green);}
+.lc-step.closed .lc-circle{background:var(--green-pale);border-color:var(--green);}
+.lc-label{font-size:11px;font-weight:700;text-align:center;margin-top:6px;line-height:1.3;}
+.lc-step.open .lc-label{color:var(--red);}
+.lc-step.investigate .lc-label{color:#92400E;}
+.lc-step.disposition .lc-label{color:var(--blue);}
+.lc-step.corrective .lc-label{color:var(--purple-dark);}
+.lc-step.verify .lc-label,.lc-step.closed .lc-label{color:var(--green);}
+.lc-connector{flex:1;height:3px;margin-top:22px;min-width:10px;}
+.lc-step.open+.lc-connector{background:var(--red);}
+.lc-connector{background:var(--purple-mid);}
+
+/* Who does what */
+.who-rows{display:flex;flex-direction:column;gap:8px;margin:28px 0;}
+.who-row{display:flex;gap:12px;align-items:flex-start;background:var(--gray-soft);border-radius:12px;padding:14px 16px;}
+.who-role{background:var(--purple-dark);color:white;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;flex-shrink:0;min-width:120px;text-align:center;}
+.who-desc{font-size:14px;color:var(--gray-text);line-height:1.65;}
+
+/* AI involvement */
+.ai-ncr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.ai-ncr-card{border-radius:14px;padding:16px 18px;border:2px solid var(--purple-mid);background:var(--purple-pale);}
+.ai-ncr-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:7px;}
+.ai-ncr-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.ai-ncr-grid{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>What Is a Non-Conformance Report (NCR)?</h1>
+  <p class="hero-sub">An NCR is the document that tracks every quality failure in a manufacturing environment — from the moment a defect is found to the moment the root cause is fixed and verified. You'll encounter NCRs constantly in any QC or documentation role. This article explains what they are, who fills them out, and how AI is changing the process.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>What Non-Conformance Means</h2>
+    <p>In manufacturing, <mark>non-conformance</mark> means a product, material, or process failed to meet a defined specification. It's a broader term than "defect" — it covers anything outside the defined acceptable range, including raw materials that arrive out of spec, process parameters that drifted outside limits, and finished products that fail inspection.</p>
+    <p>A Non-Conformance Report (NCR) is the document that opens when a non-conformance is discovered and closes when the problem is fully resolved. It's not just a description of what went wrong — it's a structured process for managing the problem to a verified resolution.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Non-Conformance Report (NCR):</strong> A formal document opened when a product, material, or process fails to meet a specification. The NCR tracks the full lifecycle of the quality problem: identification → investigation → disposition (what to do with the affected product) → corrective action (fix the root cause) → verification (confirm the fix worked) → closure. NCRs cannot be closed until all steps are completed and documented.</div>
+    </div>
+
+    <div class="pull-quote"><p>A facility with no NCRs is not a high-quality facility — it's a facility that isn't reporting its problems. Regulators know this, and too few NCRs is itself a red flag during audits.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What an NCR Looks Like — Interactive Example</h2>
+    <p>Below is a sample NCR for the temperature excursion event from our pharmaceutical production example. Explore the disposition options to see what each choice means.</p>
+
+    <div class="mock-ncr">
+      <div class="ncr-header">
+        <span class="ncr-title">NON-CONFORMANCE REPORT — NCR-2024-0847</span>
+        <span class="ncr-status">STATUS: OPEN</span>
+      </div>
+      <div class="ncr-body">
+        <div class="ncr-section">
+          <div class="ncr-section-title">1. Identification</div>
+          <div class="ncr-row">
+            <div><div class="ncr-field-label">Date/Time Opened</div><div class="ncr-field-value">2024-03-14 · 10:12 AM</div></div>
+            <div><div class="ncr-field-label">Opened By</div><div class="ncr-field-value">A. Chen (QC Tech III)</div></div>
+          </div>
+          <div class="ncr-row">
+            <div><div class="ncr-field-label">Batch / Product</div><div class="ncr-field-value highlight">BTH-2024-1143 · Metformin 500mg</div></div>
+            <div><div class="ncr-field-label">Equipment</div><div class="ncr-field-value">Coating Pan CP-04 / Sensor S-217</div></div>
+          </div>
+          <div class="ncr-full"><div class="ncr-field-label">Description of Non-Conformance</div><div class="ncr-field-value highlight">Coating pan temperature excursion detected at 10:12. Measured: 43.2°C. Specification limit: ≤40.0°C. Excursion duration: 49 minutes. Line halted pending investigation. AI alert generated automatically; production supervisor notified immediately.</div></div>
+        </div>
+        <div class="ncr-section">
+          <div class="ncr-section-title">2. Immediate Containment</div>
+          <div class="ncr-full"><div class="ncr-field-label">Action Taken</div><div class="ncr-field-value">Production halted at 10:12. Affected product held in quarantine pending disposition. Maintenance notified at 10:13. Equipment isolated and tagged out of service.</div></div>
+        </div>
+        <div class="ncr-section">
+          <div class="ncr-section-title">3. Disposition Decision</div>
+          <p style="font-size:14px;color:var(--gray-muted);margin-bottom:10px;">Select the disposition option to see what each means for this batch:</p>
+          <div class="disposition-btns">
+            <button class="disp-btn" onclick="showDisp('rework',this)">🔧 Rework</button>
+            <button class="disp-btn" onclick="showDisp('scrap',this)">🗑️ Scrap</button>
+            <button class="disp-btn" onclick="showDisp('uai',this)">✅ Use As-Is</button>
+            <button class="disp-btn" onclick="showDisp('return',this)">↩️ Return to Supplier</button>
+          </div>
+          <div class="disp-result disp-rework" id="disp-rework"><strong>Rework:</strong> The affected batch undergoes additional processing to bring it into specification. For this temperature excursion — coating tablets at too high a temperature may affect coating integrity. Rework might involve testing a sample of tablets for dissolution profile and film coating thickness. If tests pass, the batch may be releasable. Rework requires a separate batch record documenting the rework process and a QA sign-off confirming the reworked product meets spec.</div>
+          <div class="disp-result disp-scrap" id="disp-scrap"><strong>Scrap:</strong> The affected batch is rejected and destroyed. Chosen when rework is not feasible (the quality risk is too high, rework would require more processing than the product can tolerate, or the defect fundamentally affects the product's safety or efficacy). Destruction must be documented, witnessed, and recorded. For pharmaceutical product, specific destruction procedures must comply with environmental regulations.</div>
+          <div class="disp-result disp-uai" id="disp-uai"><strong>Use As-Is (with Deviation):</strong> The product is released without rework, but the deviation from specification is formally documented and justified. Requires a written justification that the deviation does not affect product safety, quality, or efficacy — signed off by QA management and sometimes the regulatory affairs team. In pharmaceutical manufacturing, Use-As-Is requires especially strong scientific justification and carries regulatory risk if challenged during audit.</div>
+          <div class="disp-result disp-return" id="disp-return"><strong>Return to Supplier:</strong> Applies when the non-conformance originates with incoming materials or components — the defective lot is returned to the supplier with a formal rejection notice. The NCR becomes part of the supplier quality record, affecting the supplier's approval status. Multiple NCRs resulting in supplier returns may trigger a supplier audit or re-qualification process.</div>
+        </div>
+        <div class="ncr-section">
+          <div class="ncr-section-title">4. Root Cause Investigation</div>
+          <div class="ncr-full"><div class="ncr-field-label">Findings</div><div class="ncr-field-value">Temperature sensor S-217 had drifted from calibration — reporting 2.1°C below actual temperature. Actual coating pan temperature was 43.2°C when display read 41.1°C. Sensor had reached its 180-day calibration interval on 2024-03-10 (4 days prior). Sensor replacement and recalibration completed 10:38.</div></div>
+          <div class="ncr-full"><div class="ncr-field-label">Root Cause</div><div class="ncr-field-value">Calibration interval for high-temperature sensors not synchronized with production scheduling — sensor due for calibration was not flagged for service before batch production began.</div></div>
+        </div>
+        <div class="ncr-section">
+          <div class="ncr-section-title">5. Corrective Action</div>
+          <div class="ncr-full"><div class="ncr-field-label">Action Required</div><div class="ncr-field-value pending">Implement pre-batch equipment verification checklist that includes calibration expiry review for all production-critical sensors. Update CMMS to flag calibration due dates 7 days in advance. Review all other sensors in coating department for upcoming calibration intervals. — STATUS: IN PROGRESS</div></div>
+        </div>
+        <div class="ncr-section">
+          <div class="ncr-section-title">6. Verification</div>
+          <div class="ncr-full"><div class="ncr-field-label">Verification Method</div><div class="ncr-field-value pending">QA to confirm pre-batch checklist implemented and sensors reviewed. Next batch production (BTH-2024-1201) to serve as first verification event. — STATUS: PENDING</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The NCR Lifecycle — From Open to Closed</h2>
+    <div class="lifecycle">
+      <div class="lc-step open"><div class="lc-circle">🚨</div><div class="lc-label">NCR<br>Opened</div></div>
+      <div class="lc-connector"></div>
+      <div class="lc-step investigate"><div class="lc-circle">🔎</div><div class="lc-label">Root Cause<br>Investigation</div></div>
+      <div class="lc-connector"></div>
+      <div class="lc-step disposition"><div class="lc-circle">⚖️</div><div class="lc-label">Disposition<br>Decision</div></div>
+      <div class="lc-connector"></div>
+      <div class="lc-step corrective"><div class="lc-circle">🔧</div><div class="lc-label">Corrective<br>Action</div></div>
+      <div class="lc-connector"></div>
+      <div class="lc-step verify"><div class="lc-circle">✅</div><div class="lc-label">Verification<br>of Effectiveness</div></div>
+      <div class="lc-connector"></div>
+      <div class="lc-step closed"><div class="lc-circle">🔒</div><div class="lc-label">NCR<br>Closed</div></div>
+    </div>
+    <p>An NCR is not closed when the defective product is handled — it's closed when the root cause is fixed and that fix is verified as effective. This distinction is what separates a quality management system that learns from problems versus one that just responds to them.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Who Does What on an NCR</h2>
+    <div class="who-rows">
+      <div class="who-row"><div class="who-role">QC Technician</div><div class="who-desc">Opens the NCR when a non-conformance is discovered. Documents the initial description, the affected product or lot, and the immediate containment action taken. This is often the first person to interact with an NCR — and getting the initial description right is critical for the investigation.</div></div>
+      <div class="who-row"><div class="who-role">QA Investigator</div><div class="who-desc">Leads the root cause investigation. Uses the 5 Whys method, fishbone diagrams, or statistical analysis to identify what actually caused the non-conformance — not just the symptom, but the underlying process failure. Documents findings in the NCR.</div></div>
+      <div class="who-row"><div class="who-role">QA Manager</div><div class="who-desc">Makes or approves the disposition decision. Decides whether affected product can be reworked, used as-is, or must be scrapped. Reviews root cause analysis for adequacy. Signs off on corrective action plans before they are implemented.</div></div>
+      <div class="who-row"><div class="who-role">Process Engineer</div><div class="who-desc">Designs and implements the corrective action — the actual process change, procedure update, or equipment modification that addresses the root cause. Works with QA to confirm the corrective action is feasible and doesn't introduce new risks.</div></div>
+      <div class="who-row"><div class="who-role">QA Director</div><div class="who-desc">Closes the NCR after confirming that the corrective action was implemented as planned AND that verification evidence shows it's working. A QA director cannot close an NCR until verification is complete — this is the final gate in the process.</div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Is Changing the NCR Process</h2>
+    <div class="ai-ncr-grid">
+      <div class="ai-ncr-card"><h3>🤖 Auto-Detection → Auto-Draft</h3><p>When an AI inspection system or process sensor detects a non-conformance, it can automatically generate a draft NCR — pre-populated with the affected product, timestamp, sensor readings, and non-conformance description. Workers review and confirm rather than starting from a blank form.</p></div>
+      <div class="ai-ncr-card"><h3>📊 Pattern Recognition</h3><p>AI quality management systems can identify when multiple NCRs share a root cause — a specific supplier, a specific piece of equipment, a specific shift pattern. Instead of investigating each NCR independently, quality teams can see systemic issues across dozens of events at once.</p></div>
+      <div class="ai-ncr-card"><h3>⏰ Escalation Tracking</h3><p>AI systems monitor NCR age and escalate automatically when investigation or corrective action steps are overdue. Old, open NCRs are a major audit finding — automated reminders and escalation paths keep the NCR process moving without depending on someone to remember to follow up.</p></div>
+      <div class="ai-ncr-card"><h3>✍️ Draft Corrective Actions</h3><p>Based on similar past NCRs and their successful corrective actions, AI systems can suggest corrective action approaches — "Similar excursions in the past were resolved by calibration interval adjustment — see NCRs 0441, 0613, and 0729 for reference." Humans still decide and implement; AI surfaces relevant precedent.</p></div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">During an FDA audit, an investigator asks to see a list of all open NCRs for the past 12 months. The quality manager shows a list of 3 open NCRs — all opened in the past 30 days. The investigator then notes that the facility had 0 NCRs in the preceding 11 months. What does this likely indicate to the auditor?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While it\'s theoretically possible for a facility to run 11 months without a non-conformance event, it\'s statistically extremely unlikely in any real production environment. The FDA auditor knows this — 0 NCRs over 11 months is not a sign of excellent quality, it\'s a sign that the NCR system isn\'t being used properly.')">The facility had excellent quality for 11 months — 0 NCRs indicates near-perfect operations</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. An FDA auditor views a long period of zero NCRs as a sign of under-reporting — not quality excellence. All manufacturing processes have some level of variation and non-conformance. A facility that claims none occurred for 11 months is almost certainly either not detecting non-conformances, or detecting them and handling them informally without opening NCRs (which is itself a serious compliance violation). The sudden appearance of 3 NCRs in the month before an audit may even suggest the facility realized it needed some NCRs on file to look compliant. The auditor will now investigate whether the NCR system is functioning correctly and whether non-conformances were being handled off the books.')">Under-reporting — 0 NCRs over 11 months in a real manufacturing environment is almost certainly a sign that non-conformances were not being formally reported, which is itself a compliance violation</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Equipment upgrades might reduce NCR frequency somewhat, but they don\'t eliminate non-conformances — and they don\'t explain why the rate dropped to literally zero for 11 months and then suddenly jumped. The auditor will not accept equipment upgrades as an explanation for 0 NCRs without specific evidence, and the timing of the 3 recent NCRs opening just before an audit makes any explanation more suspicious.')">The facility upgraded its equipment 11 months ago — improved equipment explains the zero NCR period</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The auditor won\'t wait for an explanation before noting that this pattern warrants investigation. An FDA auditor who sees 0 NCRs for 11 months is specifically trained to treat this as a quality system indicator — not a data anomaly to wait on. This pattern is a known audit finding type: lack of NCR reporting as a systemic issue.')">The auditor waits for the quality manager\'s explanation before drawing any conclusion</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>An NCR is the formal document that tracks a quality failure from discovery through verified resolution. It's not closed when the defective product is handled — it's closed when the root cause is fixed and the fix is confirmed to be working.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>Disposition is the decision about what to do with the affected product: rework (fix it), scrap (destroy it), use as-is with deviation (document and justify releasing it), or return to supplier (reject incoming materials). Each option requires specific documentation and approvals.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A facility with too few NCRs is a regulatory red flag — it suggests problems aren't being reported. AI systems help by auto-generating draft NCRs from detected non-conformances, identifying patterns across many NCRs, and tracking overdue items to prevent NCRs from aging without resolution.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showDisp(id,btn){
+  document.querySelectorAll(".disp-result").forEach(el=>el.classList.remove("show"));
+  document.querySelectorAll(".disp-btn").forEach(b=>b.classList.remove("selected"));
+  document.getElementById("disp-"+id).classList.add("show");
+  btn.classList.add("selected");
+}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

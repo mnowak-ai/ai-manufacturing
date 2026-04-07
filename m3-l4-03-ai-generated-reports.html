@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Generated Reports: How to Read, Verify, and Use Them Without Blindly Trusting Them</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Annotated report */
+.annotated-report{background:white;border:2px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:28px 0;box-shadow:0 4px 20px rgba(0,0,0,.06);}
+.ar-title-bar{background:var(--purple-dark);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.art-left{font-family:var(--mono);font-size:11px;color:var(--purple-mid);}
+.art-right{font-size:11px;color:rgba(255,255,255,.5);}
+.ar-body{padding:20px;}
+.ar-section{margin-bottom:20px;position:relative;}
+.ar-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-muted);margin-bottom:8px;font-family:var(--mono);}
+.ar-text{background:var(--gray-soft);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.75;color:var(--gray-text);}
+.ar-text.flagged{border-left:4px solid var(--orange);background:var(--orange-pale);}
+.ar-text.error{border-left:4px solid var(--red);background:var(--red-pale);}
+.ar-text.good{border-left:4px solid var(--green);background:var(--green-pale);}
+.ar-annotation{display:flex;gap:8px;margin-top:8px;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.6;}
+.ar-annotation.warn{background:var(--orange-pale);border:1px solid #FDE68A;color:#92400E;}
+.ar-annotation.danger{background:var(--red-pale);border:1px solid #FECACA;color:var(--red);}
+.ar-annotation.ok{background:var(--green-pale);border:1px solid #86EFAC;color:var(--green);}
+.ar-icon{font-size:14px;flex-shrink:0;}
+
+/* Check list sim */
+.checklist-sim{background:var(--gray-soft);border:2px solid var(--purple-mid);border-radius:20px;padding:24px;margin:28px 0;}
+.cl-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:16px;}
+.cl-items{display:flex;flex-direction:column;gap:8px;}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:white;border-radius:10px;border:1.5px solid var(--purple-mid);cursor:pointer;transition:all .2s;}
+.cl-item.checked{border-color:var(--green);background:var(--green-pale);}
+.cl-item.skipped{border-color:var(--red);background:var(--red-pale);opacity:.7;}
+.cli-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--purple-mid);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.cl-item.checked .cli-box{background:var(--green);border-color:var(--green);color:white;}
+.cli-text h4{font-size:14px;font-weight:600;color:var(--gray-text);margin-bottom:2px;}
+.cli-text p{font-size:12px;color:var(--gray-muted);margin:0;line-height:1.5;}
+.cl-progress{margin-top:14px;height:8px;background:var(--purple-mid);border-radius:4px;overflow:hidden;}
+.cl-progress-fill{height:100%;background:var(--green);border-radius:4px;transition:width .3s;}
+.cl-progress-label{font-size:12px;color:var(--gray-muted);margin-top:6px;}
+
+/* Common errors */
+.error-cards{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.ec{border-radius:14px;overflow:hidden;border:2px solid;}
+.ec.num{border-color:#FECACA;}
+.ec.omit{border-color:#FDE68A;}
+.ec.context{border-color:var(--blue-mid);}
+.ec.date{border-color:var(--purple-mid);}
+.ec-header{padding:12px 18px;display:flex;gap:10px;align-items:center;}
+.ec.num .ec-header{background:var(--red-pale);}
+.ec.omit .ec-header{background:var(--orange-pale);}
+.ec.context .ec-header{background:var(--blue-pale);}
+.ec.date .ec-header{background:var(--purple-pale);}
+.ec-icon{font-size:20px;}
+.ec-header h3{font-size:14px;font-weight:700;}
+.ec.num .ec-header h3{color:var(--red);}
+.ec.omit .ec-header h3{color:#92400E;}
+.ec.context .ec-header h3{color:var(--blue);}
+.ec.date .ec-header h3{color:var(--purple-dark);}
+.ec-body{padding:12px 18px;background:white;}
+.ec-example{font-family:var(--mono);font-size:12px;color:var(--gray-text);background:var(--gray-soft);padding:10px 12px;border-radius:6px;margin:8px 0;line-height:1.65;}
+.ec-fix{font-size:13px;color:var(--gray-text);line-height:1.65;}
+
+/* Escalation guide */
+.escalate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.eg-card{border-radius:14px;padding:16px 18px;border:2px solid;}
+.eg-card.yes{background:var(--red-pale);border-color:#FECACA;}
+.eg-card.no{background:var(--green-pale);border-color:#86EFAC;}
+.eg-card h3{font-size:13px;font-weight:700;margin-bottom:8px;}
+.yes h3{color:var(--red);}
+.no h3{color:var(--green);}
+.eg-item{font-size:13px;display:flex;gap:8px;margin-bottom:4px;line-height:1.55;}
+@media(max-width:560px){.escalate-grid{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>AI-Generated Reports: How to Read, Verify, and Use Them</h1>
+  <p class="hero-sub">The slides say "AI drafts, humans confirm accuracy" — but how exactly does a person confirm accuracy? This article teaches the practical skill: what to look for in an AI-generated report, what AI commonly gets wrong, and when to escalate instead of approve.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Why Human Review Is Not Optional</h2>
+    <p>AI systems that generate manufacturing reports are powerful — they process massive amounts of data, draft summaries automatically, and can flag issues faster than any human team. But they make mistakes. Specific kinds of mistakes, that a trained human reader can catch.</p>
+    <p>The problem with automation bias — <mark>the tendency to over-trust automated outputs</mark> — is that it's strongest when the AI is usually right. If the AI is 98% accurate, humans stop checking carefully. The 2% of errors that do occur then slip through undetected, sometimes into legally binding documents that form the basis of regulatory submissions, batch releases, or product dispositions.</p>
+    <p>Your job when reviewing an AI-generated report is not to re-do the AI's work from scratch. It's to <strong>know what to look for</strong> — the specific categories of error that AI systems in manufacturing documentation commonly make.</p>
+
+    <div class="pull-quote"><p>Approving an AI-generated report without reading it is not efficiency — it's signing a document you haven't checked. In manufacturing, that signature carries legal and regulatory weight.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Read a Real AI-Generated Report — With Annotations</h2>
+    <p>Below is an AI-generated shift summary report with annotations highlighting what a human reviewer should notice. Work through each section and see what the flags mean.</p>
+
+    <div class="annotated-report">
+      <div class="ar-title-bar">
+        <span class="art-left">SHIFT SUMMARY REPORT — AUTO-GENERATED · LINE 4 · 14:00–22:00</span>
+        <span class="art-right">Pending Human Review</span>
+      </div>
+      <div class="ar-body">
+        <div class="ar-section">
+          <div class="ar-section-label">Executive Summary</div>
+          <div class="ar-text good">Line 4 completed second shift production of Batch BTH-2024-1143 (Metformin 500mg). Total output: 142,650 units. Overall pass rate: 99.92%. Three inspection categories performed within specification. One temperature excursion event was documented and resolved within 49 minutes. Production resumed at 11:01. Batch is recommended for QA review and release consideration.</div>
+          <div class="ar-annotation ok"><span class="ar-icon">✅</span><span><strong>Check 1 — Summary accuracy:</strong> The key numbers here (142,650 units, 99.92%, 49-minute downtime) match the underlying inspection log data. This is the first thing to verify — do the headline numbers in the summary actually match the detailed records?</span></div>
+        </div>
+
+        <div class="ar-section">
+          <div class="ar-section-label">Defect Analysis</div>
+          <div class="ar-text flagged">112 units flagged by AI inspection system. Flagged defect types: surface chips (47%), weight deviations (31%), missing imprint (14%), color variation (8%). All flagged units removed from batch. Defect rate consistent with historical average of 0.07–0.09% for this product line.</div>
+          <div class="ar-annotation warn"><span class="ar-icon">⚠️</span><span><strong>Check 2 — Missing step:</strong> The report states all flagged units were "removed from batch" — but this skips a required step. Some flags (confidence &lt;85%) require human verification before disposition. Were the 4 "REVIEW REQ'D" items from the inspection log individually verified? The AI summary collapsed this into "all removed" which may be inaccurate or missing the verification documentation.</span></div>
+        </div>
+
+        <div class="ar-section">
+          <div class="ar-section-label">Temperature Excursion Event</div>
+          <div class="ar-text error">At 10:12, a temperature excursion was detected (43.2°C; limit 40.0°C). The excursion lasted approximately 30 minutes. Root cause: sensor malfunction. Corrective action: sensor replacement. Production resumed at 10:42.</div>
+          <div class="ar-annotation danger"><span class="ar-icon">🚨</span><span><strong>Check 3 — Factual error:</strong> The audit trail shows production resumed at 11:01 — not 10:42 as stated here. This is a 19-minute discrepancy in a documented excursion event. In a regulatory submission, this would be an inaccurate record. The AI likely miscalculated the downtime duration. This must be corrected before the report is approved.</span></div>
+        </div>
+
+        <div class="ar-section">
+          <div class="ar-section-label">Equipment Status</div>
+          <div class="ar-text good">All production equipment operating within validated parameters. Coating pan temperature sensor replaced and recalibrated per SOP-MAINT-078. Calibration certificate recorded in maintenance management system.</div>
+          <div class="ar-annotation ok"><span class="ar-icon">✅</span><span><strong>Check 4 — Cross-reference:</strong> Verify that SOP-MAINT-078 is actually the correct procedure for sensor replacement on this equipment model, and confirm the calibration certificate number appears in the maintenance management system. The AI may have referenced the right SOP name but the wrong revision.</span></div>
+        </div>
+
+        <div class="ar-section">
+          <div class="ar-section-label">Recommendation</div>
+          <div class="ar-text flagged">Based on the above, Batch BTH-2024-1143 meets release criteria. QA Director approval recommended.</div>
+          <div class="ar-annotation warn"><span class="ar-icon">⚠️</span><span><strong>Check 5 — Context the AI cannot see:</strong> The AI cannot know whether the temperature excursion may have affected product quality beyond the documented time window, whether similar excursions have occurred on recent batches (a pattern the QA Director should know about), or whether there are open NCRs from this batch that haven't been closed. The "release recommended" conclusion should only stand after those contextual checks are done by a human.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Your Review Checklist — Work Through It Every Time</h2>
+    <p>Click each checklist item to mark it as verified. Don't approve a report until all required checks are complete.</p>
+
+    <div class="checklist-sim">
+      <div class="cl-title">📋 AI Report Review Checklist</div>
+      <div class="cl-items" id="checklistItems"></div>
+      <div class="cl-progress"><div class="cl-progress-fill" id="clFill" style="width:0%;"></div></div>
+      <div class="cl-progress-label" id="clLabel">0 of 8 items verified</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Four Things AI Gets Wrong in Manufacturing Reports</h2>
+
+    <div class="error-cards">
+      <div class="ec num">
+        <div class="ec-header"><span class="ec-icon">🔢</span><h3>Number Errors — Calculation Mistakes in Summaries</h3></div>
+        <div class="ec-body">
+          <p class="ec-fix">AI systems can make arithmetic errors when aggregating data, especially when handling exceptions — units reworked and re-inspected, units held pending review, batch splits. The summary number might not equal the sum of the detailed rows.</p>
+          <div class="ec-example">AI states: "Total rejected units: 108"<br>Actual count from inspection log rows: 112 rejected + 4 under review = 116 total flagged<br>→ Discrepancy of 8 units unaccounted for</div>
+          <p class="ec-fix"><strong>How to catch it:</strong> Manually add up the detailed rows and compare to the summary totals. Don't assume the AI's arithmetic is correct.</p>
+        </div>
+      </div>
+
+      <div class="ec omit">
+        <div class="ec-header"><span class="ec-icon">🕳️</span><h3>Missing Steps — Events That Happened but Weren't Summarized</h3></div>
+        <div class="ec-body">
+          <p class="ec-fix">AI summarizes what it can see in structured data. Actions that were logged informally — a verbal instruction, a procedure step completed without a formal system entry, a supervisor override — may be absent from the AI-generated summary even though they occurred.</p>
+          <div class="ec-example">Audit trail entry at 09:02: "Compression speed changed 35→40 RPM. Supervisor authorized."<br>AI shift summary: No mention of compression speed change or supervisor authorization.<br>→ A process deviation that required supervisor authorization was omitted from the summary</div>
+          <p class="ec-fix"><strong>How to catch it:</strong> Compare the AI summary to the raw audit trail entries. Look for events logged in the audit trail that don't appear in the summary narrative.</p>
+        </div>
+      </div>
+
+      <div class="ec context">
+        <div class="ec-header"><span class="ec-icon">🧩</span><h3>Context Errors — The AI Doesn't Know What It Doesn't Know</h3></div>
+        <div class="ec-body">
+          <p class="ec-fix">AI generates summaries based on the data in its system. It has no knowledge of: a pending regulatory inquiry about this product, a supplier quality alert for the raw material lot used, a pattern of similar excursions across other recent batches, or a customer complaint that makes this batch especially sensitive. Human reviewers bring context that no AI summary can contain.</p>
+          <div class="ec-example">AI summary: "Temperature excursion resolved, batch meets release criteria."<br>Human reviewer knows: This is the third temperature excursion on this line in 30 days. The QA director has asked to be personally notified about any further excursions before release.<br>→ The AI's "release recommended" ignores a context that completely changes the appropriate response</div>
+          <p class="ec-fix"><strong>How to catch it:</strong> Before approving, ask yourself: "Is there anything I know about this product, batch, line, or supplier that the AI doesn't have access to that changes this picture?"</p>
+        </div>
+      </div>
+
+      <div class="ec date">
+        <div class="ec-header"><span class="ec-icon">⏱️</span><h3>Timestamp Errors — Time Calculations That Don't Match</h3></div>
+        <div class="ec-body">
+          <p class="ec-fix">AI systems can miscalculate durations, especially when events span shift changes, midnight crossings, daylight saving time transitions, or when there are gaps in the production record. Reported downtime durations, holding times, and process step durations may be wrong.</p>
+          <div class="ec-example">AI summary: "Excursion downtime: approximately 30 minutes (10:12 to 10:42)"<br>Audit trail: Line resumed at 11:01, not 10:42. Actual downtime: 49 minutes.<br>→ 19-minute discrepancy. In a pharmaceutical context, accurate downtime documentation affects whether the product meets holding time specifications.</div>
+          <p class="ec-fix"><strong>How to catch it:</strong> For any timed event (downtime, holding times, process step durations), verify against the raw timestamps in the audit trail rather than trusting the AI's calculated duration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>When to Approve vs. When to Escalate</h2>
+    <div class="escalate-grid">
+      <div class="eg-card yes">
+        <h3>🚨 Escalate — Don't Approve Alone</h3>
+        <div class="eg-item"><span>→</span><span>A factual error in the AI summary (wrong number, wrong timestamp)</span></div>
+        <div class="eg-item"><span>→</span><span>A process deviation that required supervisor authorization but isn't documented in the summary</span></div>
+        <div class="eg-item"><span>→</span><span>An open NCR that the AI summary doesn't acknowledge</span></div>
+        <div class="eg-item"><span>→</span><span>A pattern you recognize that the AI can't see (third excursion this month)</span></div>
+        <div class="eg-item"><span>→</span><span>Anything the AI flagged as requiring human review that you can't verify</span></div>
+        <div class="eg-item"><span>→</span><span>Summary recommends release but your SOP requires QA Director sign-off for any excursion</span></div>
+      </div>
+      <div class="eg-card no">
+        <h3>✅ Approve — After Thorough Review</h3>
+        <div class="eg-item"><span>→</span><span>All summary numbers cross-check against the detailed records</span></div>
+        <div class="eg-item"><span>→</span><span>All audit trail events appear in the summary narrative</span></div>
+        <div class="eg-item"><span>→</span><span>All timestamps and durations verified against raw data</span></div>
+        <div class="eg-item"><span>→</span><span>No open items requiring escalation or additional verification</span></div>
+        <div class="eg-item"><span>→</span><span>Your contextual knowledge is consistent with the AI's recommendation</span></div>
+        <div class="eg-item"><span>→</span><span>All required sign-off steps are completed per SOP</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">An AI-generated batch record summary states: "Batch yield: 98.3% — within acceptable range (specification: ≥97.0%). No yield deviations to report." A reviewer calculates the yield from the raw production data: 139,850 units produced from 142,200 units started = 98.4%. The AI's stated yield is 98.3%. What should the reviewer do?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ A 0.1% discrepancy in a yield calculation is meaningful in a regulated manufacturing context. Batch records are legal documents — the numbers in them must be accurate, not approximately correct. Signing off on a known discrepancy without investigation creates a record that is knowingly inaccurate.')">Approve the report — 0.1% is a rounding difference and doesn\'t affect the conclusion that yield is within specification</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Even a small discrepancy requires investigation before the report is approved. The reviewer needs to understand: which calculation is correct (AI or manual)? If the AI is wrong, what caused the error — did it exclude certain units from its count? Were reworked units counted twice or not at all? In a pharmaceutical batch record, the yield calculation must be accurate and the method used must be documented. Approving a report with a known numerical error — even a small one — means signing off on an inaccurate legal document. The right step is to document the discrepancy, investigate which number is correct, correct the report if the AI is wrong, and then approve.')">Investigate the discrepancy before approving — even a small calculation error must be resolved before signing off on a batch record, since it\'s a legal document and numbers must be accurate</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The reviewer\'s manual calculation may be correct — in which case the AI is wrong and the batch record needs correction. Assuming the AI is right and the reviewer made an error reverses the human-AI relationship: humans are there to check the AI, not assume the AI is correct when there\'s a discrepancy.')">Recheck the manual calculation — the AI is likely correct and the reviewer probably made an arithmetic error</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The discrepancy is between the AI summary and the raw data the reviewer calculated from. The data source for both should be the same production records. Escalating to IT before first investigating whether it\'s a calculation error (rather than a data error) adds unnecessary process. The right first step is to determine which calculation is correct, then understand why there\'s a discrepancy.')">Escalate to IT — a discrepancy between manual and AI calculations indicates a system data integrity issue</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Automation bias — the tendency to over-trust automated outputs — is the primary risk when reviewing AI-generated reports. Your job is to know what AI commonly gets wrong and check specifically for those things, not to redo all the AI's work from scratch.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>Four common AI documentation errors: number errors (arithmetic mistakes in summaries), missing steps (events logged in the audit trail that don't appear in the summary), context errors (the AI can't know what you know from outside the system), and timestamp errors (duration calculations that don't match raw data).</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>When you find an error — even a small one — escalate before approving. Approving an AI-generated report with a known inaccuracy means signing off on an incorrect legal document. Your signature carries regulatory and legal weight regardless of whether the AI generated the underlying content.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const checks=[
+  {title:"Verify headline numbers against detailed records",desc:"Do total units, pass rates, and rejection counts match when you add up the detailed rows?"},
+  {title:"Confirm all timed events have accurate timestamps",desc:"Cross-reference any stated duration or time against the raw audit trail entries."},
+  {title:"Check for audit trail events missing from the summary",desc:"Are there entries in the audit trail that don't appear in the summary narrative?"},
+  {title:"Verify all process deviations are documented",desc:"Any parameter changes, overrides, or excursions should be in the summary with authorization documented."},
+  {title:"Confirm all required sign-offs are present",desc:"Does your SOP require additional review steps for this product, batch size, or event type?"},
+  {title:"Check for open NCRs or flags requiring follow-up",desc:"The AI may have logged items as 'pending review' that need human disposition before the record is closed."},
+  {title:"Apply your contextual knowledge",desc:"Is there anything you know about this product, line, or supplier that changes the picture the AI presents?"},
+  {title:"Verify SOP and regulation references are correct",desc:"Check that procedure numbers, revision levels, and regulatory citations in the report are accurate."},
+];
+
+const container=document.getElementById("checklistItems");
+let checked=0;
+checks.forEach((c,i)=>{
+  const el=document.createElement("div");
+  el.className="cl-item";
+  el.innerHTML=`<div class="cli-box" id="box-${i}"></div><div class="cli-text"><h4>${c.title}</h4><p>${c.desc}</p></div>`;
+  el.onclick=()=>{
+    if(el.classList.contains("checked"))return;
+    el.classList.add("checked");
+    document.getElementById("box-"+i).textContent="✓";
+    checked++;
+    document.getElementById("clFill").style.width=(checked/checks.length*100)+"%";
+    document.getElementById("clLabel").textContent=`${checked} of ${checks.length} items verified${checked===checks.length?" — Report ready for approval":""}`;
+  };
+  container.appendChild(el);
+});
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

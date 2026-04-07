@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is an Audit Trail and Why Is It One of the Most Important Things in a Regulated Factory?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Live audit trail sim */
+.trail-sim{background:#0F0A1A;border-radius:20px;padding:24px;margin:28px 0;border:1.5px solid var(--purple-mid);}
+.ts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.ts-title{font-size:12px;font-weight:700;color:#8B7FA0;font-family:var(--mono);letter-spacing:.08em;}
+.ts-btn{padding:8px 16px;border-radius:10px;border:1.5px solid var(--purple-mid);background:var(--purple);color:white;font-size:12px;cursor:pointer;font-family:"DM Sans",sans-serif;font-weight:600;}
+.ts-btn:hover{background:var(--purple-dark);}
+.trail-entries{display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto;padding-right:4px;}
+.trail-entry{display:flex;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);animation:slideIn .3s ease;}
+.trail-entry.normal{background:rgba(110,231,183,.06);}
+.trail-entry.change{background:rgba(245,158,11,.08);}
+.trail-entry.alert{background:rgba(239,68,68,.08);}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+.te-time{font-family:var(--mono);font-size:10px;color:#6EE7B7;flex-shrink:0;padding-top:2px;min-width:68px;}
+.te-user{font-family:var(--mono);font-size:10px;color:#A78BFA;flex-shrink:0;min-width:80px;}
+.te-action{font-size:12px;flex:1;line-height:1.5;}
+.trail-entry.normal .te-action{color:rgba(255,255,255,.75);}
+.trail-entry.change .te-action{color:#FDE68A;}
+.trail-entry.alert .te-action{color:#FCA5A5;}
+.te-badge{font-size:9px;font-weight:700;border-radius:4px;padding:2px 7px;flex-shrink:0;text-transform:uppercase;}
+.normal .te-badge{background:rgba(110,231,183,.15);color:#6EE7B7;}
+.change .te-badge{background:rgba(245,158,11,.15);color:#FDE68A;}
+.alert .te-badge{background:rgba(239,68,68,.15);color:#FCA5A5;}
+
+/* What makes valid */
+.valid-cards{display:flex;flex-direction:column;gap:10px;margin:28px 0;}
+.valid-card{display:flex;gap:14px;background:var(--gray-soft);border-radius:14px;padding:16px 18px;border-left:4px solid var(--purple);}
+.vc-num{width:28px;height:28px;background:var(--purple);border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.vc-body h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:4px;}
+.vc-body p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+
+/* Manual vs AI */
+.compare-blocks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.cb{border-radius:16px;padding:18px;border:2px solid;}
+.cb.manual{background:var(--orange-pale);border-color:#FDE68A;}
+.cb.auto{background:var(--purple-pale);border-color:var(--purple-mid);}
+.cb h3{font-size:14px;font-weight:700;margin-bottom:10px;}
+.manual h3{color:#92400E;}
+.auto h3{color:var(--purple-dark);}
+.cb-item{font-size:13px;color:var(--gray-text);display:flex;gap:8px;margin-bottom:5px;line-height:1.55;}
+@media(max-width:560px){.compare-blocks{grid-template-columns:1fr;}}
+
+/* Scenario sim */
+.scenario-sim{background:var(--gray-soft);border:2px solid var(--purple-mid);border-radius:20px;padding:26px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:14px;}
+.ss-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ssb{padding:8px 14px;border-radius:10px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;cursor:pointer;color:var(--gray-text);font-family:"DM Sans",sans-serif;transition:all .2s;}
+.ssb.active,.ssb:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.ss-result{padding:18px 20px;border-radius:12px;display:none;}
+.ss-result.show{display:block;}
+.ss-result.ok{background:var(--green-pale);border:1.5px solid #86EFAC;}
+.ss-result.warn{background:var(--orange-pale);border:1.5px solid #FDE68A;}
+.ss-result.bad{background:var(--red-pale);border:1.5px solid #FECACA;}
+.ss-result h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.ss-result.ok h3{color:var(--green);}
+.ss-result.warn h3{color:#92400E;}
+.ss-result.bad h3{color:var(--red);}
+.ss-result p{font-size:14px;line-height:1.7;margin:0;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>What Is an Audit Trail?</h1>
+  <p class="hero-sub">An audit trail is the silent record-keeper running in the background of every regulated factory — capturing every action, every change, every access event, automatically. It's what turns a documentation system from a trust-based process into a verifiable one. This article explains how it works and why it matters so much.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>What an Audit Trail Actually Is</h2>
+    <p>An audit trail is an <mark>automatically generated, chronological record of every action taken in a system</mark>. Not just what was documented — every login, every data entry, every change to a record, every approval, every failed access attempt. It runs silently, in the background, without anyone having to decide to document something.</p>
+    <p>The defining feature of a proper audit trail is that it is <strong>tamper-evident</strong> — if someone tries to change or delete an entry, the system records that attempt too. You can see not just what happened, but whether someone tried to cover it up.</p>
+
+    <div class="vocab">
+      <div class="vocab-word">Key Term</div>
+      <div class="vocab-def"><strong>Audit Trail:</strong> An automatically generated, chronological record of system activity — who did what, when, from which device, and what changed. In regulated manufacturing, audit trails must be: (1) created automatically, not manually; (2) protected from modification or deletion; (3) accessible for review by auditors; (4) associated with the specific user who performed each action (not a shared login).</div>
+    </div>
+
+    <p>Think of an audit trail like a security camera for data. A security camera records everything that happens in a room — you don't have to decide to film something for it to be captured. An audit trail records everything that happens in a system, whether or not anyone intended for it to be documented.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Watch an Audit Trail Being Generated — Live</h2>
+    <p>Click "Add Entry" to simulate audit trail entries being generated in real time as manufacturing events occur. Notice how each entry captures who, what, and when — automatically.</p>
+
+    <div class="trail-sim">
+      <div class="ts-header">
+        <span class="ts-title">AUDIT TRAIL — BATCH BTH-2024-1143</span>
+        <button class="ts-btn" onclick="addEntry()">+ Add Entry</button>
+      </div>
+      <div class="trail-entries" id="trailEntries">
+        <div class="trail-entry normal"><span class="te-time">08:01:14</span><span class="te-user">SYS-AUTO</span><span class="te-action">Batch BTH-2024-1143 created. Template: Metformin 500mg Rev 4.2</span><span class="te-badge">CREATE</span></div>
+        <div class="trail-entry normal"><span class="te-time">08:03:47</span><span class="te-user">J.OKONKWO</span><span class="te-action">Raw material verification completed. Lot: API-2024-0312. Weight: 125.03 kg (spec: 125.00 ±0.50 kg)</span><span class="te-badge">VERIFY</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Makes an Audit Trail Legally Valid</h2>
+    <p>Not every log qualifies as a legally valid audit trail. Regulators — especially the FDA under 21 CFR Part 11 — have specific requirements for what an electronic audit trail must demonstrate. Here are the five properties that matter most:</p>
+
+    <div class="valid-cards">
+      <div class="valid-card"><div class="vc-num">1</div><div class="vc-body"><h3>Attributable — Every entry tied to a specific person</h3><p>Each audit trail entry must identify who performed the action — by name or unique user ID. Shared logins ("QC_TEAM") are not acceptable under regulatory standards because you can't determine which individual took an action. Individual accountability is the foundation of audit trail validity.</p></div></div>
+      <div class="valid-card"><div class="vc-num">2</div><div class="vc-body"><h3>Contemporaneous — Recorded at the time of the action</h3><p>Audit trail entries must be generated at the moment an action occurs — not filled in later from memory. Retroactively created entries are a major regulatory red flag and can invalidate the entire record set. This is why AI systems that log automatically are more trustworthy than human-filled forms — the timestamp is set by the system, not the person.</p></div></div>
+      <div class="valid-card"><div class="vc-num">3</div><div class="vc-body"><h3>Original — Captures what actually happened, not a summary</h3><p>The audit trail must record the actual data — the measured value, the specific action taken, the exact field changed. A note saying "inspection done, results OK" is not sufficient. The actual measurement, the pass/fail result, the specific system identifier, and the timestamp must all be captured.</p></div></div>
+      <div class="valid-card"><div class="vc-num">4</div><div class="vc-body"><h3>Accurate — Reflects reality, not what should have happened</h3><p>An audit trail that records incorrect data — or that is altered after the fact to show what the process was supposed to do rather than what it actually did — is worse than no audit trail at all. It creates false evidence. Regulators treat falsified records as serious violations that can result in criminal prosecution, not just fines.</p></div></div>
+      <div class="valid-card"><div class="vc-num">5</div><div class="vc-body"><h3>Tamper-Evident — Any changes are themselves recorded</h3><p>If a field in a record is changed, the audit trail must capture: the original value, the new value, who made the change, and when. It's not possible to simply "edit" an entry — the original entry is preserved and the change is layered on top, visible to auditors. Deletion of entries is flagged and traceable in a compliant system.</p></div></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Manual vs. AI-Generated Audit Trails</h2>
+    <div class="compare-blocks">
+      <div class="cb manual">
+        <h3>📝 Manual (Paper-Based) System</h3>
+        <div class="cb-item"><span>→</span><span>Inspector fills in a form — timestamp may be approximate</span></div>
+        <div class="cb-item"><span>→</span><span>Shared logbooks — hard to attribute to a specific person</span></div>
+        <div class="cb-item"><span>→</span><span>Entries can be crossed out and rewritten — no tamper evidence</span></div>
+        <div class="cb-item"><span>→</span><span>Gaps when inspectors are busy or forget</span></div>
+        <div class="cb-item"><span>→</span><span>Paper can be lost, damaged, misfiled</span></div>
+        <div class="cb-item"><span>→</span><span>Retroactive entries — filling in "what should have happened"</span></div>
+        <div class="cb-item"><span>→</span><span>Hard to search or aggregate for analysis</span></div>
+      </div>
+      <div class="cb auto">
+        <h3>🤖 AI-Automated Digital System</h3>
+        <div class="cb-item"><span>→</span><span>System timestamps every entry to the millisecond</span></div>
+        <div class="cb-item"><span>→</span><span>Individual user logins — every action attributed to a specific person</span></div>
+        <div class="cb-item"><span>→</span><span>Changes are layered — original preserved, edit history visible</span></div>
+        <div class="cb-item"><span>→</span><span>Continuous logging — no gaps between entries</span></div>
+        <div class="cb-item"><span>→</span><span>Secure digital storage with redundant backup</span></div>
+        <div class="cb-item"><span>→</span><span>Retroactive entries flagged automatically with delay notice</span></div>
+        <div class="cb-item"><span>→</span><span>Instantly searchable, filterable, and exportable for audits</span></div>
+      </div>
+    </div>
+
+    <div class="pull-quote"><p>An AI system that logs automatically doesn't just create more complete records — it creates more trustworthy ones. The timestamp is set by the machine, not the person who might be tempted to backfill.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>When Audit Trails Matter Most: Three Scenarios</h2>
+
+    <div class="scenario-sim">
+      <div class="ss-label">🧪 Scenario Simulator — Select a situation to see how the audit trail helps</div>
+      <div class="ss-btns">
+        <button class="ssb active" onclick="showScenario('recall',this)">Product Recall</button>
+        <button class="ssb" onclick="showScenario('tamper',this)">Suspected Tampering</button>
+        <button class="ssb" onclick="showScenario('audit',this)">FDA Audit</button>
+      </div>
+      <div class="ss-result ok show" id="sc-recall">
+        <h3>✅ Product Recall — Audit Trail as Precision Tool</h3>
+        <p>A customer reports illness linked to a pharmaceutical product. Without an audit trail, the company must recall every product made in the past 6 months — costing millions and pulling safe product from the market. With a complete audit trail, investigators can pinpoint: which specific batches were made on the affected line, which raw material lots were used, when the equipment was last calibrated, and which workers handled the product. The recall can be targeted to the two specific batches at risk — protecting the company and keeping safe product available to patients who need it.</p>
+      </div>
+      <div class="ss-result warn" id="sc-tamper" style="display:none;">
+        <h3>⚠️ Suspected Record Tampering — Audit Trail as Evidence</h3>
+        <p>An anonymous tip suggests that a QC manager has been approving batches without completing required inspections — backdating approval signatures. The audit trail shows: the QC manager's login ID approved batch records at timestamps that are 4–6 hours after the batch was actually completed, and the system captures that the review was done in 30 seconds — too fast to have actually checked the 47 data fields in the batch record. The tamper-evident audit trail doesn't just surface the problem — it provides the evidence for the investigation. The specific login, the timestamps, and the impossibly fast review time are all captured, automatically, without anyone having to catch the manager in the act.</p>
+      </div>
+      <div class="ss-result bad" id="sc-audit" style="display:none;">
+        <h3>🚨 FDA Audit — What an Auditor Actually Checks</h3>
+        <p>An FDA investigator arrives unannounced for a routine inspection. One of the first things requested: "Please show me the audit trail for your electronic batch record system for the past 12 months." The auditor is checking: Are entries contemporaneous or backdated? Are shared logins being used? Are changes recorded with before/after values? Are there unexplained gaps? In a facility with a compliant AI-generated audit trail, this review is a non-event — the data is complete, timestamped, and instantly retrievable. In a facility with a paper-based or incomplete system, this request triggers a days-long scramble that often reveals compliance gaps — and can result in a Warning Letter that halts product release.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical company switches from paper batch records to a digital system. The new system allows any user with access to edit any field in a batch record, and only saves the most recent version — overwriting previous entries when changes are made. Does this system meet the requirements for a valid electronic audit trail?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Being digital doesn\'t automatically make a system compliant. The FDA\'s 21 CFR Part 11 requirements for electronic records specify what a digital system must do — including maintaining complete change history. A digital system that overwrites previous entries is actually worse than a paper system in one important way: at least with paper, you can sometimes see that something was crossed out. With an overwriting digital system, the original value is simply gone.')">Yes — it\'s a digital system, so it automatically meets electronic record requirements</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. A system that overwrites previous values when records are edited does NOT maintain a valid audit trail, because the "before" state of each change is permanently lost. A compliant electronic audit trail must preserve the original entry, the new value, who made the change, and when — all of which must remain visible to auditors. Additionally, if the system allows any user to edit any field without access controls, it fails the attributability requirement. This system would fail an FDA 21 CFR Part 11 review. The company would need to implement a system that logs every change as a new layer while preserving the original, and restricts editing by user role.')">No — a compliant audit trail must preserve the original value AND the changed value when a field is edited. Overwriting loses the "before" state, which is required for tamper-evident record-keeping</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Whether the system is internally developed or commercially purchased doesn\'t determine compliance. What matters is what the system does — specifically, whether it captures and preserves the complete change history with timestamps and user attribution. A commercial system that overwrites records is just as non-compliant as an internal one that does the same.')">It depends on whether the system was commercially purchased or internally developed</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Saving a copy of the record after each change is closer — but "a copy of the record" is not the same as a proper audit trail entry. A compliant system needs to capture: which specific field was changed, the original value of that field, the new value, who made the change, the exact timestamp, and the reason for the change (in some regulated contexts). Simply saving snapshots of the whole record doesn\'t meet these requirements cleanly.')">It depends on whether they save a copy of the full record after each change</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>An audit trail is an automatically generated, chronological record of every system action — who did what, when, and what changed. It's tamper-evident: if someone tries to change or delete an entry, the system records that attempt too.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>A valid audit trail must be: Attributable (tied to a specific person), Contemporaneous (recorded at the time of action), Original (captures actual data), Accurate (reflects reality), and Tamper-Evident (changes are layered, not overwritten). These five properties are regulatory requirements, not design preferences.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>AI-automated audit trails are more trustworthy than manual records because timestamps are set by the system (not the person), coverage is continuous (no gaps), and changes are captured automatically — not requiring anyone to decide to document something. This is why moving to digital documentation is a compliance upgrade, not just a convenience.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+
+const entries=[
+  {type:"normal",time:"08:14:22",user:"J.OKONKWO",action:"Mixing step 1 initiated. Parameters: Speed 45 RPM, Temp 22.3°C (spec: 20-25°C)",badge:"PROCESS"},
+  {type:"normal",time:"08:44:38",user:"SYS-AUTO",action:"In-process check — granule moisture: 2.8% (spec: 2.0-3.5%). PASS",badge:"AUTO-LOG"},
+  {type:"change",time:"09:02:11",user:"M.SANTOS",action:"Compression speed CHANGED: 35 RPM → 40 RPM. Reason: tablet hardness below target. Approved: QC Supervisor",badge:"CHANGE"},
+  {type:"normal",time:"09:47:54",user:"SYS-AUTO",action:"Tablet weight check — 142 units sampled. Mean: 500.2mg. RSD: 0.8%. PASS",badge:"AUTO-LOG"},
+  {type:"alert",time:"10:12:07",user:"A.CHEN",action:"⚠ Coating pan temperature excursion: 43.2°C (limit: 40°C). Line paused. Maintenance notified.",badge:"ALERT"},
+  {type:"change",time:"10:38:44",user:"D.OKAFOR",action:"Temperature excursion investigated. Root cause: airflow sensor drift. Sensor replaced, recalibrated. Resume authorized.",badge:"CHANGE"},
+  {type:"normal",time:"11:01:33",user:"SYS-AUTO",action:"Production resumed. All parameters within specification. Documentation gap 49 min logged automatically.",badge:"AUTO-LOG"},
+  {type:"normal",time:"14:22:08",user:"QA.MGMT",action:"Batch record reviewed. 112 AI inspection flags reviewed, 108 confirmed, 4 cleared as false positives. NCR opened for temperature excursion.",badge:"REVIEW"},
+  {type:"normal",time:"14:47:52",user:"QA.DIR",action:"Batch BTH-2024-1143 RELEASED for distribution. QA Director e-signature applied. Certificate of Analysis generated.",badge:"RELEASE"},
+];
+
+let idx=0;
+function addEntry(){
+  if(idx>=entries.length){document.querySelector(".ts-btn").textContent="All entries logged ✓";document.querySelector(".ts-btn").disabled=true;return;}
+  const e=entries[idx++];
+  const el=document.createElement("div");
+  el.className=`trail-entry ${e.type}`;
+  el.innerHTML=`<span class="te-time">${e.time}</span><span class="te-user">${e.user}</span><span class="te-action">${e.action}</span><span class="te-badge">${e.badge}</span>`;
+  const container=document.getElementById("trailEntries");
+  container.appendChild(el);
+  container.scrollTop=container.scrollHeight;
+}
+
+function showScenario(id,btn){
+  document.querySelectorAll(".ss-result").forEach(el=>{el.style.display="none";el.classList.remove("show");});
+  document.querySelectorAll(".ssb").forEach(b=>b.classList.remove("active"));
+  const el=document.getElementById("sc-"+id);
+  el.style.display="block";
+  el.classList.add("show");
+  btn.classList.add("active");
+}
+
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

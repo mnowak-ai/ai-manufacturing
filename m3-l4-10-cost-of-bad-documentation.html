@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hidden Cost of Bad Documentation: Real Recalls, Legal Cases, and Factory Shutdowns</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Case cards */
+.case-cards{display:flex;flex-direction:column;gap:24px;margin:28px 0;}
+.case-card{border-radius:22px;overflow:hidden;border:2px solid;}
+.case-card.missing{border-color:#FECACA;}
+.case-card.falsified{border-color:var(--purple-mid);}
+.case-card.shutdown{border-color:#FDE68A;}
+.case-card.liability{border-color:var(--blue-mid);}
+.case-header{padding:18px 24px;display:flex;align-items:center;gap:14px;}
+.missing .case-header{background:linear-gradient(135deg,#7F1D1D,var(--red));}
+.falsified .case-header{background:linear-gradient(135deg,#1A0A2E,#4A1580);}
+.shutdown .case-header{background:linear-gradient(135deg,#78350F,var(--orange));}
+.liability .case-header{background:linear-gradient(135deg,#1E3A8A,var(--blue));}
+.case-icon{font-size:36px;}
+.case-header-meta h3{font-family:"Fraunces",serif;font-size:18px;font-weight:900;color:white;margin-bottom:2px;}
+.case-header-meta .case-tag{font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+.case-body{padding:20px 24px;background:white;}
+.case-body p{font-size:15px;line-height:1.75;margin-bottom:12px;}
+.case-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;}
+.case-stat{border-radius:10px;padding:12px;text-align:center;}
+.missing .case-stat{background:var(--red-pale);border:1px solid #FECACA;}
+.falsified .case-stat{background:var(--purple-pale);border:1px solid var(--purple-mid);}
+.shutdown .case-stat{background:var(--orange-pale);border:1px solid #FDE68A;}
+.liability .case-stat{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.case-stat-num{font-family:"Fraunces",serif;font-size:20px;font-weight:900;}
+.missing .case-stat-num{color:var(--red);}
+.falsified .case-stat-num{color:var(--purple-dark);}
+.shutdown .case-stat-num{color:#92400E;}
+.liability .case-stat-num{color:var(--blue);}
+.case-stat-label{font-size:11px;color:var(--gray-muted);margin-top:3px;line-height:1.4;}
+.case-lesson{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.65;margin-top:8px;}
+.missing .case-lesson{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.falsified .case-lesson{background:var(--purple-pale);color:var(--purple-dark);border:1px solid var(--purple-mid);}
+.shutdown .case-lesson{background:var(--orange-pale);color:#92400E;border:1px solid #FDE68A;}
+.liability .case-lesson{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+@media(max-width:560px){.case-stats{grid-template-columns:1fr 1fr;}}
+
+/* Three failure types */
+.failure-types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0;}
+.ft-card{border-radius:16px;padding:16px;text-align:center;border:2px solid;}
+.ft-card.missing-t{background:var(--red-pale);border-color:#FECACA;}
+.ft-card.falsified-t{background:var(--purple-pale);border-color:var(--purple-mid);}
+.ft-card.inadequate-t{background:var(--orange-pale);border-color:#FDE68A;}
+.ft-icon{font-size:30px;margin-bottom:8px;}
+.ft-card h3{font-size:13px;font-weight:700;margin-bottom:6px;}
+.missing-t h3{color:var(--red);}
+.falsified-t h3{color:var(--purple-dark);}
+.inadequate-t h3{color:#92400E;}
+.ft-card p{font-size:12px;line-height:1.6;margin:0;}
+.missing-t p{color:var(--red);}
+.falsified-t p{color:var(--gray-text);}
+.inadequate-t p{color:#92400E;}
+@media(max-width:560px){.failure-types{grid-template-columns:1fr;}}
+
+/* What good docs protect against */
+.protection-rows{display:flex;flex-direction:column;gap:8px;margin:28px 0;}
+.prot-row{display:flex;gap:12px;background:var(--green-pale);border-radius:12px;padding:14px 16px;border:1.5px solid #86EFAC;}
+.prot-icon{font-size:20px;flex-shrink:0;}
+.prot-text{font-size:14px;color:var(--gray-text);line-height:1.65;}
+.prot-text strong{color:var(--green);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>The Hidden Cost of Bad Documentation</h1>
+  <p class="hero-sub">Documentation isn't paperwork — it's protection. This article shows what actually happens when records are missing, falsified, or incomplete: factory shutdowns, criminal prosecutions, nine-figure fines, and product liability cases that destroy companies that should have survived their quality problems.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Three Ways Documentation Fails</h2>
+    <div class="failure-types">
+      <div class="ft-card missing-t"><div class="ft-icon">🕳️</div><h3>Missing Records</h3><p>Required documentation was never created — inspections logged nowhere, calibrations not recorded, batch steps undocumented. Often a systemic culture problem, not a single event.</p></div>
+      <div class="ft-card falsified-t"><div class="ft-icon">✏️</div><h3>Falsified Records</h3><p>Records that were altered, backdated, or invented — recording what should have happened instead of what did. Can result in criminal charges, not just regulatory fines.</p></div>
+      <div class="ft-card inadequate-t"><div class="ft-icon">📄</div><h3>Inadequate Records</h3><p>Records that exist but lack specificity — vague descriptions, missing lot numbers, no traceability links. Look compliant but fail during investigations when precision is required.</p></div>
+    </div>
+    <div class="pull-quote"><p>The regulatory consequence for falsified records is categorically worse than for missing records — because falsification signals intent. Missing a record might be negligence; falsifying one suggests deliberate concealment.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Four Real Cases — What Bad Documentation Actually Costs</h2>
+
+    <div class="case-cards">
+      <div class="case-card missing">
+        <div class="case-header"><div class="case-icon">🏭</div><div class="case-header-meta"><h3>Ranbaxy Laboratories — FDA Import Ban</h3><div class="case-tag">Pharmaceutical · Missing and Falsified Records · India/USA · 2008–2013</div></div></div>
+        <div class="case-body">
+          <p>Ranbaxy was one of the world's largest generic pharmaceutical manufacturers. FDA inspections of their Indian facilities found systematic documentation failures: test data that didn't match reported results, stability studies that hadn't actually been conducted, and records showing manufactured dates that were physically impossible given equipment availability logs.</p>
+          <p>The investigation revealed that the documentation failures weren't isolated errors — they were part of a systematic practice of submitting data to regulators that didn't match what actually happened in the factory. FDA inspectors found that Ranbaxy had been filing what one internal whistleblower called "application fraud" in its FDA submissions.</p>
+          <div class="case-stats">
+            <div class="case-stat"><div class="case-stat-num">$500M</div><div class="case-stat-label">US Department of Justice settlement — one of the largest pharma settlements in history</div></div>
+            <div class="case-stat"><div class="case-stat-num">30+ Drugs</div><div class="case-stat-label">US market drugs affected by manufacturing and documentation failures</div></div>
+            <div class="case-stat"><div class="case-stat-num">Import Ban</div><div class="case-stat-label">FDA banned imports from multiple Ranbaxy facilities — destroying market access</div></div>
+          </div>
+          <div class="case-lesson"><strong>Documentation lesson:</strong> The $500M settlement and import bans weren't primarily consequences of product quality failures — they were consequences of documentation failures. Regulators can work with a quality problem that's disclosed honestly. Falsified records that concealed quality problems for years transformed a fixable situation into a criminal case.</div>
+        </div>
+      </div>
+
+      <div class="case-card falsified">
+        <div class="case-header"><div class="case-icon">🔬</div><div class="case-header-meta"><h3>Able Laboratories — Criminal Conviction, Factory Closure</h3><div class="case-tag">Pharmaceutical · Falsified QC Records · New Jersey, USA · 2005–2006</div></div></div>
+        <div class="case-body">
+          <p>Able Laboratories was a small New Jersey generic drug manufacturer. When FDA inspectors arrived in 2005, they found QC analysts had been falsifying laboratory test results — reporting that products passed dissolution and potency tests without actually running the tests. The lab notebooks showed data that was physically impossible: identical results across multiple different test runs, results recorded before the test equipment was even turned on, and results for samples that were never actually collected.</p>
+          <p>The company's QC director and several analysts had been creating fictional test records to meet production quotas and release timelines. Products were being shipped to patients based on documentation that was entirely invented.</p>
+          <div class="case-stats">
+            <div class="case-stat"><div class="case-stat-num">Criminal</div><div class="case-stat-label">Convictions for QC manager and multiple analysts</div></div>
+            <div class="case-stat"><div class="case-stat-num">100%</div><div class="case-stat-label">Of production shut down — FDA consent decree halted all manufacturing</div></div>
+            <div class="case-stat"><div class="case-stat-num">Bankruptcy</div><div class="case-stat-label">Company ultimately filed for bankruptcy and ceased operations</div></div>
+          </div>
+          <div class="case-lesson"><strong>Documentation lesson:</strong> Falsifying QC records isn't just a regulatory violation — it's a federal crime in pharmaceutical manufacturing. The analysts who falsified records weren't just fired; they faced criminal prosecution. The company didn't recover. The pressure to meet quotas by falsifying records destroyed the company far more completely than an honest quality failure would have.</div>
+        </div>
+      </div>
+
+      <div class="case-card shutdown">
+        <div class="case-header"><div class="case-icon">⚠️</div><div class="case-header-meta"><h3>Peanut Corporation of America — Salmonella and the Cost of Missing Records</h3><div class="case-tag">Food Manufacturing · Missing Records, Criminal Concealment · Georgia, USA · 2009</div></div></div>
+        <div class="case-body">
+          <p>The 2008–2009 salmonella outbreak linked to Peanut Corporation of America (PCA) killed 9 people and sickened more than 700. The investigation found not just contamination — it found that PCA management had known about positive salmonella tests and shipped product anyway, and had created records showing negative test results to cover the shipments. Internal emails showed executives discussing how to deal with positive test results while continuing to ship.</p>
+          <p>The documentation failures weren't accidental — they were deliberate. Records were created to show compliance with food safety requirements that hadn't actually been met. The company's own quality testing had found the contamination; the documentation was falsified to allow shipment to continue.</p>
+          <div class="case-stats">
+            <div class="case-stat"><div class="case-stat-num">9 Dead</div><div class="case-stat-label">Deaths attributed to the contaminated peanut products</div></div>
+            <div class="case-stat"><div class="case-stat-num">28 Years</div><div class="case-stat-label">Federal prison sentence for PCA's owner and CEO — unprecedented for a food safety case</div></div>
+            <div class="case-stat"><div class="case-stat-num">$150M+</div><div class="case-stat-label">Estimated civil liability and settlement costs across the supply chain</div></div>
+          </div>
+          <div class="case-lesson"><strong>Documentation lesson:</strong> This case established that food safety documentation failures combined with knowing product shipment can result in decades-long federal prison sentences — not just fines. The CEO's 28-year sentence was the longest ever imposed in a food safety criminal case in the US at that time. Documentation falsification isn't a compliance technicality — it's evidence of intent.</div>
+        </div>
+      </div>
+
+      <div class="case-card liability">
+        <div class="case-header"><div class="case-icon">⚖️</div><div class="case-header-meta"><h3>Vioxx — When Missing Long-Term Documentation Created Billion-Dollar Liability</h3><div class="case-tag">Pharmaceutical · Inadequate Records and Disclosure · Merck · Global · 2004–2007</div></div></div>
+        <div class="case-body">
+          <p>Merck's painkiller Vioxx was one of the best-selling drugs in the world before it was withdrawn from the market in 2004 after studies showed it significantly increased the risk of heart attacks and strokes. The documentation and disclosure failures came in two forms: internal documents showed that Merck scientists had seen cardiovascular signals in early data that weren't adequately documented in the regulatory submissions, and external communications minimized risks that the internal records acknowledged.</p>
+          <p>Plaintiffs' attorneys obtained internal Merck documents showing that company scientists were aware of cardiovascular risks earlier than the company publicly disclosed. The documentation that existed internally — and the gap between what internal records showed and what was disclosed externally — became the central evidence in thousands of lawsuits.</p>
+          <div class="case-stats">
+            <div class="case-stat"><div class="case-stat-num">$4.85B</div><div class="case-stat-label">Merck's settlement fund for Vioxx-related personal injury claims</div></div>
+            <div class="case-stat"><div class="case-stat-num">27,000+</div><div class="case-stat-label">Lawsuits filed against Merck by patients alleging cardiovascular harm</div></div>
+            <div class="case-stat"><div class="case-stat-num">~140M</div><div class="case-stat-label">Vioxx prescriptions written before withdrawal</div></div>
+          </div>
+          <div class="case-lesson"><strong>Documentation lesson:</strong> Internal records that contradict public statements become devastating evidence in litigation. In this case, the documentation that existed internally — showing earlier awareness of risks — proved more damaging than if those concerns had been formally documented, investigated, and disclosed. Complete and transparent documentation of safety signals, even unfavorable ones, is both ethically required and legally protective.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Good Documentation Protects Against</h2>
+    <div class="protection-rows">
+      <div class="prot-row"><span class="prot-icon">⚖️</span><div class="prot-text"><strong>Legal liability:</strong> Complete production records showing that every step was performed correctly create a strong defense in product liability cases. Missing records create the presumption that steps weren't completed.</div></div>
+      <div class="prot-row"><span class="prot-icon">🔍</span><div class="prot-text"><strong>Regulatory penalties:</strong> When FDA or other regulators find a quality issue and documentation is complete, the investigation is faster and the company's good faith is evident. When documentation is incomplete, regulators assume the worst — and the penalties reflect that assumption.</div></div>
+      <div class="prot-row"><span class="prot-icon">👤</span><div class="prot-text"><strong>Personal criminal exposure:</strong> Regulators pursuing criminal charges need to prove intent and knowledge. Complete, accurate records that document what was known when protect individuals by establishing what decisions were made on what information — and by showing that problems were reported through proper channels rather than concealed.</div></div>
+      <div class="prot-row"><span class="prot-icon">🏭</span><div class="prot-text"><strong>Operational continuity:</strong> Facilities with strong documentation pass audits and avoid consent decrees. Facilities with documentation failures face shutdowns that can take months or years to resolve — and during which no revenue is generated while fixed costs continue.</div></div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A QC analyst at a pharmaceutical company runs a dissolution test on a batch and gets a result slightly below specification: 78% dissolved (specification: ≥80%). Their supervisor says: "Run it again — we need this batch released today." The second test passes: 83%. The analyst records only the second (passing) test result in the batch record, not mentioning the first failing result. What is the most serious consequence of this documentation choice?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While audit trail gaps are a documentation concern, most modern electronic systems would have logged both test runs anyway — making it difficult to selectively record only one. The more serious issue is not the audit trail gap itself but what the selective recording represents and its consequences.')">The audit trail will show a gap because two test runs were logged by the instrument but only one appears in the batch record</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. Under FDA regulations, a failing test result cannot be discarded and replaced with a passing result without a formal investigation — called "out-of-specification" (OOS) investigation — that determines why the first test failed before the second test\'s result can be accepted. Selectively recording only the passing result while ignoring the failing result is not just a documentation omission — it is data falsification. FDA regulations (21 CFR 211.192) specifically require that all test results, including failing results, be documented and that OOS results be investigated before retest results can be used. This analyst and their supervisor have committed what regulators call "test until you pass" — a serious violation that, if discovered, can result in criminal charges, facility shutdown, and recall of all products released using this practice. The batch record showing only one passing test misrepresents what happened and creates a false compliance record.')">This is data falsification — a failing test result cannot be discarded; it requires a formal out-of-specification investigation before retest results can be accepted, and selectively recording only the passing result is a federal crime in pharmaceutical manufacturing</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ The test itself may have been conducted correctly — the problem isn\'t necessarily test accuracy. The problem is with the documentation decision: a failing result was not recorded, and no OOS investigation was initiated. The first test may have been a genuine result, a technique error, or a true out-of-specification result — but the way to find out is through an OOS investigation, not by running the test again without investigation and recording only the passing result.')">The analyst should have validated the test method before recording any results</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ While retesting is sometimes permitted under specific conditions, the conditions are very specific: an OOS investigation must first determine that the initial test result was likely caused by a demonstrable lab error (not a product quality issue) before a retest can substitute for the original result. Retesting without investigation and discarding the failing result is not an acceptable practice — it\'s specifically what FDA regulations are designed to prevent.')">The analyst followed an acceptable practice — retesting is standard when an initial result fails</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="longer"/></svg></div><p>Documentation failures come in three types: missing records (never created), falsified records (altered or invented), and inadequate records (vague or incomplete). Falsification is categorically more serious than missing records because it signals intent — and regulators pursue criminal charges, not just fines, when falsification is discovered.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Real consequences of documentation failures: $500M DOJ settlements (Ranbaxy), criminal convictions and bankruptcy (Able Laboratories), 28-year prison sentences (PCA), and $4.85B liability settlements (Vioxx). In every case, the documentation failure was more damaging than the underlying quality problem would have been if handled honestly.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Good documentation protects against legal liability, regulatory penalties, personal criminal exposure, and operational shutdowns. It also enables honest quality management: a failing test result documented and investigated appropriately is a manageable quality event; the same result falsified to show a pass is a federal crime with criminal prosecution exposure for the individuals involved.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>

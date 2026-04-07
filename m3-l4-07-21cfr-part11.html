@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is FDA 21 CFR Part 11? A Beginner's Guide to Electronic Records Requirements</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;--mono:"Space Mono",monospace;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,50px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.vocab{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:16px;padding:20px 24px;margin:18px 0;}
+.vocab-word{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);margin-bottom:6px;}
+.vocab-def{font-size:15px;line-height:1.75;color:var(--gray-text);}
+.vocab-def strong{color:var(--purple-dark);}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* Regulation origin */
+.reg-card{background:linear-gradient(135deg,#1A0A2E,#1E3A8A);border-radius:20px;padding:28px;margin:28px 0;color:white;}
+.rc-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#93C5FD;margin-bottom:10px;}
+.rc-title{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:white;margin-bottom:6px;}
+.rc-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.5;}
+.rc-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.rc-fact{background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center;}
+.rc-fact-val{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:#93C5FD;}
+.rc-fact-lbl{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.4;}
+@media(max-width:560px){.rc-facts{grid-template-columns:1fr 1fr;}}
+
+/* Requirement cards */
+.req-cards{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.req-card{border-radius:16px;overflow:hidden;border:2px solid var(--purple-mid);}
+.req-header{background:var(--purple-dark);padding:12px 20px;display:flex;align-items:center;gap:12px;}
+.req-num{background:var(--purple);color:white;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;font-family:var(--mono);flex-shrink:0;}
+.req-header h3{font-size:15px;font-weight:700;color:white;margin:0;}
+.req-body{padding:14px 20px;background:white;}
+.req-body p{font-size:14px;line-height:1.75;margin-bottom:8px;}
+.req-example{background:var(--gray-soft);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gray-muted);font-style:italic;border-left:3px solid var(--purple-mid);}
+.req-compliant{background:var(--green-pale);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--green);margin-top:8px;border:1px solid #86EFAC;}
+.req-noncompliant{background:var(--red-pale);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--red);margin-top:6px;border:1px solid #FECACA;}
+
+/* Who must comply */
+.industry-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.ind-card{border-radius:14px;padding:16px 18px;border:2px solid var(--purple-mid);background:var(--purple-pale);}
+.ind-card h3{font-size:14px;font-weight:700;color:var(--purple-dark);margin-bottom:5px;}
+.ind-card p{font-size:13px;color:var(--gray-text);margin:0;line-height:1.65;}
+@media(max-width:560px){.industry-grid{grid-template-columns:1fr;}}
+
+/* Compliance sim */
+.compliance-sim{background:var(--gray-soft);border:2px solid var(--purple-mid);border-radius:20px;padding:24px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple);margin-bottom:14px;}
+.cs-scenarios{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.csb{padding:8px 14px;border-radius:10px;border:1.5px solid var(--purple-mid);background:white;font-size:13px;cursor:pointer;color:var(--gray-text);font-family:"DM Sans",sans-serif;transition:all .2s;}
+.csb.active,.csb:hover{background:var(--purple);border-color:var(--purple);color:white;}
+.cs-result{display:none;border-radius:12px;padding:16px 18px;}
+.cs-result.show{display:block;}
+.cs-result.pass{background:var(--green-pale);border:1.5px solid #86EFAC;}
+.cs-result.fail{background:var(--red-pale);border:1.5px solid #FECACA;}
+.cs-result.partial{background:var(--orange-pale);border:1.5px solid #FDE68A;}
+.cs-result h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.pass h3{color:var(--green);}
+.fail h3{color:var(--red);}
+.partial h3{color:#92400E;}
+.cs-result p{font-size:14px;line-height:1.7;margin:0;}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:40px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.qopt{text-align:left;padding:14px 18px;border-radius:12px;border:1.5px solid var(--purple-mid);background:white;font-size:15px;color:var(--gray-text);cursor:pointer;transition:all .15s;font-family:"DM Sans",sans-serif;line-height:1.5;}
+.qopt:hover{background:var(--purple-pale);border-color:var(--purple);}
+.qopt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.qopt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.qfb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.65;display:none;}
+.qfb.show{display:block;}
+.qfb.cfb{background:var(--green-pale);color:var(--green);border:1px solid #86EFAC;}
+.qfb.wfb{background:var(--red-pale);color:var(--red);border:1px solid #FECACA;}
+.summary{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin-top:48px;}
+.summary-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.spoints{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.spoint{display:flex;gap:14px;align-items:flex-start;}
+.sdot{width:24px;height:24px;background:var(--purple);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sdot svg{width:12px;height:12px;}
+.spoint p{font-size:15px;line-height:1.75;margin:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 3 · Lesson 3.4 — Documentation</div>
+  <h1>What Is FDA 21 CFR Part 11?</h1>
+  <p class="hero-sub">It came up in the SCW.AI case study, and you'll see it referenced constantly in pharmaceutical, food, and medical device manufacturing. This article explains what it is, what it actually requires, and why it matters for anyone working with electronic records in a regulated facility.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Problem This Regulation Was Created to Solve</h2>
+    <p>By the mid-1990s, pharmaceutical manufacturers were starting to replace paper records with electronic systems. Computers were faster and more reliable — but they raised a serious question regulators hadn't fully answered: <mark>can an electronic record be trusted the same way a signed, dated paper document can?</mark></p>
+    <p>Paper has natural properties that make falsification difficult — ink dries, corrections are visible, erasures leave marks, and a signed document physically exists. Electronic records seemed easier to alter without leaving a trace. Someone could change a batch result, backdate an entry, or delete an inconvenient record — and the file would look exactly the same as one created honestly.</p>
+    <p>The FDA's answer was <strong>21 CFR Part 11</strong> — a set of technical and procedural requirements that, if followed, make electronic records just as trustworthy as paper ones. Published in 1997, it defines what a compliant electronic records and electronic signatures system must do.</p>
+
+    <div class="reg-card">
+      <div class="rc-tag">📜 Regulation at a Glance</div>
+      <div class="rc-title">21 CFR Part 11 — Electronic Records; Electronic Signatures</div>
+      <div class="rc-sub">Published by the U.S. Food and Drug Administration (FDA) · Title 21 of the Code of Federal Regulations · Part 11</div>
+      <div class="rc-facts">
+        <div class="rc-fact"><div class="rc-fact-val">1997</div><div class="rc-fact-lbl">Year published — still the governing standard</div></div>
+        <div class="rc-fact"><div class="rc-fact-val">FDA</div><div class="rc-fact-lbl">Enforced by the Food and Drug Administration</div></div>
+        <div class="rc-fact"><div class="rc-fact-val">Pharma, Food, Medical Devices</div><div class="rc-fact-lbl">Primary regulated industries affected</div></div>
+      </div>
+    </div>
+
+    <div class="vocab">
+      <div class="vocab-word">Breaking Down the Name</div>
+      <div class="vocab-def"><strong>21</strong> = Title 21 of the Code of Federal Regulations (CFR). Title 21 covers food and drugs — it's where all FDA regulations live.<br><br><strong>CFR</strong> = Code of Federal Regulations. The codified rules that federal agencies must follow and enforce — like the law, but for agency procedures.<br><br><strong>Part 11</strong> = The specific part of Title 21 that covers electronic records and electronic signatures. Each "part" covers a specific topic. Part 11 is the famous one for documentation.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Part 11 Actually Requires — Seven Key Rules</h2>
+    <p>Part 11 sets requirements in two categories: electronic records (how records must be stored and protected) and electronic signatures (how digital sign-offs must work). Here are the seven most important requirements — with examples of what compliance looks like in practice.</p>
+
+    <div class="req-cards">
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.10(a)</span><h3>System Validation</h3></div>
+        <div class="req-body">
+          <p>The computer system used to create and store electronic records must be formally validated — tested and documented to prove it works as intended and produces accurate, reliable results.</p>
+          <div class="req-example">"We tested the system to make sure it saves records correctly, calculates correctly, and doesn't lose data — and we have 200 pages of documentation proving we did those tests."</div>
+          <div class="req-compliant">✅ Compliant: Purpose-built pharmaceutical software validated per FDA guidance, with documented IQ/OQ/PQ testing protocols.</div>
+          <div class="req-noncompliant">❌ Non-compliant: Using Microsoft Excel spreadsheets as the primary batch record system without validation documentation.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.10(b)</span><h3>Accurate Copies</h3></div>
+        <div class="req-body">
+          <p>The system must be able to generate accurate and complete copies of records in human-readable form — for inspection, audit, or review. Records that can only exist in proprietary formats that can't be printed or exported are not compliant.</p>
+          <div class="req-compliant">✅ Compliant: System can export any record as a human-readable PDF with all fields, timestamps, and audit trail visible.</div>
+          <div class="req-noncompliant">❌ Non-compliant: Records stored in a proprietary format that becomes unreadable if the software license lapses.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.10(e)</span><h3>Audit Trail</h3></div>
+        <div class="req-body">
+          <p>The system must maintain a computer-generated, time-stamped audit trail that records operator actions and documents who changed what, when. Audit trails must be retained for the same period as the records they document. They cannot be modified or disabled by users.</p>
+          <div class="req-compliant">✅ Compliant: Every field change in the batch record system captures: original value, new value, user ID, timestamp, and reason for change. Audit trail is read-only to all users including administrators.</div>
+          <div class="req-noncompliant">❌ Non-compliant: System administrators can delete or modify audit trail entries through a back-end database access.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.10(g)</span><h3>Authority Checks</h3></div>
+        <div class="req-body">
+          <p>The system must enforce who is authorized to use it, create records, modify records, and sign off at each stage. Access must be role-based — a QC technician should not be able to perform a QA Director's release function.</p>
+          <div class="req-compliant">✅ Compliant: Role-based access control with four tiers (Operator, QC Tech, QA Manager, QA Director), each with defined permissions. Access reviews conducted quarterly.</div>
+          <div class="req-noncompliant">❌ Non-compliant: Shared login "QC_TEAM" used by all quality staff, with no individual accountability for who performed each action.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.10(h)</span><h3>Device Checks</h3></div>
+        <div class="req-body">
+          <p>The system must verify that input devices (terminals, tablets, scales, sensors) used to enter data are authorized and functioning correctly. Data from uncalibrated or unauthorized devices should not be accepted into regulated records.</p>
+          <div class="req-compliant">✅ Compliant: Each connected scale has a device ID registered in the system. Data is only accepted from devices within their calibration window. Expired devices are locked out automatically.</div>
+          <div class="req-noncompliant">❌ Non-compliant: Any networked device can enter data into the batch record system without authentication or verification of calibration status.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.50</span><h3>Electronic Signature Components</h3></div>
+        <div class="req-body">
+          <p>Electronic signatures must include the signer's printed name, the date and time the signature was applied, and the meaning of the signature (e.g., "reviewed and approved" or "performed by"). The signature must be uniquely tied to the individual — it cannot be shared.</p>
+          <div class="req-compliant">✅ Compliant: Signature applied requires the user to re-enter their password at the moment of signing, and the system records: full name, timestamp, and a configurable reason code (Reviewed / Approved / Performed / Witnessed).</div>
+          <div class="req-noncompliant">❌ Non-compliant: Batch records approved by clicking a "Supervisor Approved" button that only requires the current logged-in session — not a re-authentication step at the moment of signing.</div>
+        </div>
+      </div>
+
+      <div class="req-card">
+        <div class="req-header"><span class="req-num">§11.100</span><h3>Electronic Signature Uniqueness</h3></div>
+        <div class="req-body">
+          <p>Each electronic signature must be unique to one person — it can never be reused, reassigned, or shared with anyone else, even temporarily. When someone leaves the company, their signature credentials must be deactivated, never reassigned to a new hire.</p>
+          <div class="req-compliant">✅ Compliant: User accounts tied to employee ID numbers. When employment ends, accounts are immediately deactivated. New hires receive new accounts — never reuse of a previous employee's credentials.</div>
+          <div class="req-noncompliant">❌ Non-compliant: New hire given login credentials of a departed employee "temporarily" until IT sets up their own account — even for one shift.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Which Industries Must Comply</h2>
+    <div class="industry-grid">
+      <div class="ind-card"><h3>💊 Pharmaceutical Manufacturing</h3><p>Batch records, testing records, cleaning validation records, equipment logbooks — virtually every record in a pharma facility falls under Part 11 when created electronically. The highest scrutiny industry.</p></div>
+      <div class="ind-card"><h3>🧬 Biotech and Biologics</h3><p>Manufacturing records for biologics (vaccines, blood products, gene therapies) are subject to the same requirements. Often involves even more complex batch records due to living cell processes.</p></div>
+      <div class="ind-card"><h3>🩺 Medical Devices</h3><p>Design history files, device history records, and quality system records for medical devices fall under Part 11 when maintained electronically. FDA's 21 CFR Part 820 (Quality System Regulation) requires these records — Part 11 governs when they're electronic.</p></div>
+      <div class="ind-card"><h3>🥫 Food Manufacturing</h3><p>Certain food companies regulated by FDA — particularly those subject to HACCP or FSMA (Food Safety Modernization Act) requirements — must meet Part 11 for electronic records. Applies to records that FDA regulations require be kept.</p></div>
+    </div>
+
+    <div class="pull-quote"><p>Part 11 doesn't apply to every record a company keeps — it applies to records that FDA regulations specifically require. If there's an FDA regulation requiring you to keep a specific record, and you keep it electronically, Part 11 governs how that electronic record must be maintained.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Part 11 Compliance Check — Test Your Understanding</h2>
+    <div class="compliance-sim">
+      <div class="cs-label">🔍 Does This System Meet Part 11? — Select a Scenario</div>
+      <div class="cs-scenarios">
+        <button class="csb active" onclick="showCS('a',this)">Scenario A</button>
+        <button class="csb" onclick="showCS('b',this)">Scenario B</button>
+        <button class="csb" onclick="showCS('c',this)">Scenario C</button>
+        <button class="csb" onclick="showCS('d',this)">Scenario D</button>
+      </div>
+      <div class="cs-result fail show" id="cs-a">
+        <h3>❌ Scenario A — NOT Compliant</h3>
+        <p>A pharmaceutical company stores batch records in a shared Excel spreadsheet on a network drive. Any team member can edit any cell. There's no version history turned on. The quality manager prints and signs each completed sheet as the official record.<br><br><strong>Failures:</strong> System not validated. No computer-generated audit trail (Excel version history is not Part 11-compliant). Multiple users can edit records without attribution. Electronic signatures not compliant. The printed paper might be the "official record," but if the electronic version is used to create it, Part 11 still applies to the creation process.</p>
+      </div>
+      <div class="cs-result pass" id="cs-b" style="display:none;">
+        <h3>✅ Scenario B — Compliant</h3>
+        <p>A biotech company uses a validated LIMS (Laboratory Information Management System) with role-based access. Every field change is captured in a read-only audit trail showing the original value, new value, user, and timestamp. Signing a record requires re-entering the user's password. The system was validated with documented IQ/OQ/PQ protocols before going live.<br><br><strong>Compliant because:</strong> System validated ✓, audit trail present and tamper-evident ✓, electronic signatures require re-authentication ✓, role-based access enforced ✓.</p>
+      </div>
+      <div class="cs-result partial" id="cs-c" style="display:none;">
+        <h3>⚠️ Scenario C — Partially Compliant (Gap in Signatures)</h3>
+        <p>A food manufacturer uses a validated electronic batch record system with a full audit trail. However, batch approval is done by the QA Manager clicking an "Approve" button while already logged in — no re-entry of credentials at the moment of signing.<br><br><strong>Gap:</strong> The audit trail and record creation are compliant, but the electronic signature process fails §11.50 — signatures must be linked to the signer at the moment of signing, which typically requires re-authentication (re-entering password) to confirm identity and intent. A session that's been open for hours could be used by someone other than the authorized signer.</p>
+      </div>
+      <div class="cs-result fail" id="cs-d" style="display:none;">
+        <h3>❌ Scenario D — NOT Compliant (Shared Credentials)</h3>
+        <p>A medical device company uses a validated system, but when a QA technician is on vacation, their manager logs in using the technician's credentials to enter records the technician performed.<br><br><strong>Critical failure:</strong> §11.100 requires that each electronic signature be unique to one individual and never shared. Using another person's credentials — even briefly, even with good intent — creates a record that appears to be signed by someone who didn't actually perform the work. This is a falsification of records under FDA interpretation, regardless of intent. The manager should have an authorized procedure for documenting work performed in their colleague's absence.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-box fade-in">
+    <div class="quiz-label">🧠 Check Your Understanding</div>
+    <div class="quiz-q">A pharmaceutical facility has been using a paper-based batch record system for 20 years. They decide to "go paperless" by having workers photograph each completed paper form with a tablet and upload the images to a cloud storage folder. A QA manager then reviews the images and types "Approved — [name] — [date]" in the file name. Does this system meet 21 CFR Part 11 requirements for electronic records?</div>
+    <div class="quiz-opts" id="q1opts">
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Storing records in the cloud doesn\'t automatically make them Part 11 compliant. Part 11 compliance is about the properties of the system — audit trails, validated software, proper electronic signatures, access controls — not just where the files are stored.')">Yes — the records are stored electronically in the cloud, which meets the electronic records requirement</button>
+      <button class="qopt" onclick="doQ('q1',this,true,'✅ Correct. This system fails on multiple Part 11 requirements. The original records are still paper — the photographs are images of paper forms, not native electronic records. The "approval" is a typed file name, not a compliant electronic signature (which requires: the signer\'s full name, date/time captured by the system — not typed by the signer — and a meaning code, all captured at the moment of signing with re-authentication). There is no audit trail on the images themselves. The cloud folder has no validated access controls or change history. This system is essentially a paper system with photographs — it doesn\'t satisfy Part 11\'s requirements for the electronic records or electronic signatures it would need to create and use compliantly.')">No — photographing paper forms does not create compliant electronic records, and typing a name in a file name is not a compliant electronic signature</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Part 11 does not have a size exemption. Both small and large pharmaceutical companies must comply with Part 11 for records that FDA regulations require them to keep. The regulation was designed to apply to any FDA-regulated entity using electronic records.')">It depends on the company\'s size — small pharmaceutical companies are exempt from Part 11</button>
+      <button class="qopt" onclick="doQ('q1',this,false,'❌ Part 11 applies when FDA-required records are maintained electronically — which this system attempts to do. If the paper originals are being treated as the official records and the images are just copies for convenience, the paper system requirements still apply. Either way, the electronic system being used is not Part 11 compliant, and if FDA views the images as the official records, all Part 11 requirements apply to them.')">It depends on whether they retain the original paper forms as the official record</button>
+    </div>
+    <div class="qfb" id="q1fb"></div>
+  </div>
+
+  <div class="summary fade-in">
+    <div class="summary-label">📌 Article Summary</div>
+    <h2>What to Remember</h2>
+    <div class="spoints">
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>21 CFR Part 11 is the FDA regulation that defines what electronic records and electronic signatures systems must do to be as trustworthy as paper records. Published in 1997, it applies to any FDA-regulated record that is maintained electronically — primarily in pharmaceutical, biotech, medical device, and certain food manufacturing contexts.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>The seven key requirements: validated systems, accurate copy generation, tamper-evident audit trails, authority checks (role-based access), device checks, electronic signature components (name + time + meaning), and signature uniqueness (never shared or reused). Failing any one of these is a compliance violation.</p></div>
+      <div class="spoint"><div class="sdot"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><p>Common mistakes: shared login credentials, approval by clicking without re-authentication, unvalidated commercial software (Excel, Google Sheets), and assuming that storing records digitally automatically makes them compliant. Part 11 compliance is about the system's properties and procedures — not just where the files live.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener("scroll",()=>{const e=document.documentElement;document.getElementById("pb").style.width=((e.scrollTop/(e.scrollHeight-e.clientHeight))*100)+"%";});
+const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add("visible");}),{threshold:.1});
+document.querySelectorAll(".fade-in").forEach(el=>obs.observe(el));
+function showCS(id,btn){document.querySelectorAll(".cs-result").forEach(el=>{el.style.display="none";el.classList.remove("show");});document.querySelectorAll(".csb").forEach(b=>b.classList.remove("active"));const el=document.getElementById("cs-"+id);el.style.display="block";el.classList.add("show");btn.classList.add("active");}
+function doQ(id,btn,correct,msg){const opts=document.getElementById(id+"opts");if(opts.querySelector(".correct,.wrong"))return;btn.classList.add(correct?"correct":"wrong");const fb=document.getElementById(id+"fb");fb.className="qfb show "+(correct?"cfb":"wfb");fb.textContent=msg;}
+</script>
+</body>
+</html>
