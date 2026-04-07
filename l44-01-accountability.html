@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Is Responsible When AI Gets It Wrong in Manufacturing?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* accountability layers */
+.acct-layers{display:flex;flex-direction:column;gap:12px;margin:28px 0;}
+.al{border-radius:16px;padding:18px 22px;border:1.5px solid;}
+.al.operator{background:var(--blue-pale);border-color:var(--blue-mid);}
+.al.supervisor{background:var(--green-pale);border-color:#6EE7B7;}
+.al.engineer{background:var(--orange-pale);border-color:#FCD34D;}
+.al.management{background:var(--purple-pale);border-color:var(--purple-mid);}
+.al-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.al.operator .al-label{color:var(--blue);}
+.al.supervisor .al-label{color:var(--green);}
+.al.engineer .al-label{color:var(--orange);}
+.al.management .al-label{color:var(--purple);}
+.al-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:5px;}
+.al-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.al-owns{margin-top:7px;font-size:12px;font-weight:600;}
+.al.operator .al-owns{color:var(--blue);}
+.al.supervisor .al-owns{color:var(--green);}
+.al.engineer .al-owns{color:var(--orange);}
+.al.management .al-owns{color:var(--purple);}
+
+/* scenario explorer */
+.scenario-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sb-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sb-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.sb-tab{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.sb-tab:hover{border-color:var(--purple);color:var(--purple);}
+.sb-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.sb-panel{display:none;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;}
+.sb-panel.show{display:block;}
+.sb-situation{font-size:13px;line-height:1.85;color:var(--gray-text);margin-bottom:10px;}
+.sb-outcome{background:var(--red-pale);border:1px solid var(--red);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);line-height:1.7;margin-bottom:8px;}
+.sb-verdict{background:var(--orange-pale);border:1px solid var(--orange);border-radius:10px;padding:10px 14px;font-size:13px;color:#92400E;line-height:1.7;margin-bottom:8px;}
+.sb-lesson{background:var(--green-pale);border:1px solid var(--green);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--green);line-height:1.7;}
+
+/* the right behavior */
+.right-behavior{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.rb-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.rb-steps{display:flex;flex-direction:column;gap:10px;}
+.rb-step{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:13px 18px;display:flex;gap:12px;align-items:flex-start;}
+.rb-num{width:26px;height:26px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rb-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>Who Is Responsible When AI Gets It Wrong in Manufacturing?</h1>
+  <p class="hero-sub">When AI recommends something that turns out to be wrong — and a human follows that recommendation — who is accountable? The answer affects every manufacturing worker who interacts with AI tools. Your judgment isn't optional. It's legally and professionally required.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Short Answer — and Why It Matters</h2>
+  <p>When an AI tool in a manufacturing facility produces a flawed recommendation, and a human implements it without appropriate review, accountability does not transfer to the software. Software cannot be held professionally or legally liable. The human who reviewed and acted on the recommendation remains responsible for the decision.</p>
+  <p>This isn't about blame — it's about how professional judgment works in every field. A doctor who follows a diagnostic software's recommendation without applying clinical judgment is still responsible for patient care. An engineer who implements a simulation result without engineering review is still accountable for the design. A production supervisor who approves an AI-generated schedule without applying their knowledge of the floor is still accountable for what happens during that shift.</p>
+  <div class="pull-quote"><p>AI gives you a recommendation. You make the decision. Those are two different acts — and only one of them is yours. Accountability follows the decision, not the recommendation.</p></div>
+  <p>Understanding this isn't meant to make you afraid of AI tools — it's meant to make you a more effective, professional user of them. Workers who understand their accountability use AI as a powerful starting point for judgment, not as a bypass for judgment. That distinction defines the difference between competent and excellent manufacturing professionals.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Where Accountability Lives at Each Level</h2>
+  <p>In a manufacturing facility using AI tools, accountability is distributed across multiple roles — each with its own specific responsibilities related to AI-assisted decisions. No one person is responsible for everything. But everyone has something they're responsible for that the AI cannot assume.</p>
+
+  <div class="acct-layers">
+    <div class="al operator">
+      <div class="al-label">Machine Operator / Technician</div>
+      <div class="al-title">Responsible for: What your hands actually do</div>
+      <div class="al-desc">Your assignment may come from an AI-generated schedule, but the actual operation of your machine, adherence to your work instructions, and the quality of your specific output are your responsibility. If an AI-generated work order assigns you a task, and you notice something doesn't look right — wrong material specification, a step that seems out of order, a quantity that doesn't match what you know about the job — you are responsible for flagging it before proceeding. "The system told me to" is not a sufficient defense for a quality failure caused by information you could reasonably have identified as incorrect.</div>
+      <div class="al-owns">Your accountability: The quality and safety of your specific work. Flagging discrepancies you observe before proceeding.</div>
+    </div>
+    <div class="al supervisor">
+      <div class="al-label">Foreman / Shift Supervisor</div>
+      <div class="al-title">Responsible for: What happens on your shift</div>
+      <div class="al-desc">The AI may generate the shift schedule, worker assignments, and job sequencing. But you review and approve that schedule before releasing it. You apply your knowledge of the floor — which workers are struggling today, which machine has been behaving strangely, which job carries quality risk — before it becomes live direction to your team. If an AI recommendation creates worker overload, safety concerns, or quality risk that you can identify from your floor experience, approving it anyway transfers accountability to you.</div>
+      <div class="al-owns">Your accountability: The health, safety, and output of your shift team. Applying floor knowledge to AI-generated schedules before approval.</div>
+    </div>
+    <div class="al engineer">
+      <div class="al-label">Process Engineer / Quality Engineer</div>
+      <div class="al-title">Responsible for: The process design decisions</div>
+      <div class="al-desc">When AI process optimization tools recommend changes to process parameters — temperature settings, cycle times, inspection frequencies, material specifications — an engineer must review those recommendations against engineering principles, quality standards, regulatory requirements, and customer specifications before they're implemented. An AI recommendation to reduce a process tolerance or eliminate a quality check is an engineering hypothesis, not a validated process change. Implementing it without engineering review makes the engineer accountable for the outcome.</div>
+      <div class="al-owns">Your accountability: The technical validity of any process change derived from AI recommendations. Regulatory and customer specification compliance.</div>
+    </div>
+    <div class="al management">
+      <div class="al-label">Operations Manager / Production Manager</div>
+      <div class="al-title">Responsible for: The system design and culture</div>
+      <div class="al-desc">Management is accountable not just for individual AI-assisted decisions but for the organizational system around AI tools: whether workers are trained to understand AI recommendations critically, whether override protocols exist and are used, whether the culture rewards workers for flagging AI recommendations they're uncertain about, and whether AI systems are properly configured and monitored for accuracy. If the organization treats AI outputs as final decisions rather than inputs to judgment, management bears responsibility for the consequences of that culture.</div>
+      <div class="al-owns">Your accountability: The organizational framework for AI governance. Training, override protocols, and the culture of critical review.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Real Scenarios: Where Did Accountability Land?</h2>
+  <p>Accountability questions become clearest when something goes wrong. These three scenarios show how accountability plays out in realistic manufacturing situations involving AI recommendations.</p>
+
+  <div class="scenario-box">
+    <div class="sb-label">Accountability Scenarios</div>
+    <div class="sb-title">When AI Was Wrong — Who Was Accountable?</div>
+    <div class="sb-sub">Three realistic situations. Click each to see what happened and where accountability actually fell.</div>
+    <div class="sb-tabs">
+      <button class="sb-tab" onclick="showSB('cert',this)">The Expired Certification</button>
+      <button class="sb-tab" onclick="showSB('overload',this)">The Overloaded Worker</button>
+      <button class="sb-tab" onclick="showSB('spec',this)">The Wrong Specification</button>
+    </div>
+    <div class="sb-panel" id="sb-panel"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Most Important Thing to Understand</h2>
+  <p>Here's a misconception that causes real problems: some workers believe that if they follow an AI recommendation exactly, any bad outcome is the system's fault rather than theirs. This misunderstands how professional accountability works in any field.</p>
+  <p>A <mark>professional judgment standard</mark> applies to workers in skilled roles — including manufacturing workers operating AI-assisted systems. The standard asks: given the information you had and the context you were working in, did you apply the level of critical review that a competent professional in your role would apply? If the answer is yes, and you had a reasonable basis for your decision, accountability is mitigated even if the outcome was bad. If the answer is no — if you approved an AI recommendation without applying reasonable judgment — accountability is not shifted to the software.</p>
+  <p>Practically, this means: you don't have to be right every time. You do have to think. Workers who actively engage their judgment when reviewing AI outputs — who ask "does this make sense?", who flag things that don't look right, who document their reasoning — are building exactly the professional record that protects them when something goes wrong.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Behaviors That Protect You Professionally</h2>
+
+  <div class="right-behavior">
+    <div class="rb-label">Professional Practice</div>
+    <div class="rb-title">What Good AI-Assisted Decision-Making Looks Like</div>
+    <div class="rb-steps">
+      <div class="rb-step"><div class="rb-num">1</div><div class="rb-text"><strong>Review AI recommendations before acting on them.</strong> Don't pass a schedule, approve a process change, or implement a recommendation without actually reading and thinking about it. Even a 60-second review catches obvious mismatches that a busy workflow makes easy to miss.</div></div>
+      <div class="rb-step"><div class="rb-num">2</div><div class="rb-text"><strong>Apply your floor knowledge.</strong> You know things the AI doesn't — which machine sounds different today, which worker is having a hard week, which material from last week's delivery didn't look quite right. That knowledge is your contribution to the human-AI partnership. Use it.</div></div>
+      <div class="rb-step"><div class="rb-num">3</div><div class="rb-text"><strong>Flag concerns before proceeding, not after.</strong> If an AI recommendation looks wrong, raise the concern before implementing it — not after something goes wrong. A concern raised before action is a professional judgment call. A concern raised after failure is an excuse.</div></div>
+      <div class="rb-step"><div class="rb-num">4</div><div class="rb-text"><strong>Document your reasoning.</strong> When you override an AI recommendation, log what you observed and why you made a different call. When you accept a recommendation you had questions about, note that you reviewed it and the specific factors that made you comfortable proceeding. Documentation is your professional record.</div></div>
+      <div class="rb-step"><div class="rb-num">5</div><div class="rb-text"><strong>Know your override authority.</strong> Understand what you are authorized to change, what requires a supervisor's approval, and what requires engineering review. Acting within your authority while flagging things outside it is the correct professional posture. Acting on everything alone — or flagging nothing — both create risk.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI scheduling system assigns Jordan, a recently certified welder, to a complex aerospace weld joint. The shift supervisor reviews the AI-generated schedule quickly before shift start, doesn't notice the assignment, and releases it to the floor. Jordan completes the weld. At inspection, the joint fails the aerospace quality specification. Who bears primary accountability for the quality failure?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The AI scheduling system — it generated the assignment that caused the problem</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Jordan — the welder who performed the work should have known the job exceeded their current skill level</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">The shift supervisor — reviewing and approving the schedule before release is explicitly their accountability. The supervisor's job is to apply floor knowledge (Jordan's recent certification, the complexity of this specific joint) before releasing AI-generated assignments. Approving without review transferred the accountability from the system to the decision-maker.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The AI tool vendor — they are responsible for the accuracy of the certification matching algorithm</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The shift supervisor's explicit role is to review AI-generated schedules and apply floor knowledge before releasing them to workers. The AI system flagged Jordan as "certified" — which is technically accurate. But the supervisor's value-add is knowing that Jordan certified three weeks ago and isn't ready for aerospace complexity yet. That's information the certification database doesn't contain. By releasing without that review, the supervisor bypassed their own accountability layer. Jordan may have secondary accountability if they recognized the job exceeded their current skill level and didn't raise it — but the primary accountability is with the supervisor who approved the assignment.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ While AI systems, tool vendors, and individual workers all play roles, the primary accountability here rests with the shift supervisor. Their explicit responsibility is reviewing AI-generated schedules before releasing them — applying floor knowledge the AI doesn't have. The certification database says Jordan is certified, but the supervisor knows Jordan certified three weeks ago and isn't ready for aerospace weld complexity. That judgment is exactly what the supervisor is accountable for providing. AI accountability frameworks in manufacturing consistently place the accountability for AI-assisted decisions with the human who reviews and approves them before implementation.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Accountability for AI-assisted decisions in manufacturing stays with the human who reviews and acts on the recommendation — not with the software. AI generates recommendations; humans make decisions. Those are different acts with different accountability.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Every role has specific accountability: operators for their own work quality and flagging discrepancies; supervisors for applying floor knowledge before approving AI schedules; engineers for technical validity of AI-suggested process changes; managers for the organizational framework around AI governance.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The professional judgment standard: were you applying the level of critical review a competent professional in your role would apply? Accountability is mitigated by documented, reasonable judgment — not by following the AI's output without thinking.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The behaviors that protect you: review before acting, apply floor knowledge, flag concerns before not after, document your reasoning, and know your override authority. These are the habits of a professional who uses AI well.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var scenarios={
+  cert:{situation:'The AI workforce scheduling system assigns Marcus to a precision TIG welding job requiring active TIG certification. Marcus\'s certification expired 6 weeks ago — but the HR database wasn\'t updated immediately when the certification lapsed. The shift supervisor reviews the schedule quickly, doesn\'t verify certifications manually, and releases it. Marcus completes the job. At inspection, the weld shows quality issues consistent with out-of-practice technique.',outcome:'Three joints fail inspection. The entire batch must be re-inspected and partially reworked — a 14-hour delay and $8,400 in rework cost.',verdict:'The shift supervisor bears primary accountability. The AI acted on the data available to it (the certification hadn\'t been updated as expired). The supervisor\'s responsibility includes verifying that critical certifications are current for complex, high-stakes jobs — not trusting the system completely. The HR department shares accountability for the delayed database update.',lesson:'Lesson: AI is only as accurate as its data. For safety-critical or quality-critical job assignments, the human reviewer\'s job is to verify that the system\'s data reflects current reality — especially for certifications and qualifications that can lapse.'},
+  overload:{situation:'An AI scheduling optimization system analyzes throughput targets and assigns a specific machine operator to run 4.2 production cycles per hour — mathematically achievable based on historical data. What the system didn\'t model: the product being run that day requires an additional manual quality verification step that the historical data didn\'t include because it was added to the SOP after the training data was collected. The shift supervisor releases the schedule without reviewing the new SOP against the scheduled output rate.',outcome:'The operator cannot realistically complete the verification step at the scheduled pace. They begin skipping parts of it to hit the target rate. End-of-shift inspection finds 12% of parts with a specific defect that the skipped verification step was designed to catch.',verdict:'The shift supervisor is accountable for releasing a schedule they didn\'t verify against current SOPs. The operator has secondary accountability for skipping a required quality step rather than reporting that the pace was incompatible with the requirements. The operations manager has accountability for deploying an AI system without a process to flag when SOPs are updated in ways that affect scheduling assumptions.',lesson:'Lesson: AI scheduling systems train on historical data. When SOPs change, the system doesn\'t automatically know. Humans reviewing AI-generated schedules must ask: have any process requirements changed since this system was last updated?'},
+  spec:{situation:'An AI inventory management system generates a purchase order recommendation for 4mm stainless steel sheet — "type: stainless" — without specifying grade, because the material specification field in the ERP was left blank when the product\'s work order was created. The purchasing agent receives the AI-generated recommendation, reviews the quantity and timing, and approves the order. 304-grade stainless is ordered. The product specification requires 316-grade for corrosion resistance. The material passes receiving inspection (it looks correct), gets issued to production, and is used in 200 completed units before the discrepancy is caught at customer inspection.',outcome:'200 units are rejected. The correct material must be sourced, all 200 units must be disassembled, rebuilt with 316-grade material, and re-inspected. Total cost: approximately $66,000.',verdict:'The purchasing agent who approved the order without verifying the material specification is primarily accountable — approving a recommendation without verifying that the critical specification field (grade) was populated is a failure of the review process. The person who created the work order with an incomplete specification shares accountability. The ERP system administrator has organizational accountability for not making material grade a required field in the specification.',lesson:'Lesson: AI generates recommendations from the data it was given. Incomplete input data produces confidently presented but wrong recommendations. The human reviewer\'s job includes checking that the AI\'s inputs were complete — not just that its output looks reasonable.'}
+};
+function showSB(key,btn){
+  document.querySelectorAll('.sb-tab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var s=scenarios[key];
+  var p=document.getElementById('sb-panel');
+  p.innerHTML='<div class="sb-situation">'+s.situation+'</div>'
+    +'<div class="sb-outcome"><strong>⚠️ What happened:</strong> '+s.outcome+'</div>'
+    +'<div class="sb-verdict"><strong>⚖️ Where accountability landed:</strong> '+s.verdict+'</div>'
+    +'<div class="sb-lesson"><strong>✅ The lesson:</strong> '+s.lesson+'</div>';
+  p.classList.add('show');
+}
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

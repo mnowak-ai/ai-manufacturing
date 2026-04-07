@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Hiring Managers Actually Want: AI Skills Already Showing Up in Manufacturing Job Postings</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* posting card */
+.job-posting{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:22px 26px;margin:24px 0;}
+.jp-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;}
+.jp-company-icon{width:44px;height:44px;border-radius:12px;background:var(--purple-dark);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.jp-header-text{}
+.jp-role{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);}
+.jp-company{font-size:13px;color:var(--gray-muted);margin-top:2px;}
+.jp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.jp-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;background:var(--gray-soft);color:var(--gray-muted);border:1px solid var(--purple-mid);}
+.jp-body{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.jp-highlight{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:600;}
+.jp-module-link{margin-top:12px;padding:10px 14px;background:var(--white);border:1px solid var(--purple-mid);border-radius:10px;font-size:12px;line-height:1.65;color:var(--purple-dark);}
+.jp-module-link strong{color:var(--purple);}
+
+/* skill mapper */
+.skill-mapper{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sm-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sm-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sm-items{display:flex;flex-direction:column;gap:10px;}
+.sm-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;overflow:hidden;}
+.sm-item-head{padding:12px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer;}
+.sm-job-phrase{font-size:14px;font-weight:600;color:var(--purple-dark);flex:1;}
+.sm-toggle{font-size:16px;color:var(--gray-muted);flex-shrink:0;transition:transform .25s;}
+.sm-toggle.open{transform:rotate(45deg);}
+.sm-item-body{display:none;padding:0 18px 14px;}
+.sm-item-body.open{display:block;}
+.sm-module{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:4px;}
+.sm-explanation{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* interview prep */
+.interview-prep{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ip{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;}
+.ip-q{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.ip-q::before{content:"Q: ";color:var(--purple);}
+.ip-a{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.ip-a::before{content:"A: ";font-weight:700;color:var(--green);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>What Hiring Managers Actually Want: AI Skills Already Showing Up in Manufacturing Job Postings</h1>
+  <p class="hero-sub">The skills in this module aren't theoretical — they're appearing in real job postings right now. This article connects what you've learned to what employers are looking for, so you can walk into an interview and talk about AI-assisted manufacturing from actual experience.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Labor Market Is Already Shifting</h2>
+  <p>Job postings for manufacturing roles have changed meaningfully over the past three years. Where a production planner posting used to list ERP experience and scheduling software proficiency, today's postings increasingly add: "experience interpreting AI-assisted production dashboards," "ability to evaluate and override automated scheduling recommendations," and "comfort with predictive maintenance alert systems."</p>
+  <p>These aren't advanced IT or data science roles. They're production supervisor, quality technician, maintenance coordinator, and operations analyst jobs — the roles that form the backbone of every manufacturing facility. The difference between a candidate who can speak to AI-assisted manufacturing and one who can't is increasingly the difference between a callback and a pass.</p>
+  <div class="pull-quote"><p>You don't need to code AI tools to get hired working alongside them. You need to understand what they do, what their limits are, and how to apply judgment when they surface a recommendation. That's exactly what this module teaches.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Real Job Postings — What Employers Are Writing</h2>
+  <p>The language below is drawn from actual manufacturing job postings. The highlighted phrases are the new AI-related requirements. Under each posting is a direct connection to the skills you've built in this module.</p>
+
+  <div class="job-posting">
+    <div class="jp-header">
+      <div class="jp-company-icon">🏭</div>
+      <div class="jp-header-text">
+        <div class="jp-role">Production Planner — Automotive Components</div>
+        <div class="jp-company">Mid-size tier 1 automotive supplier, Midwest region</div>
+      </div>
+    </div>
+    <div class="jp-tags"><span class="jp-tag">Full-Time</span><span class="jp-tag">$58k–$74k</span><span class="jp-tag">ERP Required</span></div>
+    <div class="jp-body">Requirements include: 2+ years in production planning or scheduling; experience with SAP or equivalent ERP system; <span class="jp-highlight">ability to review and adjust AI-assisted production schedules</span>; strong understanding of capacity constraints and machine utilization; <span class="jp-highlight">familiarity with MES data dashboards and cycle time analysis</span>; excellent communication with floor supervisors and supply chain teams.</div>
+    <div class="jp-module-link"><strong>Module 4 connection:</strong> Lesson 4.1 (ERP, scheduling, work orders), Lesson 4.2 (resource management, utilization), Lesson 4.3 (cycle time analysis, process monitoring). You've been working with these concepts directly.</div>
+  </div>
+
+  <div class="job-posting">
+    <div class="jp-header">
+      <div class="jp-company-icon">🔧</div>
+      <div class="jp-header-text">
+        <div class="jp-role">Maintenance Coordinator — Industrial Manufacturing</div>
+        <div class="jp-company">Large food and beverage producer, Southeast region</div>
+      </div>
+    </div>
+    <div class="jp-tags"><span class="jp-tag">Full-Time</span><span class="jp-tag">$52k–$68k</span><span class="jp-tag">Night Shift Available</span></div>
+    <div class="jp-body">Responsibilities include: coordinating preventive and corrective maintenance schedules across 40+ production assets; <span class="jp-highlight">using predictive maintenance software to prioritize work orders and review AI-generated equipment health alerts</span>; partnering with operations teams on maintenance windows; <span class="jp-highlight">documenting override decisions when planned maintenance intervals are adjusted based on equipment condition data</span>; training technicians on maintenance platform usage.</div>
+    <div class="jp-module-link"><strong>Module 4 connection:</strong> Lesson 4.2 (equipment as resource, utilization monitoring, predictive maintenance principles), Lesson 4.4 (accountability and documentation of AI-assisted decisions — exactly what "documenting override decisions" means).</div>
+  </div>
+
+  <div class="job-posting">
+    <div class="jp-header">
+      <div class="jp-company-icon">🔍</div>
+      <div class="jp-header-text">
+        <div class="jp-role">Quality Engineer — Medical Device Manufacturing</div>
+        <div class="jp-company">Precision medical components manufacturer, Northeast</div>
+      </div>
+    </div>
+    <div class="jp-tags"><span class="jp-tag">Full-Time</span><span class="jp-tag">$72k–$92k</span><span class="jp-tag">ISO 13485 Preferred</span></div>
+    <div class="jp-body">Key qualifications: BS in Engineering or related field or equivalent experience; experience in quality systems for regulated manufacturing; <span class="jp-highlight">ability to critically evaluate AI-generated quality alerts and distinguish signal from noise</span>; familiarity with SPC charting and statistical process data; <span class="jp-highlight">strong judgment in applying AI-suggested parameter adjustments against engineering specification limits</span>; DMAIC or Six Sigma training preferred.</div>
+    <div class="jp-module-link"><strong>Module 4 connection:</strong> Lesson 4.3 (cycle time data, bottleneck analysis, Six Sigma), Lesson 4.4 (AI confidence vs. accuracy, accountability when evaluating AI-generated quality alerts, when optimization goes wrong).</div>
+  </div>
+
+  <div class="job-posting">
+    <div class="jp-header">
+      <div class="jp-company-icon">📦</div>
+      <div class="jp-header-text">
+        <div class="jp-role">Operations Analyst — Consumer Goods Production</div>
+        <div class="jp-company">Regional consumer goods manufacturer</div>
+      </div>
+    </div>
+    <div class="jp-tags"><span class="jp-tag">Full-Time</span><span class="jp-tag">$55k–$70k</span><span class="jp-tag">Entry-Level Welcome</span></div>
+    <div class="jp-body">This role supports operations managers in analyzing production performance data. Responsibilities include: <span class="jp-highlight">monitoring AI-powered resource management dashboards and identifying anomalies requiring human review</span>; tracking inventory levels and working with the purchasing team on AI-generated reorder recommendations; <span class="jp-highlight">preparing reports that contextualize AI-generated findings with operational knowledge for leadership review</span>; supporting continuous improvement projects using Lean tools and data analysis.</div>
+    <div class="jp-module-link"><strong>Module 4 connection:</strong> Lesson 4.2 (inventory management, reorder points, AI tracking), Lesson 4.3 (Lean, continuous improvement, bottleneck analysis). The "identifying anomalies requiring human review" phrase is exactly what you practiced in the AI Running Low simulation.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Skill Mapper: What You've Learned → What Employers Want</h2>
+  <p>Click each job posting phrase to see exactly what skill it maps to from this module — and how to talk about it in an interview.</p>
+
+  <div class="skill-mapper">
+    <div class="sm-label">Skill Mapper</div>
+    <div class="sm-title">Job Requirement → Your Learning → Interview Language</div>
+    <div class="sm-sub">Click each employer phrase to see the module skill behind it and how to discuss it with a hiring manager.</div>
+    <div class="sm-items" id="sm-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Interview Prep: How to Talk About AI Experience You Built in This Course</h2>
+  <p>Many students worry they won't be able to answer interview questions about AI in manufacturing because they haven't worked at a facility yet. But you've been working with production dashboards, AI scheduling concepts, inventory alerts, and process optimization data throughout this module. Here's how to talk about that honestly and confidently.</p>
+
+  <div class="interview-prep">
+    <div class="ip">
+      <div class="ip-q">Have you worked with AI production planning tools?</div>
+      <div class="ip-a">I've worked extensively with AI scheduling concepts through my coursework, including reviewing AI-generated production schedules, identifying when a schedule doesn't account for floor context like worker certifications or equipment constraints, and understanding how ERP systems connect to AI scheduling tools. I understand the workflow of reviewing and approving AI recommendations rather than treating them as automatic directives.</div>
+    </div>
+    <div class="ip">
+      <div class="ip-q">How would you handle an AI alert that doesn't seem right to you?</div>
+      <div class="ip-a">I'd start by reviewing the underlying data — is the alert based on a sensor reading, an inventory count, or a production metric? I'd check whether the alert makes physical sense given what I know about current conditions. If it doesn't — for example, a consumption spike during idle hours — I'd investigate the data source before acting. If the alert seems legitimate, I'd follow the defined escalation process and document my decision and reasoning.</div>
+    </div>
+    <div class="ip">
+      <div class="ip-q">What do you know about predictive maintenance and AI?</div>
+      <div class="ip-a">I understand that predictive maintenance uses sensor data — vibration, temperature, current draw — to detect early signs of equipment wear before failures occur. AI analyzes those patterns against historical failure data to estimate when maintenance is needed, shifting from reactive repairs to scheduled prevention. I also understand that AI alerts need human review — a sensor reading that's physically implausible given current conditions (like the facility being idle overnight) might be a sensor error, not a real maintenance issue.</div>
+    </div>
+    <div class="ip">
+      <div class="ip-q">Tell me about a time you had to evaluate data and make a judgment call.</div>
+      <div class="ip-a">In my coursework, I worked through a scenario where an AI inventory dashboard showed a critical material shortage predicted within hours, a warning alert for a second material in a few days, and a sensor alert for a third material showing an overnight consumption spike during idle hours. I had to triage all three — act immediately on the critical shortage, plan a standard reorder for the warning, and investigate the sensor alert rather than placing an emergency order on what turned out to be a sensor malfunction. That kind of triage thinking is what I understand the role involves.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A job posting for a production supervisor role reads: "Candidates should be comfortable reviewing AI-generated shift schedules, applying operational context, and making override decisions when needed." Which combination of skills from this module most directly matches this requirement?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Programming AI scheduling systems and configuring ERP databases</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Understanding how AI scheduling tools generate assignments (Lesson 4.1 — ERP, work orders, scheduling), knowing what AI sees vs. what a supervisor knows about the floor (Lesson 4.2 — people as resources, skills matrix), and the professional practice of reviewing, applying judgment, and documenting override decisions (Lesson 4.4 — accountability)</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Digital twin simulation expertise and Six Sigma Black Belt certification</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Demand forecasting and supply chain management at the enterprise level</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The posting is asking for exactly the human-AI partnership skills this module builds: understanding what AI scheduling tools do and how they generate recommendations, applying the floor knowledge and professional context that AI can't access, and knowing how to document a professional decision when you override or modify an AI suggestion. You don't need to code the system — you need to use it with judgment. That's what this module prepared you for.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The posting is asking for the user-side of AI-assisted scheduling — someone who can work with the outputs of AI tools, apply floor knowledge, and make professional decisions. That maps directly to Lesson 4.1 (scheduling and ERP concepts), Lesson 4.2 (understanding people as resources and what AI sees vs. what supervisors know), and Lesson 4.4 (professional accountability and the practice of documented judgment). Programming, advanced certifications, and enterprise supply chain work are different skills at a different level than what this posting requires.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI-related skills are already appearing in mainstream manufacturing job postings across production planning, maintenance, quality, and operations roles — not just technical or IT positions. The market is shifting now.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">What employers are asking for: ability to review AI-generated schedules and dashboards, interpret data and apply operational context, distinguish signal from noise in AI alerts, and document override decisions. All of these were built in this module.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">You don't need to build AI systems to get hired working alongside them. The judgment, critical review, and human-AI partnership skills you've developed are exactly what manufacturing employers need right now.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Coursework-based AI experience is real and talkable in interviews. The simulations, dashboard reviews, and decision scenarios in this module are genuine demonstrations of the skills employers describe in their postings.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var skillMap=[
+  {phrase:'"Experience with AI-assisted production planning"',module:'Lesson 4.1 — Job Planning',explain:'This means understanding how AI scheduling tools use ERP data (work orders, certifications, inventory levels) to generate production schedules — and how to review those schedules critically before releasing them to the floor. You\'ve worked through this in the PrecisionTech case study and the Build Your Own Schedule simulation.',interview:'"I understand how AI scheduling tools pull from ERP work orders and worker certification data to generate shift assignments, and I know how to apply floor context — like worker readiness and machine conditions — when reviewing those recommendations before approving them."'},
+  {phrase:'"Familiarity with predictive maintenance platforms"',module:'Lesson 4.2 — Resource Management',explain:'Predictive maintenance platforms monitor equipment sensors and flag developing problems before breakdowns occur. Familiarity means being able to read the alerts, distinguish real anomalies from sensor errors, and know when to escalate to maintenance vs. continue monitoring. The AI Running Low simulation gave you practice with exactly this type of alert triage.',interview:'"I\'m familiar with how predictive maintenance systems use sensor data — vibration, temperature, utilization — to flag anomalies before they become failures. I understand the importance of investigating alerts that don\'t make physical sense before acting on them."'},
+  {phrase:'"Ability to interpret data dashboards and make operational decisions"',module:'Lesson 4.3 — Process Optimization',explain:'Data dashboards in manufacturing show cycle times, queue depths, utilization rates, and downtime percentages. Interpreting them means reading the numbers, identifying patterns (like a station with high utilization and a growing queue), and forming an actionable recommendation. The Bottleneck Simulation in Lesson 4.3 is a direct practice of this skill.',interview:'"I can read production dashboards showing cycle time, utilization, and queue data to identify where constraints are developing, and I understand how to prioritize which findings require immediate action versus investigation."'},
+  {phrase:'"Documenting override decisions when AI recommendations are adjusted"',module:'Lesson 4.4 — Reflection & Judgment',explain:'This is about professional accountability. When a supervisor or planner changes an AI-generated recommendation, they\'re expected to log what the AI suggested, what they changed it to, and why. This creates an audit trail and contributes to improving the AI system over time. Lesson 4.4 covers exactly why this documentation practice matters.',interview:'"I understand that when I modify an AI recommendation, I need to document the reasoning — what the system suggested, what I changed, and the specific operational context that drove the decision. That record protects me professionally and helps improve the system."'},
+  {phrase:'"Identifying anomalies requiring human review"',module:'Lesson 4.2 — Simulation & Lesson 4.4 — AI Confidence',explain:'AI systems flag everything with equal visual presentation — a valid alert looks identical to a sensor glitch. The human skill is recognizing when an alert doesn\'t make sense given the physical context (like the 340% bolt consumption spike during idle hours in the Simulation article). You practiced this exact skill.',interview:'"I know how to evaluate AI alerts by checking whether they make physical sense in context — for example, a consumption spike during verified idle hours is more likely a sensor problem than a real shortage, and I\'d investigate before placing an emergency order."'},
+  {phrase:'"Supporting continuous improvement using Lean tools and data analysis"',module:'Lesson 4.3 — Lean, 5S, PDCA',explain:'This means knowing what Lean frameworks like 5S, PDCA, and the 8 Wastes are, how to use production data to identify improvement opportunities, and how to participate in or lead structured improvement cycles. You covered all of this in the Lean Manufacturing and 5S articles.',interview:'"I\'m familiar with Lean frameworks including 5S, the 8 Wastes, and the PDCA continuous improvement cycle. I understand how to use production data to identify waste and how AI process monitoring tools surface improvement opportunities for human-led Lean projects."'}
+];
+var openSM=null;
+var smc=document.getElementById('sm-items');
+skillMap.forEach(function(s,i){
+  var div=document.createElement('div');div.className='sm-item';
+  div.innerHTML='<div class="sm-item-head" onclick="toggleSM('+i+')">'
+    +'<div class="sm-job-phrase">&#x1F4CB; '+s.phrase+'</div>'
+    +'<div class="sm-toggle" id="smt'+i+'">+</div></div>'
+    +'<div class="sm-item-body" id="smb'+i+'">'
+    +'<div class="sm-module">Module Connection: '+s.module+'</div>'
+    +'<div class="sm-explanation">'+s.explain+'</div>'
+    +'<div style="margin-top:8px;background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--green);line-height:1.65;">'
+    +'<strong>How to say it in an interview:</strong> '+s.interview+'</div></div>';
+  smc.appendChild(div);
+});
+function toggleSM(i){
+  var b=document.getElementById('smb'+i),t=document.getElementById('smt'+i);
+  if(openSM===i){b.classList.remove('open');t.classList.remove('open');openSM=null;return;}
+  if(openSM!==null){document.getElementById('smb'+openSM).classList.remove('open');document.getElementById('smt'+openSM).classList.remove('open');}
+  b.classList.add('open');t.classList.add('open');openSM=i;
+}
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
