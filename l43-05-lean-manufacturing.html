@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Lean Manufacturing and Why Does Every Factory Care About Waste?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* 8 wastes grid */
+.wastes-grid{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.waste-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.waste-card{flex:1;min-width:180px;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 18px;cursor:pointer;transition:all .2s;user-select:none;}
+.waste-card:hover{border-color:var(--purple);background:var(--purple-pale);}
+.waste-card.active{border-color:var(--purple);background:var(--purple-pale);}
+.waste-icon{font-size:24px;margin-bottom:8px;}
+.waste-acronym{display:inline-block;font-size:10px;font-weight:700;background:var(--purple);color:#fff;padding:2px 6px;border-radius:4px;margin-bottom:5px;}
+.waste-name{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.waste-short{font-size:12px;color:var(--gray-muted);line-height:1.5;}
+.waste-detail{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-top:6px;display:none;}
+.waste-detail.show{display:block;}
+.wd-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:8px;}
+.wd-desc{font-size:13px;line-height:1.85;color:var(--gray-text);margin-bottom:8px;}
+.wd-example{font-size:12px;font-style:italic;color:var(--gray-muted);background:var(--gray-soft);border-radius:8px;padding:8px 12px;}
+.wd-ai{margin-top:8px;background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+
+/* lean tools */
+.lean-tools{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.lt{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.lt-icon{font-size:22px;flex-shrink:0;}
+.lt-body{}
+.lt-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.lt-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.lt-ai{margin-top:6px;background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:7px 12px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+
+/* kaizen cycle */
+.kaizen-cycle{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.kc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.kc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.kc-steps{display:flex;flex-direction:column;gap:0;}
+.kc-step{display:flex;gap:14px;align-items:stretch;}
+.kc-spine{width:44px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.kc-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;background:var(--purple);}
+.kc-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.kc-step:last-child .kc-line{display:none;}
+.kc-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;margin-bottom:10px;}
+.kc-step-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.kc-step-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.kc-ai-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);margin-top:5px;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>What Is Lean Manufacturing and Why Does Every Factory Care About Waste?</h1>
+  <p class="hero-sub">You will hear "Lean," "Kaizen," "5S," and "the eight wastes" constantly in manufacturing careers. This article explains what Lean actually means — in plain language — and how AI is becoming one of the most powerful Lean tools available.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>What Lean Manufacturing Actually Means</h2>
+  <p>The word "Lean" gets used so often in manufacturing that it starts to sound like a buzzword without meaning. But the core idea is simple: <mark>Lean manufacturing is a systematic approach to identifying and eliminating waste from every part of a production process.</mark></p>
+  <p>Not physical waste — like scrap metal or spilled chemicals. The Lean definition of "waste" is much broader: any activity, step, time, or resource that does not add value from the customer's perspective. If a customer wouldn't pay extra for it if they knew it was happening, Lean considers it waste worth eliminating.</p>
+  <p>Lean thinking originated from Toyota's production system in the 1970s and spread globally through the 1980s and 1990s. Today, some version of Lean principles is standard in virtually every manufacturing industry — automotive, aerospace, electronics, food production, medical devices, and beyond. Understanding Lean is professional fluency in manufacturing.</p>
+  <div class="pull-quote"><p>Lean asks one question about every step in every process: does this add value for the customer? If the answer is no — and the step can be eliminated, shortened, or simplified — it's a candidate for improvement.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The 8 Types of Waste — Lean's Framework for Finding Problems</h2>
+  <p>Lean practitioners identified eight specific categories of waste that appear in manufacturing processes. These categories have a memorable acronym: <mark>DOWNTIME</mark>. Click each waste type to see what it means, real examples, and how AI helps detect it.</p>
+
+  <div class="wastes-grid" id="wastes-container"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Continuous Improvement Mindset: Kaizen</h2>
+  <p>Lean isn't a one-time project. It's a philosophy that every process can always be improved, that improvement should never stop, and that the people doing the work are often the best source of improvement ideas. This philosophy has a Japanese name: <mark>Kaizen</mark> — meaning "change for the better."</p>
+  <p>A Kaizen mindset means looking at every process as something that can be made slightly better — not necessarily through major capital investment, but often through small, practical changes. Standardize a step so it takes 2 fewer minutes. Move a tool 3 feet closer to where it's used. Add a check to catch an error earlier rather than at final inspection.</p>
+  <p>The Lean improvement cycle — sometimes called Plan-Do-Check-Act (PDCA) — is the structured approach teams use to implement Kaizen improvements systematically rather than randomly.</p>
+
+  <div class="kaizen-cycle">
+    <div class="kc-label">The Continuous Improvement Cycle</div>
+    <div class="kc-title">Plan → Do → Check → Act (PDCA)</div>
+    <div class="kc-steps">
+      <div class="kc-step">
+        <div class="kc-spine"><div class="kc-dot">P</div><div class="kc-line"></div></div>
+        <div class="kc-card">
+          <div class="kc-step-title">Plan — Identify the problem and design a solution</div>
+          <div class="kc-step-text">Observe the current process. Collect data on where waste or delays exist. Form a specific hypothesis: "If we pre-stage materials at Station 3 instead of requiring operators to walk to the warehouse, we can reduce cycle time by approximately 3 minutes per part." Define how you'll measure success.</div>
+          <div class="kc-ai-tag">🤖 AI contribution: Provides data on current baseline performance, identifies the waste pattern, and calculates the expected improvement if the change is made.</div>
+        </div>
+      </div>
+      <div class="kc-step">
+        <div class="kc-spine"><div class="kc-dot">D</div><div class="kc-line"></div></div>
+        <div class="kc-card">
+          <div class="kc-step-title">Do — Implement the change on a small scale first</div>
+          <div class="kc-step-text">Test the improvement on one shift, one station, or one product line before rolling it out everywhere. Small-scale testing limits the damage if something unexpected happens — and something unexpected almost always happens.</div>
+          <div class="kc-ai-tag">🤖 AI contribution: Monitors the test in real time, comparing actual performance during the trial to the pre-change baseline.</div>
+        </div>
+      </div>
+      <div class="kc-step">
+        <div class="kc-spine"><div class="kc-dot">C</div><div class="kc-line"></div></div>
+        <div class="kc-card">
+          <div class="kc-step-title">Check — Measure whether the change worked</div>
+          <div class="kc-step-text">Compare actual results to the plan. Did cycle time improve as expected? Did quality hold? Were there unexpected consequences downstream? Use data, not opinion, to answer these questions. A change that feels like an improvement might look different in the numbers.</div>
+          <div class="kc-ai-tag">🤖 AI contribution: Generates comparison reports automatically — actual vs. baseline across all metrics, with statistical confidence that the change produced the measured effect.</div>
+        </div>
+      </div>
+      <div class="kc-step">
+        <div class="kc-spine"><div class="kc-dot">A</div><div class="kc-line"></div></div>
+        <div class="kc-card">
+          <div class="kc-step-title">Act — Standardize the improvement or go back to the drawing board</div>
+          <div class="kc-step-text">If the change worked: document it, update the standard operating procedure, train all workers, and roll it out to all shifts. Then immediately look for the next improvement opportunity. If it didn't work: understand why — was the hypothesis wrong? Did implementation miss something? Use what you learned and try again.</div>
+          <div class="kc-ai-tag">🤖 AI contribution: Tracks whether the standardized improvement holds over time or degrades — alerting the team if performance drifts back toward the old baseline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Key Lean Tools You'll Hear About</h2>
+  <p>Lean comes with a vocabulary of specific tools and techniques. You'll encounter these terms throughout a manufacturing career. Here are the most common ones — what they mean and how AI connects to each.</p>
+
+  <div class="lean-tools">
+    <div class="lt">
+      <div class="lt-icon">📋</div>
+      <div class="lt-body">
+        <div class="lt-title">5S — Organizing the Workplace</div>
+        <div class="lt-desc">5S is a workplace organization method with five steps: Sort (remove everything that doesn't belong), Set in Order (arrange everything logically — tools where they're used, labels on everything), Shine (clean consistently to maintain and inspect), Standardize (make the organized state the standard everyone follows), Sustain (build habits and accountability to keep it this way). A well-5S'd workplace is faster to work in, safer, and easier to spot problems in — because deviations from the standard are immediately visible.</div>
+        <div class="lt-ai">AI connection: Computer vision systems can monitor workstation organization and flag when tools are misplaced or areas fall out of 5S standard — catching backslide automatically rather than during manual audits.</div>
+      </div>
+    </div>
+    <div class="lt">
+      <div class="lt-icon">🗺️</div>
+      <div class="lt-body">
+        <div class="lt-title">Value Stream Mapping (VSM) — Drawing the Whole Process</div>
+        <div class="lt-desc">Value Stream Mapping is a technique for drawing out the entire production process from raw material to finished goods — including every step, every wait, every decision point, and every information flow. The map makes the waste visible: you can literally see where parts sit waiting, where information gaps cause delays, and where effort is being spent on non-value-adding steps. VSM is done before any improvement project to ensure the team understands the full system, not just their local area.</div>
+        <div class="lt-ai">AI connection: Process mining tools can automatically generate value stream maps from ERP and MES data — identifying every step and its actual cycle time without requiring manual observation and mapping sessions.</div>
+      </div>
+    </div>
+    <div class="lt">
+      <div class="lt-icon">📌</div>
+      <div class="lt-body">
+        <div class="lt-title">Kanban — Controlling Flow With Visual Signals</div>
+        <div class="lt-desc">Kanban (Japanese for "sign" or "card") is a system for controlling the flow of work and materials using visual signals. In a physical kanban system, a card or empty bin signals "I need more of this" — the upstream process doesn't produce until it sees the signal. This prevents overproduction and keeps inventory lean. In modern manufacturing, kanban signals are often digital — the MES automatically signals upstream stations and suppliers when downstream consumption triggers a replenishment need.</div>
+        <div class="lt-ai">AI connection: AI-driven inventory systems apply kanban logic automatically — triggering replenishment orders in real time based on actual consumption rates rather than fixed reorder schedules.</div>
+      </div>
+    </div>
+    <div class="lt">
+      <div class="lt-icon">🔍</div>
+      <div class="lt-body">
+        <div class="lt-title">Root Cause Analysis (RCA) — Finding the Real Problem</div>
+        <div class="lt-desc">Root Cause Analysis is the disciplined process of not stopping at the obvious cause of a problem, but digging until you find the underlying cause — the one that, if fixed, prevents the problem from recurring. The most famous RCA tool is "5 Why" — ask "why did this happen?" and for each answer, ask "why?" again, at least five times. The fifth-level answer is usually the real root cause, while the first-level answer is just a symptom.</div>
+        <div class="lt-ai">AI connection: AI correlation analysis can rapidly surface variables statistically associated with a problem — narrowing the investigation space for human root cause analysts from hundreds of possible causes to the handful most likely to be relevant.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>AI as a Lean Tool</h2>
+  <p>Lean's biggest practical challenge has always been visibility: waste is hard to see when you're inside a system. Workers adapt to the workarounds. Supervisors accept the normal as the standard. The twelve minutes a worker spends walking to retrieve materials has happened for so long that nobody thinks to question it.</p>
+  <p>AI process monitoring changes this by making the invisible visible. A worker walking 3 minutes to retrieve materials three times per shift, on five machines, across three shifts, generates 135 minutes of walking waste per day — and AI can calculate that number automatically from badge scan data and floor sensor tracking. No human analyst would think to measure it. The AI surfaces it as a motion waste finding with the throughput impact quantified.</p>
+  <p>This is why Lean practitioners increasingly describe AI as a "waste detection amplifier" — not a replacement for Lean thinking, but a tool that makes Lean analysis faster, more comprehensive, and less dependent on the limited bandwidth of human observation. The improvement decisions still require human judgment, worker input, and engineering expertise. But finding the waste to improve has never been easier.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A production team implements a new process change that reduces Station 4's cycle time by 3 minutes. After two weeks, the team lead declares the improvement a success and moves on to the next project. What Lean principle is being violated?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">No principle is violated — a 3-minute improvement is good, and moving to the next project is efficient use of team time</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">The 5S principle — the workspace should have been organized before the cycle time improvement was attempted</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">The "Act" and "Sustain" phases of the PDCA cycle — two weeks is not enough to know if the improvement will hold. The change should be standardized in the SOP, all shifts trained to the new standard, and monitoring continued to verify that performance doesn't drift back. Declaring victory and moving on without standardizing and sustaining is one of the most common reasons Lean improvements don't last.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The Kaizen principle — improvements should always be larger than 3 minutes to be worth documenting</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The "Act" phase of PDCA is where successful improvements get standardized — documented in the standard operating procedure, communicated to all shifts, and monitored over time to verify they hold. Skipping this step is how manufacturing operations end up re-doing the same improvements repeatedly: the change is made, nobody documents it properly, the team moves on, and over the next few months the process gradually drifts back to the old way as workers default to familiar habits. AI monitoring can help with the "Sustain" part of 5S and PDCA — tracking whether performance stays at the improved level or regresses, and alerting the team if it does.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The missing step is standardization and sustainability — the "Act" phase of PDCA. Two weeks of improvement data shows the change worked initially, but Lean requires that successful improvements be: (1) documented in the updated SOP, (2) communicated and trained to all shifts, and (3) monitored over time to ensure performance doesn't regress. Without standardization, the improved process gradually drifts back to the old way as workers default to familiar habits, new team members aren't trained to the new standard, and the team eventually has to make the same improvement again — wasting the original investment.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Lean manufacturing is a systematic approach to eliminating waste — defined as anything a customer wouldn't pay for — from every part of a production process. It originated with Toyota and is now standard in virtually every manufacturing industry.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The 8 Wastes (DOWNTIME): Defects, Overproduction, Waiting, Non-utilized talent, Transportation, Inventory, Motion, and Extra-processing. Each represents a category of activity that adds cost without adding value.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Kaizen is the philosophy of continuous, never-ending improvement. The PDCA cycle (Plan-Do-Check-Act) is the structured method for implementing Kaizen improvements systematically — with AI contributing data at every phase.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Key Lean tools include 5S (workplace organization), Value Stream Mapping (visualizing the full process), Kanban (controlling flow), and Root Cause Analysis (finding the actual cause, not just the symptom). Each has AI-connected applications in modern facilities.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI functions as a "waste detection amplifier" — making invisible waste patterns visible through continuous data analysis. The improvement decisions still require human judgment and worker knowledge. AI finds the problem. People fix it.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var wastes=[
+  {letter:'D',icon:'❌',name:'Defects',short:'Making it wrong — then fixing or scrapping it',desc:'Any product that doesn\'t meet specification is a defect. Defects waste the materials used to make the part, the labor time spent on it, and the machine time it consumed — plus the additional time and cost of rework or disposal. Defects caught late (at final inspection or, worse, at the customer) are far more expensive than defects caught early at the station where they occurred.',example:'A batch of machined parts fails the diameter tolerance check at final inspection. Every part in the batch must be reworked — adding 2 hours of labor per part — because the tolerance drift wasn\'t caught until the end of the line.',ai:'AI monitors quality data in real time and detects tolerance drift before a full batch is affected, flagging the issue at the station where it starts rather than at final inspection.'},
+  {letter:'O',icon:'📦',name:'Overproduction',short:'Making more than is needed, when it isn\'t needed',desc:'Lean considers overproduction the worst waste because it creates most of the others: extra inventory that needs to be stored (Inventory waste), extra handling (Transportation waste), and parts that may sit long enough to become obsolete or damaged (Defects waste). Making only what\'s needed, when it\'s needed, in the quantity needed is a core Lean principle.',example:'A production supervisor schedules 500 units of a component "just in case" a customer order increases — but the order stays at 300. 200 units sit in finished goods inventory for 6 months, tying up $18,000 in capital.',ai:'AI demand sensing and production scheduling tools calculate exactly what should be produced based on confirmed and forecasted orders — reducing overproduction by matching production to actual demand.'},
+  {letter:'W',icon:'⏳',name:'Waiting',short:'Time when a person or machine is idle, waiting for something',desc:'Waiting waste is whenever a worker stands idle waiting for a machine to finish, a material to arrive, an approval to be granted, or a supervisor to answer a question. Waiting is a symptom of imbalanced flow — something upstream isn\'t keeping up, or information isn\'t flowing fast enough. The classic sign: workers who have nothing to do because the station before them is the bottleneck.',example:'Stations 4 and 5 in our Ridgeline simulation run at 38–41% utilization — meaning workers spend more than half their shift waiting for output from the bottleneck at Station 3.',ai:'AI scheduling tools minimize waiting by sequencing jobs to keep machines and workers continuously occupied, pre-staging materials so workers don\'t wait for supplies, and alerting teams to bottlenecks before queues reach critical levels.'},
+  {letter:'N',icon:'💡',name:'Non-Utilized Talent',short:'Skills and knowledge workers have that aren\'t being used',desc:'This waste is about people, not machines. When workers with valuable skills, experience, and ideas aren\'t given opportunities to use them — to suggest improvements, to cross-train, to take on more responsibility — the organization loses the value those capabilities could create. A worker who has been doing the same step for 8 years may know exactly why it takes twice as long some days as others. Not asking is Non-Utilized Talent waste.',example:'An experienced operator knows a specific trick for reducing the setup time on Machine #7 by 40%. Nobody ever asked. The knowledge stays in their head, applied only when they\'re on shift, never documented or standardized.',ai:'AI workforce management tools can identify workers whose certification profiles suggest cross-training opportunities or whose performance data indicates high capability that isn\'t being deployed in current assignments.'},
+  {letter:'T',icon:'🚚',name:'Transportation',short:'Moving materials more than necessary',desc:'Every time a material, part, or assembly is moved from one place to another, it\'s a form of transportation waste — unless that movement is absolutely necessary to complete the product. Extra moves add time, increase the chance of damage, and consume labor and equipment that could be doing something productive. Unnecessary transportation is often caused by poor facility layout: machines that should be adjacent are on opposite sides of the building.',example:'Partially-assembled brackets are moved from the welding area to a central staging rack, then moved again to the grinding station, then moved to a holding area before coating. Three moves where one would suffice if the layout were optimized.',ai:'AI facility simulation tools can model different layout configurations and calculate the total transportation distance under each scenario, identifying layout changes that minimize material movement.'},
+  {letter:'I',icon:'🏪',name:'Inventory',short:'Storing more materials or parts than the process needs right now',desc:'Excess inventory — raw materials, work-in-process, or finished goods held beyond immediate need — is a waste because it ties up cash, consumes storage space, and can obscure problems (defects buried in a large batch are harder to find and trace). Lean\'s JIT philosophy targets this directly: hold only what you need for the near-term production plan.',example:'A facility maintains 3 months of stainless steel sheet "just in case" — tying up $150,000 in capital at all times, with $30,000–$45,000 in annual carrying cost.',ai:'AI inventory management calculates optimal safety stock levels based on actual usage rates and supplier lead times — reducing excess inventory while protecting against stockouts.'},
+  {letter:'M',icon:'🚶',name:'Motion',short:'Unnecessary physical movement by workers',desc:'Motion waste is the physical movement workers make that doesn\'t directly add value to the product: walking across the facility to retrieve a tool, reaching awkwardly for materials positioned inconveniently, or sorting through a disorganized bin to find the right part. 5S workplace organization directly targets motion waste by putting tools and materials exactly where they\'re needed.',example:'A welder walks 90 feet round-trip to retrieve consumables (welding wire, tips) from a central supply area, three times per shift. That\'s 270 feet of walking per shift — or about 14 minutes per shift of non-value-adding motion.',ai:'AI can analyze worker movement patterns using RFID or badge tracking to quantify motion waste across the facility — identifying which workstations generate the most unnecessary movement.'},
+  {letter:'E',icon:'⚙️',name:'Extra-Processing',short:'Doing more work on a part than the customer actually needs',desc:'Extra-processing is spending more time, effort, or precision on a step than the customer\'s specification actually requires. Polishing a surface to a mirror finish when the spec only requires smooth. Running 6 quality checks when 2 would catch every defect the customer cares about. Using an expensive precision machine for a job that a cheaper machine handles just as well. The extra effort costs real money and time without delivering real value.',example:'A component is manually deburred and cleaned after machining to a cosmetically perfect finish — even though it\'s an internal structural part that no one will ever see or touch after assembly.',ai:'AI process analysis can identify steps where the actual output specification significantly exceeds the customer\'s stated requirement — flagging extra-processing candidates for engineering review.'}
+];
+var activeWaste=null;
+var wc=document.getElementById('wastes-container');
+var row;
+wastes.forEach(function(w,i){
+  if(i%2===0){row=document.createElement('div');row.className='waste-row';wc.appendChild(row);}
+  var card=document.createElement('div');card.className='waste-card';card.id='wc'+i;
+  card.innerHTML='<div class="waste-icon">'+w.icon+'</div>'
+    +'<div class="waste-acronym">'+w.letter+'</div>'
+    +'<div class="waste-name">'+w.name+'</div>'
+    +'<div class="waste-short">'+w.short+'</div>';
+  card.onclick=function(){toggleWaste(i);};
+  row.appendChild(card);
+  // detail panel
+  var det=document.createElement('div');det.className='waste-detail';det.id='wd'+i;
+  det.innerHTML='<div class="wd-title">'+w.name+' — Explained</div>'
+    +'<div class="wd-desc">'+w.desc+'</div>'
+    +'<div class="wd-example"><strong>Factory Example:</strong> '+w.example+'</div>'
+    +'<div class="wd-ai"><strong>🤖 AI Connection:</strong> '+w.ai+'</div>';
+  // insert after parent row — handled via full-width div below row
+  if(i%2===1||i===wastes.length-1){
+    var detWrap=document.createElement('div');detWrap.id='dw'+Math.floor(i/2);
+    wc.insertBefore(detWrap,row.nextSibling);
+  }
+});
+// re-insert details into correct position
+wastes.forEach(function(w,i){
+  var det=document.getElementById('wd'+i);
+  if(!det){
+    var d=document.createElement('div');d.className='waste-detail';d.id='wd'+i;
+    d.innerHTML='<div class="wd-title">'+w.name+' — Explained</div>'
+      +'<div class="wd-desc">'+w.desc+'</div>'
+      +'<div class="wd-example"><strong>Factory Example:</strong> '+w.example+'</div>'
+      +'<div class="wd-ai"><strong>🤖 AI Connection:</strong> '+w.ai+'</div>';
+    var dw=document.getElementById('dw'+Math.floor(i/2));
+    if(dw)dw.appendChild(d);
+  }
+});
+function toggleWaste(i){
+  var card=document.getElementById('wc'+i);
+  var det=document.getElementById('wd'+i);
+  if(!det)return;
+  var isOpen=det.classList.contains('show');
+  document.querySelectorAll('.waste-detail').forEach(function(d){d.classList.remove('show');});
+  document.querySelectorAll('.waste-card').forEach(function(c){c.classList.remove('active');});
+  if(!isOpen){det.classList.add('show');card.classList.add('active');det.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

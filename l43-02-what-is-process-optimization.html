@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Process Optimization? Doing the Same Work Smarter, Not Just Faster</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* PDCA cycle */
+.pdca{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.pdca-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pdca-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.pdca-steps{display:flex;flex-direction:column;gap:12px;}
+.pdca-step{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.pdca-letter{width:44px;height:44px;border-radius:12px;font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pdca-body{}
+.pdca-step-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.pdca-step-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.pdca-example{margin-top:8px;font-size:12px;font-style:italic;color:var(--gray-muted);background:var(--gray-soft);padding:8px 12px;border-radius:8px;}
+
+/* before/after process */
+.process-compare{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.pc-card{flex:1;min-width:220px;border-radius:18px;overflow:hidden;border:2px solid;}
+.pc-card.before{border-color:var(--red);}
+.pc-card.after{border-color:var(--green);}
+.pc-head{padding:14px 20px;}
+.pc-card.before .pc-head{background:var(--red-pale);}
+.pc-card.after  .pc-head{background:var(--green-pale);}
+.pc-head-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.pc-card.before .pc-head-label{color:var(--red);}
+.pc-card.after  .pc-head-label{color:var(--green);}
+.pc-head-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.pc-body{padding:14px 20px;background:var(--white);}
+.pc-step{font-size:13px;line-height:1.7;padding:5px 0;border-bottom:1px solid var(--gray-soft);display:flex;gap:8px;align-items:flex-start;}
+.pc-step:last-child{border-bottom:none;}
+.pc-step-num{font-size:10px;font-weight:700;color:var(--gray-muted);flex-shrink:0;margin-top:3px;}
+
+/* waste spotter */
+.waste-spotter{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ws-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ws-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ws-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ws-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:14px;}
+.ws-scene-desc{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.ws-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.ws-opts{display:flex;flex-direction:column;gap:8px;}
+.ws-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:11px 16px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.ws-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.ws-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.ws-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ws-fb{padding:11px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;margin-top:8px;}
+.ws-fb.show{display:block;}
+.ws-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.ws-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.ws-next{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;display:none;}
+.ws-next.show{display:inline-block;}
+.ws-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:12px;padding:16px 20px;margin-top:12px;display:none;}
+.ws-score.show{display:block;}
+
+/* continuous improvement */
+.ci-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ci-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;}
+.ci-icon{font-size:22px;flex-shrink:0;}
+.ci-body{}
+.ci-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.ci-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>What Is Process Optimization? Doing the Same Work Smarter, Not Just Faster</h1>
+  <p class="hero-sub">Optimization doesn't mean pushing people harder or buying more machines. It means studying how work actually flows, finding where time is wasted, testing a smarter approach, and measuring whether it worked. This article walks through the full concept — including the vocabulary you'll hear constantly on a modern manufacturing floor.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>What "Optimizing a Process" Actually Means</h2>
+  <p>When someone says a process needs to be "optimized," they mean: the way we currently do this isn't as efficient as it could be. There's time, motion, material, or effort being used that isn't creating value — and if we eliminate or reduce that waste, the same people and machines can produce more output with the same or less effort.</p>
+  <p>Importantly, optimization is not the same as working faster or harder. Asking workers to rush is not a process improvement — it usually increases defects and reduces quality. True process optimization changes the <em>design</em> of the work itself: the sequence of steps, the layout of the workspace, the timing of material delivery, the handoff between one step and the next.</p>
+  <div class="pull-quote"><p>A process that's been optimized doesn't feel rushed. It feels smooth. Work arrives when it's needed, tools are where they should be, the next step begins immediately when the previous one ends, and nothing gets done twice because it was done wrong the first time.</p></div>
+  <p>Process optimization is one of the defining disciplines of Lean manufacturing — and it's increasingly powered by AI tools that can analyze thousands of data points across a production floor and surface patterns no human could detect from observation alone.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Five Steps of Process Optimization</h2>
+  <p>Effective process optimization follows a disciplined cycle — not a one-time fix, but a repeating loop of observation, analysis, improvement, and measurement. This cycle has a name: <mark>PDCA</mark>, which stands for Plan, Do, Check, Act. It's one of the most widely used frameworks in manufacturing and quality management.</p>
+
+  <div class="pdca">
+    <div class="pdca-label">The Core Framework</div>
+    <div class="pdca-title">PDCA — The Process Improvement Cycle</div>
+    <div class="pdca-steps">
+      <div class="pdca-step">
+        <div class="pdca-letter" style="background:var(--blue);">P</div>
+        <div class="pdca-body">
+          <div class="pdca-step-title">Plan — Map the Current Process and Find the Waste</div>
+          <div class="pdca-step-desc">Before changing anything, document exactly how the process works right now. Walk the floor. Time every step. Draw a process map that shows every handoff, every wait, every movement. Identify where time is being lost — not where you think it's being lost, but where data shows it actually is. Develop a specific hypothesis: if we change X, we expect outcome Y.</div>
+          <div class="pdca-example">Example: "Our welding cycle takes 4.5 minutes per bracket. Observation shows workers spend 45 seconds of that time walking to retrieve welding wire from a bin 15 feet away. If we move the wire bin next to each welding station, we expect to reduce cycle time to 3.8 minutes."</div>
+        </div>
+      </div>
+      <div class="pdca-step">
+        <div class="pdca-letter" style="background:var(--green);">D</div>
+        <div class="pdca-body">
+          <div class="pdca-step-title">Do — Test the Change at Small Scale</div>
+          <div class="pdca-step-desc">Don't change the entire facility at once. Run a controlled test on one shift, one machine, or one team. This limits the risk if the change doesn't work as expected — and generates real data about whether the hypothesis was correct. Small-scale tests also reveal unexpected problems (things that seemed fine on paper but don't work on the floor) before they affect everyone.</div>
+          <div class="pdca-example">Example: Move one welding station's wire bin as a test for one week. Track cycle times carefully for that station during the test vs. the unchanged stations.</div>
+        </div>
+      </div>
+      <div class="pdca-step">
+        <div class="pdca-letter" style="background:var(--orange);">C</div>
+        <div class="pdca-body">
+          <div class="pdca-step-title">Check — Measure Whether It Worked</div>
+          <div class="pdca-step-desc">Compare the measured results from the test against the original baseline. Did cycle time actually decrease? By how much? Were there any negative side effects — more defects, worker discomfort, or problems in adjacent steps? Be honest about the data. If the change didn't produce the expected improvement, that's important information — not a failure, but data for the next iteration.</div>
+          <div class="pdca-example">Example: After one week, the test station's average cycle time is 3.9 minutes — close to the 3.8-minute target. Quality is unchanged. Workers report the new layout feels more natural. The change worked.</div>
+        </div>
+      </div>
+      <div class="pdca-step">
+        <div class="pdca-letter" style="background:var(--purple);">A</div>
+        <div class="pdca-body">
+          <div class="pdca-step-title">Act — Standardize the Improvement (Then Find the Next One)</div>
+          <div class="pdca-step-desc">If the test was successful, implement the change across all relevant stations and update the standard operating procedure (SOP) — the official written description of how the job should be done. Then start the PDCA cycle again. There is always another improvement to find. The process never reaches a final "perfect" state — continuous improvement means the search never stops.</div>
+          <div class="pdca-example">Example: Update the layout for all six welding stations and add wire bin placement to the SOP. Update the cycle time standard from 4.5 to 3.9 minutes. Begin planning: the next observation shows setup time between jobs is now the biggest remaining waste.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What "Waste" Means in Process Optimization</h2>
+  <p>The goal of process optimization is to eliminate <mark>waste</mark> — and in Lean manufacturing, "waste" has a very specific meaning. It's not just scrap or rejected parts. Waste is any activity that consumes time, resources, or effort without adding value to the product that the customer is willing to pay for.</p>
+  <p>Walking across the facility to get a tool is waste. Waiting for a machine to finish is waste. Producing parts that need to be reworked is waste. Having information that needs to be re-entered into three different systems is waste. These wastes are often invisible to the people doing them every day — because they've become part of the routine. Process optimization makes them visible.</p>
+  <p>Here's a real-world look at how the same production process can be redesigned to eliminate waste — without asking anyone to work harder.</p>
+
+  <div class="process-compare">
+    <div class="pc-card before">
+      <div class="pc-head">
+        <div class="pc-head-label">❌ Before Optimization — Welding Station Setup</div>
+        <div class="pc-head-title">Current Process: 8 minutes total setup time</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-step"><div class="pc-step-num">1.</div><div>Worker finishes previous job and walks to the job assignment board (60 ft away) to see what comes next — 2.5 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">2.</div><div>Returns to workstation, retrieves the work order paper from the foreman's office — 1 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">3.</div><div>Walks to the materials staging area to pull the next job's parts — 1.5 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">4.</div><div>Returns to station and sets up the welding fixture — 2 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">5.</div><div>Locates welding wire spec, confirms it matches job requirement — 1 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">6.</div><div>Begins welding</div></div>
+      </div>
+    </div>
+    <div class="pc-card after">
+      <div class="pc-head">
+        <div class="pc-head-label">✅ After Optimization — Same Job</div>
+        <div class="pc-head-title">Redesigned Process: 2.5 minutes total setup time</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-step"><div class="pc-step-num">1.</div><div>While finishing the previous job, worker sees next assignment appear on the floor terminal at their station — 0 min extra</div></div>
+        <div class="pc-step"><div class="pc-step-num">2.</div><div>Materials handler pre-stages next job's parts at the station during the previous job — 0 min walking</div></div>
+        <div class="pc-step"><div class="pc-step-num">3.</div><div>Work order and welding wire spec both display on the terminal screen — 0 min retrieval</div></div>
+        <div class="pc-step"><div class="pc-step-num">4.</div><div>Worker changes fixture setup — 2.5 min</div></div>
+        <div class="pc-step"><div class="pc-step-num">5.</div><div>Begins welding immediately</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p>The welding work itself didn't change. The worker didn't work harder or faster. But 5.5 minutes of non-value-adding activity per job cycle was eliminated through redesigned information flow, pre-staged materials, and digital work assignment. Across 8 setups per shift, that's 44 minutes of recovered productive time — per station, per shift, every day.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Continuous Improvement: The Mindset Behind the Method</h2>
+  <p>Process optimization isn't a project with an end date. It's a mindset — one that manufacturing professionals use the Japanese term <mark>Kaizen</mark> to describe. Kaizen means "change for better" and refers to the philosophy that every process can always be improved, even when it's already good, and that small, continuous improvements accumulate into transformational results over time.</p>
+
+  <div class="ci-cards">
+    <div class="ci-card">
+      <div class="ci-icon">🔍</div>
+      <div class="ci-body">
+        <div class="ci-title">Every Worker Is a Process Improvement Resource</div>
+        <div class="ci-desc">The people doing the work are closest to the waste. A machine operator who runs the same setup 12 times per shift has a detailed understanding of where time is lost that no analyst sitting in an office can match. Kaizen cultures actively involve floor workers in identifying improvements — not just waiting for managers or AI to find them.</div>
+      </div>
+    </div>
+    <div class="ci-card">
+      <div class="ci-icon">📏</div>
+      <div class="ci-body">
+        <div class="ci-title">You Can Only Improve What You Measure</div>
+        <div class="ci-desc">Process improvement requires baseline data. If you don't know how long a step currently takes, you can't know whether a change made it faster. This is where AI data collection tools add enormous value — cycle times, queue lengths, machine utilization rates can be tracked automatically, giving the improvement team an accurate picture of current performance without requiring anyone to stand with a stopwatch.</div>
+      </div>
+    </div>
+    <div class="ci-card">
+      <div class="ci-icon">🔄</div>
+      <div class="ci-body">
+        <div class="ci-title">Small Improvements Beat Infrequent Overhauls</div>
+        <div class="ci-desc">Many organizations wait to make process improvements until problems become crises — then implement sweeping changes that disrupt the whole system. Kaizen philosophy favors frequent small improvements: test a change this week, implement it next week, look for the next improvement the week after. Many small wins, compounded over time, produce bigger results with less risk than infrequent major overhauls.</div>
+      </div>
+    </div>
+    <div class="ci-card">
+      <div class="ci-icon">📐</div>
+      <div class="ci-body">
+        <div class="ci-title">Standardize, Then Improve From the New Standard</div>
+        <div class="ci-desc">Every improvement should be documented in a Standard Operating Procedure (SOP) — the official written description of how the job is done. Without standardization, improvements drift back to the old method over time as workers revert to familiar habits. The standard captures the improvement; the next round of PDCA improves on the new standard. Each cycle builds on the last.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Process Waste Identification Practice</h2>
+  <p>Process optimization skill starts with learning to see waste — to look at a work process and identify where time and effort are being used without adding value to the product. Work through these three scenarios and identify the primary type of waste present.</p>
+
+  <div class="waste-spotter">
+    <div class="ws-label">Practice: Spot the Waste</div>
+    <div class="ws-title">Three Process Scenarios — What's Being Wasted?</div>
+    <div class="ws-sub">Read each scenario, then identify the main type of waste. Each scenario represents a real pattern you'll encounter on a manufacturing floor.</div>
+    <div class="ws-scenario">
+      <div class="ws-scene-desc" id="ws-scene"></div>
+      <div class="ws-q" id="ws-q"></div>
+      <div class="ws-opts" id="ws-opts"></div>
+      <div class="ws-fb good" id="ws-good"></div>
+      <div class="ws-fb bad"  id="ws-bad"></div>
+      <button class="ws-next" id="ws-next" onclick="nextWS()">Next Scenario →</button>
+      <div class="ws-score" id="ws-score"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A process improvement team tests a new material pre-staging system for two weeks. The test data shows cycle time improved by only 4% instead of the expected 12%. The team lead suggests the test "failed" and the idea should be abandoned. What would a continuous improvement mindset say about this conclusion?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The team lead is correct — if a test doesn't meet its target, the idea should be abandoned and a completely different approach tried</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">A 4% improvement is real — the hypothesis was partly right. The team should analyze why the improvement was smaller than expected (perhaps materials were pre-staged but in the wrong location, or the fixture change time is larger than the walk time that was saved), update the approach, and test again. Declaring a partial improvement a failure discourages the kind of iterative learning that Kaizen requires.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">The 4% improvement should be immediately implemented facility-wide — any improvement is worth standardizing, even without understanding why the full gain wasn't achieved</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Process improvements must hit their target to be considered — partial success is the same as failure in process optimization</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. A 4% improvement is meaningful data, not a failure. The continuous improvement mindset treats every test result — whether it hit the target or not — as learning. A 4% result when 12% was expected tells the team something important: the hypothesis was partially correct (the change did help), but something else is limiting the gains. Investigating that gap often reveals the next, more impactful improvement opportunity. Abandoning a partial success without understanding why it fell short misses the learning that PDCA is designed to capture.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Process optimization doesn't treat partial improvements as failures — it treats them as data. A 4% improvement tells the team: the change helped, but less than expected. That gap between 4% and 12% is worth investigating. Maybe the pre-staging helped reduce walking time but fixture setup is the larger remaining waste. Maybe the staging location wasn't quite right. The continuous improvement cycle runs the check, analyzes the gap, updates the approach, and tests again — it doesn't declare a partial positive result a failure and abandon the direction.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Process optimization means changing how work is designed — the sequence, layout, timing, and handoffs — to eliminate waste and improve flow. It is not about asking workers to work harder or faster.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The PDCA cycle (Plan, Do, Check, Act) is the standard framework for process improvement: map the current process, test a change at small scale, measure whether it worked, standardize if successful, then start again.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Waste in process optimization means any activity that uses time or resources without adding value the customer pays for: walking, waiting, rework, unnecessary motion, information re-entry, and overproduction.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Kaizen — the philosophy of continuous small improvements — is the mindset underlying process optimization. Improvements never stop; every standardized process becomes the starting point for the next improvement cycle.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI tools accelerate process optimization by measuring cycle times, queue lengths, and utilization rates automatically and continuously — giving improvement teams accurate baseline data without manual observation, and surfacing patterns across the entire facility that no human could detect by walking the floor.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var wsScenarios=[
+  {scene:'A quality inspector finishes checking a batch of 40 parts. She marks them all as passed on her paper inspection sheet, then walks to the data entry terminal on the other side of the room, types in all 40 results manually, then returns to her station to start the next batch. This process repeats 8 times per shift.',q:'What is the primary type of waste in this process?',opts:['Defect waste — parts are being made incorrectly and need re-inspection','Motion and processing waste — the worker is walking back and forth to a separate terminal and re-entering data that was already recorded on paper. The same information is being recorded twice, and the walking consumes productive time with no value added.','Waiting waste — the next batch has to wait while the inspector is at the data terminal','Overproduction — more parts are being inspected than needed'],correct:1,good:'✅ Correct. This is classic motion and processing waste (sometimes called "double handling"). The inspector recorded the results once on paper, then recorded them again in the system — the same information entered twice. Plus, walking to a separate terminal 8 times per shift burns 20–30 minutes of productive inspection time. The fix: a tablet or terminal at the inspection station that records results once, directly into the system, while the inspector works.',bad:'❌ The main waste is motion and redundant processing. The inspector records results on paper (once), then walks to a terminal and types the same results again (twice). Both the walking and the data re-entry consume time without adding value. The fix is a data entry point at the inspection station — so results are captured once, directly into the system, with no additional walking or re-entry.'},
+  {scene:'An assembly line produces 150 components per hour. Quality inspection can only process 100 per hour. The assembly team keeps running at full speed because "stopping is inefficient." By the end of each shift, there are 400+ components stacked in carts waiting for inspection, and the overnight shift starts with a 4-hour inspection backlog before any new work can be shipped.',q:'What is the primary type of waste driving this problem?',opts:['Defect waste — all 400 waiting parts must have quality problems','Overproduction waste — the assembly team is producing faster than the system can process, creating large inventory buffers that cost carrying money, hide quality problems until it\'s too late to fix them easily, and create pressure to rush inspection to clear the backlog.','Waiting waste — inspection workers are idle for too much of the shift','Motion waste — inspectors are walking too far between the assembly area and the inspection station'],correct:1,good:'✅ Correct. This is overproduction — making more than the next step in the process can handle. The assembly team\'s "efficiency" is an illusion: they\'re running at 150/hr but only 100/hr can be processed, so the extra 50/hr accumulates as WIP inventory. That WIP has carrying cost, hides defect signals (if something is wrong, you find out hours later after 300 defective parts are already made), and creates inspection pressure that leads to rushed work and mistakes. The smarter approach: pace assembly at 100/hr to match inspection\'s rate — and invest in fixing the inspection bottleneck.',bad:'❌ The primary waste is overproduction. Assembly is running at 150/hr when the downstream process can only handle 100/hr. That excess 50 units per hour piles up as WIP inventory with real costs: storage, tracking, insurance, and the risk that defects from hours ago pile up undetected until inspection finally reaches them. Running faster than the downstream process can handle is never efficient — it just hides the real problem (a bottleneck at inspection) behind a growing queue of inventory.'},
+  {scene:'A CNC machine operator finishes one job and prepares for the next. The machine has to run a calibration routine that takes 12 minutes before each new job — required by the current process. During those 12 minutes, the operator stands at the machine watching the calibration run, because the process requires a human to be present. This happens 6 times per shift.',q:'What optimization approach would reduce this waste most directly?',opts:['Accept the wait time — calibration is required, so there\'s nothing to be done','Move calibration to occur while the previous job is finishing (setup reduction) and evaluate whether operator presence during automated calibration is truly necessary — if the machine can signal when calibration is complete, the operator can do other work nearby. 12 min × 6 times = 72 min of idle waiting per shift eliminated.','Assign a second operator to watch the calibration so the first operator can work — double the labor cost to eliminate idle time','Replace the machine — calibration times are a hardware problem that can\'t be optimized'],correct:1,good:'✅ Correct. This is waiting waste — 72 minutes per shift of an operator watching a machine do an automated routine. Two improvements apply: (1) examine whether calibration can be triggered to begin during the last phase of the previous job rather than waiting for job completion first (setup reduction), and (2) evaluate whether operator presence during an automated routine is truly required for safety/quality, or is just a legacy habit. If the machine can run calibration autonomously and signal completion, the operator can perform productive work at an adjacent station during those 12 minutes.',bad:'❌ Waiting waste during mandatory automated routines is directly addressable. Two optimization strategies: (1) setup reduction — can calibration begin before the previous job fully completes, rather than after? (2) Is operator presence during automated calibration a true requirement or a legacy rule? If the machine alerts on completion, operators can productively use that 12 minutes rather than watching a screen. 72 minutes of standing time per shift, per machine, accumulates to significant recoverable capacity over a year.'}
+];
+var wsIdx=0,wsScore=0,wsDone=false;
+function renderWS(){
+  var s=wsScenarios[wsIdx];
+  document.getElementById('ws-scene').textContent=s.scene;
+  document.getElementById('ws-q').textContent=s.q;
+  var el=document.getElementById('ws-opts');el.innerHTML='';
+  s.opts.forEach(function(o,i){
+    var btn=document.createElement('button');btn.className='ws-opt';btn.textContent=o;
+    btn.onclick=function(){answerWS(i);};el.appendChild(btn);
+  });
+  document.getElementById('ws-good').className='ws-fb good';
+  document.getElementById('ws-bad').className='ws-fb bad';
+  document.getElementById('ws-next').className='ws-next';
+  document.getElementById('ws-score').className='ws-score';
+  wsDone=false;
+}
+function answerWS(i){
+  if(wsDone)return;wsDone=true;
+  var s=wsScenarios[wsIdx];
+  var btns=document.querySelectorAll('#ws-opts .ws-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  var correct=i===s.correct;
+  if(correct){btns[i].classList.add('correct');document.getElementById('ws-good').textContent=s.good;document.getElementById('ws-good').classList.add('show');wsScore++;}
+  else{btns[i].classList.add('wrong');document.getElementById('ws-bad').textContent=s.bad;document.getElementById('ws-bad').classList.add('show');}
+  if(wsIdx<wsScenarios.length-1)document.getElementById('ws-next').classList.add('show');
+  else{var sc=document.getElementById('ws-score');sc.className='ws-score show';sc.innerHTML='<strong style="font-family:Fraunces,serif;font-size:22px;color:var(--purple-dark);">'+wsScore+' / 3</strong><div style="font-size:14px;line-height:1.7;color:var(--gray-text);margin-top:6px;">'+(wsScore===3?'Excellent — you can identify waste patterns clearly. That\'s the core skill of process optimization.':wsScore===2?'Good work. Review the scenario you missed — pay attention to the type of waste and what the simplest fix would be.':'Review the waste concepts carefully. Focus on: what activity is happening here that the customer isn\'t paying for?')+'</div>';}
+}
+function nextWS(){wsIdx++;renderWS();}
+renderWS();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

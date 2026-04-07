@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Bottleneck and Why Does It Slow Down Everything Downstream?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* pipe visual */
+.pipe-visual{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.pv-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pv-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.pipe-row{display:flex;align-items:center;gap:0;margin-bottom:24px;flex-wrap:wrap;justify-content:center;row-gap:8px;}
+.pipe-seg{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.pipe-tube{border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;letter-spacing:.05em;}
+.pipe-seg-label{font-size:10px;font-weight:600;color:var(--gray-muted);text-align:center;max-width:60px;line-height:1.3;}
+.pipe-connector{width:20px;height:4px;flex-shrink:0;margin-top:-18px;}
+.pipe-connector.normal{background:var(--purple-mid);}
+.pipe-connector.backed{background:var(--red);}
+.flow-arrow{font-size:14px;color:var(--gray-muted);margin-top:-18px;flex-shrink:0;}
+.pipe-note{font-size:12px;line-height:1.7;color:var(--gray-text);margin-top:4px;padding:10px 14px;background:var(--white);border-radius:10px;border:1px solid var(--purple-mid);}
+
+/* production line */
+.prod-line{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px;margin:28px 0;overflow-x:auto;}
+.pl-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:10px;}
+.pl-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;}
+.pl-stations{display:flex;align-items:flex-end;gap:0;min-width:540px;}
+.pl-station{display:flex;flex-direction:column;align-items:center;flex:1;}
+.pl-bar-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.pl-bar{width:48px;border-radius:6px 6px 0 0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;transition:height .6s ease;}
+.pl-bar.normal{background:var(--green);}
+.pl-bar.bottleneck{background:var(--red);}
+.pl-bar.backed{background:var(--orange);}
+.pl-rate{font-size:11px;font-weight:700;color:#fff;margin-bottom:4px;}
+.pl-station-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.7);text-align:center;margin-top:8px;line-height:1.4;max-width:70px;}
+.pl-arrow{font-size:20px;color:rgba(255,255,255,.3);align-self:center;flex-shrink:0;margin-bottom:30px;}
+.pl-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;}
+.pl-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.75);}
+.pl-legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.pl-note{font-size:13px;line-height:1.7;color:rgba(255,255,255,.8);margin-top:14px;padding:12px 16px;background:rgba(255,255,255,.06);border-radius:10px;}
+
+/* queue visualizer */
+.queue-viz{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.qv-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.qv-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.qv-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.qv-speed-wrap{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;margin-bottom:16px;}
+.qv-speed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:8px;}
+.qv-slider-row{display:flex;align-items:center;gap:12px;}
+.qv-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;border-radius:3px;background:var(--purple-mid);outline:none;}
+.qv-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--purple);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.qv-val{font-family:"Fraunces",serif;font-size:18px;font-weight:900;color:var(--purple-dark);min-width:90px;text-align:right;}
+.qv-stations{display:flex;flex-direction:column;gap:10px;}
+.qv-station{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;}
+.qv-station.bottleneck-st{border-color:var(--red);background:var(--red-pale);}
+.qv-st-name{font-weight:700;font-size:13px;color:var(--purple-dark);margin-bottom:6px;}
+.qv-station.bottleneck-st .qv-st-name{color:var(--red);}
+.qv-st-row{display:flex;align-items:center;gap:10px;}
+.qv-st-capacity{font-size:11px;color:var(--gray-muted);min-width:90px;flex-shrink:0;}
+.qv-st-bar-wrap{flex:1;height:14px;background:var(--gray-soft);border-radius:5px;overflow:hidden;}
+.qv-st-bar{height:100%;border-radius:5px;transition:width .4s ease;}
+.qv-st-queue{font-size:11px;font-weight:700;min-width:80px;text-align:right;}
+
+/* real examples */
+.examples-grid{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.eg{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;}
+.eg-icon{font-size:24px;flex-shrink:0;}
+.eg-body{}
+.eg-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:5px;}
+.eg-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.eg-effect{margin-top:8px;background:var(--red-pale);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--red);line-height:1.65;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>What Is a Bottleneck and Why Does It Slow Down Everything Downstream?</h1>
+  <p class="hero-sub">The word "bottleneck" gets used constantly in manufacturing, but rarely explained. This article gives you the full concept: the slowest step in a process limits output for everything that follows — no matter how fast everything else runs. One slow station can idle four downstream stations simultaneously.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Start With a Bottle</h2>
+  <p>The word "bottleneck" comes from a physical observation anyone can make: pour water through a bottle, and no matter how much water is in the bottle, it can only flow out as fast as the neck allows. The neck is the narrowest point. Everything that comes after the neck — however large the receiving glass — can only fill at the rate the neck permits.</p>
+  <p>Manufacturing works exactly the same way. A production process is a series of steps that a product moves through. Each step has a maximum capacity — the most units it can handle per hour. When one step in the middle of the process is significantly slower than the others, work piles up before that step. Everything after it runs slower than it could. The slow step controls the rate of the entire system.</p>
+  <div class="pull-quote"><p>A chain is only as strong as its weakest link. A production line is only as fast as its slowest step. You can speed up every other station in the facility — but until you fix the bottleneck, total output cannot improve.</p></div>
+  <p>This is one of the most important ideas in all of manufacturing. It sounds simple. But its implications are profound — and frequently counterintuitive to people who are new to production environments.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Water Pipe Analogy</h2>
+  <p>Imagine water flowing through a series of connected pipes. Each pipe segment has its own diameter — its own capacity to let water through. If water flows into the system at 100 gallons per minute, but one segment in the middle is only 2 inches wide, the output of the entire system is limited by that 2-inch segment — regardless of how wide all the other pipes are.</p>
+
+  <div class="pipe-visual">
+    <div class="pv-label">Analogy</div>
+    <div class="pv-title">Why the Narrow Pipe Controls Everything</div>
+    <div class="pipe-row">
+      <div class="pipe-seg">
+        <div class="pipe-tube" style="width:60px;height:30px;background:var(--blue);">IN</div>
+        <div class="pipe-seg-label">100 gal/min entering</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="pipe-seg">
+        <div class="pipe-tube" style="width:56px;height:28px;background:var(--green);">56px</div>
+        <div class="pipe-seg-label">Wide pipe — can handle 100+</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="pipe-seg">
+        <div class="pipe-tube" style="width:20px;height:28px;background:var(--red);font-size:9px;">20px</div>
+        <div class="pipe-seg-label" style="color:var(--red);font-weight:700;">BOTTLENECK — only 22 gal/min</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="pipe-seg">
+        <div class="pipe-tube" style="width:56px;height:28px;background:var(--orange);opacity:.7;">56px</div>
+        <div class="pipe-seg-label">Wide pipe — can handle 100+ but receives only 22</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="pipe-seg">
+        <div class="pipe-tube" style="width:56px;height:28px;background:var(--orange);opacity:.7;">OUT</div>
+        <div class="pipe-seg-label">22 gal/min output — despite wide pipes before and after</div>
+      </div>
+    </div>
+    <div class="pipe-note">The pipes after the bottleneck are just as wide as the ones before it. They <em>could</em> handle 100 gallons per minute. But they only receive 22 — because the bottleneck is the controlling rate. Making those downstream pipes wider does nothing to increase output. Only widening the bottleneck pipe changes the system's total flow.</div>
+  </div>
+
+  <p>Now replace "pipes" with "production stations" and "gallons per minute" with "units per hour." The same logic applies exactly. A welding station that can process 40 units per hour sitting after a stamping station that can only do 20 units per hour doesn't help — it just waits for parts to arrive at half the rate it could process them.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>A Production Floor Bottleneck: What It Looks Like</h2>
+  <p>Let's make this concrete with a real production line. A metal bracket goes through five stations: cutting, stamping, welding, coating, and final inspection. Each station has a maximum capacity — the most brackets it can complete per hour. Here's what the line looks like when one station is a bottleneck.</p>
+
+  <div class="prod-line">
+    <div class="pl-label">Production Line Visualization</div>
+    <div class="pl-title">Five Stations — One Controls Everything</div>
+    <div class="pl-stations">
+      <div class="pl-station">
+        <div class="pl-bar-wrap">
+          <div class="pl-rate">60/hr</div>
+          <div class="pl-bar normal" style="height:60px;"></div>
+        </div>
+        <div class="pl-station-name">Station 1 Cutting</div>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-station">
+        <div class="pl-bar-wrap">
+          <div class="pl-rate">55/hr</div>
+          <div class="pl-bar normal" style="height:55px;"></div>
+        </div>
+        <div class="pl-station-name">Station 2 Stamping</div>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-station">
+        <div class="pl-bar-wrap">
+          <div class="pl-rate" style="color:var(--red);">20/hr ⚠️</div>
+          <div class="pl-bar bottleneck" style="height:20px;"></div>
+        </div>
+        <div class="pl-station-name">Station 3 Welding BOTTLENECK</div>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-station">
+        <div class="pl-bar-wrap">
+          <div class="pl-rate" style="color:var(--orange);">20/hr*</div>
+          <div class="pl-bar backed" style="height:20px;"></div>
+        </div>
+        <div class="pl-station-name">Station 4 Coating (waiting)</div>
+      </div>
+      <div class="pl-arrow">→</div>
+      <div class="pl-station">
+        <div class="pl-bar-wrap">
+          <div class="pl-rate" style="color:var(--orange);">20/hr*</div>
+          <div class="pl-bar backed" style="height:20px;"></div>
+        </div>
+        <div class="pl-station-name">Station 5 Inspection (waiting)</div>
+      </div>
+    </div>
+    <div class="pl-legend">
+      <div class="pl-legend-item"><div class="pl-legend-dot" style="background:var(--green);"></div>Running at capacity</div>
+      <div class="pl-legend-item"><div class="pl-legend-dot" style="background:var(--red);"></div>Bottleneck — limits entire line</div>
+      <div class="pl-legend-item"><div class="pl-legend-dot" style="background:var(--orange);"></div>Starved — waiting on bottleneck</div>
+    </div>
+    <div class="pl-note">Station 3 (welding) can only process 20 brackets per hour. Stations 1 and 2 are producing 55–60 per hour — which means parts pile up in a queue before the welding station. Stations 4 and 5 could run at 40–50 per hour, but they only receive 20 brackets per hour from welding. The entire line's output = 20/hr. Speeding up cutting or stamping makes the queue pile higher — it does not increase final output. Only fixing Station 3 changes the system result.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Interactive: Change the Bottleneck Speed and Watch What Happens</h2>
+  <p>Use the slider below to change the welding station's processing rate. Watch how the queue before it and the output of downstream stations change. Notice that downstream stations can never exceed the welding station's rate — no matter how capable they are.</p>
+
+  <div class="queue-viz">
+    <div class="qv-label">Interactive: Bottleneck Explorer</div>
+    <div class="qv-title">Control the Bottleneck — See the System Respond</div>
+    <div class="qv-sub">Drag the slider to change the welding station's capacity. The system shows you what happens to queues and downstream output in real time.</div>
+    <div class="qv-speed-wrap">
+      <div class="qv-speed-label">Welding Station Capacity (units per hour)</div>
+      <div class="qv-slider-row">
+        <input type="range" class="qv-slider" id="weld-slider" min="10" max="60" value="20" oninput="updateBN()">
+        <div class="qv-val" id="weld-val">20 units/hr</div>
+      </div>
+    </div>
+    <div class="qv-stations" id="qv-stations"></div>
+    <div style="margin-top:12px;font-size:13px;font-weight:700;color:var(--purple-dark);" id="qv-summary"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Critical Insight: Speeding Up Non-Bottlenecks Wastes Money</h2>
+  <p>This is the part that surprises most people — and it's one of the most practically important ideas in manufacturing operations.</p>
+  <p>Imagine a manager at our bracket facility notices the production rate is only 20/hr and decides to buy a faster cutting machine (Station 1) that can process 90 units per hour instead of 60. They spend $80,000 on the upgrade. What happens to total output? <strong>Nothing.</strong> Output stays at 20/hr. The welding station is still the bottleneck. The faster cutting machine just creates a larger pile of parts waiting for welding.</p>
+  <p>Any money, time, or effort invested in improving a non-bottleneck station does not improve overall output. It may improve utilization of that station — but it doesn't change what the customer ultimately receives. The only investment that meaningfully improves total output is investment in the bottleneck itself.</p>
+  <p>This principle comes from a management theory called the <mark>Theory of Constraints</mark> (TOC), developed by Eliyahu Goldratt. His simple rule: find the constraint (bottleneck), exploit it fully, subordinate everything else to supporting it, and then elevate it (invest in improving it). Once that constraint is resolved, a new bottleneck will emerge somewhere else — and the process repeats.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Real Bottleneck Examples in Manufacturing</h2>
+
+  <div class="examples-grid">
+    <div class="eg">
+      <div class="eg-icon">⚙️</div>
+      <div class="eg-body">
+        <div class="eg-title">Single Specialized Machine</div>
+        <div class="eg-desc">A facility has one heat treatment oven. Parts from three different production lines all need to pass through this oven before final inspection. The oven can process 30 parts per hour. The three lines are producing a combined 75 parts per hour. Result: the oven is permanently backed up. All three lines slow down to match the oven's rate — or parts pile up until the queue becomes unmanageable.</div>
+        <div class="eg-effect">Downstream effect: Inspection is idle 60% of the time. Shipping is always behind. Customer complaints increase. Adding more inspectors doesn't help — the oven controls the rate.</div>
+      </div>
+    </div>
+    <div class="eg">
+      <div class="eg-icon">🧑‍🔧</div>
+      <div class="eg-body">
+        <div class="eg-title">A Single Certified Expert</div>
+        <div class="eg-desc">Only one worker in the facility holds the certification for a specialized precision measurement process that every part must pass before shipping. That worker can complete 25 measurements per hour. The production floor produces 60 parts per hour. The measurement station is the bottleneck — not a machine, but a person. When this person is absent, the whole system backs up even faster.</div>
+        <div class="eg-effect">Downstream effect: Finished parts pile up waiting for measurement. Overtime is called regularly to clear the backlog. No increase in production speed helps — only cross-training a second worker to hold that certification expands the system's capacity.</div>
+      </div>
+    </div>
+    <div class="eg">
+      <div class="eg-icon">📋</div>
+      <div class="eg-body">
+        <div class="eg-title">An Approval Process</div>
+        <div class="eg-desc">Before any custom order goes to production, it requires sign-off from a quality engineer who reviews the specifications against engineering drawings. The engineer reviews 8 orders per day. The sales team is submitting 20 orders per day. The bottleneck is administrative — not a machine or a production step. Orders are waiting 2–3 days for review before production can even begin.</div>
+        <div class="eg-effect">Downstream effect: Lead times to customers are longer than they should be. The production floor has less work than it could because approved orders aren't arriving. The quality engineer is overwhelmed. Hiring a second engineer — or automating parts of the review — is what fixes it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A five-station production line has these hourly capacities: Station 1: 80/hr, Station 2: 75/hr, Station 3: 35/hr, Station 4: 70/hr, Station 5: 65/hr. The production manager wants to increase output and has budget to upgrade one station. Which station should they upgrade, and why?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Station 1 — it has the highest capacity (80/hr) so improving it first gives the biggest raw capacity increase</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Station 5 — improving the last station speeds up the final output step closest to the customer</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Station 3 — at 35/hr it is the bottleneck that limits the entire line. Every other station can run faster than 35/hr but will never produce more than 35/hr in total output. Upgrading Station 3 is the only investment that actually increases what the customer receives.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Station 4 — it has the biggest gap between its capacity (70/hr) and the current bottleneck rate (35/hr), which means it's the most "wasted" capacity</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Station 3 at 35/hr is the bottleneck — the slowest step in the sequence. Every other station's capacity above 35/hr is irrelevant to total output because they can never receive or produce more than Station 3 allows. Upgrading any other station wastes money on capacity that the bottleneck makes unusable. Upgrading Station 3 to, say, 50/hr would immediately increase line output from 35/hr to 50/hr — a 43% improvement. The next bottleneck would then be wherever the new slowest station is.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The bottleneck is Station 3 at 35/hr. No matter how fast Stations 1, 2, 4, and 5 can run, the line's total output cannot exceed 35/hr because Station 3 controls the flow rate. Upgrading any other station doesn't change this — it just creates larger queues in front of Station 3, or idle capacity after it. Only improving Station 3 changes what customers ultimately receive. The Theory of Constraints says clearly: find the constraint, and invest there first.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A bottleneck is the slowest step in a production process. Like the narrow neck of a bottle, it limits total flow regardless of how fast everything else operates.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Parts pile up before a bottleneck (creating queues and WIP inventory). Stations after a bottleneck run below their capacity (they're "starved" — receiving work slower than they could process it).</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Improving a non-bottleneck station does not increase total output — it just creates a larger pile-up before the bottleneck or more idle time after it. Only improving the bottleneck itself changes the system's output rate.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Bottlenecks can be machines, people (only one person certified for a critical process), or administrative processes (approvals, reviews). Any step that limits flow is a bottleneck, regardless of what type of step it is.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Once a bottleneck is fixed, a new bottleneck emerges — the next slowest step now controls the system. Process optimization is a continuous process of finding and improving the current constraint.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var stations=[
+  {name:'Cutting',capacity:60,type:'pre'},
+  {name:'Stamping',capacity:55,type:'pre'},
+  {name:'Welding',capacity:20,type:'bn'},
+  {name:'Coating',capacity:45,type:'post'},
+  {name:'Inspection',capacity:50,type:'post'}
+];
+
+function updateBN(){
+  var weld=parseInt(document.getElementById('weld-slider').value);
+  document.getElementById('weld-val').textContent=weld+' units/hr';
+  var el=document.getElementById('qv-stations');el.innerHTML='';
+  var isBN=weld<45;
+  stations.forEach(function(s,i){
+    var effectiveRate=s.type==='post'?Math.min(s.capacity,weld):(s.type==='bn'?weld:s.capacity);
+    var queue=s.type==='pre'&&weld<s.capacity?(s.capacity-weld)+' parts/hr piling up':'—';
+    var barPct=Math.round((effectiveRate/60)*100);
+    var isCurrent=s.type==='bn';
+    var isStarved=s.type==='post'&&weld<s.capacity;
+    var isOverfed=s.type==='pre'&&weld<s.capacity;
+
+    var barColor=isCurrent?(weld>=45?'var(--green)':'var(--red)'):(isStarved?'var(--orange)':'var(--green)');
+    var div=document.createElement('div');
+    div.className='qv-station'+(isCurrent&&weld<45?' bottleneck-st':'');
+    div.innerHTML='<div class="qv-st-name">'+s.name+(isCurrent&&weld<45?' ⚠️ BOTTLENECK':'')+'</div>'
+      +'<div class="qv-st-row">'
+      +'<div class="qv-st-capacity">Produces: '+effectiveRate+'/hr</div>'
+      +'<div class="qv-st-bar-wrap"><div class="qv-st-bar" style="width:'+barPct+'%;background:'+barColor+';"></div></div>'
+      +'<div class="qv-st-queue"'+(isOverfed?' style="color:var(--red);"':'')+'>'+(isOverfed?'Queue: +'+queue:'✓')+'</div>'
+      +'</div>';
+    el.appendChild(div);
+  });
+  var summary=document.getElementById('qv-summary');
+  var systemRate=Math.min(weld,45);
+  if(weld<45){
+    summary.textContent='System output: '+weld+' units/hr — welding is the bottleneck. Parts pile up before welding at '+(60-weld)+'/hr on the cutting side.';
+    summary.style.color='var(--red)';
+  }else if(weld===45){
+    summary.textContent='System output: 45 units/hr — welding no longer the bottleneck. Coating is now the slowest step at 45/hr.';
+    summary.style.color='var(--orange)';
+  }else{
+    summary.textContent='System output: 45 units/hr — coating (45/hr) is now the bottleneck. Welding has excess capacity above what coating can receive.';
+    summary.style.color='var(--purple)';
+  }
+}
+updateBN();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Finds Bottlenecks That Humans Miss: A Deep Dive Into Pattern Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* human vs AI comparison */
+.compare-grid{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.cg-card{flex:1;min-width:220px;border-radius:18px;padding:20px;}
+.cg-card.human{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.cg-card.ai{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.cg-title{font-weight:700;font-size:15px;margin-bottom:10px;}
+.cg-card.human .cg-title{color:var(--orange);}
+.cg-card.ai .cg-title{color:var(--blue);}
+.cg-item{font-size:13px;line-height:1.7;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.cg-item:last-child{border-bottom:none;}
+
+/* data types */
+.data-types{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.dt-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;}
+.dt-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+.dt-body{}
+.dt-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.dt-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.dt-example{margin-top:8px;background:var(--white);border-radius:10px;padding:10px 14px;font-size:12px;font-style:italic;color:var(--gray-muted);border:1px solid var(--purple-mid);}
+
+/* pattern detection explainer */
+.pattern-box{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:#fff;}
+.pb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.pb-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:20px;}
+.pb-steps{display:flex;flex-direction:column;gap:12px;}
+.pb-step{background:rgba(255,255,255,.07);border-radius:12px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;}
+.pb-step-num{width:28px;height:28px;border-radius:50%;background:var(--purple);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pb-step-body{}
+.pb-step-title{font-weight:700;font-size:13px;color:#fff;margin-bottom:3px;}
+.pb-step-text{font-size:12px;line-height:1.7;color:rgba(255,255,255,.75);}
+
+/* correlation explorer */
+.correlation-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ce-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ce-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ce-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ce-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ce-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.ce-btn:hover{border-color:var(--purple);color:var(--purple);}
+.ce-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.ce-panel{display:none;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;}
+.ce-panel.show{display:block;}
+.ce-finding-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.ce-finding-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.ce-finding-data{background:var(--gray-soft);border-radius:10px;padding:12px 16px;font-size:13px;line-height:1.8;color:var(--gray-text);margin-bottom:10px;}
+.ce-finding-data code{background:var(--purple-pale);color:var(--purple-dark);border-radius:3px;padding:1px 5px;font-size:12px;}
+.ce-finding-insight{background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13px;color:var(--purple-dark);line-height:1.7;}
+.ce-human-note{background:var(--orange-pale);border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--orange);line-height:1.65;margin-top:8px;}
+
+/* ai limits */
+.limits{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.lim{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;}
+.lim-icon{font-size:20px;flex-shrink:0;}
+.lim-body{}
+.lim-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.lim-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.lim-human{margin-top:6px;background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:7px 10px;font-size:12px;color:var(--green);line-height:1.65;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>How AI Finds Bottlenecks That Humans Miss: A Deep Dive Into Pattern Detection</h1>
+  <p class="hero-sub">A supervisor walking the floor can watch one station at a time. AI can analyze every station, every machine, every delay across the entire production floor — simultaneously, continuously, for months at a time. This article explains how that pattern detection actually works, and where human judgment still has to take over.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Human Supervisors Miss Bottlenecks</h2>
+  <p>An experienced production supervisor is genuinely skilled at reading a factory floor. They know the sounds of machines running well and running poorly. They can walk the line and sense where work is piling up. They understand the people, the products, and the history of the facility. None of that knowledge is replaceable by software.</p>
+  <p>But there's a fundamental limit to what any human can see simultaneously. A supervisor watching Station 3 isn't watching Station 7. A supervisor investigating a problem on the afternoon shift doesn't have the morning shift's data in front of them. A supervisor working a crisis on Monday doesn't have bandwidth to notice the subtle pattern that only appears on Thursdays between 2 PM and 4 PM.</p>
+  <div class="pull-quote"><p>AI doesn't see more clearly than an experienced supervisor. It sees more simultaneously — across every station, every shift, every week — and it never forgets what it observed last month when looking for patterns today.</p></div>
+
+  <div class="compare-grid">
+    <div class="cg-card human">
+      <div class="cg-title">👁 What a Human Supervisor Observes</div>
+      <div class="cg-item">One or two stations at a time — wherever they're standing</div>
+      <div class="cg-item">The current shift — what happened last week requires memory or notes</div>
+      <div class="cg-item">Obvious problems: long queues, idle workers, machines in alarm</div>
+      <div class="cg-item">Subtle environmental cues: unusual sounds, unusual smells, body language of workers</div>
+      <div class="cg-item">Context: why something is happening, who is involved, what's been tried before</div>
+      <div class="cg-item">Problems that feel urgent — may miss slow-developing patterns</div>
+    </div>
+    <div class="cg-card ai">
+      <div class="cg-title">💻 What AI Monitoring Observes</div>
+      <div class="cg-item">Every station simultaneously — no blind spots in coverage</div>
+      <div class="cg-item">Every shift, continuously, for months or years — perfect memory</div>
+      <div class="cg-item">Statistical patterns invisible to daily observation: "Station 6 runs 22% slower on Tuesdays"</div>
+      <div class="cg-item">Correlations across variables: queue length + machine temperature + operator assigned</div>
+      <div class="cg-item">Subtle trends: a station's average cycle time increasing 0.3 minutes per week over 6 weeks</div>
+      <div class="cg-item">No fatigue, no attention limits — consistent monitoring 24/7</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Four Data Types AI Uses to Find Bottlenecks</h2>
+  <p>AI process monitoring tools don't use one type of data — they combine several streams simultaneously to build a complete picture of where and why delays occur.</p>
+
+  <div class="data-types">
+    <div class="dt-card">
+      <div class="dt-icon">⏱️</div>
+      <div class="dt-body">
+        <div class="dt-title">Cycle Time Data — How Long Each Step Actually Takes</div>
+        <div class="dt-desc">Cycle time is the total time from when a station starts working on a unit to when it passes that unit to the next step. AI systems capture actual cycle times for every operation across every shift — not the planned time from the work order, but the real time recorded by MES sensors or barcode scans when operations start and end. Over time, this data reveals which stations consistently run slower than planned, which have high variability (sometimes fast, sometimes slow), and which are gradually getting slower as equipment wears.</div>
+        <div class="dt-example">Example AI finding: "Station 4 average cycle time increased from 8.2 to 11.7 minutes over the past 6 weeks. Standard deviation also increased — suggesting inconsistent performance, not a clean process change."</div>
+      </div>
+    </div>
+    <div class="dt-card">
+      <div class="dt-icon">📊</div>
+      <div class="dt-body">
+        <div class="dt-title">Queue Length Monitoring — Where Work Piles Up</div>
+        <div class="dt-desc">The station in front of a bottleneck always has a growing queue — work arriving faster than the station can process it. AI systems track queue depth at each station over time: how many units are waiting, for how long, and at what time of day or shift. A station that consistently maintains a queue of 8–12 units while every other station has queues of 0–2 is almost certainly the bottleneck or immediately upstream of it. Queue data also identifies "hidden" bottlenecks — like a batch inspection step that processes work in large groups, creating periodic surges rather than a constant queue.</div>
+        <div class="dt-example">Example AI finding: "Average queue depth at Station 3 between 10 AM and 2 PM is 14.3 units — 6.8x higher than the next-highest station. This pattern repeats every weekday, suggesting a structural bottleneck rather than a one-time event."</div>
+      </div>
+    </div>
+    <div class="dt-card">
+      <div class="dt-icon">🔧</div>
+      <div class="dt-body">
+        <div class="dt-title">Equipment Utilization Rates — Who Is Working and Who Is Waiting</div>
+        <div class="dt-desc">Utilization rate measures what percentage of available time a machine or station is actively working vs. idle, waiting, or in setup. A station before a bottleneck will have high utilization — it's always running because there's always more work to push through. A station after a bottleneck will have low utilization — it runs for a while, then waits, then runs again, at whatever rate the bottleneck feeds it. AI systems calculate utilization rates for every machine continuously. The pattern of one high-utilization machine surrounded by lower-utilization neighbors is a classic bottleneck signature.</div>
+        <div class="dt-example">Example AI finding: "Station 3 utilization: 97%. Station 4 utilization: 43%. Station 5 utilization: 38%. Stations 4 and 5 are operating at less than half their potential — starved by Station 3's output rate."</div>
+      </div>
+    </div>
+    <div class="dt-card">
+      <div class="dt-icon">🔗</div>
+      <div class="dt-body">
+        <div class="dt-title">Correlation Analysis — Finding Hidden Relationships Between Variables</div>
+        <div class="dt-desc">This is where AI goes beyond what human analysis can practically do. Correlation analysis looks for statistical relationships between variables that change together — even when they're not obviously connected. Does Station 6's cycle time increase when a specific operator is assigned? Does equipment temperature correlate with slower processing? Does the bottleneck shift between stations depending on which product family is running? Humans can form hypotheses about these relationships. AI can test them against months of data across every variable simultaneously and return a definitive statistical answer.</div>
+        <div class="dt-example">Example AI finding: "Station 4 cycle time shows a 0.76 correlation with ambient humidity above 68%. On high-humidity days, cycle time averages 14.2 minutes vs. 8.8 minutes on low-humidity days. The adhesive curing step may be humidity-sensitive."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Puts It All Together: The Pattern Detection Pipeline</h2>
+
+  <div class="pattern-box">
+    <div class="pb-label">🧠 Inside the AI Analysis Engine</div>
+    <div class="pb-title">From Raw Data to Bottleneck Identification</div>
+    <div class="pb-steps">
+      <div class="pb-step">
+        <div class="pb-step-num">1</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Collect data continuously</div>
+          <div class="pb-step-text">MES sensors, barcode scanners, IoT devices, and ERP records generate timestamped data for every operation start, operation complete, machine state change, queue snapshot, and delay event — thousands of data points per hour across the entire floor.</div>
+        </div>
+      </div>
+      <div class="pb-step">
+        <div class="pb-step-num">2</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Calculate baseline metrics</div>
+          <div class="pb-step-text">For each station and each shift, the AI calculates: average cycle time, cycle time variability (standard deviation), queue depth over time, utilization rate, downtime frequency and duration, and changeover time. This baseline represents "normal" performance.</div>
+        </div>
+      </div>
+      <div class="pb-step">
+        <div class="pb-step-num">3</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Identify statistical outliers</div>
+          <div class="pb-step-text">Any station, shift, or condition that deviates significantly from the baseline gets flagged. A station that's consistently 40% slower than planned is an outlier. A station that's normally fast but becomes slow under specific conditions (high volume, specific product, specific operator) is a conditional outlier — potentially more revealing than a chronic one.</div>
+        </div>
+      </div>
+      <div class="pb-step">
+        <div class="pb-step-num">4</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Run correlation analysis across all variables</div>
+          <div class="pb-step-text">The AI tests every variable against every other variable: does cycle time at Station 4 change with temperature? With which operator is assigned? With the product being run? With the day of the week? With what happened two stations upstream? Correlations above a threshold get surfaced as potential causal relationships to investigate.</div>
+        </div>
+      </div>
+      <div class="pb-step">
+        <div class="pb-step-num">5</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Rank bottlenecks by throughput impact</div>
+          <div class="pb-step-text">The AI calculates which constraint, if resolved, would produce the largest increase in throughput. It presents a ranked list of bottlenecks — not just "there's a problem here" but "fixing this specific station would increase line output by approximately 23%, based on current cycle time distributions."</div>
+        </div>
+      </div>
+      <div class="pb-step">
+        <div class="pb-step-num">6</div>
+        <div class="pb-step-body">
+          <div class="pb-step-title">Surface findings to human reviewers</div>
+          <div class="pb-step-text">The AI presents its findings — with the supporting data — to process engineers and operations managers. From here, human judgment takes over: Why is this the bottleneck? What's causing it? Is the proposed improvement feasible? Who needs to be involved in implementing it?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Interactive: Explore AI Pattern Findings</h2>
+  <p>Below are four types of patterns that an AI process monitoring system might find on a production floor. Click each one to see the data the AI detected, the pattern it identified, and what a human needs to investigate next.</p>
+
+  <div class="correlation-explorer">
+    <div class="ce-label">Pattern Explorer</div>
+    <div class="ce-title">What Did the AI Actually Find?</div>
+    <div class="ce-sub">These are realistic examples of AI bottleneck findings — the kind of patterns that take months of manual data collection to notice, but emerge quickly from continuous AI monitoring.</div>
+    <div class="ce-btns">
+      <button class="ce-btn" onclick="showCE('ct',this)">Cycle Time Drift</button>
+      <button class="ce-btn" onclick="showCE('queue',this)">Queue Pattern</button>
+      <button class="ce-btn" onclick="showCE('shift',this)">Shift Difference</button>
+      <button class="ce-btn" onclick="showCE('corr',this)">Hidden Correlation</button>
+    </div>
+    <div class="ce-panel" id="ce-panel"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Cannot Do: The Human's Essential Role</h2>
+  <p>AI bottleneck detection is genuinely powerful. It's also genuinely limited in ways that make human judgment irreplaceable. Understanding the limits prevents two dangerous mistakes: ignoring AI findings (because "the floor supervisor knows better") and blindly acting on them (because "the data says so").</p>
+
+  <div class="limits">
+    <div class="lim">
+      <div class="lim-icon">🤔</div>
+      <div class="lim-body">
+        <div class="lim-title">AI can find the pattern — not explain why it exists</div>
+        <div class="lim-desc">The AI detects that Station 4's cycle time is 40% longer on Tuesday afternoon than Monday morning. It cannot tell you why. Maybe there's a quality issue that creates rework loops. Maybe the afternoon crew is less experienced on a specific product. Maybe a supply of a critical component runs low by Tuesday and workers are compensating. The AI spots the symptom. Humans diagnose the cause.</div>
+        <div class="lim-human">Human role: Investigate the "why" behind the pattern through floor observation, worker interviews, and process knowledge that isn't in any data stream.</div>
+      </div>
+    </div>
+    <div class="lim">
+      <div class="lim-icon">🏗️</div>
+      <div class="lim-body">
+        <div class="lim-title">AI can suggest the fix — not evaluate its feasibility</div>
+        <div class="lim-desc">The AI calculates that adding a second operator at Station 3 would increase throughput by 28%. It doesn't know that Station 3's workspace can only physically accommodate one person. It doesn't know that the operation requires specialized certification that only two workers in the facility hold. It doesn't know that the capital investment required has already been rejected in this year's budget cycle.</div>
+        <div class="lim-human">Human role: Evaluate whether the AI's proposed improvement is actually implementable given space, budget, personnel, regulatory, and organizational constraints.</div>
+      </div>
+    </div>
+    <div class="lim">
+      <div class="lim-icon">👥</div>
+      <div class="lim-body">
+        <div class="lim-title">AI can flag a performance difference — not understand its cause or implications</div>
+        <div class="lim-desc">The AI detects that Worker A processes Station 6 significantly faster than Worker B. It flags this as a training opportunity for Worker B. It doesn't know that Worker B is following a more careful quality protocol that prevents defects — and that Worker A's faster cycle time actually produces a higher defect rate that shows up two stations later. The AI's speed metric and the quality metric may be in separate data systems that haven't been connected.</div>
+        <div class="lim-human">Human role: Understand whether a performance difference is actually a problem, or whether it reflects a deliberate quality trade-off. Integrate context that lives across multiple systems or only in workers' knowledge.</div>
+      </div>
+    </div>
+    <div class="lim">
+      <div class="lim-icon">🔄</div>
+      <div class="lim-body">
+        <div class="lim-title">AI can rank improvements by throughput impact — not by organizational priority</div>
+        <div class="lim-desc">The AI's ranked bottleneck list is ordered by potential throughput gain. But fixing the #1 throughput bottleneck might require a six-month equipment procurement process. Fixing the #3 bottleneck might require a three-hour process adjustment that a team lead can authorize tomorrow. The AI doesn't know the difference — it doesn't have access to organizational timelines, approval processes, or change management realities.</div>
+        <div class="lim-human">Human role: Reprioritize the AI's list based on what's actually actionable given implementation time, organizational capacity, and strategic priorities.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI process monitoring system flags Station 7 as a bottleneck, reporting a 67% utilization rate vs. 94–98% for all surrounding stations and a consistently growing queue depth between 11 AM and 3 PM. The process engineer reviews this finding and immediately begins planning to purchase additional equipment for Station 7. What critical step is being skipped?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">No step is being skipped — the AI has identified the bottleneck and the engineer is taking the right action</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">The engineer hasn't investigated why Station 7 is slow before jumping to a solution. The AI found that it's a bottleneck — it can't explain why. The slowness could be due to equipment wear, a training gap, a process design problem, a material quality issue, or something else entirely. Each cause has a different (and potentially much cheaper) fix than new equipment. The why must be investigated before the what.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">The AI's data should be verified by a second AI system before humans act on it</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The engineer should check all other stations first to make sure they aren't also bottlenecks before acting on Station 7</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The AI has done its job well — it found the pattern and quantified the bottleneck. But jumping directly to "buy new equipment" without understanding why Station 7 is slow could be an expensive mistake. If the slowness is caused by a worn machine component, a $2,000 part replacement fixes it. If it's caused by a process step that can be simplified, a kaizen event fixes it for free. If it's caused by a quality check that's necessary and can't be eliminated, the solution might be a second operator rather than new equipment. The AI provides the map. Humans have to walk the territory to understand what's actually happening before deciding how to fix it.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The AI found that Station 7 is a bottleneck — but not why it's a bottleneck. The difference matters enormously for choosing the right fix. New equipment could be the right answer — but it might also be an expensive solution to a problem that has a much cheaper fix. Before committing capital, the process engineer needs to investigate: Is the machine wearing out (maintenance or repair)? Is the process step unnecessarily complex (process redesign)? Is the operator undertrained (training)? Is there a material quality issue creating rework (supplier quality)? The AI gives you the where. Humans have to find the why before deciding the what.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Human supervisors are limited by field of view, shift boundaries, and attention bandwidth — they can't monitor every station simultaneously or track subtle patterns that emerge over weeks. AI monitoring does exactly this without fatigue or gaps.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI finds bottlenecks using four data types: cycle time data (how long each step actually takes), queue length monitoring (where work piles up), equipment utilization rates (who is working vs. waiting), and correlation analysis (hidden relationships between variables).</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The AI pattern detection pipeline collects data continuously, calculates baselines, identifies outliers, runs correlations, ranks bottlenecks by throughput impact, and surfaces findings to human reviewers — who then apply judgment the AI can't provide.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Critical AI limits: it finds the pattern but not why it exists; suggests fixes but can't evaluate feasibility; flags performance differences but can't interpret their cause; ranks by throughput impact but doesn't know organizational priorities. Human judgment is irreplaceable at every one of these steps.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var patterns={
+  ct:{
+    finding:'Cycle Time Drift at Station 4',
+    title:'A Station Getting Slowly Slower — Too Gradual for Anyone to Notice',
+    data:'6 weeks of Station 4 data:\n• Week 1 avg: <code>8.2 min/part</code>\n• Week 2 avg: <code>8.7 min/part</code>\n• Week 3 avg: <code>9.1 min/part</code>\n• Week 4 avg: <code>9.8 min/part</code>\n• Week 5 avg: <code>10.6 min/part</code>\n• Week 6 avg: <code>11.4 min/part</code>\n• Standard deviation also increased from 0.9 to 2.4 — more inconsistency',
+    insight:'Station 4 has drifted 39% slower over 6 weeks. No single-day jump — just 0.3–0.5 minutes per week. No supervisor flagged it because on any given day, the change was imperceptible. The AI sees the trend across all 6 weeks simultaneously.',
+    human:'Human must investigate: Is this machine wear (bearings, tooling)? Is there a new step being added informally to the process? Is this related to a specific material batch? The gradual nature suggests equipment wear or process drift — both require floor investigation to diagnose.'
+  },
+  queue:{
+    finding:'Recurring Queue Pattern — Same Time Every Day',
+    title:'A Bottleneck That Only Appears Between 10 AM and 1 PM',
+    data:'Station 3 queue depth by time of day (7-day average):\n• 7:00–9:00 AM: <code>1.2 units average</code>\n• 9:00–10:00 AM: <code>2.8 units average</code>\n• 10:00 AM–1:00 PM: <code>14.7 units average</code> ← spike\n• 1:00–3:00 PM: <code>3.1 units average</code>\n• 3:00–5:00 PM: <code>1.4 units average</code>',
+    insight:'The bottleneck at Station 3 isn\'t permanent — it appears for exactly 3 hours midmorning, every day. This pattern wouldn\'t be obvious to a supervisor doing periodic walkthrough checks. AI tracking queue depth continuously reveals a time-specific constraint.',
+    human:'Human must investigate: What happens at 10 AM that creates this surge? Is it a scheduled batch release? A material delivery that floods the floor? A shift crossover? Is a specific product family scheduled in this window that takes longer at Station 3? The time-specific nature is a huge clue about the cause.'
+  },
+  shift:{
+    finding:'Dramatic Shift-to-Shift Performance Difference',
+    title:'The Same Station — Twice as Slow on Afternoon Shift',
+    data:'Station 6 cycle time by shift (30-day data):\n• Morning shift (6 AM–2 PM): <code>6.8 min/part avg</code>, σ = 0.7\n• Afternoon shift (2 PM–10 PM): <code>13.2 min/part avg</code>, σ = 2.9\n• Night shift (10 PM–6 AM): <code>7.1 min/part avg</code>, σ = 0.8\n\nAfternoon shift is 94% slower than morning — with much higher variability.',
+    insight:'This isn\'t an equipment issue — the same machine produces very different results by shift. Morning and night shift performance is similar; afternoon is an outlier. AI catches this by comparing across all shift data simultaneously. No single-shift supervisor would see the full picture.',
+    human:'Human must investigate: Who is the afternoon shift operator or team lead? Has training been consistent across shifts? Is there a material quality difference by time of day? Is the afternoon team running a different product mix? This finding points directly at a people or process variable that changes with the shift — which requires human investigation, not equipment repair.'
+  },
+  corr:{
+    finding:'Unexpected Correlation Between Temperature and Output',
+    title:'Station 8 Slows Down When the Building Gets Warm',
+    data:'Correlation analysis: Station 8 cycle time vs. building temperature sensor:\n• Below 68°F: <code>9.1 min/part avg</code>\n• 68–72°F: <code>10.4 min/part avg</code>\n• 72–76°F: <code>12.8 min/part avg</code>\n• Above 76°F: <code>16.3 min/part avg</code>\n\nCorrelation coefficient: <code>r = 0.84</code> (strong positive relationship)',
+    insight:'Station 8 gets dramatically slower as the building temperature rises. A human supervisor would be unlikely to notice this — they\'d need to manually cross-reference temperature logs against production data for months. AI correlation analysis surfaces it automatically as a statistically significant relationship.',
+    human:'Human must investigate: What is happening physically at Station 8 that makes it temperature-sensitive? Is an adhesive or sealant curing faster in heat, causing quality issues that require rework? Is a hydraulic system performing differently at high temperatures? Are workers experiencing heat stress? The correlation tells you what — humans must figure out why and whether the fix is HVAC, process chemistry, or something else.'
+  }
+};
+var activeCE=null;
+function showCE(key,btn){
+  document.querySelectorAll('.ce-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var p=patterns[key];
+  var panel=document.getElementById('ce-panel');
+  panel.innerHTML='<div class="ce-finding-label">AI Finding: '+p.finding+'</div>'
+    +'<div class="ce-finding-title">'+p.title+'</div>'
+    +'<div class="ce-finding-data">'+p.data.split('\n').map(function(l){
+      return l.replace(/<code>(.*?)<\/code>/g,'<code>$1</code>');
+    }).join('<br>')+'</div>'
+    +'<div class="ce-finding-insight"><strong>AI Pattern:</strong> '+p.insight+'</div>'
+    +'<div class="ce-human-note"><strong>Human Investigation Required:</strong> '+p.human+'</div>';
+  panel.classList.add('show');
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
