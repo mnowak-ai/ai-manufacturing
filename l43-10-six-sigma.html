@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Six Sigma and How Does It Connect to AI Process Improvement?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* sigma levels */
+.sigma-visual{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px;margin:28px 0;color:#fff;}
+.sv-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:10px;}
+.sv-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:20px;}
+.sv-rows{display:flex;flex-direction:column;gap:10px;}
+.sv-row{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.07);border-radius:12px;padding:12px 16px;}
+.sv-sigma{font-family:"Fraunces",serif;font-size:18px;font-weight:900;min-width:60px;flex-shrink:0;}
+.sv-bar-wrap{flex:1;height:12px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
+.sv-bar{height:100%;border-radius:4px;}
+.sv-dpmo{font-size:12px;color:rgba(255,255,255,.7);min-width:100px;text-align:right;flex-shrink:0;}
+.sv-desc{font-size:11px;color:rgba(255,255,255,.5);min-width:110px;text-align:right;flex-shrink:0;}
+
+/* DMAIC */
+.dmaic{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.dmaic-step{display:flex;gap:0;align-items:stretch;}
+.dmaic-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.dmaic-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;flex-shrink:0;margin-top:14px;}
+.dmaic-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.dmaic-step:last-child .dmaic-line{display:none;}
+.dmaic-card{flex:1;border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;margin-bottom:10px;background:var(--white);}
+.dmaic-phase{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.dmaic-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:5px;}
+.dmaic-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.dmaic-ai{margin-top:7px;background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:7px 12px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+
+/* belts */
+.belts{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0;}
+.belt{flex:1;min-width:140px;border-radius:14px;padding:16px;text-align:center;}
+.belt.white{background:#F8F7FA;border:2px solid #ddd;}
+.belt.yellow{background:#FFFBEB;border:2px solid #FCD34D;}
+.belt.green{background:var(--green-pale);border:2px solid #6EE7B7;}
+.belt.black{background:#1e293b;border:2px solid #475569;}
+.belt-icon{font-size:26px;margin-bottom:8px;}
+.belt-name{font-weight:700;font-size:13px;margin-bottom:5px;}
+.belt.white .belt-name{color:var(--gray-text);}
+.belt.yellow .belt-name{color:var(--orange);}
+.belt.green .belt-name{color:var(--green);}
+.belt.black .belt-name{color:#94a3b8;}
+.belt-desc{font-size:11px;line-height:1.65;}
+.belt.white .belt-desc{color:var(--gray-muted);}
+.belt.yellow .belt-desc{color:#A16207;}
+.belt.green .belt-desc{color:#276749;}
+.belt.black .belt-desc{color:#94a3b8;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>What Is Six Sigma and How Does It Connect to AI Process Improvement?</h1>
+  <p class="hero-sub">You'll hear "Six Sigma" constantly in manufacturing. It's a data-driven methodology for reducing defects and process variation. This article explains what it actually means, why "3.4 defects per million" matters, and how AI is accelerating Six Sigma work in modern facilities.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>What "Six Sigma" Actually Means</h2>
+  <p>The name comes from statistics. In a normal distribution — the bell curve that describes how measurements tend to cluster — <mark>sigma (σ)</mark> is the symbol for standard deviation: a measure of how spread out the data is. A process that operates at "Six Sigma" quality has its variation so tightly controlled that virtually all outputs fall within the acceptable specification range.</p>
+  <p>More specifically: a Six Sigma process produces fewer than <mark>3.4 defects per million opportunities (DPMO)</mark>. To put that in everyday terms: if you ran a Six Sigma process 1 million times, you'd get 3 or 4 failures. That's 99.99966% success rate — not because the process is perfect, but because the variation has been studied, measured, and controlled to an extraordinary degree.</p>
+  <div class="pull-quote"><p>Six Sigma isn't about working harder or caring more. It's about measuring process variation precisely, finding what drives it, eliminating the causes, and standardizing the improved process — using data at every step.</p></div>
+
+  <div class="sigma-visual">
+    <div class="sv-label">Sigma Level Comparison — What Each Level Actually Means</div>
+    <div class="sv-title">From 3σ to 6σ: The Quality Gap Is Enormous</div>
+    <div class="sv-rows">
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:#EF4444;">1σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:30%;background:#EF4444;"></div></div>
+        <div class="sv-dpmo" style="color:#EF4444;">691,462 DPMO</div>
+        <div class="sv-desc" style="color:#EF4444;">69% failure rate</div>
+      </div>
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:var(--orange);">2σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:55%;background:var(--orange);"></div></div>
+        <div class="sv-dpmo" style="color:var(--orange);">308,538 DPMO</div>
+        <div class="sv-desc" style="color:var(--orange);">31% failure rate</div>
+      </div>
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:#EAB308;">3σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:74%;background:#EAB308;"></div></div>
+        <div class="sv-dpmo" style="color:#EAB308;">66,807 DPMO</div>
+        <div class="sv-desc" style="color:#EAB308;">6.7% failure rate</div>
+      </div>
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:#22C55E;">4σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:87%;background:#22C55E;"></div></div>
+        <div class="sv-dpmo" style="color:#22C55E;">6,210 DPMO</div>
+        <div class="sv-desc" style="color:#22C55E;">0.62% failure rate</div>
+      </div>
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:#60A5FA;">5σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:95%;background:#60A5FA;"></div></div>
+        <div class="sv-dpmo" style="color:#60A5FA;">233 DPMO</div>
+        <div class="sv-desc" style="color:#60A5FA;">0.023% failure rate</div>
+      </div>
+      <div class="sv-row">
+        <div class="sv-sigma" style="color:var(--purple-mid);">6σ</div>
+        <div class="sv-bar-wrap"><div class="sv-bar" style="width:100%;background:var(--purple);"></div></div>
+        <div class="sv-dpmo" style="color:var(--purple-mid);">3.4 DPMO</div>
+        <div class="sv-desc" style="color:var(--purple-mid);">99.9997% success</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.65;">Most manufacturing processes aim for 4σ–6σ depending on the criticality of the product. Medical devices and aerospace components typically target 6σ. Consumer goods often target 4σ–5σ.</div>
+  </div>
+
+  <p>To make the scale concrete: if you made a million cups of coffee, 3σ quality means 66,807 are made wrong. At 6σ, only 3 or 4 are wrong. For a medical device manufacturer producing implantable components, 3σ quality isn't just inefficient — it's unacceptable. At 6σ, the process is tight enough to be confident every device reaching a patient will function correctly.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>DMAIC: The Six Sigma Problem-Solving Process</h2>
+  <p>Six Sigma isn't just a quality goal — it's a disciplined methodology for getting there. The core process is called <mark>DMAIC</mark>: Define, Measure, Analyze, Improve, Control. Each phase has specific tools, specific outputs, and a specific role for AI in modern implementations.</p>
+
+  <div class="dmaic">
+    <div class="dmaic-step">
+      <div class="dmaic-spine"><div class="dmaic-dot" style="background:#3B82F6;">D</div><div class="dmaic-line"></div></div>
+      <div class="dmaic-card">
+        <div class="dmaic-phase" style="color:#3B82F6;">Define</div>
+        <div class="dmaic-title">What problem are we solving, and why does it matter?</div>
+        <div class="dmaic-desc">Clearly define the quality problem: what defect is occurring, how often, at which step, and what it costs the business in rework, scrap, customer returns, or warranty claims. Set a clear improvement goal — not "reduce defects" but "reduce defect rate on the coating step from 4.2% to below 0.8% within 12 weeks."</div>
+        <div class="dmaic-ai">AI connection: Process monitoring data provides immediate baseline defect rates and costs without manual data collection — compressing the Define phase from weeks to days.</div>
+      </div>
+    </div>
+    <div class="dmaic-step">
+      <div class="dmaic-spine"><div class="dmaic-dot" style="background:var(--orange);">M</div><div class="dmaic-line"></div></div>
+      <div class="dmaic-card">
+        <div class="dmaic-phase" style="color:var(--orange);">Measure</div>
+        <div class="dmaic-title">How bad is the current process, and can we measure it reliably?</div>
+        <div class="dmaic-desc">Collect detailed data on the current process: defect rates, process variable readings (temperature, pressure, time, speed), measurement system accuracy, and process capability indices (Cp and Cpk — statistical measures of how well the process fits within its specification limits). Before improving a process, you must be confident you can measure it accurately.</div>
+        <div class="dmaic-ai">AI connection: Automated data collection from sensors and MES systems provides far more measurement points per unit time than manual observation — producing statistically robust capability studies in days rather than weeks.</div>
+      </div>
+    </div>
+    <div class="dmaic-step">
+      <div class="dmaic-spine"><div class="dmaic-dot" style="background:var(--green);">A</div><div class="dmaic-line"></div></div>
+      <div class="dmaic-card">
+        <div class="dmaic-phase" style="color:var(--green);">Analyze</div>
+        <div class="dmaic-title">What is actually causing the defects?</div>
+        <div class="dmaic-desc">Use statistical tools to identify which process variables are driving the defect: correlation analysis, hypothesis testing, regression analysis, and designed experiments. The goal is to move from "defects happen" to "defects happen when process variable X is above Y and temperature is below Z" — a specific, testable root cause statement.</div>
+        <div class="dmaic-ai">AI connection: This is where AI most dramatically accelerates Six Sigma. Correlation analysis that previously took a Six Sigma team weeks of manual data work now runs in minutes, testing every variable against every other variable automatically and surfacing the strongest correlations for human investigation.</div>
+      </div>
+    </div>
+    <div class="dmaic-step">
+      <div class="dmaic-spine"><div class="dmaic-dot" style="background:var(--purple);">I</div><div class="dmaic-line"></div></div>
+      <div class="dmaic-card">
+        <div class="dmaic-phase" style="color:var(--purple);">Improve</div>
+        <div class="dmaic-title">What change eliminates the root cause?</div>
+        <div class="dmaic-desc">Design, test, and validate the improvement. Run designed experiments (changing process variables in controlled ways to confirm their effect). Pilot the improvement on a small scale first. Verify that the change actually reduces defects to the target level — not just that it seems better, but that the data confirms it meets the improvement goal.</div>
+        <div class="dmaic-ai">AI connection: Digital twin simulations can test many improvement options virtually before committing to physical trials. AI can also optimize multi-variable process settings (finding the combination of temperature, pressure, time, and speed that minimizes defects) more rapidly than traditional designed experiment methods.</div>
+      </div>
+    </div>
+    <div class="dmaic-step">
+      <div class="dmaic-spine"><div class="dmaic-dot" style="background:var(--red);">C</div><div class="dmaic-line"></div></div>
+      <div class="dmaic-card">
+        <div class="dmaic-phase" style="color:var(--red);">Control</div>
+        <div class="dmaic-title">How do we make sure the improvement lasts?</div>
+        <div class="dmaic-desc">Standardize the improved process. Update the control plan — the document specifying which process variables must be monitored, at what frequency, and what response is required if they drift out of control. Train all operators and supervisors on the new standard. Set up ongoing statistical process control (SPC) charts to detect drift before it becomes a defect problem.</div>
+        <div class="dmaic-ai">AI connection: Continuous AI monitoring replaces or supplements manual SPC charting — detecting drift in real time rather than catching it on a weekly chart review. Alerts fire automatically when a process variable trends toward the control limit, before defects are produced.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Six Sigma Belt Levels — The Career Structure</h2>
+  <p>Six Sigma practitioners earn certifications called "belts" — like martial arts — that indicate their training level and their role in Six Sigma projects. You'll see these credentials listed on job postings and mentioned by colleagues throughout a manufacturing career.</p>
+
+  <div class="belts">
+    <div class="belt white">
+      <div class="belt-icon">⬜</div>
+      <div class="belt-name">White Belt</div>
+      <div class="belt-desc">Basic awareness of Six Sigma concepts. Understands what DMAIC is and why quality improvement matters. Suitable for all production workers.</div>
+    </div>
+    <div class="belt yellow">
+      <div class="belt-icon">🟨</div>
+      <div class="belt-name">Yellow Belt</div>
+      <div class="belt-desc">Can participate in improvement projects, collect data, and apply basic quality tools. Typically team leads and technicians who support DMAIC projects.</div>
+    </div>
+    <div class="belt green">
+      <div class="belt-icon">🟩</div>
+      <div class="belt-name">Green Belt</div>
+      <div class="belt-desc">Can lead improvement projects with guidance. Trained in statistical tools. Typically engineers, quality analysts, and production supervisors with improvement project responsibilities.</div>
+    </div>
+    <div class="belt black">
+      <div class="belt-icon">⬛</div>
+      <div class="belt-name">Black Belt</div>
+      <div class="belt-desc">Expert-level Six Sigma practitioner. Leads complex DMAIC projects, mentors Green Belts, and drives organizational quality improvement strategy. Typically quality engineers and senior operations roles.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Why AI Is Accelerating Six Sigma — and What It Still Can't Do</h2>
+  <p>Traditional Six Sigma is powerful — but slow. A full DMAIC project can take 3–6 months. Much of that time is spent collecting data manually, running statistical analyses by hand, and waiting for enough data points to achieve statistical significance. AI shrinks these timelines dramatically.</p>
+  <p>AI-driven data collection from sensors produces months of data in days. AI correlation analysis tests hundreds of variable combinations in minutes that would take a Six Sigma team weeks to work through. AI continuous monitoring replaces periodic SPC chart reviews with real-time alerts. The result: organizations can run more Six Sigma projects, faster, covering more of the process simultaneously.</p>
+  <p>What AI still cannot do: decide which quality problems are worth solving first (that requires business context and customer relationship knowledge). Identify measurement system errors that are producing misleading data. Build the cross-functional consensus needed to actually implement a change on the factory floor. Understand why a specific defect mode matters more to this customer than the failure rate alone suggests. Those remain human responsibilities — and in Six Sigma, they're often the most important ones.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A quality team completes the Analyze phase of a DMAIC project and discovers, through AI correlation analysis, that defects at the coating step are strongly correlated with ambient humidity above 65%. They immediately update the standard operating procedure to require dehumidification whenever humidity exceeds 65%. What DMAIC step did they skip — and why does it matter?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">They skipped the Define phase — the problem wasn't clearly stated before the correlation was found</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">They skipped the Improve phase — going directly from Analyze (finding the correlation) to Control (updating the SOP) without running a designed experiment to verify that controlling humidity actually reduces defects as predicted. A correlation is a hypothesis, not a proof. The change to the SOP should come after a controlled trial confirms the improvement, not before.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">They didn't skip any phase — finding the root cause and fixing it is exactly what DMAIC is designed to do</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">They skipped the Measure phase — the humidity data wasn't a measured process variable before it was used in the correlation</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. This is a common Six Sigma error — "correlation to control" without an Improve phase in between. The correlation between humidity and defects is a strong signal that humidity is worth investigating. But correlation is not causation. The correct next step is the Improve phase: design a controlled experiment where humidity is deliberately controlled at different levels, observe the defect rate at each level, and confirm that controlling humidity produces the expected defect reduction. Only after that confirmation does updating the SOP make sense. Skipping this step risks standardizing a control that addresses a correlate but not the actual root cause — and discovering later that defects persist despite the humidity control.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The missing step is the Improve phase — the controlled experiment that confirms humidity control actually reduces defects. A correlation says "these two things move together." It doesn't say "controlling one thing will change the other." The correlation between humidity and defects might reflect a true causal relationship — or it might both be caused by a third variable (maybe production runs on high-humidity days also tend to be longer, and it's actually fatigue in extended runs driving the defect rate). The Improve phase's designed experiments separate correlation from causation. Updating the SOP before that confirmation risks standardizing the wrong fix.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Six Sigma is a data-driven quality methodology targeting fewer than 3.4 defects per million opportunities — achieved by measuring process variation precisely, finding its causes, eliminating them, and standardizing the improvement. The name comes from statistical standard deviation (sigma).</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">DMAIC (Define-Measure-Analyze-Improve-Control) is the Six Sigma problem-solving process. Each phase has specific tools and a specific role for AI — from automated baseline data collection in Measure, to AI correlation analysis in Analyze, to digital twin simulation in Improve, to real-time process monitoring in Control.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Sigma levels matter practically: at 3σ, a process fails 6.7% of the time. At 6σ, it fails 0.00034% of the time. For safety-critical products, the difference between sigma levels is the difference between acceptable and unacceptable quality.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI dramatically accelerates the Analyze phase — running correlation analysis across all variables simultaneously in minutes rather than weeks. But AI can't decide which problems matter most, build organizational consensus for change, or understand customer relationship context that makes some defects more urgent than the numbers alone suggest.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

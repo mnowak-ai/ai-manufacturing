@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5S: The Factory Floor Organization System That Makes AI Work Better</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* 5S steps */
+.five-s{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.s-step{display:flex;gap:0;align-items:stretch;}
+.s-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.s-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-size:15px;font-weight:900;color:#fff;flex-shrink:0;margin-top:16px;}
+.s-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.s-step:last-child .s-line{display:none;}
+.s-card{flex:1;border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 20px;margin-bottom:12px;background:var(--white);}
+.s-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;margin-bottom:8px;}
+.s-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.s-desc{font-size:13px;line-height:1.85;color:var(--gray-text);margin-bottom:8px;}
+.s-example{font-size:12px;font-style:italic;color:var(--gray-muted);background:var(--gray-soft);border-radius:8px;padding:8px 12px;margin-bottom:8px;}
+.s-ai{background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+
+/* before/after workstation */
+.workstation{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.ws-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ws-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.ws-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.ws-tab{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-muted);transition:all .2s;}
+.ws-tab:hover{border-color:var(--purple);color:var(--purple);}
+.ws-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.ws-panel{display:none;}
+.ws-panel.show{display:block;}
+.ws-description{font-size:14px;line-height:1.8;color:var(--gray-text);background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:16px 20px;margin-bottom:12px;}
+.ws-problems{display:flex;flex-direction:column;gap:6px;}
+.ws-problem{font-size:13px;line-height:1.65;padding:7px 12px;border-radius:8px;}
+.ws-problem.bad{background:var(--red-pale);color:var(--red);}
+.ws-problem.good{background:var(--green-pale);color:var(--green);}
+
+/* AI connection */
+.ai-connection{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px;margin:28px 0;color:#fff;}
+.aic-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:10px;}
+.aic-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:18px;}
+.aic-rows{display:flex;flex-direction:column;gap:12px;}
+.aic-row{background:rgba(255,255,255,.07);border-radius:12px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;}
+.aic-row-icon{font-size:20px;flex-shrink:0;}
+.aic-row-body{}
+.aic-row-title{font-weight:700;font-size:13px;color:#fff;margin-bottom:3px;}
+.aic-row-text{font-size:12px;line-height:1.7;color:rgba(255,255,255,.75);}
+
+/* 5S audit sim */
+.audit-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.as-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.as-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.as-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.as-observations{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.as-obs{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;display:flex;gap:12px;justify-content:space-between;align-items:flex-start;}
+.as-obs-text{font-size:13px;line-height:1.6;color:var(--gray-text);flex:1;}
+.as-obs-btns{display:flex;gap:6px;flex-shrink:0;}
+.as-btn{font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;cursor:pointer;font-family:"DM Sans",sans-serif;border:1.5px solid;}
+.as-btn.pass{background:var(--green-pale);color:var(--green);border-color:var(--green);}
+.as-btn.fail{background:var(--red-pale);color:var(--red);border-color:var(--red);}
+.as-btn.pass:hover:not([disabled]){background:var(--green);color:#fff;}
+.as-btn.fail:hover:not([disabled]){background:var(--red);color:#fff;}
+.as-result{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:none;}
+.as-result.show{display:block;}
+.as-score-num{font-family:"Fraunces",serif;font-size:30px;font-weight:900;color:var(--purple-dark);}
+.as-score-text{font-size:14px;color:var(--gray-text);margin-top:6px;line-height:1.75;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>5S: The Factory Floor Organization System That Makes AI Work Better</h1>
+  <p class="hero-sub">5S is the foundation that every other manufacturing improvement system depends on. AI process optimization only works on a standardized, organized process. A chaotic floor produces chaotic data — and chaotic data produces unreliable AI analysis. Understanding 5S means understanding why human discipline is what makes AI useful.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Organization Comes Before Optimization</h2>
+  <p>Imagine trying to improve the performance of a production step where workers spend different amounts of time on each unit because they can't reliably find their tools, materials arrive at inconsistent locations, and the workspace layout changes informally between shifts. The AI monitoring that station would see high cycle time variability — sometimes 8 minutes, sometimes 14 minutes. It would flag the station as a potential bottleneck. But the real problem isn't process complexity — it's workplace disorganization creating artificial variability.</p>
+  <p>This is why Lean practitioners insist that 5S comes before optimization. A disorganized process produces data that looks like a process problem when it's actually a discipline problem. Solving the wrong problem is worse than not solving anything — it wastes resources and leaves the actual cause untouched.</p>
+  <div class="pull-quote"><p>AI process optimization is only as reliable as the process it analyzes. A standardized, organized process produces clean, consistent data that AI can interpret accurately. A chaotic, variable process produces noise that looks like signal — and the "optimizations" derived from that noise are meaningless.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Five S's — Explained From Scratch</h2>
+  <p>5S is a five-step workplace organization methodology that originated in Japan and is now standard practice in manufacturing facilities worldwide. The five steps build on each other: each one creates the conditions for the next one to work.</p>
+
+  <div class="five-s">
+    <div class="s-step">
+      <div class="s-spine"><div class="s-num" style="background:#3B82F6;">1</div><div class="s-line"></div></div>
+      <div class="s-card">
+        <div class="s-badge" style="background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);">Sort — Seiri</div>
+        <div class="s-title">Remove everything that doesn't belong</div>
+        <div class="s-desc">Go through everything in the workspace: every tool, every material, every fixture, every document. Anything that isn't needed for the work done at that station right now is removed — returned to where it belongs, sent to storage, or disposed of. The goal is eliminating the clutter that makes it hard to find what you need and creates confusion about what belongs where.</div>
+        <div class="s-example">In practice: A machining station accumulates tools from three different jobs over several months. The Sort step means every tool at the station is evaluated — does this belong here? Is it needed for the current job family? Tools that don't belong are returned to the tool crib. The workstation now contains only what's needed.</div>
+        <div class="s-ai">AI relevance: AI computer vision systems can help identify "red-tagged" items (things that shouldn't be at a station) by comparing the current station image to the standard layout. But the initial Sort decision — whether something belongs here — requires human judgment about what the process actually needs.</div>
+      </div>
+    </div>
+
+    <div class="s-step">
+      <div class="s-spine"><div class="s-num" style="background:var(--green);">2</div><div class="s-line"></div></div>
+      <div class="s-card">
+        <div class="s-badge" style="background:var(--green-pale);color:var(--green);border:1px solid #6EE7B7;">Set in Order — Seiton</div>
+        <div class="s-title">A place for everything, and everything in its place</div>
+        <div class="s-desc">Once the station contains only what belongs there, arrange everything in the most logical, efficient location — as close as possible to where it's used. Every item gets a designated location, clearly marked. Tools hang on shadow boards (outlines that show exactly where each tool goes). Materials are staged at the point of use, not at a central supply area workers have to walk to. The test: can a new worker find everything they need without asking anyone?</div>
+        <div class="s-example">In practice: The welding station is reorganized so that welding wire, tips, and shielding gas are all within arm's reach of the welder's position. The positioning jig sits on a clearly marked platform. The inspection gauge hangs on a shadow board with its outline labeled. The worker never needs to leave the workstation for any standard task.</div>
+        <div class="s-ai">AI relevance: Set in Order creates the standardized layout that AI visual monitoring can track. Once the correct layout is defined and photographed, AI can detect deviations — tools returned to wrong locations, materials staged in the wrong area — automatically rather than requiring manual audits.</div>
+      </div>
+    </div>
+
+    <div class="s-step">
+      <div class="s-spine"><div class="s-num" style="background:var(--orange);">3</div><div class="s-line"></div></div>
+      <div class="s-card">
+        <div class="s-badge" style="background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;">Shine — Seiso</div>
+        <div class="s-title">Clean consistently — and use cleaning to inspect</div>
+        <div class="s-desc">Shine doesn't just mean "make it look nice." The deeper purpose is using the cleaning routine as an inspection routine. When a worker cleans their machine and workstation at the end of every shift, they're simultaneously checking for leaks, unusual wear, loose fasteners, misaligned components, and early signs of equipment problems — things that are invisible when the machine is dirty and running, but obvious when you're wiping it down carefully. Cleaning is inspection.</div>
+        <div class="s-example">In practice: A press brake operator cleans their machine at shift end. During cleaning, they notice a small hydraulic fluid residue on the base of the cylinder housing — a slow leak that wasn't visible during normal operation. Maintenance is notified. A $180 seal replacement prevents what would have become a complete hydraulic failure within a week.</div>
+        <div class="s-ai">AI relevance: IoT leak sensors and vibration monitors catch many equipment anomalies automatically — but they can't catch everything a careful human worker notices during a hands-on cleaning inspection. The Shine step is one of the manufacturing processes where human tactile and visual inspection remains superior to sensor-based monitoring for detecting subtle early-stage problems.</div>
+      </div>
+    </div>
+
+    <div class="s-step">
+      <div class="s-spine"><div class="s-num" style="background:var(--purple);">4</div><div class="s-line"></div></div>
+      <div class="s-card">
+        <div class="s-badge" style="background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);">Standardize — Seiketsu</div>
+        <div class="s-title">Make the organized state the expected state for everyone</div>
+        <div class="s-desc">The first three S's create a good workplace. Standardize makes that good workplace permanent by converting it from an initiative into a standard. The standard defines: what does the workstation look like when it's correct? Photographs of the properly organized station are posted at the station. Checklists define the cleaning routine. Schedules define when Sort and Set in Order are reviewed. New workers are trained to the standard, not to whatever the previous worker happened to do.</div>
+        <div class="s-example">In practice: A laminated reference card is mounted at each welding station showing a photograph of the correct tool layout, the required cleaning steps at shift end, and the weekly check items. Every worker trained at that station learns the standard — not the informal habits of whoever preceded them.</div>
+        <div class="s-ai">AI relevance: Standardize creates the documented baseline that AI monitoring systems use as their reference state. A computer vision system monitoring workstation layout compares what it sees to the standardized photograph — it can only flag deviations if the standard has been clearly defined and documented.</div>
+      </div>
+    </div>
+
+    <div class="s-step">
+      <div class="s-spine"><div class="s-num" style="background:var(--red);">5</div><div class="s-line"></div></div>
+      <div class="s-card">
+        <div class="s-badge" style="background:var(--red-pale);color:var(--red);border:1px solid var(--red);">Sustain — Shitsuke</div>
+        <div class="s-title">Build the discipline to maintain the standard without being told</div>
+        <div class="s-desc">This is the hardest S — and the one most 5S initiatives fail at. Sustain means that the organized, standardized workplace is maintained not because someone checks on it, but because the team understands why it matters and has built the habits to maintain it. It requires regular 5S audits (with published scores), leadership that models the behavior, and a culture where "we don't leave the workstation without returning tools to their marked locations" is simply how we work.</div>
+        <div class="s-example">In practice: Each shift conducts a 5-minute end-of-shift 5S check, scored on a simple checklist. Scores are posted publicly. The team lead reviews any item that scores below standard and addresses it within 24 hours. Over time, the end-of-shift check becomes habit rather than obligation — the team finds the disorganized state genuinely uncomfortable.</div>
+        <div class="s-ai">AI relevance: AI monitoring can support Sustain by flagging deviations automatically — without requiring a physical audit — and generating trend data on which stations are maintaining their standard over time. But no AI system can replace the leadership, culture, and human accountability that Sustain ultimately depends on.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Before and After 5S: What Actually Changes</h2>
+  <p>Click each tab to see what a workstation looks like before 5S implementation, and what it looks like after — and what the specific differences mean for both human workers and AI monitoring.</p>
+
+  <div class="workstation">
+    <div class="ws-label">Workstation Comparison</div>
+    <div class="ws-title">Station 3 — MIG Welding — Before and After 5S</div>
+    <div class="ws-tabs">
+      <div class="ws-tab active" onclick="showWS('before',this)">Before 5S</div>
+      <div class="ws-tab" onclick="showWS('after',this)">After 5S</div>
+      <div class="ws-tab" onclick="showWS('ai',this)">What Changes for AI</div>
+    </div>
+    <div class="ws-panel show" id="ws-before">
+      <div class="ws-description">The welding station has tools from three different job families mixed on the bench. Wire and tips from a previous job sit on the left side. The current job's fixtures are stacked on a cart that's blocking part of the aisle. The cleaning rag is draped over the welding gun holder. There's no clear indication of where anything "should" be — workers arrange things based on what was left by the previous shift.</div>
+      <div class="ws-problems">
+        <div class="ws-problem bad">⚠️ Workers spend 3–8 minutes at shift start reorganizing the workspace to their preference before beginning production</div>
+        <div class="ws-problem bad">⚠️ Tools needed for the current job are often missing — borrowed by another station and not returned</div>
+        <div class="ws-problem bad">⚠️ New workers don't know where things should go and develop their own informal habits, creating inconsistency across shifts</div>
+        <div class="ws-problem bad">⚠️ The blocked aisle creates a safety hazard and slows material movement to and from the station</div>
+        <div class="ws-problem bad">⚠️ AI cycle time data from this station shows high variability (8–16 min/unit) that appears to be process complexity but is actually setup time variability</div>
+      </div>
+    </div>
+    <div class="ws-panel" id="ws-after">
+      <div class="ws-description">The welding station has a shadow board with outlines for every tool — welding gun, wire cutters, tip wrench, inspection gauge. Each outline is labeled. Wire spools and tips for the current job family are staged in a dedicated rack at the operator's left side. The fixture for the current job sits on a marked platform. A cleaning checklist is laminated and mounted on the wall. The aisle is clear.</div>
+      <div class="ws-problems">
+        <div class="ws-problem good">✅ Workers begin production within 90 seconds of shift start — no reorganization needed because the previous shift returned everything to its marked location</div>
+        <div class="ws-problem good">✅ Any missing tool is immediately obvious — the shadow board shows an empty outline rather than an ambiguous clutter</div>
+        <div class="ws-problem good">✅ New workers are trained to the documented standard — the station looks the same regardless of which operator is working</div>
+        <div class="ws-problem good">✅ Clear aisle satisfies safety code and allows efficient material staging without delays</div>
+        <div class="ws-problem good">✅ AI cycle time data shows dramatically reduced variability (10.2–11.8 min/unit) — the data is now a reliable measure of process performance, not organizational chaos</div>
+      </div>
+    </div>
+    <div class="ws-panel" id="ws-ai">
+      <div class="ws-description">Before 5S, the AI process monitoring system at this station was seeing high variability in cycle time and could not reliably identify whether the variation was caused by process complexity, machine performance, or operator behavior. After 5S standardization, the improved data quality changes what AI can and can't do:</div>
+      <div class="ws-problems">
+        <div class="ws-problem good">✅ Cycle time variation has collapsed — the AI can now identify the true process performance baseline rather than measuring organizational chaos</div>
+        <div class="ws-problem good">✅ Deviation detection is now meaningful — when cycle time spikes on a 5S'd station, it signals a real process issue (machine, material, or operator), not workspace disorganization</div>
+        <div class="ws-problem good">✅ Computer vision AI can compare current layout to the standardized reference photograph and flag deviations automatically during the shift</div>
+        <div class="ws-problem good">✅ Operator performance comparison is now valid — before 5S, workers performed differently partly due to workspace setup. Now, consistent layout means performance differences reflect genuine skill differences, not organizational variation.</div>
+        <div class="ws-problem bad">⚠️ AI still cannot enforce 5S behavior — it can flag deviations, but the discipline to maintain the standard requires human leadership and accountability</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How 5S and AI Work Together</h2>
+
+  <div class="ai-connection">
+    <div class="aic-label">5S + AI — How They Reinforce Each Other</div>
+    <div class="aic-title">Human Discipline Creates the Foundation. AI Monitors the Standard.</div>
+    <div class="aic-rows">
+      <div class="aic-row">
+        <div class="aic-row-icon">📸</div>
+        <div class="aic-row-body">
+          <div class="aic-row-title">Computer Vision Layout Monitoring</div>
+          <div class="aic-row-text">AI cameras can compare the current workstation layout to the standardized reference photograph — flagging tools returned to wrong locations, items placed outside their marked areas, or obstructions in designated clear zones. This automates 5S audit checking without requiring a physical walk-through every shift.</div>
+        </div>
+      </div>
+      <div class="aic-row">
+        <div class="aic-row-icon">📊</div>
+        <div class="aic-row-body">
+          <div class="aic-row-title">Data Quality Improvement</div>
+          <div class="aic-row-text">A standardized, 5S'd process produces consistent, low-variability data. AI process analysis is only as reliable as the data it analyzes. When a station is well-organized and consistently maintained, cycle time data becomes a true measure of process performance — allowing AI to detect genuine optimization opportunities rather than filtering out organizational noise.</div>
+        </div>
+      </div>
+      <div class="aic-row">
+        <div class="aic-row-icon">📈</div>
+        <div class="aic-row-body">
+          <div class="aic-row-title">Sustain Trend Tracking</div>
+          <div class="aic-row-text">AI can track 5S audit scores over time across all stations, identifying which areas are maintaining their standard and which are backsliding. This trend data surfaces for team leaders and managers without requiring manual report aggregation — making the Sustain phase more visible and actionable than paper-based audit systems alone.</div>
+        </div>
+      </div>
+      <div class="aic-row">
+        <div class="aic-row-icon">🔍</div>
+        <div class="aic-row-body">
+          <div class="aic-row-title">Bottleneck Analysis Validity</div>
+          <div class="aic-row-text">When AI flags a station as a bottleneck based on cycle time data, the reliability of that finding depends on whether the station's data reflects actual process performance or organizational chaos. A well-5S'd station ensures the bottleneck finding is real — which means fixing it will actually help throughput, not just move the variability somewhere else.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick 5S Audit Practice</h2>
+  <p>Walk through the eight observations below — each describes something a supervisor might see on the production floor. Classify each as a 5S pass or fail, and identify which S it relates to.</p>
+
+  <div class="audit-sim">
+    <div class="as-label">5S Audit Practice</div>
+    <div class="as-title">Pass or Fail?</div>
+    <div class="as-sub">For each observation, decide whether it meets 5S standards or represents a failure. Click Pass ✓ or Fail ✗ for each item.</div>
+    <div class="as-observations" id="audit-obs"></div>
+    <div class="as-result" id="audit-result">
+      <div class="as-score-num" id="audit-score-num"></div>
+      <div class="as-score-text" id="audit-score-text"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI process monitoring system reports that Station 5 has a cycle time standard deviation of 4.8 minutes — more than twice the average variation of all other stations on the line. The operations manager immediately begins planning a process improvement project for Station 5. What should happen first?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Implement an AI-driven scheduling change to reduce the load on Station 5 — high variation usually means overloading</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Conduct a 5S assessment of Station 5 before designing a process improvement project. High cycle time variability is a symptom of both process problems AND workplace disorganization. If the variability is driven by workers spending inconsistent time searching for tools, reorganizing the workspace, or compensating for poor layout, a 5S intervention will reduce variation faster and cheaper than any process engineering change — and will produce cleaner data for whatever process improvement work follows.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Add a second operator to Station 5 to reduce variability through redundancy</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Trust the AI's cycle time data and start the DMAIC process immediately — the data is already telling you there's a problem</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. High cycle time variability has two possible causes: genuine process variability (the right target for process improvement) and organizational variability (which 5S addresses). Before investing in a DMAIC project, assess the workstation itself. If tools are disorganized, setup varies by operator, and workers spend inconsistent amounts of time searching and arranging, the cycle time data is measuring organizational chaos as much as process performance. A 5S intervention at Station 5 may reduce the standard deviation from 4.8 to 1.2 minutes without any process engineering change — and the cleaner data that results will make any subsequent process analysis far more reliable.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ High cycle time variability is a symptom — not automatically a process problem. Before investing in a process improvement project (which is relatively expensive and time-consuming), assess whether the variability might be driven by workplace disorganization: inconsistent tool placement, variable setup time, workers adapting to a different layout than the previous shift left. A 5S assessment of Station 5 takes a few hours and may identify that the variability drops dramatically with organization and standardization alone — without any process engineering. Starting DMAIC on data from a disorganized process means analyzing noise as if it were signal, potentially arriving at improvement recommendations that don't address the actual cause.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">5S (Sort, Set in Order, Shine, Standardize, Sustain) is a workplace organization methodology that creates the standardized, consistent foundation that all other improvement systems — including AI process optimization — depend on.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A disorganized process produces data that looks like a process problem but is actually an organizational problem. AI analyzing a chaotic workstation will generate "optimization" recommendations that address symptoms while the actual cause (disorganization) goes untreated.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">5S and AI reinforce each other: standardized layouts enable AI computer vision monitoring; consistent processes produce clean data for AI analysis; AI trend tracking supports the Sustain phase by automatically flagging backslide. But AI cannot replace the human discipline and leadership that 5S ultimately depends on.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">High cycle time variability at a station can mean process problems or organizational problems. A 5S assessment before a process improvement project ensures the team is solving the right problem — not running an expensive DMAIC project on data that's measuring organizational chaos.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Sustain is the hardest S — maintaining the organized state requires human leadership, culture, and accountability. No AI system can create the organizational discipline that makes 5S sustainable over time. That is irreducibly a human management challenge.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+function showWS(tab,el){
+  document.querySelectorAll('.ws-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.ws-panel').forEach(function(p){p.classList.remove('show');});
+  el.classList.add('active');
+  document.getElementById('ws-'+tab).classList.add('show');
+}
+
+var auditItems=[
+  {text:'A worker returns their welding gun to its labeled hook on the shadow board at shift end.',correct:true,which:'Set in Order',reason:'This is 5S working as designed — tools returned to their designated, marked location.'},
+  {text:'Three unlabeled bins of mixed fasteners are stored under the workbench at Station 4 — left over from a job completed 2 weeks ago.',correct:false,which:'Sort',reason:'Items not needed for current operations should be removed (red-tagged) in the Sort step. Unlabeled bins of old job materials create confusion and clutter.'},
+  {text:'The floor markings indicating where the material cart should park are clearly visible and the cart is parked within them.',correct:true,which:'Set in Order / Standardize',reason:'Clear visual floor markings and consistent cart placement are 5S standards correctly in place.'},
+  {text:'A worker notices a small oil spot under the press brake during their end-of-shift cleaning and reports it to maintenance.',correct:true,which:'Shine',reason:'This is the inspection benefit of the Shine step — cleaning as inspection catches early equipment issues that might otherwise go unnoticed.'},
+  {text:'The 5S audit checklist for Station 2 has not been signed for 11 days.',correct:false,which:'Sustain',reason:'Audit completion is a core Sustain requirement. An 11-day gap suggests the standard is not being maintained and the 5S discipline has lapsed.'},
+  {text:'A new operator at Station 6 is shown the laminated reference card with the correct workstation layout and cleaning checklist.',correct:true,which:'Standardize',reason:'Documented standards and new worker orientation to those standards is exactly what the Standardize step creates.'},
+  {text:'Tools from two different job families are stored together in the same drawer with no labels or organization.',correct:false,which:'Sort / Set in Order',reason:'Mixed, unlabeled tools violate both Sort (only current job tools at the station) and Set in Order (everything has a clearly marked, designated location).'},
+  {text:'Cycle time data for Station 3 shows dramatically reduced variability after the 5S implementation compared to the previous month.',correct:true,which:'Demonstrates 5S Impact',reason:'Reduced cycle time variability after 5S implementation confirms that the previous variability was driven partly by organizational inconsistency — exactly the benefit standardization provides to process data quality.'}
+];
+var auditAnswers={};
+var auditContainer=document.getElementById('audit-obs');
+auditItems.forEach(function(item,i){
+  var div=document.createElement('div');div.className='as-obs';
+  div.innerHTML='<div class="as-obs-text">Observation '+(i+1)+': '+item.text+'</div>'
+    +'<div class="as-obs-btns">'
+    +'<button class="as-btn pass" id="ap'+i+'" onclick="auditAnswer('+i+',true)">✓ Pass</button>'
+    +'<button class="as-btn fail" id="af'+i+'" onclick="auditAnswer('+i+',false)">✗ Fail</button>'
+    +'</div>';
+  auditContainer.appendChild(div);
+  var fb=document.createElement('div');fb.id='afb'+i;fb.style.cssText='display:none;font-size:12px;line-height:1.65;padding:8px 12px;border-radius:8px;margin-top:4px;';
+  auditContainer.appendChild(fb);
+});
+var auditScore=0,auditCount=0;
+function auditAnswer(i,pass){
+  if(auditAnswers[i]!==undefined)return;
+  auditAnswers[i]=pass;
+  var item=auditItems[i];
+  var correct=(pass===item.correct);
+  if(correct)auditScore++;
+  auditCount++;
+  document.getElementById('ap'+i).disabled=true;
+  document.getElementById('af'+i).disabled=true;
+  var fb=document.getElementById('afb'+i);
+  fb.style.display='block';
+  if(correct){fb.style.background='var(--green-pale)';fb.style.color='var(--green)';fb.textContent='✅ Correct. '+item.which+': '+item.reason;}
+  else{fb.style.background='var(--red-pale)';fb.style.color='var(--red)';fb.textContent='❌ This is a '+(item.correct?'Pass':'Fail')+'. '+item.which+': '+item.reason;}
+  if(auditCount===auditItems.length){
+    var r=document.getElementById('audit-result');r.classList.add('show');
+    document.getElementById('audit-score-num').textContent=auditScore+' / '+auditItems.length;
+    var t=auditScore>=7?'Excellent 5S judgment. You correctly identified which observations meet the standard and which represent failures — and you can relate each to the correct S step.':auditScore>=5?'Good understanding. Review the items you missed and think about which S step each one violates.':'Review the five S steps and revisit each observation. The key question for each: does this reflect Sort (right items present), Set in Order (correctly placed), Shine (clean and inspected), Standardize (documented standard), or Sustain (standard being maintained)?';
+    document.getElementById('audit-score-text').textContent=t;
+  }
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
