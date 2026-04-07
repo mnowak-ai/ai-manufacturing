@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Builds a Production Schedule: What It Sees, What It Calculates, What It Misses</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* AI input pipeline */
+.pipeline{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.pipe-row{display:flex;gap:14px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 20px;}
+.pipe-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.pipe-content{}
+.pipe-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.pipe-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.pipe-example{margin-top:6px;font-size:12px;font-style:italic;color:var(--gray-muted);background:var(--white);border-radius:8px;padding:8px 12px;border:1px solid var(--purple-mid);}
+
+/* Black box sim */
+.black-box{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.bb-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.bb-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:20px;}
+.bb-flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
+.bb-box{border-radius:14px;padding:16px 20px;text-align:center;min-width:120px;}
+.bb-box.inputs{background:rgba(59,130,246,.2);border:1.5px solid rgba(59,130,246,.5);}
+.bb-box.engine{background:rgba(123,47,190,.4);border:2px solid var(--purple);min-width:140px;}
+.bb-box.outputs{background:rgba(39,103,73,.2);border:1.5px solid rgba(39,103,73,.5);}
+.bb-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;opacity:.8;}
+.bb-box.inputs .bb-box-label{color:#93C5FD;}
+.bb-box.engine .bb-box-label{color:var(--purple-mid);}
+.bb-box.outputs .bb-box-label{color:#6EE7B7;}
+.bb-items{display:flex;flex-direction:column;gap:4px;}
+.bb-item{font-size:12px;line-height:1.5;opacity:.9;}
+.bb-arrow{font-size:24px;color:var(--purple-mid);}
+.bb-steps{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
+.bb-step{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 16px;display:flex;align-items:flex-start;gap:10px;}
+.bb-step-num{width:22px;height:22px;border-radius:50%;background:var(--purple);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bb-step-text{font-size:13px;line-height:1.65;opacity:.85;}
+
+/* Can see / Can't see */
+.see-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.see-card{border-radius:16px;padding:20px;}
+.see-card.can{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.see-card.cant{background:var(--red-pale);border:1.5px solid var(--red);}
+.see-title{font-weight:700;font-size:14px;margin-bottom:12px;}
+.see-card.can .see-title{color:var(--blue);}
+.see-card.cant .see-title{color:var(--red);}
+.see-item{font-size:13px;line-height:1.7;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.see-item:last-child{border-bottom:none;}
+.see-item::before{font-weight:700;margin-right:6px;}
+.see-card.can .see-item::before{content:"✓ ";color:var(--blue);}
+.see-card.cant .see-item::before{content:"✗ ";color:var(--red);}
+@media(max-width:520px){.see-grid{grid-template-columns:1fr;}}
+
+/* Gap spotter sim */
+.gap-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.gs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.gs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.gs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.gs-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:16px;}
+.gs-situation{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:10px;}
+.gs-question{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.gs-choices{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.gs-choice{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.gs-choice:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.gs-choice.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.gs-choice.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.gs-fb{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;margin-top:10px;}
+.gs-fb.show{display:block;}
+.gs-fb.good{background:var(--green-pale);color:var(--green);}
+.gs-fb.bad{background:var(--red-pale);color:var(--red);}
+.gs-next{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;display:none;}
+.gs-next.show{display:inline-block;}
+.gs-progress{font-size:12px;color:var(--gray-muted);margin-bottom:10px;}
+.gs-final{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;margin-top:14px;}
+.gs-final.show{display:block;}
+.gs-final-score{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--purple-dark);}
+.gs-final-text{font-size:14px;line-height:1.7;color:var(--gray-text);margin-top:6px;}
+
+/* Summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 · Job Planning</div>
+  <h1>How AI Builds a Production Schedule: What It Sees, What It Calculates, What It Misses</h1>
+  <p class="hero-sub">AI scheduling tools generate plans in seconds. But how? And why can't you just trust whatever they produce? This article opens the black box — and explains what AI can never see no matter how smart it gets.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>First: What Is an AI Scheduling Tool?</h2>
+    <p>An <mark>AI scheduling tool</mark> is a software system that takes a large set of inputs — work orders, machine availability, worker skills, material inventory, deadlines — and uses algorithms to generate an optimized production schedule. Instead of a human planner spending hours arranging everything manually, the AI does the heavy calculation work and presents the result as a Gantt chart or schedule that a human can review and approve.</p>
+    <p>The tool used in your lesson's PrecisionTech case study is called <strong>Wrkspce.ai</strong>. It integrates with enterprise systems like SAP ERP (a large business management software) and Siemens MES (Manufacturing Execution System — the software that tracks what's actually happening on the production floor in real time). We'll explain both of those briefly so the vocabulary doesn't get in the way.</p>
+    <div class="pull-quote"><p>An AI scheduling tool is like a very fast, very organized planning assistant that never gets tired — but also never walks the floor, never talks to workers, and never has a gut feeling.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Does AI Scheduling Actually See? The Inputs</h2>
+    <p>Before an AI tool can generate a schedule, it needs data — lots of it. The quality of the schedule is directly tied to the quality and completeness of the data it receives. Here's everything a sophisticated AI scheduling system typically reads before it builds a plan:</p>
+    <div class="pipeline">
+      <div class="pipe-row">
+        <div class="pipe-icon">📋</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Active Work Orders and Order Details</div>
+          <div class="pipe-desc">Every open job: what product, what quantity, what customer, what delivery deadline. This is the "demand" that the schedule must fulfill.</div>
+          <div class="pipe-example">Example: "WO-1187: 500 Brackets BR-44, due Friday 5 PM. WO-1201: 200 Housings, due Thursday noon. WO-1215: 300 Frames, due Friday noon."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">🗺️</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Process Routes for Each Product</div>
+          <div class="pipe-desc">The documented sequence of steps for each product type — which machines, in what order, with what quality checks between them. AI treats these as fixed constraints it cannot violate.</div>
+          <div class="pipe-example">Example: "Bracket BR-44 route: Laser Cut → Press Bend → Weld → Weld Inspect → Coat → Final Inspect → Package."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">⚙️</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Machine Availability and Capabilities</div>
+          <div class="pipe-desc">Which machines exist, what jobs each one can perform, what their scheduled maintenance windows are, and which ones are currently flagged as unavailable or restricted.</div>
+          <div class="pipe-example">Example: "Press Station 2 can handle jobs requiring bending force up to 200 tons. Available Mon–Fri. Scheduled maintenance Wed 6–8 AM. Currently operational."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">👷</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Worker Availability, Skills, and Certifications</div>
+          <div class="pipe-desc">Which workers are scheduled on which shifts, what operations each person is certified to perform, and any known absences or restrictions in the system.</div>
+          <div class="pipe-example">Example: "Marcus T.: certified for MIG welding, TIG welding, press operation. Scheduled Day Shift Mon–Thu. Friday: vacation (approved)."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">📦</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Material Inventory Levels</div>
+          <div class="pipe-desc">What raw materials and components are currently in stock, in what quantities, and whether any purchase orders are in transit with expected arrival dates.</div>
+          <div class="pipe-example">Example: "3.5mm stainless steel sheet: 120 sq ft on hand. M6 bolts: 4,200 units. Zinc primer: 18 gallons. Incoming PO #4471: 200 sq ft steel sheet, arriving Tuesday."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">⏱️</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Historical Job Time Data</div>
+          <div class="pipe-desc">How long each operation actually took on past similar jobs — thousands of data points that the AI uses to generate more accurate time estimates than standard work orders alone provide.</div>
+          <div class="pipe-example">Example: "Last 200 runs of the Bracket BR-44 press bend step: average 48.3 seconds per part, standard deviation 4.1 seconds. Work order estimate: 45 seconds. AI uses 48 seconds."</div>
+        </div>
+      </div>
+      <div class="pipe-row">
+        <div class="pipe-icon">⚡</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Real-Time Machine Sensor Data (if connected)</div>
+          <div class="pipe-desc">In advanced facilities, AI scheduling tools connect to live sensor data from machines — knowing not just whether a machine is scheduled, but whether it's actually running, at what speed, and whether any anomalies are appearing.</div>
+          <div class="pipe-example">Example: "Press Station 2: currently running at 92% of rated speed. No anomalies. Vibration sensor: normal. Temperature: normal. Estimated completion of current job: 2h 14m."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Happens Inside: The Calculation</h2>
+    <p>Once the AI has all this data, it runs an optimization algorithm — a complex mathematical process that tries to find the best possible arrangement of all the jobs, machines, and workers to meet all the deadlines while minimizing waste (idle machines, overtime, missed deliveries). Here's a simplified view of what that looks like:</p>
+
+    <div class="black-box">
+      <div class="bb-label">Inside the AI Scheduling Engine</div>
+      <div class="bb-title">From Data to Optimized Schedule</div>
+      <div class="bb-flow">
+        <div class="bb-box inputs">
+          <div class="bb-box-label">Inputs</div>
+          <div class="bb-items">
+            <div class="bb-item">Work orders + deadlines</div>
+            <div class="bb-item">Process routes</div>
+            <div class="bb-item">Machine availability</div>
+            <div class="bb-item">Worker skills + shifts</div>
+            <div class="bb-item">Material inventory</div>
+            <div class="bb-item">Historical job times</div>
+          </div>
+        </div>
+        <div class="bb-arrow">→</div>
+        <div class="bb-box engine">
+          <div class="bb-box-label">AI Engine</div>
+          <div class="bb-items">
+            <div class="bb-item">Optimization algorithm</div>
+            <div class="bb-item">Constraint solver</div>
+            <div class="bb-item">Thousands of iterations</div>
+          </div>
+        </div>
+        <div class="bb-arrow">→</div>
+        <div class="bb-box outputs">
+          <div class="bb-box-label">Outputs</div>
+          <div class="bb-items">
+            <div class="bb-item">Gantt chart schedule</div>
+            <div class="bb-item">Resource assignments</div>
+            <div class="bb-item">Predicted completion times</div>
+            <div class="bb-item">Risk flags</div>
+          </div>
+        </div>
+      </div>
+      <div class="bb-steps">
+        <div class="bb-step"><div class="bb-step-num">1</div><div class="bb-step-text"><strong>Load all constraints.</strong> The AI reads every hard rule it must follow: process route sequences, machine capability limits, worker certifications, maintenance windows. These cannot be violated under any circumstances.</div></div>
+        <div class="bb-step"><div class="bb-step-num">2</div><div class="bb-step-text"><strong>Calculate all job time requirements.</strong> For each job, using the historical data, it calculates how long each step will realistically take — not just the standard estimate. This becomes the foundation for all time slot assignments.</div></div>
+        <div class="bb-step"><div class="bb-step-num">3</div><div class="bb-step-text"><strong>Identify the critical path.</strong> For each job, the AI finds the "critical path" — the sequence of steps that determines the minimum time the job requires. Any delay in a critical path step delays the whole job.</div></div>
+        <div class="bb-step"><div class="bb-step-num">4</div><div class="bb-step-text"><strong>Assign jobs to time slots, iterating toward the best arrangement.</strong> The AI tries thousands of different arrangements — which job uses which machine when — scoring each one on how well it meets the optimization goals (minimize overtime, protect deadlines, fill gaps). It keeps the best arrangement it finds.</div></div>
+        <div class="bb-step"><div class="bb-step-num">5</div><div class="bb-step-text"><strong>Generate the schedule and flag risks.</strong> The final arrangement becomes the Gantt chart. Jobs that are at risk of missing their deadline get flagged. Constraint violations are highlighted. The planner receives a schedule with clear indicators of where human attention is needed.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What AI Can See vs. What It Can Never See</h2>
+    <p>This is the most important concept in this article. AI scheduling tools are powerful — but their view of the world is limited to the data in the systems they're connected to. And the factory floor is always richer, more complicated, and more human than any database.</p>
+
+    <div class="see-grid">
+      <div class="see-card can">
+        <div class="see-title">✅ What AI Can See (In the Data)</div>
+        <div class="see-item">Which machines are scheduled vs. in maintenance</div>
+        <div class="see-item">Which workers are on which shifts per the roster</div>
+        <div class="see-item">Worker certifications listed in the HR system</div>
+        <div class="see-item">Inventory quantities as recorded in the ERP</div>
+        <div class="see-item">Work order deadlines and priorities as entered</div>
+        <div class="see-item">Historical average time per operation</div>
+        <div class="see-item">Process route step sequences</div>
+        <div class="see-item">Machine sensor readings (if connected)</div>
+        <div class="see-item">Officially logged machine downtime incidents</div>
+      </div>
+      <div class="see-card cant">
+        <div class="see-title">✗ What AI Cannot See (Off the Books)</div>
+        <div class="see-item">A new worker who's technically certified but still learning — running 30% slower than average</div>
+        <div class="see-item">A machine that's "available" in the system but making a new sound that concerns the maintenance team</div>
+        <div class="see-item">A worker who mentioned they weren't feeling well this morning</div>
+        <div class="see-item">A customer who called yesterday saying they could accept the order a day late if needed</div>
+        <div class="see-item">Friction between two workers who were recently in a conflict and shouldn't be paired on the same team right now</div>
+        <div class="see-item">Material that shows as in stock but may have been informally set aside for another job</div>
+        <div class="see-item">A foreman's gut feeling that the press is going to need maintenance soon</div>
+        <div class="see-item">A vendor relationship issue that might delay the incoming material shipment</div>
+        <div class="see-item">The fact that this particular customer is extremely important and their order should be protected above its official priority level</div>
+      </div>
+    </div>
+
+    <p>Read that list carefully. Every single item on the right side is the kind of thing an experienced production planner, shift supervisor, or foreman knows — and the AI does not. This is precisely why AI schedules require human review, not just human delivery.</p>
+    <p>The AI produces a schedule that is optimal <em>within the world it can see</em>. Your job is to check whether that world matches the actual world on the floor today.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Simulation: AI Generated This Schedule — What's Missing?</h2>
+    <p>The AI has just generated a schedule for the week. Everything looks good in the system. But there's information the AI doesn't have. In each scenario below, decide whether you should approve the AI plan as-is, adjust it, or escalate it for more investigation.</p>
+
+    <div class="gap-sim">
+      <div class="gs-label">Simulation: Reviewing AI Schedules</div>
+      <div class="gs-title">The AI Generated a Plan — You Review It</div>
+      <div class="gs-sub">Each scenario gives you information the AI doesn't have. Decide the right response.</div>
+      <div class="gs-progress" id="gs-progress">Scenario 1 of 4</div>
+      <div class="gs-scenario">
+        <div class="gs-situation" id="gs-situation"></div>
+        <div class="gs-question" id="gs-question"></div>
+      </div>
+      <div class="gs-choices" id="gs-choices"></div>
+      <div class="gs-fb good" id="gs-good"></div>
+      <div class="gs-fb bad" id="gs-bad"></div>
+      <button class="gs-next" id="gs-next" onclick="nextGs()">Next Scenario →</button>
+      <div class="gs-final" id="gs-final">
+        <div class="gs-final-score" id="gs-final-score"></div>
+        <div class="gs-final-text" id="gs-final-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI scheduling tools generate plans by processing work orders, process routes, machine availability, worker certifications, inventory, and historical job time data — all simultaneously, in seconds.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Inside the AI, an optimization algorithm tries thousands of arrangements and scores each one on how well it meets all deadlines while minimizing waste. The best arrangement becomes the Gantt chart schedule.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI can only see what's in the data. It cannot see floor conditions, interpersonal dynamics, informal knowledge, gut feelings, or anything that hasn't been officially logged in a connected system.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The gap between "what the system knows" and "what's actually happening on the floor" is exactly where human review of AI-generated schedules adds its greatest value.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Approving an AI schedule without checking that world-versus-data gap is one of the most common errors in AI-assisted planning — and one of the most avoidable with good professional habits.</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const scenarios=[
+  {
+    situation:"The AI has assigned this week's high-precision CNC machining job to Jordan, who is listed in the HR system as certified for CNC operation. However, you know that Jordan completed their certification training just two weeks ago and is still working under close supervision. The AI's time estimate assumes the standard 3.2-minute cycle time per part — based on the historical average for this job. This job has a customer deadline that cannot move.",
+    question:"What should you do?",
+    opts:["Approve the AI schedule — Jordan is certified, which is all that matters","Adjust the schedule to add 20–25% extra time for Jordan's learning curve, or reassign the job to a more experienced CNC operator and put Jordan on a lower-stakes job this week","Reject the schedule entirely and ask the AI to regenerate it without using Jordan","Ask Jordan if they think they can hit the standard cycle time before approving anything"],
+    correct:1,
+    good:"✅ Right. The AI sees 'CNC certified' and generates a plan based on average cycle times. It cannot see that Jordan is two weeks post-certification and still developing speed and consistency. For a job with a tight customer deadline, the right move is either adjusting the time estimate upward (protecting the deadline with realistic expectations) or assigning the job to an experienced operator and giving Jordan a lower-stakes opportunity. This is exactly the kind of context the AI doesn't have — and that you do.",
+    bad:"❌ The AI's plan is based on a data reality (Jordan is certified, average cycle time is 3.2 min) that doesn't match the floor reality (Jordan is two weeks post-cert and still building speed). For a job with an unmovable customer deadline, accepting the AI's time estimate for a new operator risks a late delivery. The right action is adjusting the estimate or reassigning — not blindly approving or fully rejecting."
+  },
+  {
+    situation:"The AI has scheduled a key job for Press Station 2 all day Monday and Tuesday. In the system, Press Station 2 shows as fully operational — no maintenance flags, no anomalies logged. However, you walked past it Friday afternoon and noticed it was making a slightly different sound during operation. You mentioned it to the maintenance tech, who said they'd 'keep an eye on it' but didn't log anything officially.",
+    question:"What should you do before approving Monday's schedule?",
+    opts:["Approve the schedule — nothing is officially logged and the AI shows no anomalies","Talk to the maintenance tech before Monday's shift starts, get a formal assessment, and decide based on that — delay approving the schedule until you have a real answer","Move all of Monday's Press Station 2 work to another machine just to be safe","Ignore it — gut feelings about machine sounds are not reliable enough to act on"],
+    correct:1,
+    good:"✅ Right. The AI cannot see Friday's unofficial observation or the maintenance tech's verbal 'keep an eye on it.' But you can — and you should act on it. A machine issue that appears mid-Monday would be far more disruptive and expensive than a 30-minute investigation before the shift. Get a formal assessment, get a documented answer, then approve the schedule with confidence — or adjust it based on what maintenance finds.",
+    bad:"❌ This is a classic case where human observation reveals something the AI's data doesn't contain. 'Nothing is officially logged' doesn't mean nothing is wrong — it means the concern hasn't made it into the system yet. A machine issue that surfaces mid-Monday with two full days of jobs scheduled on it would cascade through the entire week. A 30-minute maintenance check before the shift costs almost nothing compared to that scenario."
+  },
+  {
+    situation:"The AI generated a schedule that puts WO-1187 as the fourth-highest priority job this week, after three other jobs with earlier deadlines. Technically this is correct by due date. However, your sales manager mentioned on Friday that the customer for WO-1187 is the company's largest account — worth 40% of annual revenue — and they've been frustrated by a quality issue on their last order. The sales manager wants this job to be treated as the top priority this week.",
+    question:"How should this information change your approach to the schedule?",
+    opts:["Ignore the sales manager's input — the AI schedule is based on objective deadline data and should not be changed for relationship reasons","Approve the AI schedule and ask the sales manager to contact the customer to reset expectations","Manually escalate WO-1187's priority in the scheduling system to reflect the business relationship importance, regenerate or adjust the schedule, and communicate the tradeoff to the other jobs' stakeholders","Switch all four jobs to top priority to avoid making a hard decision"],
+    correct:2,
+    good:"✅ Right. The AI prioritizes jobs based on what's in the system — due dates and priority codes. It cannot weigh business relationships, revenue importance, or recovery-from-quality-issues context. This is a legitimate business reason to override the AI's priority ranking. The right move: update WO-1187's priority in the system (so future AI runs reflect it), adjust the schedule, and proactively communicate to any other customers whose jobs are deprioritized. Human judgment translates business context into scheduling decisions.",
+    bad:"❌ The AI is making a technically correct scheduling decision based on due dates. But business relationships, revenue importance, and quality recovery situations are context the AI doesn't have. This is a legitimate case for human override — not because the AI is wrong, but because the AI is working with incomplete business context. Update the priority in the system, adjust the schedule, and communicate the tradeoff."
+  },
+  {
+    situation:"It's Monday morning. The AI has generated a schedule that uses both welding bays at full capacity all week. While reviewing, you notice that the AI's schedule assumes the Tuesday afternoon material shipment (200 sq ft of steel sheet, listed as PO #4471) will arrive as planned. However, your purchasing team just sent an email saying the vendor called and the shipment is delayed until Thursday.",
+    question:"What should happen to the AI schedule?",
+    opts:["Approve the AI schedule and deal with the material issue when it happens Tuesday afternoon","Update the system with the new material arrival date, trigger an AI re-plan that reflects the delay, review the new schedule, and proactively contact any customers whose jobs may be affected","Cancel all jobs that depend on the delayed material and reschedule them for next week","Ask the AI to check if the material delay matters — let it make the call"],
+    correct:1,
+    good:"✅ Right. The AI generated a solid schedule based on Tuesday material arrival. That assumption is now wrong. The immediate action is to update the system with the correct Thursday arrival date — so the AI's data matches reality — then re-run or adjust the schedule. The new plan will show which jobs are affected and when. Then, before anything else, proactively contact any customers whose deadlines may be impacted. AI plans are only as good as the data behind them — when data changes, the plan must change too.",
+    bad:"❌ The AI's plan is based on Tuesday material arrival — a fact that is now false. Approving the plan and dealing with it Tuesday afternoon means the problem hits mid-production, with jobs stalled, workers idle, and machines sitting with no material to run. The right response is immediate: update the system with the real arrival date, trigger a re-plan, and communicate to affected customers now — while there's still time to manage expectations. Proactive beats reactive every time."
+  }
+];
+let gIdx=0,gScore=0,gDone=false;
+function renderGs(){
+  const s=scenarios[gIdx];
+  document.getElementById('gs-progress').textContent=`Scenario ${gIdx+1} of ${scenarios.length}`;
+  document.getElementById('gs-situation').textContent=s.situation;
+  document.getElementById('gs-question').textContent=s.question;
+  const c=document.getElementById('gs-choices');c.innerHTML='';
+  s.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='gs-choice';b.textContent=o;
+    b.onclick=()=>doGs(i);c.appendChild(b);
+  });
+  document.getElementById('gs-good').className='gs-fb good';
+  document.getElementById('gs-bad').className='gs-fb bad';
+  document.getElementById('gs-next').className='gs-next';
+  gDone=false;
+}
+function doGs(i){
+  if(gDone)return;gDone=true;
+  const s=scenarios[gIdx];
+  const btns=document.querySelectorAll('#gs-choices .gs-choice');
+  btns.forEach(b=>b.disabled=true);
+  if(i===s.correct){btns[i].classList.add('correct');document.getElementById('gs-good').textContent=s.good;document.getElementById('gs-good').classList.add('show');gScore++;}
+  else{btns[i].classList.add('wrong');document.getElementById('gs-bad').textContent=s.bad;document.getElementById('gs-bad').classList.add('show');}
+  if(gIdx<scenarios.length-1)document.getElementById('gs-next').classList.add('show');
+  else showFinal();
+}
+function nextGs(){gIdx++;renderGs();}
+function showFinal(){
+  const f=document.getElementById('gs-final');f.classList.add('show');
+  document.getElementById('gs-final-score').textContent=`${gScore} / ${scenarios.length}`;
+  let t='';
+  if(gScore===4)t='Perfect score. You instinctively look for the gap between what the AI knows and what the floor knows — that\'s the most important skill in AI-assisted planning.';
+  else if(gScore>=2)t='Strong performance. The scenarios you missed reveal exactly where to focus your attention when reviewing AI-generated schedules.';
+  else t='Keep at it — these scenarios reflect real situations from real facilities. Review the feedback on each one and think about what the AI couldn\'t see.';
+  document.getElementById('gs-final-text').textContent=t;
+}
+renderGs();
+</script>
+</body>
+</html>

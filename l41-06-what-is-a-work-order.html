@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Work Order? The Document That Starts Every Manufacturing Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Journey flow */
+.journey{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.journey-step{display:flex;gap:0;align-items:stretch;}
+.js-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.js-dot{width:20px;height:20px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);flex-shrink:0;margin-top:18px;}
+.js-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.journey-step:last-child .js-line{display:none;}
+.js-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 20px;margin-bottom:14px;}
+.js-who{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;}
+.js-action{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.js-detail{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.js-creates{margin-top:8px;font-size:12px;font-style:italic;color:var(--gray-muted);background:var(--white);padding:7px 12px;border-radius:8px;border:1px solid var(--purple-mid);}
+
+/* Annotated work order */
+.wo-container{margin:24px 0;}
+.wo-intro{font-size:14px;color:var(--gray-muted);margin-bottom:12px;font-style:italic;}
+.wo-doc{background:var(--white);border:2px solid var(--purple-dark);border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(74,21,128,.12);}
+.wo-top-bar{background:var(--purple-dark);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.wo-company{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--white);}
+.wo-doc-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.8);}
+.wo-id-bar{background:var(--purple-pale);padding:10px 24px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;border-bottom:1.5px solid var(--purple-mid);}
+.wo-id-item{font-size:12px;color:var(--gray-muted);}<br>
+.wo-id-item strong{color:var(--purple-dark);font-weight:700;}
+.wo-fields{display:flex;flex-direction:column;gap:0;}
+.wo-field{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--purple-mid);cursor:pointer;transition:background .15s;}
+.wo-field:last-child{border-bottom:none;}
+.wo-field:hover{background:var(--purple-pale);}
+.wo-field.active{background:var(--purple-pale);}
+.wo-field-label{padding:13px 16px 13px 24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);background:var(--gray-soft);border-right:1.5px solid var(--purple-mid);display:flex;align-items:flex-start;padding-top:14px;}
+.wo-field-value{padding:13px 16px;font-size:13px;line-height:1.65;color:var(--gray-text);}
+.wo-field-value strong{color:var(--purple-dark);}
+.wo-annotation{background:var(--purple-pale);border-top:1.5px solid var(--purple-mid);padding:14px 24px;display:none;}
+.wo-annotation.show{display:block;}
+.wo-ann-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:6px;}
+.wo-ann-text{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.wo-ann-why{margin-top:8px;padding:8px 12px;background:var(--white);border-radius:8px;border-left:3px solid var(--purple);font-size:12px;color:var(--purple-dark);font-style:italic;}
+.wo-hint{text-align:center;font-size:12px;color:var(--gray-muted);margin-top:8px;font-style:italic;}
+
+/* Error sim */
+.error-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.es-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.es-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.es-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.es-wo{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 22px;margin-bottom:14px;}
+.es-wo-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.es-fields-mini{display:flex;flex-direction:column;gap:6px;}
+.es-field{display:flex;gap:10px;font-size:13px;align-items:flex-start;}
+.es-field-label{font-weight:700;color:var(--purple);min-width:110px;flex-shrink:0;}
+.es-field-val{color:var(--gray-text);}
+.es-field-val.error{color:var(--red);font-weight:600;text-decoration:underline;cursor:help;}
+.es-question{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.es-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.es-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.es-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.es-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.es-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.es-fb{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;}
+.es-fb.show{display:block;}
+.es-fb.good{background:var(--green-pale);color:var(--green);}
+.es-fb.bad{background:var(--red-pale);color:var(--red);}
+.es-next{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;display:none;}
+.es-next.show{display:inline-block;}
+.es-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;margin-top:12px;}
+.es-score.show{display:block;}
+.es-score-num{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--purple-dark);}
+.es-score-text{font-size:14px;line-height:1.7;color:var(--gray-text);margin-top:6px;}
+.es-progress{font-size:12px;color:var(--gray-muted);margin-bottom:10px;}
+
+/* AI use section */
+.ai-use-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.auc{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.auc-icon{font-size:24px;margin-bottom:8px;}
+.auc-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.auc-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:520px){.ai-use-cards{grid-template-columns:1fr;}}
+
+/* Summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 · Job Planning</div>
+  <h1>What Is a Work Order? The Document That Starts Every Manufacturing Job</h1>
+  <p class="hero-sub">Nothing gets made in a factory without authorization. That authorization is the work order — a single document that carries every instruction a worker needs, from the first machine to the final box. This article walks through every field, every purpose, and what goes wrong when the details are missing or wrong.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Before Anyone Picks Up a Tool</h2>
+    <p>Imagine you're a machine operator and it's 7 AM Monday. You walk onto the production floor. How do you know what to make today? How do you know how many? How do you know which machine to use, what material to pull from the warehouse, what specs the customer requires, and when it needs to be done?</p>
+    <p>The answer, in almost every manufacturing facility in the world, is the same: you check your <mark>work order</mark>.</p>
+    <p>A work order (sometimes called a production order, job order, or shop order) is an official document — physical or digital — that authorizes and describes a specific production run. It's the bridge between a customer's request and the factory floor's action. Without it, nothing can legally or practically begin.</p>
+    <div class="pull-quote"><p>A work order is like a recipe, a permission slip, and a job brief all in one. It tells you what to make, how to make it, what you're allowed to use, and when it needs to be done — before you touch a single machine.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Does a Work Order Come From?</h2>
+    <p>Work orders don't appear out of thin air. They're the end result of a chain of events that starts with a customer placing an order. Understanding that chain helps you see why every field on the work order carries real weight — each piece of information was deliberate.</p>
+
+    <div class="journey">
+      <div class="journey-step">
+        <div class="js-spine"><div class="js-dot"></div><div class="js-line"></div></div>
+        <div class="js-card">
+          <div class="js-who">Step 1 — Customer</div>
+          <div class="js-action">Customer places an order</div>
+          <div class="js-detail">A robotics company calls and orders 500 custom aluminum mounting brackets. They specify the part number, material, dimensions, finish, quantity, and delivery deadline. They may have engineering drawings they provide, or the facility will create them.</div>
+          <div class="js-creates">Creates: a customer purchase order (PO) — the customer's official commitment to buy</div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="js-spine"><div class="js-dot"></div><div class="js-line"></div></div>
+        <div class="js-card">
+          <div class="js-who">Step 2 — Sales / Order Entry</div>
+          <div class="js-action">Sales team enters the order into the system</div>
+          <div class="js-detail">The customer's PO gets entered into the facility's ERP system (business management software). The sales team confirms pricing, lead time, and specs. A sales order is created internally — the factory's record of what was promised to the customer.</div>
+          <div class="js-creates">Creates: a sales order (SO) — the internal record of the customer commitment</div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="js-spine"><div class="js-dot"></div><div class="js-line"></div></div>
+        <div class="js-card">
+          <div class="js-who">Step 3 — Production Planning</div>
+          <div class="js-action">Planning team converts the sales order into a work order</div>
+          <div class="js-detail">The production planner reviews the sales order and creates a work order: adding machine assignments, process route steps, material requirements, time estimates, and worker instructions. This is where AI planning tools often assist — generating the schedule and resource assignments that populate the work order fields.</div>
+          <div class="js-creates">Creates: the work order (WO) — the detailed production authorization document</div>
+        </div>
+      </div>
+      <div class="journey-step">
+        <div class="js-spine"><div class="js-dot"></div><div class="js-line"></div></div>
+        <div class="js-card">
+          <div class="js-who">Step 4 — Production Floor</div>
+          <div class="js-action">Workers receive and execute the work order</div>
+          <div class="js-detail">The work order is released to the floor — either printed physically, displayed on a terminal, or sent to workers' tablets. Workers pull the materials, set up the machines, follow the process route, complete each step, and document their progress. Inspectors sign off at quality gates. Everything traces back to the work order number.</div>
+          <div class="js-creates">Results in: a finished product batch, with the work order closed out and archived</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>A Real Work Order — Every Field Explained</h2>
+    <p>Let's look at a complete work order and explore every section. Click any field to learn what it means, why it matters, and what goes wrong if it's missing or incorrect.</p>
+    <div class="wo-hint">👆 Click any field row to learn what it means</div>
+
+    <div class="wo-container">
+      <div class="wo-doc">
+        <div class="wo-top-bar">
+          <div class="wo-company">Ridgeline Manufacturing Co.</div>
+          <div class="wo-doc-title">Production Work Order</div>
+        </div>
+        <div class="wo-id-bar">
+          <div class="wo-id-item"><strong>WO #:</strong> WO-2204</div>
+          <div class="wo-id-item"><strong>Created:</strong> Mon Apr 7, 2025 · 6:45 AM</div>
+          <div class="wo-id-item"><strong>Status:</strong> Released to Floor</div>
+          <div class="wo-id-item"><strong>Priority:</strong> High</div>
+        </div>
+        <div class="wo-fields" id="wo-fields"></div>
+        <div class="wo-annotation" id="wo-annotation">
+          <div class="wo-ann-label" id="ann-label"></div>
+          <div class="wo-ann-text" id="ann-text"></div>
+          <div class="wo-ann-why" id="ann-why"></div>
+        </div>
+      </div>
+      <div class="wo-hint" style="margin-top:10px;">Click a different row to explore it · All 10 fields have explanations</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Scheduling Tools Use Work Orders</h2>
+    <p>Work orders are one of the primary data sources that AI scheduling tools read when building a production plan. But it's important to understand exactly what AI does — and doesn't do — with this data.</p>
+
+    <div class="ai-use-cards">
+      <div class="auc">
+        <div class="auc-icon">📥</div>
+        <div class="auc-title">AI reads work orders to understand demand</div>
+        <div class="auc-desc">When a work order is created and released, the AI scheduling system reads its due date, quantity, process route, and machine requirements. This tells the AI what needs to be made, how complex it is, and when it must be done — the foundation of any schedule.</div>
+      </div>
+      <div class="auc">
+        <div class="auc-icon">🗓️</div>
+        <div class="auc-title">AI uses process routes to calculate time requirements</div>
+        <div class="auc-desc">The step sequence in the work order tells AI exactly what operations are needed and in what order. Combined with historical job time data, the AI calculates how long each step should take and builds a timeline that respects the dependency chain.</div>
+      </div>
+      <div class="auc">
+        <div class="auc-icon">⚙️</div>
+        <div class="auc-title">AI uses machine and material requirements to check availability</div>
+        <div class="auc-desc">If the work order specifies that a job needs Press Station 2 and 45 sq ft of stainless steel sheet, the AI checks whether both are available in the required time window. If there's a conflict, it flags it or finds an alternative slot.</div>
+      </div>
+      <div class="auc">
+        <div class="auc-icon">⚠️</div>
+        <div class="auc-title">AI cannot verify that work order data is accurate</div>
+        <div class="auc-desc">If the work order says a job takes 2 hours but it actually takes 3 hours because the product is more complex than previous runs, the AI schedules for 2 hours. If the material quantity on the work order is wrong, the AI doesn't know. Data quality in the work order directly determines schedule quality.</div>
+      </div>
+      <div class="auc">
+        <div class="auc-icon">🔢</div>
+        <div class="auc-title">AI tracks work order status to monitor production</div>
+        <div class="auc-desc">As workers complete each step and update the work order status, AI systems can monitor progress across all active work orders simultaneously — flagging jobs that are running behind, predicting which ones are at risk of missing their deadline, and alerting supervisors when intervention may be needed.</div>
+      </div>
+      <div class="auc">
+        <div class="auc-icon">🧠</div>
+        <div class="auc-title">AI learns from closed work orders over time</div>
+        <div class="auc-desc">When a work order is completed and closed, the actual times recorded for each step become training data for the AI. Over thousands of completed work orders, the AI develops increasingly accurate time estimates — making future schedules more realistic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Goes Wrong When Work Order Fields Are Wrong or Missing</h2>
+    <p>A work order is only useful if its information is accurate and complete. Missing fields, wrong estimates, or outdated specs cause real, costly problems on the floor — and they cascade through the AI scheduling system too, because the AI plans from whatever data it's given.</p>
+    <p>Test yourself on the scenarios below: each one shows a work order with a specific error. Identify what the most likely consequence will be on the production floor.</p>
+
+    <div class="error-sim">
+      <div class="es-label">Error Spotting Simulation</div>
+      <div class="es-title">What Happens When Work Order Data Is Wrong?</div>
+      <div class="es-sub">Each scenario shows a work order field with an error (underlined in red). Identify the most likely real-world consequence on the production floor.</div>
+      <div class="es-progress" id="es-progress">Scenario 1 of 5</div>
+      <div class="es-wo">
+        <div class="es-wo-title" id="es-wo-title"></div>
+        <div class="es-fields-mini" id="es-fields-mini"></div>
+      </div>
+      <div class="es-question" id="es-question"></div>
+      <div class="es-opts" id="es-opts"></div>
+      <div class="es-fb good" id="es-good"></div>
+      <div class="es-fb bad" id="es-bad"></div>
+      <button class="es-next" id="es-next" onclick="nextEs()">Next Scenario →</button>
+      <div class="es-score" id="es-score">
+        <div class="es-score-num" id="es-score-num"></div>
+        <div class="es-score-text" id="es-score-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-box">
+      <div class="quiz-label">Quick Check</div>
+      <div class="quiz-q">An AI scheduling system generates a weekly plan. The plan shows Job WO-2211 scheduled for Wednesday on Press Station 2, with an estimated completion time of 4 hours. However, a production planner knows that the last three times this type of job ran on that machine, it took 5.5–6 hours. The work order's time estimate hasn't been updated. What should the planner do?</div>
+      <div class="quiz-opts" id="q1-opts">
+        <button class="quiz-opt" onclick="doQ(0,false,'q1')">Trust the AI's estimate — it has access to more historical data than the planner remembers</button>
+        <button class="quiz-opt" onclick="doQ(1,true,'q1')">Update the work order's time estimate to reflect the real historical performance, re-run the schedule so the AI works from accurate data, and check whether the updated timeline still meets the Wednesday deadline</button>
+        <button class="quiz-opt" onclick="doQ(2,false,'q1')">Add a buffer by scheduling another job on Press Station 2 for Thursday instead of Wednesday, without changing the work order estimate</button>
+        <button class="quiz-opt" onclick="doQ(3,false,'q1')">Accept the 4-hour estimate for now and adjust after the job runs if it's late</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The AI plans from the data in the system — if the work order says 4 hours, the AI schedules for 4 hours. When the real time is 5.5–6 hours, the AI's schedule is built on a false premise. The right action is fixing the data first, then re-running the schedule so the AI can build a plan that actually reflects reality. Planners who notice gaps between system data and floor reality and fix the data upstream are protecting every future schedule that job appears in.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ The AI can only work with the data it's given. If the work order says 4 hours and reality is 5.5–6 hours, the AI will generate a schedule that looks valid but will fall behind every time this job runs. The fix isn't downstream — it's upstream. Update the estimate in the work order so the AI (and every planner after you) is working from accurate data. This is one of the most important data quality habits in AI-assisted manufacturing planning.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A work order is the official document that authorizes and describes every manufacturing job. Nothing gets made — and nothing gets scheduled — without one.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Work orders travel through a chain: customer purchase order → sales order → work order → production floor. Each step adds specificity and detail.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Every field on a work order serves a purpose. Product specs define what's made. Quantity drives machine time calculations. Due date anchors the backward schedule. Process route sets the dependency chain. Material requirements trigger warehouse pulls.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI scheduling tools read work orders as their primary input. They plan exactly as well as the work order data allows — and no better. Wrong estimates, missing specs, or outdated process routes produce flawed schedules regardless of how sophisticated the AI is.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Keeping work order data accurate — especially time estimates and material requirements — is one of the highest-leverage habits for anyone working in AI-assisted manufacturing planning.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// ── Annotated Work Order ──
+const woFields=[
+  {
+    label:'Product / Part',
+    value:'Aluminum Mounting Plate — Part # AMP-7731-B · Rev. 3',
+    annLabel:'What This Field Means',
+    annText:'This tells workers exactly what product is being made, down to the specific part number and revision. "Rev. 3" means this is the third version of this design — not Rev. 1, not Rev. 2. Engineers update revisions when specifications change. If a worker pulls Rev. 2 drawings instead of Rev. 3, they could machine the wrong dimensions and produce 500 defective parts.',
+    annWhy:'Why precision matters: Part numbers prevent ambiguity across products that look similar. Revision numbers prevent workers from using outdated specifications. AI systems use part numbers to pull the correct process route and time estimates automatically.'
+  },
+  {
+    label:'Customer',
+    value:'Apex Robotics Corp. · PO #: APX-88214 · Sales Order: SO-7741',
+    annLabel:'What This Field Means',
+    annText:'This links the work order back to the specific customer and their purchase order. If a quality issue is discovered mid-run, the team needs to know which customer is affected, so they can communicate proactively. The PO number is the customer\'s reference number — essential for shipping documentation and invoicing. The SO number is the internal reference.',
+    annWhy:'Why it matters: Without this link, a production team might not know that the parts they\'re making go to a high-value relationship account — information that can change how urgently a problem is escalated. AI systems use customer priority data (when entered) to weight scheduling decisions.'
+  },
+  {
+    label:'Quantity',
+    value:'100 units (order quantity: 100 · scrap allowance: 3 units · total to produce: 103)',
+    annLabel:'What This Field Means',
+    annText:'The customer ordered 100 units. But a good work order also specifies a scrap allowance — extra units to produce, because some will inevitably be rejected during inspection. Here, 3 extra units are authorized. So the team produces 103 and delivers 100 good ones. If the scrap allowance isn\'t on the work order, a team that hits its defect rate might end up short on deliverable units with no authorized way to make more quickly.',
+    annWhy:'Why it matters: Scrap allowance affects material pulls (you need raw material for 103 units, not 100), machine time estimates, and cost calculations. AI scheduling tools use the total-to-produce number — not the order quantity — when calculating how long a job will take.'
+  },
+  {
+    label:'Due Date / Priority',
+    value:'Monday, April 14, 2025 · 3:00 PM · Priority: HIGH (same-day customer pickup)',
+    annLabel:'What This Field Means',
+    annText:'This is the hard deadline — the moment by which the finished, inspected, and packaged product must be ready. "3:00 PM" is more specific than just "Monday" — it means final inspection must be signed off before 3 PM, not just by end of day. The priority flag (HIGH) tells anyone looking at the schedule that this job should be protected if disruptions require tradeoff decisions.',
+    annWhy:'Why it matters: AI scheduling tools sort and sequence jobs by due date and priority. A job flagged HIGH will be protected when a machine breakdown forces re-planning. If the due date is entered incorrectly (even by one day), the AI schedules the job later than it should be — and the delivery is late.'
+  },
+  {
+    label:'Process Route',
+    value:'Step 1: CNC Mill — Rough Cut · Step 2: CNC Mill — Drill & Contour · Step 3: Deburring Station · Step 4: Quality Inspection · Step 5: Package & Label',
+    annLabel:'What This Field Means',
+    annText:'The process route is the exact sequence of operations required to produce this part, in the order they must occur. Each step names the operation and the type of machine or station where it happens. This is the dependency chain made explicit: Step 2 cannot begin until Step 1 is complete. Step 4 (inspection) cannot begin until Step 3 (deburring) is done. AI scheduling tools read this field to understand the job\'s internal sequence constraints.',
+    annWhy:'Why it matters: If the process route is wrong — for example, if the quality inspection step is listed after packaging instead of before — workers following the work order will produce and package parts that haven\'t been inspected. The error is in the document, not the worker\'s judgment.'
+  },
+  {
+    label:'Machines Required',
+    value:'CNC Mill (M1) — Steps 1 & 2 · Deburring Station (M2) — Step 3 · Inspection Area — Step 4',
+    annLabel:'What This Field Means',
+    annText:'This specifies which machines and stations are needed for each step. Some steps can run on multiple machine options (e.g., "CNC Mill A or CNC Mill B"); others require a specific machine with specific capabilities. This field is what the AI scheduling system uses to check machine availability and assign time slots. If the wrong machine is listed, the AI might schedule the job on equipment that can\'t actually perform the required operation.',
+    annWhy:'Why it matters: Machine availability is one of the first things an AI checks when building a schedule. If CNC Mill M1 is the only machine capable of the precision required for this part, the AI needs to know that — otherwise it might assign the job to a lower-precision machine that would produce out-of-tolerance parts.'
+  },
+  {
+    label:'Materials Required',
+    value:'6061 Aluminum Sheet — 4mm thickness — 22 sq ft (includes scrap allowance) · M5 stainless bolts — 200 units · Protective foam packaging — 2 rolls',
+    annLabel:'What This Field Means',
+    annText:'This field lists every material, component, and supply needed to complete the job — including packaging materials. When the work order is released, the warehouse team uses this list to pull materials and stage them near the machine before the job starts. The quantities include the scrap allowance, so the team doesn\'t run short mid-job. If a material is missing from this list, workers discover the gap when they arrive at the machine and find they don\'t have what they need.',
+    annWhy:'Why it matters: Materials availability is one of the top causes of mid-job stoppages. AI scheduling systems that connect to inventory management check this field against current stock levels. If 22 sq ft of 6061 aluminum isn\'t in stock, the AI should flag the job as "materials not confirmed" rather than scheduling it as though it can run.'
+  },
+  {
+    label:'Assigned Workers / Team',
+    value:'Step 1–2: Alex R. (CNC Certified, Senior) · Step 3: Sam K. (Deburring Certified) · Step 4: Riley M. (Inspection Certified — available after 9 AM) · Step 5: Any available worker',
+    annLabel:'What This Field Means',
+    annText:'This field names specific workers or specifies certification requirements for each step. Some steps require specific certifications (CNC, welding, inspection). Others can be done by any qualified worker. When specific workers are named, the schedule is built around their availability. "Riley M. — available after 9 AM" is a constraint that flows directly into the schedule: nothing that requires Riley can be scheduled in the first time slot.',
+    annWhy:'Why it matters: Worker certifications are a hard constraint — you cannot assign an uncertified worker to a step that requires certification, regardless of production pressure. AI systems check certification databases when assigning workers. But as we\'ve covered, they can\'t see that a worker is newly certified and still building speed — that\'s human judgment territory.'
+  },
+  {
+    label:'Time Estimates per Step',
+    value:'Step 1: 2.5 hrs · Step 2: 1.5 hrs · Step 3: 2.0 hrs · Step 4: 1.0 hr · Step 5: 0.5 hr · Total: 7.5 hrs',
+    annLabel:'What This Field Means',
+    annText:'Each step has a time estimate — how long it should take based on the quantity being produced, the operation complexity, and historical data. These estimates are the backbone of the schedule. If Step 1 is estimated at 2.5 hours, the AI schedules Step 2 to start 2.5 hours later (on the same or next available machine). If the estimate is wrong — even by 30 minutes — every downstream step shifts accordingly.',
+    annWhy:'Why it matters: Time estimates are often the weakest link in work order data quality. Standard estimates are based on averages, but real performance varies. New workers run slower. Machines wear. Complex setups take longer. AI systems learn from actual completion times across thousands of past work orders — which is why closing out work orders promptly and accurately (recording real times) directly improves future schedule accuracy.'
+  },
+  {
+    label:'Quality / Inspection Notes',
+    value:'Dimensional tolerance: ±0.15mm on all mounting holes · Surface finish: 32 Ra or better · No burrs on inner face · Inspector sign-off required before Step 5 · Customer PO specifies first-article inspection on Unit #1',
+    annLabel:'What This Field Means',
+    annText:'This section carries the quality requirements that workers and inspectors must verify. Tolerances define acceptable dimensional variation. Surface finish ratings specify smoothness. "No burrs on inner face" is a customer-specific requirement. "First-article inspection" means Unit #1 must be fully measured and documented before the remaining 102 units run — a common requirement for new customer parts to confirm the process is set up correctly.',
+    annWhy:'Why it matters: Quality requirements that aren\'t on the work order don\'t get checked. If the customer specified "no burrs on inner face" verbally but it\'s not on the work order, the deburring operator doesn\'t know — and parts ship with burrs that violate the customer\'s spec. Work orders are the quality control system\'s starting point, not an afterthought.'
+  }
+];
+
+let activeField=null;
+const fieldsEl=document.getElementById('wo-fields');
+woFields.forEach((f,i)=>{
+  const div=document.createElement('div');
+  div.className='wo-field';
+  div.id='wof-'+i;
+  div.innerHTML=`<div class="wo-field-label">${f.label}</div><div class="wo-field-value">${f.value}</div>`;
+  div.onclick=()=>{
+    if(activeField===i){
+      div.classList.remove('active');
+      document.getElementById('wo-annotation').classList.remove('show');
+      activeField=null;return;
+    }
+    document.querySelectorAll('.wo-field').forEach(el=>el.classList.remove('active'));
+    div.classList.add('active');
+    document.getElementById('ann-label').textContent=f.annLabel;
+    document.getElementById('ann-text').textContent=f.annText;
+    document.getElementById('ann-why').textContent=f.annWhy;
+    document.getElementById('wo-annotation').classList.add('show');
+    activeField=i;
+  };
+  fieldsEl.appendChild(div);
+});
+
+// ── Error Simulation ──
+const errorScenarios=[
+  {
+    title:'Work Order WO-3301 — Precision Steel Shaft',
+    fields:[
+      {label:'Product',val:'Steel Drive Shaft — Part # DS-4412',error:false},
+      {label:'Quantity',val:'50 units + 2 scrap allowance',error:false},
+      {label:'Due Date',val:'Wednesday April 9 · 5:00 PM',error:false},
+      {label:'Materials',val:'<span class="es-field-val error" title="Error here">4140 Carbon Steel Rod — 30mm diameter — 25 linear feet</span>',error:true},
+      {label:'Step 1 Est.',val:'Lathe turning: 4 hours',error:false},
+    ],
+    errorExplain:'The material listed is 25 linear feet of 30mm rod. The actual job requires 38 linear feet (the estimate was based on an older, shorter shaft spec — the part was redesigned 6 months ago but the work order template wasn\'t updated).',
+    question:'What will most likely happen on the production floor when this work order runs?',
+    opts:['The job will run without issue — material estimates are rarely exactly correct','The warehouse team will stage 25 feet of material. Midway through the lathe operation, the team runs out of rod. The job stops. Purchasing scrambles to source an additional 13 feet urgently — likely at a higher rush price, and with a delay that risks the Wednesday deadline.','Workers will notice the discrepancy and automatically order more material before starting','The AI scheduling system will flag the material shortage before the job runs'],
+    correct:1,
+    good:'✅ Correct. Warehouse pulls exactly what the work order says — 25 feet. Workers start the job. Partway through, they run out of material. Everything stops while purchasing sources an emergency supply. Rush orders from suppliers cost more and arrive later. The Wednesday deadline is now at risk. This is one of the most common and most preventable planning failures — a work order template that wasn\'t updated when the part spec changed.',
+    bad:'❌ Warehouse teams pull exactly what the work order specifies — not more, not less. When the material listed (25 feet) is less than what the job actually needs (38 feet), the job stalls mid-run. This is a very common work order error — part specs change, but template updates lag behind. The fix is a systematic process for reviewing work order material quantities whenever a product design is revised.'
+  },
+  {
+    title:'Work Order WO-3412 — Welded Steel Frame',
+    fields:[
+      {label:'Product',val:'Custom Steel Frame — Part # CSF-900',error:false},
+      {label:'Quantity',val:'20 units',error:false},
+      {label:'Process Route',val:'Step 1: Cut → Step 2: Weld → <span class="es-field-val error" title="Error here">Step 3: Package → Step 4: Weld Inspection</span>',error:true},
+      {label:'Due Date',val:'Thursday April 10 · 2:00 PM',error:false},
+    ],
+    errorExplain:'The process route lists packaging (Step 3) before weld inspection (Step 4). Workers will follow the work order sequence exactly — packaging the frames before the inspector has checked the welds.',
+    question:'What is the most likely consequence of this sequencing error in the process route?',
+    opts:['Nothing — workers know that inspection always comes before packaging and will automatically do it in the right order','All 20 frames will be packaged before the weld inspector checks them. If any welds fail inspection, the frames must be unpackaged, reworked, and repackaged — at significant extra cost and time. The packaging materials used on rejected frames are wasted.','The AI scheduling system will catch the sequencing error and correct it automatically','The weld inspector will refuse to inspect until the frames are unpackaged, causing a work stoppage'],
+    correct:1,
+    good:'✅ Correct. Workers are trained to follow work orders — that\'s how consistent quality is maintained. If the work order says Step 3 is packaging, they package. The weld inspector, arriving for Step 4, finds boxed frames that need to be opened. Any defective welds mean unboxing, reworking, and reboxing. Packaging materials for bad units are wasted. This is a document error that has real floor consequences — and it\'s the work order author\'s responsibility to catch it before release.',
+    bad:'❌ Workers follow the work order sequence. That\'s the system — it\'s how quality and consistency are maintained across shifts and across workers. If the work order says package before inspect, workers will package before inspect. Process route errors in work orders are dangerous precisely because workers are doing exactly what they\'re supposed to do. The error is in the document, not the behavior.'
+  },
+  {
+    title:'Work Order WO-3588 — Aluminum Housing',
+    fields:[
+      {label:'Product',val:'Aluminum Housing — Part # ALH-22C',error:false},
+      {label:'Quantity',val:'150 units',error:false},
+      {label:'Assigned Worker (Step 2)',val:'<span class="es-field-val error" title="Error here">Jordan P. — CNC Certified</span>',error:true},
+      {label:'Step 2 Est.',val:'CNC contour milling: 3 hours',error:false},
+      {label:'Due Date',val:'Friday April 11 · 4:00 PM',error:false},
+    ],
+    errorExplain:'Jordan P. is listed as "CNC Certified" on the work order. However, Jordan\'s certification expired 3 months ago and hasn\'t been renewed. The HR system hasn\'t been updated, so the work order system still shows Jordan as certified.',
+    question:'What risk does this create for the production floor?',
+    opts:['No risk — CNC certifications don\'t technically expire, they just need to be renewed at some point','Jordan may operate the CNC machine on a job they\'re no longer formally authorized for — creating a compliance issue, a potential safety liability, and possibly a quality problem if Jordan\'s skills have lapsed. If the customer or a regulatory auditor later reviews the work order, the expired certification is a traceability violation.','Jordan will notice their certification has expired and will refuse to run the job','The AI system will automatically pull Jordan off the schedule when it detects the expired certification'],
+    correct:1,
+    good:'✅ Correct. Jordan probably doesn\'t know the certification lapsed — expired certifications aren\'t always communicated proactively. Jordan runs the job because the work order says they\'re certified. The machine runs. But if anything goes wrong — a quality issue, an injury, an audit — the documentation trail shows an expired certification performing certified work. That\'s a compliance failure. And if the AI scheduling system reads stale HR data, it will keep assigning Jordan to CNC jobs indefinitely. Keeping certification databases current is an HR and operations quality control issue with direct production consequences.',
+    bad:'❌ The risk here is compliance and quality traceability. Jordan isn\'t being dishonest — they\'re following the work order, which says they\'re assigned and certified. But if the certification is expired, the documented record of this job shows uncertified work being performed. In regulated industries (aerospace, medical, automotive), that\'s a traceability violation. And the AI keeps scheduling Jordan for CNC work because the system data is stale. The fix is HR data hygiene — certifications must be updated promptly in every connected system.'
+  },
+  {
+    title:'Work Order WO-3721 — Medical Device Component',
+    fields:[
+      {label:'Product',val:'Stainless Steel Valve Body — Part # VB-112 (medical grade)',error:false},
+      {label:'Quantity',val:'30 units + 2 scrap allowance',error:false},
+      {label:'Process Route',val:'Cut → Turn → Drill → Polish → Package',error:false},
+      {label:'Quality Notes',val:'<span class="es-field-val error" title="Error here">(blank — no quality requirements listed)</span>',error:true},
+      {label:'Due Date',val:'Tuesday April 8 · 11:00 AM',error:false},
+    ],
+    errorExplain:'This is a medical grade valve body — a component that goes inside a medical device. The quality requirements section is blank. For standard commercial parts, this might be acceptable. For a medical device component, this is a serious documentation failure.',
+    question:'What is the most significant consequence of blank quality notes on a medical-grade part?',
+    opts:['No real consequence — experienced workers know what quality standards to apply to medical parts','The production team has no documented specifications to inspect against. Inspectors cannot confirm what "acceptable" means — tolerances, surface finish, cleanliness standards. Even if parts are made correctly, the work order provides no quality verification record. In a medical device audit, missing quality documentation can result in product recall, regulatory action, and facility shutdown.','The parts will be rejected by the customer for visual reasons','The AI system will generate quality requirements automatically for medical parts'],
+    correct:1,
+    good:'✅ Correct. In medical device manufacturing, the work order quality notes aren\'t optional — they\'re the documented traceability record that regulators examine during audits. "We knew what the standards were" is not sufficient. The standards must be documented on the work order, signed off by inspectors, and archived. Blank quality notes on a medical part mean the facility cannot prove it met any standard — even if the parts are perfect. This can trigger FDA inspection findings, product holds, or recall if devices are already in the field.',
+    bad:'❌ For a medical-grade component, blank quality documentation isn\'t a minor gap — it\'s a regulatory compliance failure. FDA regulations (and equivalent international standards) require that every quality check be documented against a specified standard. "The team knew the standard" doesn\'t satisfy an auditor. The work order is the traceability document — it must show what was required, that it was checked, and who signed off. Missing quality notes on medical parts can trigger regulatory consequences that far exceed the cost of writing them correctly.'
+  },
+  {
+    title:'Work Order WO-3850 — Bracket Assembly',
+    fields:[
+      {label:'Product',val:'Welded Bracket Assembly — Part # WBA-55',error:false},
+      {label:'Quantity',val:'200 units',error:false},
+      {label:'Step 3 Time Estimate',val:'<span class="es-field-val error" title="Error here">Welding: 1.5 hours total</span>',error:true},
+      {label:'Process Route',val:'Cut → Press Bend → Weld → Inspect → Package',error:false},
+      {label:'Due Date',val:'Thursday April 10',error:false},
+    ],
+    errorExplain:'The welding step is estimated at 1.5 hours total for 200 units. That\'s 27 seconds per unit. But the actual weld on this part requires 3 separate weld beads per unit, each taking approximately 90 seconds with proper cooling time — about 7.5 minutes per unit, or 25 hours total. The estimate is off by a factor of 16.',
+    question:'What happens to the production schedule built on this work order?',
+    opts:['The schedule might run a little long but will generally be okay','The AI schedules 1.5 hours for the weld step. In reality the weld step takes 25 hours. The entire downstream schedule — inspection, packaging, and every other job scheduled on those machines after this one — collapses. Thursday\'s deadline is missed by days. Every job that was scheduled after WO-3850 on those machines is also delayed.','Workers will notice the estimate is wrong and report it to planning before starting','The AI will detect the error in real-time and adjust the schedule as the job runs'],
+    correct:1,
+    good:'✅ Correct — and this scenario, while extreme, reflects a real pattern. Time estimate errors compound. A wildly optimistic estimate doesn\'t just affect this one job — it cascades into every job scheduled behind it on those machines. The AI built a confident, conflict-free schedule on a false premise. When the weld step takes 25 hours instead of 1.5, everything after it shifts — and the further into the week those jobs are, the more customers are affected. Time estimate accuracy is foundational to AI scheduling quality.',
+    bad:'❌ When an AI builds a schedule around a time estimate that\'s off by a factor of 16, the entire downstream schedule collapses at that step. Every job behind WO-3850 on the welding equipment was scheduled to start after 1.5 hours. They\'ll actually wait 25 hours. That delay cascades forward through every job that depended on those machines being free on schedule. Time estimates are not cosmetic — they\'re the structural foundation of the schedule.'
+  }
+];
+
+let esIdx=0,esScore=0,esDone=false;
+function renderEs(){
+  const s=errorScenarios[esIdx];
+  document.getElementById('es-progress').textContent=`Scenario ${esIdx+1} of ${errorScenarios.length}`;
+  document.getElementById('es-wo-title').textContent=s.title;
+  const fm=document.getElementById('es-fields-mini');fm.innerHTML='';
+  s.fields.forEach(f=>{
+    const div=document.createElement('div');div.className='es-field';
+    div.innerHTML=`<span class="es-field-label">${f.label}:</span><span class="es-field-val">${f.val}</span>`;
+    fm.appendChild(div);
+  });
+  document.getElementById('es-question').textContent=s.question;
+  const opts=document.getElementById('es-opts');opts.innerHTML='';
+  s.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='es-opt';b.textContent=o;
+    b.onclick=()=>doEs(i);opts.appendChild(b);
+  });
+  document.getElementById('es-good').className='es-fb good';
+  document.getElementById('es-bad').className='es-fb bad';
+  document.getElementById('es-next').className='es-next';
+  esDone=false;
+}
+function doEs(i){
+  if(esDone)return;esDone=true;
+  const s=errorScenarios[esIdx];
+  const btns=document.querySelectorAll('#es-opts .es-opt');
+  btns.forEach(b=>b.disabled=true);
+  if(i===s.correct){btns[i].classList.add('correct');document.getElementById('es-good').textContent='✅ '+s.good;document.getElementById('es-good').classList.add('show');esScore++;}
+  else{btns[i].classList.add('wrong');document.getElementById('es-bad').textContent='❌ '+s.bad;document.getElementById('es-bad').classList.add('show');}
+  if(esIdx<errorScenarios.length-1)document.getElementById('es-next').classList.add('show');
+  else showEsScore();
+}
+function nextEs(){esIdx++;renderEs();}
+function showEsScore(){
+  const sc=document.getElementById('es-score');sc.classList.add('show');
+  document.getElementById('es-score-num').textContent=`${esScore} / ${errorScenarios.length}`;
+  let t='';
+  if(esScore===5)t='Perfect. You can identify work order errors before they reach the floor — that\'s a skill that prevents expensive, cascading production failures.';
+  else if(esScore>=3)t='Strong performance. Review the scenarios you missed — each reveals a category of work order error that causes real, costly production problems.';
+  else t='These are tricky scenarios that reflect genuine production floor failures. Review each explanation carefully — work order quality is foundational to AI scheduling quality.';
+  document.getElementById('es-score-text').textContent=t;
+}
+renderEs();
+
+const qDone={};
+function doQ(idx,correct,qid){
+  if(qDone[qid])return;qDone[qid]=true;
+  const opts=document.querySelectorAll(`#${qid}-opts .quiz-opt`);
+  opts.forEach(b=>b.disabled=true);
+  opts[idx].classList.add(correct?'correct':'wrong');
+  document.getElementById(`${qid}-${correct?'good':'bad'}`).classList.add('show');
+}
+</script>
+</body>
+</html>

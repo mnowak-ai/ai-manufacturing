@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Gantt Chart and How Do Manufacturers Use It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--teal:#0D9488;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+/* gantt */
+.gantt-wrap{border:2px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:28px 0;box-shadow:0 2px 16px rgba(123,47,190,.08);}
+.gantt-hdr{background:var(--purple-dark);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.gantt-hdr-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:#fff;}
+.gantt-hdr-sub{font-size:11px;color:rgba(255,255,255,.7);font-weight:600;}
+.gantt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.gtable{border-collapse:collapse;width:100%;min-width:600px;}
+.gtable th{background:var(--gray-soft);padding:9px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);text-align:center;border-right:1px solid var(--purple-mid);border-bottom:2px solid var(--purple-mid);white-space:nowrap;}
+.gtable th:first-child{text-align:left;padding-left:14px;min-width:110px;}
+.gtable td{border-right:1px solid var(--purple-mid);border-bottom:1px solid var(--purple-mid);padding:5px 3px;height:48px;text-align:center;vertical-align:middle;}
+.gtable td:first-child{text-align:left;padding:10px 14px;font-size:12px;font-weight:700;color:var(--purple-dark);background:var(--white);min-width:110px;}
+.gtable tr:last-child td{border-bottom:none;}
+.gtable td:last-child,.gtable th:last-child{border-right:none;}
+.gbar{display:inline-block;width:93%;border-radius:7px;padding:5px 5px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;line-height:1.3;}
+.gbar.a{background:var(--purple);}
+.gbar.b{background:#3B82F6;}
+.gbar.c{background:var(--teal);}
+.gbar.d{background:var(--orange);}
+.gbar.e{background:var(--green);}
+.gantt-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px;background:var(--gray-soft);border-top:1px solid var(--purple-mid);}
+.gl-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--gray-text);}
+.gl-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+/* explorer */
+.explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ex-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ex-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ex-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ex-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ex-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-muted);transition:all .2s;}
+.ex-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-pale);}
+.ex-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.ex-panel{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:20px 24px;display:none;}
+.ex-panel.show{display:block;}
+.ex-panel-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.ex-panel-body{font-size:14px;line-height:1.85;color:var(--gray-text);margin-bottom:12px;}
+.ex-example{background:var(--purple-pale);border-left:3px solid var(--purple);padding:11px 15px;border-radius:0 10px 10px 0;font-size:13px;color:var(--purple-dark);line-height:1.65;}
+.ex-example b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;color:var(--purple);}
+/* dep flow */
+.dep-flow{display:flex;align-items:center;flex-wrap:wrap;margin:20px 0;gap:0;row-gap:10px;}
+.dep-box{border-radius:12px;padding:12px 14px;text-align:center;border:2px solid;min-width:88px;}
+.dep-box.done{background:#F0FFF4;border-color:var(--green);}
+.dep-box.now{background:var(--purple-pale);border-color:var(--purple);}
+.dep-box.blk{background:var(--red-pale);border-color:var(--red);opacity:.7;}
+.dep-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.dep-box.done .dep-lbl{color:var(--green);}
+.dep-box.now .dep-lbl{color:var(--purple);}
+.dep-box.blk .dep-lbl{color:var(--red);}
+.dep-name{font-weight:700;font-size:13px;color:var(--gray-text);}
+.dep-arr{font-size:22px;color:var(--purple-mid);padding:0 6px;flex-shrink:0;}
+/* quiz */
+.quiz-wrap{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.quiz-sub{font-size:14px;color:var(--gray-muted);margin-bottom:16px;line-height:1.6;}
+.quiz-prog{font-size:12px;color:var(--gray-muted);margin-bottom:12px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.35;}
+.quiz-opts{display:flex;flex-direction:column;gap:9px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:11px;padding:13px 17px;font-size:13px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:#F0FFF4;border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:11px;font-size:13px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:#F0FFF4;border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.quiz-next-btn{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:12px;display:none;}
+.quiz-next-btn.show{display:inline-block;}
+.quiz-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:20px 24px;display:none;margin-top:14px;}
+.quiz-score.show{display:block;}
+.quiz-score-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--purple-dark);}
+.quiz-score-msg{font-size:14px;line-height:1.7;color:var(--gray-text);margin-top:6px;}
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 &middot; Job Planning</div>
+  <h1>What Is a Gantt Chart and How Do Manufacturers Use It?</h1>
+  <p class="hero-sub">You've seen them in the lesson slides — those colorful horizontal bar charts showing tasks across a timeline. This article explains every part of a Gantt chart, how to read one in under a minute, and why AI scheduling tools still use the same format invented over 100 years ago.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+<div class="section fade-in">
+  <h2>A Chart Invented Before World War I — Still Used Everywhere</h2>
+  <p>The Gantt chart was invented by Henry Gantt, an American mechanical engineer, around 1910. He created it to give factory managers a simple visual way to track production schedules — to see at a glance what was happening, what was running late, and what was coming up next.</p>
+  <p>More than a century later, Gantt charts are still the primary visual tool for production scheduling in manufacturing. AI scheduling tools — like the one shown in your lesson slides — display their output as Gantt charts. If you can read one, you can read any AI-generated production plan.</p>
+  <div class="pull-quote"><p>A Gantt chart turns a complex schedule into something you can understand in 30 seconds. That's why every generation of manufacturing technology — from paper boards to AI — keeps using them.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Basic Structure: Two Axes, One Big Picture</h2>
+  <p>Every Gantt chart has the same structure. The <mark>horizontal axis (left to right)</mark> represents <strong>time</strong> — moving right means moving forward. The <mark>vertical axis (top to bottom)</mark> represents <strong>resources being scheduled</strong> — usually machines, each getting its own row.</p>
+  <p>The <mark>bars</mark> are the heart of the chart. Each colored bar is one task. The bar's <strong>left edge</strong> = start time. <strong>Right edge</strong> = end time. <strong>Length</strong> = how long it takes. <strong>Row</strong> = which machine runs it.</p>
+  <p>Here is a full-week manufacturing schedule. Study it — then we'll explore every element interactively below.</p>
+
+  <div class="gantt-wrap">
+    <div class="gantt-hdr">
+      <span class="gantt-hdr-title">Facility B — Weekly Production Schedule</span>
+      <span class="gantt-hdr-sub">Monday through Friday &middot; Day Shift Only</span>
+    </div>
+    <div class="gantt-scroll">
+      <table class="gtable">
+        <thead>
+          <tr>
+            <th>Machine</th><th>Mon AM</th><th>Mon PM</th><th>Tue AM</th><th>Tue PM</th>
+            <th>Wed AM</th><th>Wed PM</th><th>Thu AM</th><th>Thu PM</th><th>Fri AM</th><th>Fri PM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Laser Cutter</td>
+            <td><span class="gbar a">WO-1187</span></td><td><span class="gbar a">WO-1187</span></td>
+            <td></td><td><span class="gbar b">WO-1201</span></td>
+            <td><span class="gbar b">WO-1201</span></td><td></td>
+            <td><span class="gbar c">WO-1215</span></td><td><span class="gbar c">WO-1215</span></td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td>Press Station 2</td>
+            <td></td><td></td>
+            <td><span class="gbar a">WO-1187</span></td><td><span class="gbar a">WO-1187</span></td>
+            <td></td><td><span class="gbar b">WO-1201</span></td>
+            <td></td><td><span class="gbar c">WO-1215</span></td>
+            <td><span class="gbar c">WO-1215</span></td><td></td>
+          </tr>
+          <tr>
+            <td>Welding Bay 1</td>
+            <td></td><td></td><td></td><td></td>
+            <td><span class="gbar a">WO-1187</span></td><td><span class="gbar a">WO-1187</span></td>
+            <td><span class="gbar d">WO-1195 &#x1F6A8;</span></td><td><span class="gbar d">WO-1195</span></td>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td>Coating Line C</td>
+            <td><span class="gbar e">WO-1180</span></td><td><span class="gbar e">WO-1180</span></td>
+            <td></td><td></td><td></td><td></td>
+            <td><span class="gbar a">WO-1187</span></td><td><span class="gbar b">WO-1201</span></td>
+            <td><span class="gbar c">WO-1215</span></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="gantt-legend">
+      <div class="gl-item"><div class="gl-dot" style="background:var(--purple)"></div>WO-1187 (Bracket BR-44)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#3B82F6"></div>WO-1201 (Housing)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--teal)"></div>WO-1215 (Frame)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--orange)"></div>WO-1195 (Rush &#x1F6A8;)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--green)"></div>WO-1180 (Carryover)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--gray-soft);border:1px solid var(--gray-muted)"></div>Empty = available</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Read Every Part of a Gantt Chart</h2>
+  <p>Let's explore each element so you can read any Gantt chart — whether hand-drawn, built in Excel, or generated by an AI scheduling tool.</p>
+  <div class="explorer">
+    <div class="ex-label">Interactive: Gantt Chart Elements</div>
+    <div class="ex-title">Click any element to learn what it means</div>
+    <div class="ex-sub">Understanding each part is what lets you evaluate an AI-generated schedule intelligently — not just accept it.</div>
+    <div class="ex-btns">
+      <button class="ex-btn" onclick="showEl('rows',this)">The Rows</button>
+      <button class="ex-btn" onclick="showEl('timeline',this)">The Timeline</button>
+      <button class="ex-btn" onclick="showEl('bars',this)">The Bars</button>
+      <button class="ex-btn" onclick="showEl('gaps',this)">The Gaps</button>
+      <button class="ex-btn" onclick="showEl('color',this)">Color Coding</button>
+      <button class="ex-btn" onclick="showEl('deps',this)">Dependencies</button>
+      <button class="ex-btn" onclick="showEl('flags',this)">Rush Flags</button>
+    </div>
+    <div class="ex-panel" id="ex-panel">
+      <div class="ex-panel-title" id="ex-title"></div>
+      <div class="ex-panel-body" id="ex-body"></div>
+      <div class="ex-example"><b>Real chart example</b><span id="ex-example"></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Is a Dependency? Why Task Order Is Locked</h2>
+  <p>A <mark>dependency</mark> is a relationship where one task cannot start until a previous task finishes. In manufacturing, dependencies come from the physical reality of how products are made. You can't weld before you cut. You can't coat before you weld. These aren't preferences — they're hard requirements the schedule must respect.</p>
+  <p>Here is WO-1187's dependency chain. Step 1 is done, Step 2 is running now, and Steps 3 and 4 are blocked until earlier steps finish:</p>
+  <div class="dep-flow">
+    <div class="dep-box done"><div class="dep-lbl">Step 1 Done</div><div class="dep-name">Laser Cut</div></div>
+    <div class="dep-arr">&#x2192;</div>
+    <div class="dep-box now"><div class="dep-lbl">Step 2 Now</div><div class="dep-name">Press Bend</div></div>
+    <div class="dep-arr">&#x2192;</div>
+    <div class="dep-box blk"><div class="dep-lbl">Step 3 Blocked</div><div class="dep-name">Weld</div></div>
+    <div class="dep-arr">&#x2192;</div>
+    <div class="dep-box blk"><div class="dep-lbl">Step 4 Blocked</div><div class="dep-name">Coat</div></div>
+  </div>
+  <p>This dependency chain creates the left-to-right sequence of purple bars in the chart above. Moving any bar earlier would violate a physical constraint. When AI re-plans after a disruption, it always respects these chains — it may adjust which time slot a job occupies, but never the order of steps within a job.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Chart Reading Practice</h2>
+  <p>Test your ability to read the schedule above. Scroll up to reference it if needed. Five questions, one correct answer each.</p>
+  <div class="quiz-wrap">
+    <div class="quiz-label">Practice Simulation</div>
+    <div class="quiz-title">Read the Chart to Answer Each Question</div>
+    <div class="quiz-sub">All questions are based on the weekly Gantt chart shown above.</div>
+    <div class="quiz-prog" id="quiz-prog">Question 1 of 5</div>
+    <div class="quiz-q" id="quiz-q"></div>
+    <div class="quiz-opts" id="quiz-opts"></div>
+    <div class="quiz-fb good" id="quiz-good"></div>
+    <div class="quiz-fb bad"  id="quiz-bad"></div>
+    <button class="quiz-next-btn" id="quiz-next" onclick="nextQ()">Next Question &#x2192;</button>
+    <div class="quiz-score" id="quiz-score">
+      <div class="quiz-score-num" id="quiz-score-num"></div>
+      <div class="quiz-score-msg" id="quiz-score-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Uses Gantt Charts</h2>
+  <p>When an AI scheduling tool generates a production plan, it outputs the result as a Gantt chart — because that's the format production managers already know how to read. The AI isn't inventing anything new. It's filling in a trusted, familiar format with optimized decisions.</p>
+  <p>Three things make AI-generated Gantt charts different from manually built ones. First, <strong>speed</strong> — a planner might spend 2-4 hours building a weekly schedule manually; the AI generates options in seconds. Second, <strong>automatic updates</strong> — when a machine breaks down, a human must recalculate every affected bar manually; AI regenerates the entire chart in real time. Third, <strong>optimization for goals</strong> — the AI can generate charts tuned to minimize overtime, protect key deadlines, or maximize machine utilization, and show you the tradeoffs between each option.</p>
+  <p>But a Gantt chart — AI-generated or not — is a <em>plan</em>. It shows what should happen. What actually happens depends on everything the chart can't see: the worker running slow today, the machine acting inconsistently, the customer who called with a changed requirement. Reading the chart is step one. Applying judgment to what you see is the skill that matters.</p>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">A Gantt chart has two axes: time (horizontal, left to right) and resources like machines (vertical, top to bottom). Each bar is one task — position shows when, length shows how long, row shows which machine.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Empty cells mean a machine is idle and available. Color coding lets you trace any job's full production journey — just follow the same color across rows to see every machine it visits in sequence.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">A dependency is when one task cannot start until another finishes. In manufacturing these are physical requirements — you can't weld before you cut, or coat before you weld.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI scheduling tools output Gantt charts — generated in seconds, updated automatically when disruptions occur, and optimized for specific goals like deadline protection or minimal overtime.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">A Gantt chart shows the plan. Your job is to spot what it can't show — the real-world conditions, floor context, and human judgment that determine whether the plan will actually work.</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var elements={
+  rows:{title:'The Rows — Each Row Is One Machine',body:'Every horizontal row in the chart represents one machine or resource. In the chart above there are four rows: Laser Cutter, Press Station 2, Welding Bay 1, and Coating Line C. Each row shows only the work assigned to that machine. Scanning all rows gives you a complete picture of every machine\'s entire week at a glance.',example:'Look at Press Station 2\'s row. It\'s idle Monday, runs WO-1187 all of Tuesday, picks up WO-1201 Wednesday afternoon, and WO-1215 Thursday afternoon. One row tells you that machine\'s complete week.'},
+  timeline:{title:'The Timeline — Reading Time Left to Right',body:'Columns represent time periods — here, half-day blocks (AM and PM) across Monday to Friday. Moving left = earlier; moving right = later. Every column represents the same amount of time, so a bar spanning two columns takes exactly twice as long as one spanning one. Compare durations just by comparing bar widths.',example:'WO-1187 uses the Laser Cutter for two columns (Mon AM + Mon PM) — one full day. Then two more columns on Press Station 2 (Tue AM + Tue PM). Follow the purple bars left to right and you see the full job timeline across the week.'},
+  bars:{title:'The Bars — Each Bar Is One Task',body:'Each colored bar is one scheduled task. Left edge = start time. Right edge = end time. Length = how long the task takes — longer bars take more time. The bar\'s row tells you which machine is running it, and the label inside shows which work order it belongs to.',example:'The purple WO-1187 bar on the Laser Cutter row: left edge at Mon AM, right edge at Mon PM. That means the laser cutting step for WO-1187 runs all day Monday on that machine. Simple and readable in one glance.'},
+  gaps:{title:'The Gaps — Idle Time and Opportunity',body:'Empty cells mean a machine has no job scheduled — it\'s idle and available. Gaps happen for several reasons: planned maintenance, handoff time between jobs, or simply no job assigned there yet. Planners and AI tools scan for gaps first when fitting in a new job or recovering from a disruption. A gap is an opportunity — but also a cost, since an idle machine isn\'t producing.',example:'Welding Bay 1 is empty Monday and Tuesday. That\'s an intentional dependency gap — WO-1187 parts aren\'t ready to weld until laser cutting (Monday) and pressing (Tuesday) are done. If a rush order arrived needing welding Monday, that gap is exactly where it would fit.'},
+  color:{title:'Color Coding — Tracking Jobs Across Machines',body:'Each work order gets its own color. By following one color across all rows you can trace a single job\'s complete journey through the facility — every machine it visits, in sequence, across the whole week. Color coding makes it fast to spot which jobs run simultaneously and where each one stands.',example:'Follow the purple bars: Laser Cutter on Monday, Press Station 2 on Tuesday, Welding Bay 1 on Wednesday, Coating Line C on Thursday. That\'s WO-1187\'s complete four-step route visible in one glance — just follow the color.'},
+  deps:{title:'Dependencies — Why Bars Must Stay in Sequence',body:'Not all bars can be freely moved on the timeline. A task that depends on a previous one being finished first is locked — it cannot be scheduled earlier than its predecessor allows. When AI re-plans after a disruption, it must respect all dependency chains. Moving one bar often means moving every bar that follows in the same chain.',example:'WO-1187\'s bars follow a strict left-to-right sequence: Laser Cut (Mon) then Press (Tue) then Weld (Wed) then Coat (Thu). The weld bar cannot move to Monday — the parts haven\'t been cut or pressed yet. Every dependency is a physical constraint no schedule can override.'},
+  flags:{title:'Rush Flags — Elevated Priority Jobs',body:'Rush orders and critical jobs are highlighted with special colors, emoji flags, or alert icons. These signals tell anyone reading the chart to protect this job\'s slot when re-planning decisions must be made. AI scheduling tools recognize priority signals and preserve flagged jobs when generating recovery plans after disruptions.',example:'WO-1195 with the alert flag in orange on Welding Bay 1 Thursday. That flag instantly communicates: protect this slot. Even if a disruption forces Thursday\'s schedule to shift, this job moves last. Human reviewers look for these flags immediately when evaluating any AI-generated re-plan.'}
+};
+
+var activeBtn=null;
+function showEl(key,btn){
+  if(activeBtn)activeBtn.classList.remove('active');
+  btn.classList.add('active');
+  activeBtn=btn;
+  var el=elements[key];
+  document.getElementById('ex-title').textContent=el.title;
+  document.getElementById('ex-body').textContent=el.body;
+  document.getElementById('ex-example').textContent=el.example;
+  document.getElementById('ex-panel').classList.add('show');
+}
+
+var questions=[
+  {q:'Which machine in the chart has at least one job scheduled every single day, Monday through Friday?',opts:['Laser Cutter','Press Station 2','Welding Bay 1','Coating Line C'],correct:3,good:'Correct! Coating Line C has a bar every day: WO-1180 on Monday and Tuesday, WO-1187 Thursday AM, WO-1201 Thursday PM, and WO-1215 Friday AM. The Laser Cutter is empty Tuesday AM and Wednesday PM. Press Station 2 is idle all of Monday and Wednesday AM. Welding Bay 1 is empty Monday, Tuesday, and Friday.',bad:'Look at Coating Line C — it has a bar every single day of the week. WO-1180 runs Monday and Tuesday, then three different jobs appear Thursday and Friday. The other machines each have at least one fully empty day.'},
+  {q:'WO-1187 (the purple job) passes through four machines. In what order does it visit them?',opts:['Press Station 2 → Laser Cutter → Coating Line C → Welding Bay 1','Laser Cutter → Press Station 2 → Welding Bay 1 → Coating Line C','Welding Bay 1 → Laser Cutter → Press Station 2 → Coating Line C','Coating Line C → Welding Bay 1 → Press Station 2 → Laser Cutter'],correct:1,good:'Correct! Follow the purple bars left to right — earlier = earlier in the process. Monday: Laser Cutter. Tuesday: Press Station 2. Wednesday: Welding Bay 1. Thursday: Coating Line C. Time flows left to right on a Gantt chart and the process sequence follows the same direction.',bad:'Follow the purple bars from left to right. Monday: Laser Cutter. Tuesday: Press Station 2. Wednesday: Welding Bay 1. Thursday: Coating Line C. Earlier bars = earlier steps in the process — that\'s the whole logic of the timeline axis.'},
+  {q:'Welding Bay 1 is completely empty Monday and Tuesday. What is the most likely reason?',opts:['Welding Bay 1 is broken and being repaired those two days','The welders have training sessions Monday and Tuesday','Welding Bay 1 is waiting on parts — WO-1187 must be laser cut and pressed before there is anything to weld','The planner forgot to schedule welding work early in the week'],correct:2,good:'Correct! Those empty slots are a dependency gap. WO-1187 must pass through the Laser Cutter on Monday and Press Station 2 on Tuesday before the parts are ready for welding. Welding Bay 1 physically cannot begin until those upstream steps are complete. The gap is intentional.',bad:'Those empty slots are a dependency gap, not an oversight. WO-1187 needs to pass through the Laser Cutter Monday and Press Station 2 Tuesday before any parts exist to weld. You cannot weld a part that hasn\'t been cut and pressed yet — the gap is built into the plan by the physical process sequence.'},
+  {q:'WO-1195 appears with an alert flag on Welding Bay 1 Thursday. What does that flag most likely communicate?',opts:['WO-1195 is the lowest-priority job and can be bumped if needed','WO-1195 is not approved yet and is pending sign-off','WO-1195 is a high-priority or rush order that should be protected when re-planning','A machine conflict was detected and WO-1195 needs to move'],correct:2,good:'Correct! The flag signals elevated priority — typically a rush order or critical customer deadline. It tells anyone reading the chart to protect this job\'s slot when disruptions force re-planning decisions. AI scheduling tools recognize these signals and preserve flagged jobs in recovery plans.',bad:'The flag is a priority signal, not a warning of a problem. It means this job is high-priority and should be the last one displaced when disruptions force re-planning. The special color and flag together communicate urgency clearly to any planner reading the chart.'},
+  {q:'A new urgent job arrives Friday morning needing Welding Bay 1 for one half-day. Which slot is the best available option?',opts:['Monday AM — Welding Bay 1 is empty then','Tuesday PM — also empty for Welding Bay 1','Wednesday AM — before WO-1187 starts in Welding Bay 1','Friday AM — Welding Bay 1 is open and the job just arrived'],correct:3,good:'Correct! Friday AM is open on Welding Bay 1 and since the job arrived Friday morning it can only be scheduled going forward. Monday and Tuesday are already in the past. Wednesday AM is committed to WO-1187\'s welding. Friday AM is the available slot.',bad:'The job just arrived Friday morning — it can only be scheduled going forward from now. Monday and Tuesday are in the past. Wednesday AM is already committed to WO-1187\'s welding step. Friday AM is the open slot on Welding Bay 1 for this new job.'}
+];
+
+var qIdx=0,score=0,answered=false;
+
+function renderQ(){
+  var q=questions[qIdx];
+  document.getElementById('quiz-prog').textContent='Question '+(qIdx+1)+' of '+questions.length;
+  document.getElementById('quiz-q').textContent=q.q;
+  var el=document.getElementById('quiz-opts');
+  el.innerHTML='';
+  q.opts.forEach(function(opt,i){
+    var btn=document.createElement('button');
+    btn.className='quiz-opt';
+    btn.textContent=opt;
+    btn.onclick=function(){answer(i);};
+    el.appendChild(btn);
+  });
+  document.getElementById('quiz-good').className='quiz-fb good';
+  document.getElementById('quiz-bad').className='quiz-fb bad';
+  document.getElementById('quiz-next').className='quiz-next-btn';
+  document.getElementById('quiz-score').className='quiz-score';
+  answered=false;
+}
+
+function answer(i){
+  if(answered)return;
+  answered=true;
+  var q=questions[qIdx];
+  var btns=document.querySelectorAll('#quiz-opts .quiz-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  if(i===q.correct){
+    btns[i].classList.add('correct');
+    document.getElementById('quiz-good').textContent='\u2705 '+q.good;
+    document.getElementById('quiz-good').classList.add('show');
+    score++;
+  }else{
+    btns[i].classList.add('wrong');
+    document.getElementById('quiz-bad').textContent='\u274C '+q.bad;
+    document.getElementById('quiz-bad').classList.add('show');
+  }
+  if(qIdx<questions.length-1){document.getElementById('quiz-next').classList.add('show');}
+  else{showScore();}
+}
+
+function nextQ(){qIdx++;renderQ();}
+
+function showScore(){
+  document.getElementById('quiz-score').classList.add('show');
+  document.getElementById('quiz-score-num').textContent=score+' / '+questions.length;
+  var msg=score===5?'Perfect. You can read a Gantt chart as well as any production planner. Every AI-generated schedule you encounter will make immediate sense.':score>=3?'Good work. Review the questions you missed — each covers a specific reading skill you will use every time you look at a production schedule.':'Keep practicing. Gantt chart reading is foundational for everything in this module. Review the annotated elements above and try again.';
+  document.getElementById('quiz-score-msg').textContent=msg;
+}
+
+renderQ();
+</script>
+</body>
+</html>

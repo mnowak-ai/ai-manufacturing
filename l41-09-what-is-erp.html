@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is an ERP System and Why Does Manufacturing Run on It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* analogy */
+.analogy-card{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:#fff;}
+.ac-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.ac-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:14px;}
+.ac-body{font-size:14px;line-height:1.85;color:rgba(255,255,255,.85);}
+
+/* modules grid */
+.modules{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.module-row{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--purple-mid);align-items:flex-start;}
+.module-row:last-child{border-bottom:none;}
+.module-icon{width:40px;height:40px;border-radius:12px;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.module-content{flex:1;}
+.module-name{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:3px;}
+.module-who{font-size:11px;font-weight:600;color:var(--gray-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;}
+.module-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.module-ai{margin-top:5px;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+
+/* before / after table */
+.compare-table{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:28px 0;}
+.ct-header{background:var(--purple-dark);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ct-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:#fff;}
+.cttable{width:100%;border-collapse:collapse;}
+.cttable th{padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;text-align:left;border-bottom:2px solid var(--purple-mid);}
+.cttable th:first-child{color:var(--red);background:var(--red-pale);}
+.cttable th:last-child{color:var(--green);background:var(--green-pale);}
+.cttable th:nth-child(2){color:var(--purple);background:var(--purple-pale);text-align:center;}
+.cttable td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--purple-mid);vertical-align:top;line-height:1.65;}
+.cttable tr:last-child td{border-bottom:none;}
+.cttable td:nth-child(2){text-align:center;font-size:16px;color:var(--purple-mid);}
+.cttable td:first-child{color:var(--red);}
+.cttable td:last-child{color:var(--green);}
+
+/* how AI connects */
+.ai-connect{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.aic-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.aic-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:16px;}
+.aic-flow{display:flex;flex-direction:column;gap:10px;}
+.aic-step{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;}
+.aic-arrow{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.aic-step-body{}
+.aic-step-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.aic-step-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* ERP vendors */
+.vendors{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;}
+.vendor-pill{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 18px;text-align:center;min-width:110px;}
+.vendor-name{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.vendor-note{font-size:11px;color:var(--gray-muted);line-height:1.5;}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 &middot; Foundational Concepts</div>
+  <h1>What Is an ERP System and Why Does Manufacturing Run on It?</h1>
+  <p class="hero-sub">The PrecisionTech case study mentions SAP ERP — but what is an ERP? This plain-language explainer tells you what it stores, who uses it, and exactly how AI scheduling tools like Wrkspce.ai connect to it.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Problem ERP Solves</h2>
+  <p>Imagine a manufacturing company in the 1980s — before any of this technology existed. The sales team writes customer orders on paper. The production team keeps their schedule in a binder. The warehouse tracks inventory on index cards. The accounting department has a separate ledger. The HR department stores worker certifications in a filing cabinet.</p>
+  <p>Every department has its own system. Nobody's systems talk to each other. When production needs to know if materials are in stock, they call the warehouse. When accounting needs to know what was shipped, they call the production manager. When a customer asks for an order status, the sales rep has to call three different departments to get an answer.</p>
+  <p>This isn't just inefficient — it produces errors. A material is listed as "in stock" in the warehouse's card system but actually got used by production two hours ago and nobody updated the card. A customer order gets entered by sales but never reaches the production floor because the paper memo got lost. A worker's certification expires but nobody tells the production planner who's assigning jobs based on old information.</p>
+  <div class="pull-quote"><p>An ERP system solves one fundamental problem: it gives every department in the company access to the same data, in real time, from one central place. When anything changes anywhere, everyone who needs to know sees the update immediately.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What ERP Actually Stands For</h2>
+  <p><mark>ERP</mark> stands for <strong>Enterprise Resource Planning</strong>. Let's break that down word by word, because each word tells you something important:</p>
+  <p><strong>Enterprise</strong> means the whole company — not just one department. ERP systems are designed to serve every part of the organization simultaneously: production, sales, finance, HR, purchasing, quality, and more.</p>
+  <p><strong>Resource</strong> means everything the company uses to operate: money, people, materials, machines, time, and information.</p>
+  <p><strong>Planning</strong> means the system doesn't just store information — it helps the organization plan how to use its resources effectively, forecast what will be needed, and make better decisions about how to allocate what it has.</p>
+
+  <div class="analogy-card">
+    <div class="ac-label">&#x1F4A1; Plain-Language Analogy</div>
+    <div class="ac-title">Think of an ERP like a factory's central nervous system</div>
+    <div class="ac-body">When you touch something hot, your nervous system instantly communicates that information to your brain, which sends a signal back to your hand to pull away. Everything is connected, information flows instantly, and the whole body can react together.<br><br>An ERP works the same way for a manufacturing company. When a customer places an order, the ERP instantly makes that information available to sales, production planning, inventory management, and finance — simultaneously. When inventory drops below a threshold, the ERP can automatically trigger a purchase order to restock. When a machine completes a job, the ERP updates the production status, adjusts the delivery estimate, and prepares the shipping paperwork. The whole company can see and react to what's happening — together.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What an ERP Stores: The Key Modules</h2>
+  <p>An ERP system is organized into <mark>modules</mark> — sections that each manage a different part of the business. Most large manufacturing ERPs (like SAP, Oracle, or Microsoft Dynamics) have at least six core modules. Here's what each one contains and who uses it — including where AI scheduling tools pull their data from.</p>
+
+  <div class="modules">
+    <div class="module-row">
+      <div class="module-icon">&#x1F4CB;</div>
+      <div class="module-content">
+        <div class="module-name">Production Planning &amp; Work Orders</div>
+        <div class="module-who">Used by: Production Planners, Production Managers</div>
+        <div class="module-desc">Stores all active work orders — what product, how many, which customer, when due, which machines required, which workers assigned, and the full process route. This is the core module that AI scheduling tools like Wrkspce.ai read from to understand what needs to be made and when.</div>
+        <div class="module-ai">&#x1F9E0; AI scheduling reads this constantly</div>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-icon">&#x1F4E6;</div>
+      <div class="module-content">
+        <div class="module-name">Inventory Management</div>
+        <div class="module-who">Used by: Warehouse Team, Procurement, Production Planners</div>
+        <div class="module-desc">Tracks every material, component, and finished product in the facility — current quantities, location in the warehouse, minimum stock levels, and incoming purchase orders. When production pulls materials for a job, the ERP reduces the inventory count. When a delivery arrives, the count increases.</div>
+        <div class="module-ai">&#x1F9E0; AI checks this before scheduling any job</div>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-icon">&#x1F91D;</div>
+      <div class="module-content">
+        <div class="module-name">Sales &amp; Customer Orders</div>
+        <div class="module-who">Used by: Sales Team, Customer Service</div>
+        <div class="module-desc">Records every customer order: what was ordered, by whom, for how much, with what delivery date. When a sales order is entered, it can automatically trigger a work order in the production planning module. Customer order status can be updated as production progresses so sales reps can give accurate delivery estimates.</div>
+        <div class="module-ai">&#x1F9E0; AI uses delivery dates to prioritize scheduling</div>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-icon">&#x1F4B0;</div>
+      <div class="module-content">
+        <div class="module-name">Finance &amp; Cost Accounting</div>
+        <div class="module-who">Used by: Finance Team, Controllers</div>
+        <div class="module-desc">Tracks all financial transactions: material costs, labor costs, overhead allocations, customer invoices, supplier payments, and profitability by product or job. When a work order closes, the ERP calculates the actual cost vs. estimated cost — data that helps improve future pricing and planning.</div>
+        <div class="module-ai">Less direct AI scheduling use — but cost data informs overtime decisions</div>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-icon">&#x1F9D1;&#x200D;&#x1F4BC;</div>
+      <div class="module-content">
+        <div class="module-name">Human Resources &amp; Worker Skills</div>
+        <div class="module-who">Used by: HR, Production Planners, Supervisors</div>
+        <div class="module-desc">Stores worker records including their certifications, training completions, shift schedules, and availability. This is where "CNC Certified — expires March 2026" lives. AI scheduling tools query this module when assigning workers to jobs — making sure only qualified people get assigned to tasks that require specific certifications.</div>
+        <div class="module-ai">&#x1F9E0; AI checks certifications for every worker assignment</div>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="module-icon">&#x1F6D2;</div>
+      <div class="module-content">
+        <div class="module-name">Purchasing &amp; Supplier Management</div>
+        <div class="module-who">Used by: Purchasing Team, Materials Managers</div>
+        <div class="module-desc">Manages supplier relationships, purchase orders, and material lead times. When inventory drops below a threshold, ERP can auto-generate purchase order suggestions. Tracks when ordered materials are expected to arrive — critical for scheduling jobs that depend on incoming deliveries.</div>
+        <div class="module-ai">&#x1F9E0; AI uses expected delivery dates to schedule dependent jobs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Before ERP vs. After ERP: One Concrete Example</h2>
+  <p>Let's trace one real manufacturing event — a customer order arriving — through both a pre-ERP and a post-ERP company to see what actually changes.</p>
+
+  <div class="compare-table">
+    <div class="ct-header"><span class="ct-title">The Same Event — Two Very Different Experiences</span></div>
+    <table class="cttable">
+      <thead>
+        <tr><th>Without ERP</th><th>&nbsp;</th><th>With ERP</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Customer calls sales rep to place order</td><td>&#x27A1;</td><td>Customer order entered directly into ERP by sales rep</td></tr>
+        <tr><td>Sales rep writes order on a form, sends paper to production</td><td>&#x27A1;</td><td>Work order automatically created in production planning module — immediately visible to planners</td></tr>
+        <tr><td>Production planner calls warehouse to check material availability</td><td>&#x27A1;</td><td>ERP automatically checks inventory levels and flags if any material is short</td></tr>
+        <tr><td>Planner builds schedule by hand in Excel, potentially missing conflicts</td><td>&#x27A1;</td><td>AI scheduling tool reads the work order from ERP and generates optimized schedule options within minutes</td></tr>
+        <tr><td>Customer calls back asking for status — sales rep calls production — production manager checks binder</td><td>&#x27A1;</td><td>Sales rep checks ERP: order is 60% complete, on track for Thursday delivery. Answers the customer in 30 seconds.</td></tr>
+        <tr><td>When job finishes, someone fills out a paper completion form that may or may not reach accounting</td><td>&#x27A1;</td><td>Worker marks job complete in ERP, inventory auto-updates, invoice auto-generates, actual vs. estimated cost calculated — all automatically</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Major ERP Systems in Manufacturing</h2>
+  <p>Several large software companies dominate the ERP market for manufacturing. You'll hear these names mentioned in production environments, job postings, and technology discussions. Knowing what they are prevents confusion.</p>
+
+  <div class="vendors">
+    <div class="vendor-pill">
+      <div class="vendor-name">SAP</div>
+      <div class="vendor-note">Most widely used enterprise ERP. Preferred by large manufacturers. Referenced in the PrecisionTech case study.</div>
+    </div>
+    <div class="vendor-pill">
+      <div class="vendor-name">Oracle</div>
+      <div class="vendor-note">Major competitor to SAP. Very common in large industrial and process manufacturing companies.</div>
+    </div>
+    <div class="vendor-pill">
+      <div class="vendor-name">Microsoft Dynamics</div>
+      <div class="vendor-note">Popular with mid-size manufacturers. Integrates well with Office tools many workers already use.</div>
+    </div>
+    <div class="vendor-pill">
+      <div class="vendor-name">Infor</div>
+      <div class="vendor-note">Specialized in manufacturing and distribution. Strong in automotive and aerospace sectors.</div>
+    </div>
+    <div class="vendor-pill">
+      <div class="vendor-name">Epicor</div>
+      <div class="vendor-note">Common in small-to-mid-size manufacturers. User-friendly interface, popular with job shops.</div>
+    </div>
+  </div>
+
+  <p>These are all different software products, but they all do fundamentally the same thing: store the company's critical data in one place so every department works from the same information. As a manufacturing worker, you may interact with just one or two modules of whichever ERP your facility uses. You don't need to know the whole system — just the parts relevant to your role.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Scheduling Tools Connect to ERP</h2>
+  <p>AI scheduling tools like Wrkspce.ai aren't standalone systems — they plug into the ERP to get their data. This connection is what makes AI scheduling practical. Without ERP data, the AI would have to be fed information manually — which would be just as slow as planning manually.</p>
+  <p>Here's the typical data flow between an ERP and an AI scheduling tool:</p>
+
+  <div class="ai-connect">
+    <div class="aic-label">Data Flow</div>
+    <div class="aic-title">How Wrkspce.ai Reads From SAP ERP</div>
+    <div class="aic-flow">
+      <div class="aic-step">
+        <div class="aic-arrow">1</div>
+        <div class="aic-step-body">
+          <div class="aic-step-title">Work orders are created in SAP</div>
+          <div class="aic-step-text">When a production planner creates a work order in SAP — setting the product, quantity, due date, and process route — that data becomes available to Wrkspce.ai through a data connection called an API (Application Programming Interface). The AI can read new and updated work orders in near real time.</div>
+        </div>
+      </div>
+      <div class="aic-step">
+        <div class="aic-arrow">2</div>
+        <div class="aic-step-body">
+          <div class="aic-step-title">AI reads inventory levels from SAP</div>
+          <div class="aic-step-text">Before scheduling any job, Wrkspce.ai checks SAP's inventory module to confirm the required materials are actually in stock. If a work order requires 45 sq ft of aluminum sheet but SAP shows only 30 sq ft on hand, the AI flags the shortfall rather than scheduling the job as if materials are available.</div>
+        </div>
+      </div>
+      <div class="aic-step">
+        <div class="aic-arrow">3</div>
+        <div class="aic-step-body">
+          <div class="aic-step-title">AI checks worker certifications from SAP HR</div>
+          <div class="aic-step-text">When assigning workers to jobs, Wrkspce.ai queries SAP's HR module to confirm which workers on the current shift hold the required certifications. If a certification is expired or a worker isn't scheduled for that shift, the AI won't assign them — preventing the kind of qualification errors that create quality and compliance problems.</div>
+        </div>
+      </div>
+      <div class="aic-step">
+        <div class="aic-arrow">4</div>
+        <div class="aic-step-body">
+          <div class="aic-step-title">AI generates the optimized schedule</div>
+          <div class="aic-step-text">With work order details, inventory status, worker certifications, machine availability, and historical job time data all pulled from SAP, Wrkspce.ai runs its optimization algorithm and produces a Gantt chart schedule. This schedule is then reviewed and approved by a human planner before being released to the floor.</div>
+        </div>
+      </div>
+      <div class="aic-step">
+        <div class="aic-arrow">5</div>
+        <div class="aic-step-body">
+          <div class="aic-step-title">Actual completion data writes back to SAP</div>
+          <div class="aic-step-text">When workers complete steps and mark them done (either through the MES or directly in Wrkspce.ai), that actual time data flows back into SAP. SAP updates the work order status, adjusts inventory, and records the actual vs. estimated completion time. This closing loop is what allows the AI to learn and improve its estimates over thousands of jobs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>This two-way connection is what makes AI scheduling genuinely useful in practice. The AI isn't working from a snapshot taken Monday morning — it's working from live data that updates as conditions change throughout the shift.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What Workers Actually Experience</h2>
+  <p>You may be wondering: if the ERP is so important, will you need to know how to use SAP to work in a manufacturing facility? The honest answer is: it depends on your role — but even workers who never open SAP directly are affected by what's in it.</p>
+  <p>A <strong>machine operator</strong> may never log into SAP at all. But the work assignment they see on their floor terminal — what job to run, which machine, what materials to pull — was generated by an AI that read their shift schedule, their certification, and the work order details from SAP. The ERP shaped their day without them touching it.</p>
+  <p>A <strong>foreman or team lead</strong> might use a simplified interface — a tablet app or floor terminal — that reads from SAP in the background. They see job status, completion rates, and worker assignments without navigating the full ERP system.</p>
+  <p>A <strong>production planner or supervisor</strong> likely works with SAP directly — creating work orders, reviewing inventory, checking worker schedules, and closing out completed jobs. ERP proficiency is a valued and often required skill at this level.</p>
+  <p>As you advance in a manufacturing career, understanding ERP systems — even at a conceptual level — makes you a more effective communicator, a better problem-solver when data-related issues arise, and a stronger candidate for leadership roles. You don't need to be an SAP administrator. But knowing what ERP is and why it matters puts you ahead of most entry-level workers walking onto the floor for the first time.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI scheduling tool generates a plan that assigns Work Order #WO-4411 to start on Monday morning. However, WO-4411 requires a specific aluminum alloy that the ERP inventory module shows as "12 sq ft on hand" — but the job actually requires 30 sq ft. Why is this a serious problem, and what should happen before the schedule is approved?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">This is not a serious problem — the warehouse team will notice when they pull the material and can order more at that point</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">The AI should have caught this automatically — if it scheduled the job, the material must be available somewhere in the system</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">This is a serious problem: the schedule is built on inaccurate data. Before approving, the planner must verify actual inventory, identify when additional material can be sourced, and either delay the job until material is confirmed or find an alternative material. Approving the schedule without fixing this guarantees a mid-run material stoppage on Monday.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The ERP inventory count is always accurate — if it shows 12 sq ft, that's exactly what's in the warehouse</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. ERP data quality is one of the most important factors in AI scheduling accuracy. An inventory count that's wrong — whether due to a recording error, informal material use that wasn't logged, or a physical count discrepancy — becomes a false premise in the AI's schedule. The job will start Monday, the warehouse team will pull 12 sq ft, and the job will stop cold when materials run out. The fix must happen before the schedule is approved: verify the physical inventory, source additional material, and update the work order start date to reflect confirmed availability. This is exactly the kind of human verification step that sits between AI output and floor action.</div>
+    <div class="quiz-fb bad"  id="q1-bad">&#x274C; The problem with discovering the material shortage when the warehouse team pulls it on Monday is that by then, workers are at their machines, materials are staged, and the shift is underway. Stopping production mid-setup wastes time and disrupts everything downstream. The right time to catch this is during schedule review — before approval, not after release. ERP inventory counts are sometimes inaccurate due to logging errors or informal use of materials. A planner reviewing an AI-generated schedule should verify that key material quantities match the physical reality, especially for jobs starting the next day.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">ERP stands for Enterprise Resource Planning — a central software system that stores all of a company's critical data in one place, accessible in real time by every department.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The key ERP modules for manufacturing are: production planning and work orders, inventory management, sales and customer orders, finance, HR and worker skills, and purchasing. Each module serves different roles but shares data with all the others.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Before ERP, every department maintained separate records that didn't talk to each other — leading to errors, delays, and information gaps. ERP made one source of truth possible across the whole company.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI scheduling tools like Wrkspce.ai connect to ERP systems (like SAP) through data APIs — reading work orders, inventory levels, worker certifications, and historical job data to generate optimized schedules. When jobs complete, actual data writes back to ERP, allowing the AI to learn and improve.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The quality of an AI-generated schedule is directly tied to the quality of the ERP data it reads. Bad data in means bad schedule out — which is why human verification of key data points before approving AI plans remains essential.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

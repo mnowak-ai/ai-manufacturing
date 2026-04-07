@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Job Planning in Manufacturing? A Plain-Language Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Analogy box */
+.analogy{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.analogy-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.analogy-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:14px;}
+.analogy-body{font-size:14px;line-height:1.85;color:rgba(255,255,255,.85);}
+.analogy-body p{font-size:14px;margin-bottom:10px;color:rgba(255,255,255,.85);}
+.analogy-body p:last-child{margin-bottom:0;}
+
+/* 5 questions flow */
+.five-q{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.fq-row{display:flex;gap:0;align-items:stretch;}
+.fq-num{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fq-circle{width:36px;height:36px;border-radius:50%;background:var(--purple);color:var(--white);font-family:"Fraunces",serif;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fq-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.fq-row:last-child .fq-line{display:none;}
+.fq-card{flex:1;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;margin-bottom:14px;}
+.fq-q{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.fq-explain{font-size:14px;line-height:1.75;color:var(--gray-text);margin-bottom:8px;}
+.fq-example{background:var(--purple-pale);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--purple-dark);font-style:italic;}
+
+/* What happens without planning */
+.failure-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.fc{display:flex;gap:14px;background:var(--red-pale);border:1.5px solid var(--red);border-radius:14px;padding:16px 20px;align-items:flex-start;}
+.fc-icon{font-size:22px;flex-shrink:0;}
+.fc-title{font-weight:700;font-size:14px;color:var(--red);margin-bottom:4px;}
+.fc-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* Planning checklist sim */
+.checklist-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cs-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:16px;}
+.cs-scenario-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.cs-scenario-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.cs-items{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.cs-item{display:flex;align-items:center;gap:12px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all .2s;}
+.cs-item.checked{background:var(--green-pale);border-color:var(--green);}
+.cs-item.missing{background:var(--red-pale);border-color:var(--red);}
+.cs-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--purple-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;transition:all .2s;}
+.cs-item.checked .cs-checkbox{background:var(--green);border-color:var(--green);color:var(--white);}
+.cs-item.missing .cs-checkbox{background:var(--red);border-color:var(--red);color:var(--white);}
+.cs-item-text{font-size:14px;color:var(--gray-text);}
+.cs-item.checked .cs-item-text{color:var(--green);font-weight:600;}
+.cs-item.missing .cs-item-text{color:var(--red);}
+.cs-result{padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.cs-result.show{display:block;}
+.cs-result.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.cs-result.warn{background:var(--orange-pale);border:1px solid var(--orange);color:#92400E;}
+.cs-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.info-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.info-icon{font-size:26px;margin-bottom:8px;}
+.info-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.info-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:520px){.info-grid{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 · Job Planning</div>
+  <h1>What Is Job Planning in Manufacturing? A Plain-Language Guide</h1>
+  <p class="hero-sub">Before any machine starts, before any worker picks up a tool, someone has to answer a set of critical questions. That's job planning — and it's harder than it sounds.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Let's Start With a Simple Question</h2>
+    <p>Imagine a factory gets an order: a customer needs 1,000 metal brackets by Friday. Easy, right? Just make them.</p>
+    <p>Except — which machines will make them? In what order? Which workers are available and trained for each step? Are all the materials in stock? How long will each step take? What if two other jobs are already scheduled on those machines this week? What if one worker calls out sick Tuesday?</p>
+    <p>Suddenly, "just make them" becomes a complex coordination challenge. That challenge is exactly what <mark>job planning</mark> is designed to solve — before anything goes wrong.</p>
+    <div class="pull-quote"><p>Job planning is the invisible work that makes visible work possible. When it's done well, the factory floor looks effortless. When it's skipped, everything falls apart.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Is a "Job" in Manufacturing?</h2>
+    <p>In everyday life, a "job" means work you do to earn money. In manufacturing, a <mark>job</mark> has a more specific meaning: it's a single, defined production task or run — usually tied to one customer order or work order.</p>
+    <p>Think of it this way: if a factory makes car parts, a "job" might be:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">🔩</div>
+        <div class="info-title">A specific production run</div>
+        <div class="info-desc">"Produce 500 units of Bracket Model BR-44 in stainless steel." That's one job — it has a specific product, a specific quantity, and specific materials.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📋</div>
+        <div class="info-title">Tied to a work order</div>
+        <div class="info-desc">Every job has a work order behind it — a document (physical or digital) that officially authorizes the production and records all the details. No work order, no job.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📅</div>
+        <div class="info-title">Has a deadline</div>
+        <div class="info-desc">Every job has a due date — when the finished product needs to leave the factory. This deadline drives the entire planning timeline backward: when must each step start to finish on time?</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🔗</div>
+        <div class="info-title">Made of multiple steps</div>
+        <div class="info-desc">Most manufacturing jobs aren't one step — they're a series of operations (cut, weld, coat, inspect, package) that must happen in a specific order. Planning maps all of those steps.</div>
+      </div>
+    </div>
+    <p>A busy factory might have 20, 50, or even 100 active jobs at once — all competing for the same machines, the same workers, and the same time slots. Job planning is how the facility manages all of them without chaos.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Does Job Planning Actually Involve?</h2>
+    <p>Good job planning answers five questions for every job before anyone touches a machine. Miss one of these questions and you're setting up problems downstream.</p>
+    <div class="five-q">
+      <div class="fq-row">
+        <div class="fq-num"><div class="fq-circle">1</div><div class="fq-line"></div></div>
+        <div class="fq-card">
+          <div class="fq-q">What exactly needs to be made?</div>
+          <div class="fq-explain">This sounds obvious, but it requires precision. Not just "brackets" — which bracket? Which material? Which dimensions? Which finish? Which customer specifications apply? A planner reviews the work order and the engineering drawings to confirm exactly what's being made.</div>
+          <div class="fq-example">Example: "500 units of Bracket BR-44, stainless steel 3.5mm, tolerance ±0.1mm, zinc primer coat, no welds on the inner face."</div>
+        </div>
+      </div>
+      <div class="fq-row">
+        <div class="fq-num"><div class="fq-circle">2</div><div class="fq-line"></div></div>
+        <div class="fq-card">
+          <div class="fq-q">What steps are required — and in what order?</div>
+          <div class="fq-explain">Every job has a process route — the specific sequence of operations required to complete it. Cutting must come before bending. Welding must come before coating. Inspection must come before packaging. The planner maps this route and makes sure each step is in the right order. (We'll go deep on this in the Task Sequencing article.)</div>
+          <div class="fq-example">Example: Cut → Press bend → Weld → Inspect weld → Apply primer → Final inspection → Package</div>
+        </div>
+      </div>
+      <div class="fq-row">
+        <div class="fq-num"><div class="fq-circle">3</div><div class="fq-line"></div></div>
+        <div class="fq-card">
+          <div class="fq-q">What resources are needed for each step?</div>
+          <div class="fq-explain">Resources means three things: machines (which specific equipment does each step require?), materials (what raw materials and components need to be ready?), and people (who is trained and available to run each step?). Planning fails if any resource is assumed to be available but isn't.</div>
+          <div class="fq-example">Example: "Press bend step requires Press Station 2 and an operator certified on that machine. Weld step requires Welding Bay 1 and a certified welder. 45 sq ft of stainless sheet must be confirmed in warehouse stock before job starts."</div>
+        </div>
+      </div>
+      <div class="fq-row">
+        <div class="fq-num"><div class="fq-circle">4</div><div class="fq-line"></div></div>
+        <div class="fq-card">
+          <div class="fq-q">How long will each step take?</div>
+          <div class="fq-explain">Every step gets a time estimate — based on historical data, engineering standards, or experience. These estimates determine the overall job timeline. If estimates are too optimistic, the schedule falls behind. If they're too conservative, machines sit idle and capacity is wasted. AI planning tools are increasingly good at improving estimate accuracy by learning from past jobs.</div>
+          <div class="fq-example">Example: "Press bend: ~45 seconds per part = 6.25 hours for 500 units. Weld: ~90 seconds per part = 12.5 hours. Coating: 4 hours for the full batch."</div>
+        </div>
+      </div>
+      <div class="fq-row">
+        <div class="fq-num"><div class="fq-circle">5</div><div class="fq-line"></div></div>
+        <div class="fq-card">
+          <div class="fq-q">When does each step need to start and finish?</div>
+          <div class="fq-explain">Working backward from the delivery deadline, the planner assigns start and end times to each step. This is called <mark>backward scheduling</mark> — you start at the due date and work backward to find when each step must begin. The result is a schedule that, if followed exactly, delivers the job on time.</div>
+          <div class="fq-example">Example: "Deadline is Friday 5 PM. Final inspection must finish by Thursday 4 PM. Coating must finish by Wednesday 8 PM. Welding must finish by Tuesday 6 PM. Press bending must start Monday morning."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Can't You Just Wing It?</h2>
+    <p>Some people new to manufacturing wonder: why does all this planning need to happen before the job starts? Can't workers just figure it out as they go?</p>
+    <p>The short answer is no — and here's why. Every unplanned problem on a factory floor is more expensive and more disruptive than a planned solution. Let's look at what specifically goes wrong when job planning is skipped or done poorly.</p>
+    <div class="failure-cards">
+      <div class="fc">
+        <div class="fc-icon">⚙️</div>
+        <div>
+          <div class="fc-title">Machine conflicts — two jobs show up needing the same machine at the same time</div>
+          <div class="fc-desc">Without planning, Job A and Job B both arrive at Press Station 2 on Tuesday morning. There's only one press. Someone has to wait. That wait cascades — every downstream step for the waiting job gets pushed back. Workers are standing around. Deadlines are at risk. All of this was completely preventable with a 20-minute planning conversation.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-icon">📦</div>
+        <div>
+          <div class="fc-title">Material surprises — the material you need isn't there when the job starts</div>
+          <div class="fc-desc">The steel sheet for a job wasn't ordered because nobody checked inventory before scheduling the job. Now the machine is set up, the workers are ready, and there's nothing to run. Production stops while purchasing scrambles to source the material. This is one of the most common and most avoidable planning failures.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-icon">👷</div>
+        <div>
+          <div class="fc-title">Wrong worker assigned — someone shows up who can't legally or safely do the job</div>
+          <div class="fc-desc">Welding requires certification. Operating certain CNC machines requires specific training. If a planner assigns a job to "whoever is available" without checking certifications, you either have an untrained worker attempting a skilled task (safety risk), or you discover the problem at job start and have to scramble for the right person (delay).</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-icon">🔗</div>
+        <div>
+          <div class="fc-title">Steps in the wrong order — work gets done that has to be undone</div>
+          <div class="fc-desc">A worker applies a primer coating to a part before the weld inspection is complete. The inspector finds a weld defect that requires grinding — which destroys the coating. Now the part has to be re-coated, adding hours and material cost. This happens when process routes aren't planned and communicated clearly in advance.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-icon">⏰</div>
+        <div>
+          <div class="fc-title">Missed deadlines — the customer doesn't get their order when promised</div>
+          <div class="fc-desc">When any of the above problems hit, they consume time. That time comes from somewhere — usually from the buffer that was supposed to protect the delivery deadline. Chain enough small problems together and you miss the deadline entirely. The customer is unhappy. The company may face financial penalties. All because the planning didn't happen.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Try It: The Job Planning Readiness Check</h2>
+    <p>Here's a scenario. You're a production planner, and it's Sunday evening. A new job just arrived for Monday morning: 300 custom steel frames for a construction equipment manufacturer. Delivery deadline: Thursday noon. Let's check if this job is actually ready to run.</p>
+    <p>Go through each planning item below and mark it checked (ready) or missing (not ready). Then see how the factory would respond.</p>
+
+    <div class="checklist-sim">
+      <div class="cs-label">Interactive: Planning Readiness Check</div>
+      <div class="cs-title">Is This Job Ready to Start Monday Morning?</div>
+      <div class="cs-sub">Job: 300 Custom Steel Frames · Customer: BuildRight Equipment · Due: Thursday 12:00 PM</div>
+      <div class="cs-scenario">
+        <div class="cs-scenario-title">What you know going into the weekend:</div>
+        <div class="cs-scenario-text">The work order exists. The engineering drawings are approved. Frame spec calls for 4mm carbon steel, laser cut → press bent → MIG welded → powder coat → final inspection. You have two certified welders on Monday's day shift. Powder coat line is available Tuesday and Wednesday. You have one laser cutter available Monday (the other is in scheduled maintenance). You haven't checked the steel inventory yet. You haven't confirmed whether Press Station 1 is free Monday — it might still be finishing another job.</div>
+      </div>
+      <div class="cs-items" id="cl-items"></div>
+      <button class="cs-btn" onclick="checkReadiness()">Check Job Readiness</button>
+      <div class="cs-result" id="cl-result"></div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Where Does AI Fit Into Job Planning?</h2>
+    <p>Job planning has always required juggling a lot of information simultaneously — and that's exactly where AI tools earn their value. An AI planning system can hold all of the constraints for all active jobs in "mind" at once and generate optimized schedules far faster than a human can do manually.</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">⚡</div>
+        <div class="info-title">Speed</div>
+        <div class="info-desc">A planner might spend 2–3 hours building a weekly schedule manually. An AI tool generates options in seconds — freeing the planner to focus on reviewing, adjusting, and applying their judgment.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🧩</div>
+        <div class="info-title">Simultaneous Constraints</div>
+        <div class="info-desc">A human can comfortably hold 5–7 constraints in mind at once. An AI can simultaneously consider hundreds — every machine's availability, every worker's certifications, every job's deadline and dependencies.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🔄</div>
+        <div class="info-title">Real-Time Replanning</div>
+        <div class="info-desc">When a machine breaks down or a worker calls out, AI can immediately generate recovery options. Without AI, a planner might spend an hour manually recalculating the ripple effects.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📊</div>
+        <div class="info-title">Learning From History</div>
+        <div class="info-desc">AI analyzes thousands of past jobs to learn how long steps actually take — not just how long they were estimated to take. This makes future plans more accurate.</div>
+      </div>
+    </div>
+    <p>But notice what AI does <em>not</em> do: it doesn't know that your most experienced welder mentioned yesterday that she's been feeling under the weather. It doesn't know that the customer for this particular job called on Friday and said they could actually accept delivery a day late if needed. It doesn't know that Press Station 1 has been making a subtle noise that your maintenance team hasn't officially logged yet.</p>
+    <p>AI brings speed and processing power. Human planners bring context, relationships, and judgment. That's why the theme of Lesson 4.1 is not "AI schedules things" — it's <strong>AI plans, humans approve and adjust</strong>.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-box">
+      <div class="quiz-label">Quick Check</div>
+      <div class="quiz-q">A new job arrives: 200 aluminum housings due in three days. The AI scheduling system immediately generates a plan and assigns it to Machine 4 and two specific workers. Before approving this plan, what is the most important thing a production planner should verify?</div>
+      <div class="quiz-opts" id="q1-opts">
+        <button class="quiz-opt" onclick="doQ(0,false,'q1')">Nothing — if the AI generated the plan, it has already accounted for all relevant constraints and it should be approved as-is</button>
+        <button class="quiz-opt" onclick="doQ(1,true,'q1')">Whether the materials are confirmed in stock, Machine 4 is actually available and functioning, and the two assigned workers are certified for the specific operations on this job — because the AI generates plans based on system data, which may not reflect the current real-world situation</button>
+        <button class="quiz-opt" onclick="doQ(2,false,'q1')">Whether the customer would prefer a different delivery date — the planner should always call the customer before approving any AI-generated plan</button>
+        <button class="quiz-opt" onclick="doQ(3,false,'q1')">Whether a different AI tool would have generated a better plan — always compare multiple AI systems before approving</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The AI generates plans from data — and data has gaps. Materials might show as "in stock" in the system but actually be allocated to another job. Machine 4 might be scheduled but currently running slow due to an issue not yet logged. The two workers might technically be certified but one is on restricted duty after a minor injury. The planner's job is to bridge between what the system knows and what's actually happening on the floor. That verification step is where human judgment earns its value.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ AI scheduling systems are only as good as the data they're fed — and shop floor reality often differs from system data. Materials might show as available but actually be allocated elsewhere. Machine 4 might be in the schedule but acting strangely. A worker might have a certification on paper but be on restricted duty. Before approving any AI-generated plan, a planner should confirm that the key assumptions — materials, machine status, worker availability and qualification — match what's actually true on the floor right now.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A "job" in manufacturing is a specific, defined production run tied to a work order — with a specific product, quantity, set of steps, and delivery deadline.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Job planning answers five questions before work begins: What's being made? In what steps and order? What resources does each step need? How long will each step take? When must each step start and finish?</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Skipping or rushing job planning causes predictable, avoidable problems: machine conflicts, missing materials, wrong workers assigned, steps done out of order, and missed customer deadlines.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI planning tools bring speed and the ability to process many constraints simultaneously — but they work from system data, which can lag behind real-world conditions.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Human planners provide the context, judgment, and floor knowledge that AI can't access — making the AI + human combination more effective than either one alone.</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const checklistItems=[
+  {text:'Work order confirmed and approved',status:'checked'},
+  {text:'Engineering drawings reviewed and understood',status:'checked'},
+  {text:'Process route (step sequence) documented',status:'checked'},
+  {text:'Laser cutter availability confirmed for Monday',status:'checked'},
+  {text:'Press Station 1 availability confirmed for Monday',status:'missing'},
+  {text:'Certified welders confirmed on Monday day shift (×2)',status:'checked'},
+  {text:'Powder coat line reserved Tuesday–Wednesday',status:'checked'},
+  {text:'4mm carbon steel sheet confirmed in warehouse inventory',status:'missing'},
+  {text:'Time estimates calculated for all 5 steps',status:'checked'},
+  {text:'Backward schedule built from Thursday noon deadline',status:'checked'},
+];
+const itemsEl=document.getElementById('cl-items');
+checklistItems.forEach((item,i)=>{
+  const div=document.createElement('div');
+  div.className='cs-item';
+  div.id='cl-item-'+i;
+  div.innerHTML=`<div class="cs-checkbox" id="cl-cb-${i}"></div><div class="cs-item-text">${item.text}</div>`;
+  div.onclick=()=>{
+    const el=document.getElementById('cl-item-'+i);
+    if(el.classList.contains('checked')||el.classList.contains('missing'))return;
+    el.classList.add(item.status);
+    document.getElementById('cl-cb-'+i).textContent=item.status==='checked'?'✓':'✗';
+  };
+  itemsEl.appendChild(div);
+});
+function checkReadiness(){
+  const missing=checklistItems.filter(i=>i.status==='missing');
+  const r=document.getElementById('cl-result');
+  if(missing.length>0){
+    r.className='cs-result show warn';
+    r.innerHTML=`⚠️ <strong>This job is NOT fully ready to start Monday morning.</strong><br><br>Two critical items are unconfirmed: Press Station 1 availability and steel inventory. Before releasing this job to the floor, a planner needs to:<br><br>1. Check whether Press Station 1 finishes its current job before Monday's start — if not, the laser cut parts will stack up with nowhere to go for the press bend step.<br><br>2. Physically confirm or check the ERP system that 4mm carbon steel is in stock in sufficient quantity. If it's not, the job cannot start regardless of how perfect everything else is.<br><br>These aren't small oversights — they're the exact problems that cause Monday morning scrambles. This is why the planning check happens <em>before</em> the shift starts, not during it.`;
+  } else {
+    r.className='cs-result show good';
+    r.innerHTML='✅ All planning items confirmed! This job is ready to start Monday morning. The schedule is solid — every step has confirmed machines, confirmed workers, confirmed materials, and a realistic timeline to hit the Thursday noon deadline.';
+  }
+}
+const qDone={};
+function doQ(idx,correct,qid){
+  if(qDone[qid])return;qDone[qid]=true;
+  const opts=document.querySelectorAll(`#${qid}-opts .quiz-opt`);
+  opts.forEach(b=>b.disabled=true);
+  opts[idx].classList.add(correct?'correct':'wrong');
+  document.getElementById(`${qid}-${correct?'good':'bad'}`).classList.add('show');
+}
+</script>
+</body>
+</html>

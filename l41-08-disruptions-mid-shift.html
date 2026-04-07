@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When the Plan Changes: How Manufacturers Handle Disruptions Mid-Shift</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* disruption types */
+.disruption-types{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.disrupt{border-radius:18px;border:1.5px solid var(--purple-mid);overflow:hidden;margin-bottom:14px;}
+.disrupt-head{padding:16px 22px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;transition:background .15s;}
+.disrupt-head:hover{background:var(--gray-soft);}
+.disrupt-icon{font-size:24px;flex-shrink:0;}
+.disrupt-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);flex:1;}
+.disrupt-toggle{font-size:18px;color:var(--gray-muted);transition:transform .25s;}
+.disrupt-toggle.open{transform:rotate(45deg);}
+.disrupt-body{display:none;padding:0 22px 20px;}
+.disrupt-body.open{display:block;}
+.disrupt-body p{font-size:14px;line-height:1.8;margin-bottom:10px;}
+.disrupt-body p:last-child{margin-bottom:0;}
+.disrupt-sub{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin:12px 0 6px;}
+.disrupt-steps{display:flex;flex-direction:column;gap:8px;}
+.ds-step{display:flex;gap:10px;align-items:flex-start;background:var(--gray-soft);border-radius:10px;padding:10px 14px;}
+.ds-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ds-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.ds-ai-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);margin-left:6px;vertical-align:middle;}
+
+/* decision framework */
+.framework{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.fw-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.fw-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.fw-table{width:100%;}
+.fw-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+.fw-row:last-child{margin-bottom:0;}
+.fw-q{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;flex:1;}
+.fw-q-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:4px;}
+.fw-q-text{font-size:14px;font-weight:600;color:var(--purple-dark);}
+.fw-arrow{font-size:20px;color:var(--purple-mid);flex-shrink:0;margin-top:14px;}
+.fw-a{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;flex:1;}
+.fw-a-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:4px;}
+.fw-a-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+
+/* simulation */
+.sim-wrap{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.sim-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sim-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sim-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sim-progress{font-size:12px;color:var(--gray-muted);margin-bottom:12px;}
+.sim-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:14px;}
+.sim-alert{background:var(--red-pale);border:1.5px solid var(--red);border-radius:10px;padding:10px 16px;display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.sim-alert-icon{font-size:18px;flex-shrink:0;}
+.sim-alert-text{font-size:13px;line-height:1.65;color:var(--red);font-weight:600;}
+.sim-context{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.sim-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:12px;}
+.sim-opts{display:flex;flex-direction:column;gap:8px;}
+.sim-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.sim-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.sim-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.sim-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.sim-fb{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;margin-top:10px;}
+.sim-fb.show{display:block;}
+.sim-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.sim-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.sim-next{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:10px;display:none;}
+.sim-next.show{display:inline-block;}
+.sim-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;margin-top:12px;}
+.sim-score.show{display:block;}
+.sim-score-num{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:var(--purple-dark);}
+.sim-score-text{font-size:14px;line-height:1.7;color:var(--gray-text);margin-top:6px;}
+
+/* before/after */
+.before-after{display:flex;gap:14px;margin:24px 0;flex-wrap:wrap;}
+.ba-card{flex:1;min-width:220px;border-radius:16px;padding:20px;}
+.ba-card.before{background:var(--red-pale);border:1.5px solid var(--red);}
+.ba-card.after{background:var(--green-pale);border:1.5px solid var(--green);}
+.ba-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.ba-card.before .ba-label{color:var(--red);}
+.ba-card.after  .ba-label{color:var(--green);}
+.ba-item{font-size:13px;line-height:1.7;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.ba-item:last-child{border-bottom:none;}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 &middot; Job Planning</div>
+  <h1>When the Plan Changes: How Manufacturers Handle Disruptions Mid-Shift</h1>
+  <p class="hero-sub">The lesson covers how AI helps plan before the shift starts. But what happens when the plan falls apart at 9 AM on a Tuesday? This article covers the messy reality — and what good replanning actually looks like with and without AI.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Plan Never Survives Contact With the Factory</h2>
+  <p>Here is something every experienced production supervisor will tell you: the schedule you build Sunday night is not the schedule you're running by Tuesday afternoon. Something always changes. Something always breaks. Someone always calls out sick at 5:58 AM.</p>
+  <p>This isn't a failure of planning — it's the nature of manufacturing. A production facility is a complex system with dozens of moving parts: machines with wear patterns, workers with variability, supply chains with delays, and customers who change their minds. Perfect plans meet imperfect reality every single day.</p>
+  <p>The question isn't whether disruptions will happen. They will. The question is how quickly and intelligently the team can respond when they do.</p>
+  <div class="pull-quote"><p>The best production plans are designed to be changed. The best production teams know how to change them — quickly, clearly, and without sending everything downstream into chaos.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Four Most Common Mid-Shift Disruptions</h2>
+  <p>While every factory has its own flavor of chaos, mid-shift disruptions cluster into four main categories. Click each one to see how it typically plays out — and how AI changes the response.</p>
+
+  <div class="disruption-types">
+
+    <div class="disrupt" id="d0">
+      <div class="disrupt-head" onclick="toggleD(0)">
+        <div class="disrupt-icon">&#x1F527;</div>
+        <div class="disrupt-title">Machine Breakdown — Something Stops Working Mid-Job</div>
+        <div class="disrupt-toggle" id="dt0">+</div>
+      </div>
+      <div class="disrupt-body" id="db0">
+        <p>A machine breaking down mid-shift is the most disruptive and most visible problem a production floor faces. It doesn't just affect the job currently running — it affects every job that was scheduled behind it, every worker waiting for output from that machine, and potentially multiple customer deadlines.</p>
+        <p>The severity depends on how critical the machine is (is it a bottleneck that everything flows through?) and how long the repair takes (minutes vs. hours vs. days).</p>
+        <div class="disrupt-sub">How the Response Works — Step by Step</div>
+        <div class="disrupt-steps">
+          <div class="ds-step"><div class="ds-num">1</div><div class="ds-text"><strong>Machine operator reports the problem</strong> to their foreman immediately. Foreman assesses — can the operator diagnose it, or does maintenance need to be called?</div></div>
+          <div class="ds-step"><div class="ds-num">2</div><div class="ds-text"><strong>Maintenance is contacted</strong> and performs an initial assessment. They give a repair estimate: 30 minutes, 2 hours, or a full-day part order.</div></div>
+          <div class="ds-step"><div class="ds-num">3</div><div class="ds-text"><strong>Shift supervisor is notified</strong> and begins assessing the schedule impact. Which jobs are directly affected? Which deadlines are at risk?<span class="ds-ai-tag">&#x1F9E0; AI step</span> In AI-connected facilities, the system already flagged the machine's anomaly and is generating recovery options while the supervisor is still walking to the machine.</div></div>
+          <div class="ds-step"><div class="ds-num">4</div><div class="ds-text"><strong>Recovery options are evaluated</strong>: Can a backup machine handle this job? Can the job wait for repair? Can a different job fill the gap while repair happens? Which option protects the most critical customer deadline?<span class="ds-ai-tag">&#x1F9E0; AI step</span> AI calculates all scenarios simultaneously and presents the best options within minutes.</div></div>
+          <div class="ds-step"><div class="ds-num">5</div><div class="ds-text"><strong>Decision made and communicated</strong>. Updated assignments pushed to worker terminals. Materials re-staged if needed. Affected customers notified if a deadline is at risk.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disrupt" id="d1">
+      <div class="disrupt-head" onclick="toggleD(1)">
+        <div class="disrupt-icon">&#x1F912;</div>
+        <div class="disrupt-title">Key Worker Calls Out — A Certified Person Isn't Coming In</div>
+        <div class="disrupt-toggle" id="dt1">+</div>
+      </div>
+      <div class="disrupt-body" id="db1">
+        <p>Worker absences are the hardest disruption to predict because they often arrive with the least notice — a text message at 5:50 AM, or sometimes no notice at all. The impact depends entirely on who is absent and what they were certified to do.</p>
+        <p>A general assembler calling out is manageable — another worker can cover. A certified welder or specialized CNC operator calling out for a job that has no other certified person available is a different kind of problem.</p>
+        <div class="disrupt-sub">How the Response Works</div>
+        <div class="disrupt-steps">
+          <div class="ds-step"><div class="ds-num">1</div><div class="ds-text"><strong>Identify the certification impact.</strong> What jobs does the absent worker's certification cover? Are any of today's scheduled jobs dependent on that specific person's qualifications?</div></div>
+          <div class="ds-step"><div class="ds-num">2</div><div class="ds-text"><strong>Check for qualified coverage.</strong><span class="ds-ai-tag">&#x1F9E0; AI step</span> In AI-connected facilities, the system pulls from the worker skills database immediately and shows which other on-site or on-call workers hold the necessary certification. Manual process: the foreman works from memory or calls HR.</div></div>
+          <div class="ds-step"><div class="ds-num">3</div><div class="ds-text"><strong>Decide: cover, delay, or reassign.</strong> Can a qualified worker from another team cover? Can the job be pushed to tomorrow's shift when the absent worker returns? Or does a different job move up to fill that machine's capacity?</div></div>
+          <div class="ds-step"><div class="ds-num">4</div><div class="ds-text"><strong>Manage overtime carefully.</strong> Calling in a worker from their day off costs overtime pay and goodwill. Is the deadline urgent enough to justify it? That's a business judgment call — not a calculation the AI makes.</div></div>
+          <div class="ds-step"><div class="ds-num">5</div><div class="ds-text"><strong>Update the schedule</strong> with the revised assignments and notify all affected workers of any changes to their day's work.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disrupt" id="d2">
+      <div class="disrupt-head" onclick="toggleD(2)">
+        <div class="disrupt-icon">&#x1F4E6;</div>
+        <div class="disrupt-title">Material Arrives Late — A Shipment Didn't Come When Planned</div>
+        <div class="disrupt-toggle" id="dt2">+</div>
+      </div>
+      <div class="disrupt-body" id="db2">
+        <p>A material shipment arriving late — or arriving in the wrong quantity or wrong specification — can halt a job entirely. Unlike a machine breakdown, this disruption often has advance warning: suppliers sometimes notify buyers of delays before the delivery date. The question is whether the facility acts on that information proactively or waits until the job starts and the material isn't there.</p>
+        <div class="disrupt-sub">How the Response Works</div>
+        <div class="disrupt-steps">
+          <div class="ds-step"><div class="ds-num">1</div><div class="ds-text"><strong>Confirm the delay and new arrival time.</strong> Contact the supplier or freight carrier to get a firm revised estimate. "It'll be there by end of week" is not actionable. "It arrives Wednesday at 2 PM" is.</div></div>
+          <div class="ds-step"><div class="ds-num">2</div><div class="ds-text"><strong>Assess which jobs are affected.</strong><span class="ds-ai-tag">&#x1F9E0; AI step</span> AI scheduling tools can immediately show which active work orders depend on the delayed material and when they were scheduled to start. Manual process: the planner traces through every open work order by hand.</div></div>
+          <div class="ds-step"><div class="ds-num">3</div><div class="ds-text"><strong>Check for substitute materials.</strong> Is there a different material grade or specification that could work for this job? That requires an engineering or quality review — not a scheduling decision.</div></div>
+          <div class="ds-step"><div class="ds-num">4</div><div class="ds-text"><strong>Pull forward other jobs</strong> to keep machines and workers productive during the gap.<span class="ds-ai-tag">&#x1F9E0; AI step</span> AI identifies which ready-to-run jobs can fill the newly open machine time without creating new conflicts.</div></div>
+          <div class="ds-step"><div class="ds-num">5</div><div class="ds-text"><strong>Communicate with affected customers</strong> before they call you. Proactive communication about a potential delay — before the deadline — is far better received than an apology after.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disrupt" id="d3">
+      <div class="disrupt-head" onclick="toggleD(3)">
+        <div class="disrupt-icon">&#x1F6A8;</div>
+        <div class="disrupt-title">Quality Escape — Defects Found Mid-Run</div>
+        <div class="disrupt-toggle" id="dt3">+</div>
+      </div>
+      <div class="disrupt-body" id="db3">
+        <p>A quality escape happens when defective parts are discovered during production — not at final inspection, but partway through the run. This is actually better than discovering defects after shipping, but it still triggers an immediate production hold and investigation.</p>
+        <p>The challenge: you don't know how far back the defect started. Every part made before the discovery point is now suspect — which means the total good-part count could be far below what the schedule assumed.</p>
+        <div class="disrupt-sub">How the Response Works</div>
+        <div class="disrupt-steps">
+          <div class="ds-step"><div class="ds-num">1</div><div class="ds-text"><strong>Stop production immediately</strong> on the affected machine or process. Segregate all parts produced since the last known-good inspection point. Do not let suspect parts advance to the next step.</div></div>
+          <div class="ds-step"><div class="ds-num">2</div><div class="ds-text"><strong>Identify the root cause.</strong> Is it a tooling issue? A material issue? A process setting that drifted? A machine that needs recalibration? Root cause determines whether production can resume quickly or needs a longer fix.</div></div>
+          <div class="ds-step"><div class="ds-num">3</div><div class="ds-text"><strong>Re-inspect all suspect parts.</strong> This takes time — and the outcome (how many parts are actually good?) determines the revised total that needs to be re-run to meet the order quantity.</div></div>
+          <div class="ds-step"><div class="ds-num">4</div><div class="ds-text"><strong>Calculate the re-run quantity</strong> and where it fits in the schedule.<span class="ds-ai-tag">&#x1F9E0; AI step</span> AI can recalculate the timeline immediately once the good-part count and re-run quantity are confirmed, showing the updated delivery estimate and any downstream impacts.</div></div>
+          <div class="ds-step"><div class="ds-num">5</div><div class="ds-text"><strong>Communicate and document.</strong> Customer gets notified if delivery is at risk. A corrective action report is filed to prevent the same defect from occurring on future runs.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Decision Framework: How to Think Under Pressure</h2>
+  <p>When a disruption hits mid-shift, time pressure is real. Workers are waiting for direction, machines are sitting idle, supervisors need answers. Having a mental framework — a set of questions to work through in order — is what separates a calm, effective response from a chaotic scramble.</p>
+
+  <div class="framework">
+    <div class="fw-label">Decision Framework</div>
+    <div class="fw-title">Five Questions to Answer When a Disruption Hits</div>
+    <div class="fw-table">
+      <div class="fw-row">
+        <div class="fw-q"><div class="fw-q-label">Question 1</div><div class="fw-q-text">How long will this disruption last?</div></div>
+        <div class="fw-arrow">&#x2192;</div>
+        <div class="fw-a"><div class="fw-a-label">Why it matters first</div><div class="fw-a-text">A 20-minute repair and a 6-hour repair require completely different responses. Get a realistic estimate before making any scheduling changes. Guessing wrong in either direction wastes time.</div></div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-q"><div class="fw-q-label">Question 2</div><div class="fw-q-text">Which jobs and deadlines are directly affected?</div></div>
+        <div class="fw-arrow">&#x2192;</div>
+        <div class="fw-a"><div class="fw-a-label">Map the damage first</div><div class="fw-a-text">Not every disruption affects every job. Identify specifically which work orders are blocked, delayed, or at risk. AI tools do this in seconds. Without AI, the planner traces the impact manually — which takes much longer under pressure.</div></div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-q"><div class="fw-q-label">Question 3</div><div class="fw-q-text">What is the most critical deadline in the affected jobs?</div></div>
+        <div class="fw-arrow">&#x2192;</div>
+        <div class="fw-a"><div class="fw-a-label">Protect the priority</div><div class="fw-a-text">Not all deadlines are equal. A job that's two days ahead of its deadline can absorb delay. A job shipping in four hours cannot. Identify the most time-critical affected job and protect it first in the re-plan.</div></div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-q"><div class="fw-q-label">Question 4</div><div class="fw-q-text">What resources can cover or fill the gap?</div></div>
+        <div class="fw-arrow">&#x2192;</div>
+        <div class="fw-a"><div class="fw-a-label">Find the alternatives</div><div class="fw-a-text">Can another machine run this job? Can a different worker cover? Can a ready job fill the idle time? This is where AI scheduling tools provide the most obvious value — scanning all available options simultaneously without missing anything.</div></div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-q"><div class="fw-q-label">Question 5</div><div class="fw-q-text">What do customers need to know, and when?</div></div>
+        <div class="fw-arrow">&#x2192;</div>
+        <div class="fw-a"><div class="fw-a-label">Communicate proactively</div><div class="fw-a-text">If a customer's delivery is at risk, they need to hear from you before the deadline — not after. A proactive call saying "we hit a machine issue but here's our recovery plan" is handled very differently than a call saying "we're sorry, your order is late." This is a human relationship decision AI cannot make.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>AI Replanning: What Changes and What Doesn't</h2>
+  <p>AI scheduling tools have transformed the replanning process in one specific and very important way: the time it takes to calculate options has dropped from hours to minutes. But the decision about which option to choose still belongs to a human. Let's be specific about which parts of the response AI helps with and which parts it doesn't.</p>
+
+  <div class="before-after">
+    <div class="ba-card before">
+      <div class="ba-label">&#x274C; Without AI — Manual Replanning</div>
+      <div class="ba-item">Planner manually traces every work order affected by the disruption — often 30–60 minutes</div>
+      <div class="ba-item">Checks machine availability by scanning paper or spreadsheet schedule — can miss conflicts</div>
+      <div class="ba-item">Worker certification checks done from memory or by calling HR</div>
+      <div class="ba-item">New schedule distributed via PA system, phone calls, or runners</div>
+      <div class="ba-item">Workers may receive conflicting updates if communication is slow</div>
+      <div class="ba-item">No automatic tracking of whether the re-plan is working</div>
+    </div>
+    <div class="ba-card after">
+      <div class="ba-label">&#x2705; With AI — Assisted Replanning</div>
+      <div class="ba-item">AI flags the disruption and maps affected jobs within seconds of the event occurring</div>
+      <div class="ba-item">Recovery options generated with full conflict checking across all machines and workers</div>
+      <div class="ba-item">Worker certification database queried automatically to find qualified coverage</div>
+      <div class="ba-item">Updated schedule pushed to all worker terminals simultaneously</div>
+      <div class="ba-item">Workers see consistent, updated assignments in real time</div>
+      <div class="ba-item">AI monitors whether re-plan is on track and flags further deviations</div>
+    </div>
+  </div>
+
+  <p>Notice what <em>isn't</em> in the "with AI" column: the decision about which recovery option to take. The judgment about whether to call a customer. The assessment of whether overtime is worth it. The conversation with the maintenance tech about how urgent the repair really is. Those remain human responsibilities in both columns — because they require context, relationships, and judgment that AI tools genuinely cannot provide.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Disruption Response Simulation</h2>
+  <p>It's mid-shift on a Wednesday. Three disruptions hit in sequence. Work through each one using the decision framework and your knowledge of how replanning works.</p>
+
+  <div class="sim-wrap">
+    <div class="sim-label">Mid-Shift Simulation</div>
+    <div class="sim-title">It's 10:14 AM — Things Are Going Wrong</div>
+    <div class="sim-sub">Three disruptions, three decisions. What do you do first, second, and third in each situation?</div>
+    <div class="sim-progress" id="sim-prog">Situation 1 of 3</div>
+    <div class="sim-scenario">
+      <div class="sim-alert">
+        <div class="sim-alert-icon">&#x26A0;&#xFE0F;</div>
+        <div class="sim-alert-text" id="sim-alert"></div>
+      </div>
+      <div class="sim-context" id="sim-context"></div>
+      <div class="sim-q" id="sim-q"></div>
+    </div>
+    <div class="sim-opts" id="sim-opts"></div>
+    <div class="sim-fb good" id="sim-good"></div>
+    <div class="sim-fb bad"  id="sim-bad"></div>
+    <button class="sim-next" id="sim-next" onclick="nextSim()">Next Situation &#x2192;</button>
+    <div class="sim-score" id="sim-score">
+      <div class="sim-score-num" id="sim-score-num"></div>
+      <div class="sim-score-text" id="sim-score-text"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Human Skill That Never Gets Replaced</h2>
+  <p>After reading about AI replanning tools, some people worry: if AI can generate a new schedule in seconds when something goes wrong, what's left for a human to do?</p>
+  <p>The answer is: everything that requires judgment under pressure.</p>
+  <p>When a machine goes down mid-shift and a customer's deadline is four hours away, the AI generates options. But deciding which option to take — weighing overtime cost against customer relationship value, knowing that one machine "technically" works but has been acting up, understanding that the supervisor on the floor right now works better with certain communication styles — none of that lives in a database.</p>
+  <p>The production supervisors and planners who thrive alongside AI tools are the ones who have developed what we might call <mark>disruption fluency</mark>: the ability to quickly assess the situation, use AI outputs as intelligent starting points rather than final answers, apply floor knowledge and relationship context the AI can't access, make confident decisions under time pressure, and communicate clearly to both the team and the customer.</p>
+  <p>That combination — AI speed + human judgment — is what actually gets the floor back on track when things go sideways. And things will go sideways. The shift is always the same. What changes is how fast and how well you recover.</p>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Mid-shift disruptions are not exceptions — they're the normal operating environment of manufacturing. The four most common types are machine breakdowns, worker absences, material delays, and quality escapes, each requiring a specific response sequence.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The five-question decision framework helps structure the response under pressure: How long? Which jobs affected? What's the most critical deadline? What resources can cover? What do customers need to know?</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI replanning tools dramatically accelerate the calculation work: flagging disruptions, mapping affected jobs, checking worker certifications, generating conflict-free recovery options, and pushing updates to all worker terminals simultaneously.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">What AI cannot do: choose which recovery option to implement, decide whether overtime is worth it, walk the floor to assess the real situation, or call a customer with a relationship-preserving explanation of what's happening.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Disruption fluency — the ability to quickly assess, decide, and communicate when the plan falls apart — is a core manufacturing competency that becomes more valuable, not less, as AI tools take over the calculation work.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+// accordion
+var dOpen=null;
+function toggleD(i){
+  var body=document.getElementById('db'+i);
+  var tog=document.getElementById('dt'+i);
+  if(dOpen===i){body.classList.remove('open');tog.classList.remove('open');dOpen=null;return;}
+  if(dOpen!==null){document.getElementById('db'+dOpen).classList.remove('open');document.getElementById('dt'+dOpen).classList.remove('open');}
+  body.classList.add('open');tog.classList.add('open');dOpen=i;
+}
+
+// simulation
+var situations=[
+  {
+    alert:'ALERT: Laser Cutter (LC-1) stopped at 10:14 AM — hydraulic fault. Maintenance estimates 3-hour repair. LC-1 was scheduled for two jobs today: WO-3301 (due 3 PM today) and WO-3318 (due Friday).',
+    context:'You are the shift supervisor. The AI has already flagged three recovery options. Option A: Move both jobs to LC-2 (which is currently running a lower-priority job that could be paused). Option B: Move WO-3301 to LC-2 immediately, push WO-3318 to tomorrow. Option C: Wait for the 3-hour repair and run both jobs afterward (tight but mathematically possible for WO-3301 if no other delays).',
+    q:'What is your first priority before deciding which option to pick?',
+    opts:[
+      'Choose Option A immediately — moving both jobs to LC-2 protects all deadlines',
+      'Confirm the repair estimate is accurate and get a realistic assessment of LC-2\'s current job flexibility before committing to any option',
+      'Call the customer for WO-3301 right away to explain the situation',
+      'Choose Option C — waiting for repair avoids disrupting other work'
+    ],
+    correct:1,
+    good:'Correct. The decision framework starts with "How long?" — and "approximately 3 hours" from a first assessment isn\'t the same as a confirmed 3-hour estimate. Before moving jobs to LC-2, you need to know: is LC-2\'s current job actually pausable without quality risk? What does the operator of LC-2 say? A maintenance estimate that turns out to be 5 hours changes the entire calculus. Get a firmer estimate first, then choose.',
+    bad:'The first question in the framework is "How long will this disruption last?" A first-pass maintenance estimate of "approximately 3 hours" may or may not be accurate. Before committing to a recovery option that moves multiple jobs, you need a more confident estimate and a real conversation with the LC-2 operator about whether that machine\'s current job can be cleanly paused. Jumping to a decision before confirming the inputs risks making the wrong choice under pressure.'
+  },
+  {
+    alert:'10:47 AM — Text from Marcus, your only certified MIG welder on day shift: "Not feeling well, can\'t come in today." Three jobs scheduled today require MIG welding: WO-3290 (due 5 PM today), WO-3301 (due 3 PM today — already partially done), and WO-3315 (due Friday).',
+    context:'The AI has pulled the certification database. Two other workers on-site hold MIG certification: Diana (currently on the press operation) and Jake (certified but hasn\'t run MIG in 8 months). There is one certified welder available on call — Sam — but calling Sam in means 4 hours of overtime pay.',
+    q:'How should you approach the coverage decision for WO-3301 (due 3 PM today)?',
+    opts:[
+      'Call Sam immediately for overtime — the 3 PM deadline is non-negotiable and you need a confident welder',
+      'Assign Jake immediately — he\'s certified and available at no extra cost',
+      'First assess WO-3301\'s actual urgency with the customer, then make a decision about Diana vs. Jake vs. Sam based on the real deadline flexibility and each worker\'s current readiness',
+      'Push all three jobs to tomorrow when Marcus is back — consistency matters more than overtime decisions'
+    ],
+    correct:2,
+    good:'Correct. Before spending overtime budget or disrupting Diana\'s current operation, the framework asks: what is the actual deadline pressure? If the customer for WO-3301 has any flexibility (even 2 hours), Jake might be the right call with a quick refresher conversation first. If 3 PM is genuinely hard, Sam\'s overtime is probably worth it. The AI gave you the options — you need to apply business judgment about cost, risk, and the specific customer relationship to make the right call. There is no universally "correct" answer here; there is a correct process.',
+    bad:'Jumping straight to overtime without assessing the actual deadline flexibility and each worker\'s real readiness is premature. Jake is certified — the question is whether his 8-month gap affects the quality risk for this specific job (some weld operations are more forgiving than others). Diana is currently doing valued work on the press. The right move is to clarify WO-3301\'s real deadline flexibility with the customer first, then match that urgency to the right coverage option.'
+  },
+  {
+    alert:'11:30 AM — Quality inspector flags WO-3290: 12 of the last 15 welded parts show porosity defects (tiny air bubbles in the weld that weaken it). Production stopped. Root cause: the MIG gas supply line had a small leak — now fixed. All parts since the last clean inspection checkpoint (2 hours ago) are suspect: approximately 80 parts.',
+    context:'The order is for 200 parts due at 5 PM today. 120 parts were made before the defect window and are confirmed good. 80 parts are suspect and must be inspected. Even if all 80 pass, 200 is only achievable if the re-inspection is fast. If any significant number of the 80 fail, a partial shipment or a late delivery becomes very likely.',
+    q:'What is the most important thing to communicate and to whom — before you know the re-inspection results?',
+    opts:[
+      'Nothing yet — wait for re-inspection results before communicating anything, so you can give complete information',
+      'Tell your production team to rush the re-inspection and skip any non-critical checks to make the 5 PM deadline',
+      'Contact the customer now, explain what happened and what you know so far, give them the honest range of outcomes (best case: full delivery on time; likely case: partial today + remainder tomorrow), and ask if they have any flexibility',
+      'Ask the AI to recalculate the schedule and let it decide what to communicate'
+    ],
+    correct:2,
+    good:'Correct. The fifth question in the decision framework is "What do customers need to know, and when?" The answer here is: they need to know now, even before you have complete information. A customer who hears "we discovered a quality issue, we\'re investigating, here\'s our current best-case and likely-case scenario" at 11:30 AM has time to plan. A customer who hears "your order will be late" at 4:45 PM has no time to respond. Proactive, honest communication — even when the news is uncertain — is the hallmark of a trustworthy supplier. This is a human relationship call the AI cannot make.',
+    bad:'Waiting for complete information before communicating is a common instinct — and almost always the wrong call. By the time you know exactly how many parts failed inspection and exactly when the remainder can ship, the customer has lost the ability to make contingency plans. The right move is to call early, share what you know, give the range of outcomes, and let the customer participate in the decision. That\'s how manufacturing relationships are maintained through difficult situations.'
+  }
+];
+var sIdx=0,sScore=0,sAnswered=false;
+function renderSim(){
+  var s=situations[sIdx];
+  document.getElementById('sim-prog').textContent='Situation '+(sIdx+1)+' of '+situations.length;
+  document.getElementById('sim-alert').textContent=s.alert;
+  document.getElementById('sim-context').textContent=s.context;
+  document.getElementById('sim-q').textContent=s.q;
+  var el=document.getElementById('sim-opts');el.innerHTML='';
+  s.opts.forEach(function(o,i){
+    var btn=document.createElement('button');btn.className='sim-opt';btn.textContent=o;
+    btn.onclick=function(){answerSim(i);};el.appendChild(btn);
+  });
+  document.getElementById('sim-good').className='sim-fb good';
+  document.getElementById('sim-bad').className='sim-fb bad';
+  document.getElementById('sim-next').className='sim-next';
+  document.getElementById('sim-score').className='sim-score';
+  sAnswered=false;
+}
+function answerSim(i){
+  if(sAnswered)return;sAnswered=true;
+  var s=situations[sIdx];
+  var btns=document.querySelectorAll('#sim-opts .sim-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  if(i===s.correct){btns[i].classList.add('correct');document.getElementById('sim-good').textContent='\u2705 '+s.good;document.getElementById('sim-good').classList.add('show');sScore++;}
+  else{btns[i].classList.add('wrong');document.getElementById('sim-bad').textContent='\u274C '+s.bad;document.getElementById('sim-bad').classList.add('show');}
+  if(sIdx<situations.length-1)document.getElementById('sim-next').classList.add('show');
+  else showSimScore();
+}
+function nextSim(){sIdx++;renderSim();}
+function showSimScore(){
+  document.getElementById('sim-score').classList.add('show');
+  document.getElementById('sim-score-num').textContent=sScore+' / '+situations.length;
+  var t=sScore===3?'Perfect. You applied the decision framework cleanly under pressure — that\'s exactly the skill that makes a production supervisor effective when the shift goes sideways.':sScore>=2?'Strong performance. Review the situation you missed and pay attention to which step of the framework it was testing.':'These situations reflect the real complexity of mid-shift disruptions. Review the decision framework and try to identify which question each situation was testing.';
+  document.getElementById('sim-score-text').textContent=t;
+}
+renderSim();
+</script>
+</body>
+</html>

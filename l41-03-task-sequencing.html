@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Sequencing: Why the Order You Do Things in Manufacturing Actually Matters</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Sequence visual */
+.seq-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:20px 0;row-gap:10px;}
+.seq-step{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.seq-box{border-radius:12px;padding:12px 16px;text-align:center;min-width:90px;border:2px solid;}
+.seq-box.ok{background:var(--purple-pale);border-color:var(--purple);}
+.seq-box.bad{background:var(--red-pale);border-color:var(--red);}
+.seq-box.done{background:var(--green-pale);border-color:var(--green);}
+.seq-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.seq-box.ok .seq-num{color:var(--purple);}
+.seq-box.bad .seq-num{color:var(--red);}
+.seq-box.done .seq-num{color:var(--green);}
+.seq-name{font-weight:700;font-size:13px;margin-top:2px;}
+.seq-arrow{font-size:20px;color:var(--purple-mid);padding:0 6px;flex-shrink:0;}
+.seq-arrow.bad{color:var(--red);}
+
+/* Real world examples */
+.example-cards{display:flex;flex-direction:column;gap:16px;margin:24px 0;}
+.ex-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;overflow:hidden;}
+.ex-header{background:var(--white);padding:16px 22px;border-bottom:1.5px solid var(--purple-mid);display:flex;align-items:center;gap:12px;}
+.ex-icon{font-size:22px;}
+.ex-product{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.ex-body{padding:16px 22px;}
+.ex-right{margin-bottom:12px;}
+.ex-right-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:8px;}
+.ex-wrong-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:8px;}
+.ex-seq{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+.ex-step{font-size:12px;font-weight:600;padding:4px 10px;border-radius:100px;}
+.ex-step.ok{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.ex-step.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.ex-arr{font-size:14px;color:var(--gray-muted);}
+.ex-why{font-size:13px;line-height:1.75;color:var(--gray-text);padding:10px 14px;border-radius:10px;}
+.ex-why.good{background:var(--green-pale);}
+.ex-why.bad{background:var(--red-pale);}
+
+/* Sort-it simulation */
+.sort-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ss-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ss-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-bottom:16px;}
+.ss-scenario-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.ss-scenario-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ss-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.ss-step-item{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 16px;cursor:grab;user-select:none;transition:all .15s;}
+.ss-step-item.dragging{opacity:.5;border-style:dashed;}
+.ss-step-item.over{border-color:var(--purple);background:var(--purple-pale);}
+.ss-step-num{width:26px;height:26px;border-radius:50%;background:var(--purple-pale);color:var(--purple);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ss-step-text{font-size:14px;color:var(--gray-text);}
+.ss-step-drag{color:var(--gray-muted);font-size:16px;margin-left:auto;}
+.ss-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.ss-result{margin-top:14px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.8;display:none;}
+.ss-result.show{display:block;}
+.ss-result.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.ss-result.partial{background:var(--orange-pale);border:1px solid var(--orange);color:#92400E;}
+.ss-result.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.ss-progress{font-size:12px;color:var(--gray-muted);margin-bottom:10px;}
+.ss-nav{margin-top:12px;display:none;}
+.ss-nav.show{display:block;}
+
+/* Dependency types */
+.dep-types{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.dt-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.dt-icon{font-size:24px;margin-bottom:8px;}
+.dt-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.dt-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.dt-example{margin-top:8px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+@media(max-width:520px){.dep-types{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 · Job Planning</div>
+  <h1>Task Sequencing: Why the Order You Do Things in Manufacturing Actually Matters</h1>
+  <p class="hero-sub">In manufacturing, doing the right steps isn't enough — you have to do them in the right order. This article explains why sequence is non-negotiable and how to think about it like a production professional.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Start With Something You Already Know</h2>
+    <p>Think about making a sandwich. You can't toast the bread after you've already put the toppings on — the toppings would burn or fall off. You don't pour the soup before it's heated. You don't cut the sandwich before you've assembled it. Order matters.</p>
+    <p>Now scale that up to a factory making 500 steel brackets. Instead of 5 steps in a sandwich, you might have 8 steps across 4 machines, each one requiring the previous step to be fully complete before it can begin. Get the order wrong at any point and you don't just make a bad sandwich — you produce defective parts, waste hours of machine time, damage expensive equipment, or create safety hazards.</p>
+    <div class="pull-quote"><p>In manufacturing, sequence isn't a preference — it's physics. Some things genuinely cannot happen before other things. Task sequencing is the science of respecting that reality.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Is Task Sequencing?</h2>
+    <p><mark>Task sequencing</mark> is the process of determining the correct order of operations for a manufacturing job — and planning the schedule so that each step happens at the right time, after its predecessor is complete, and before the steps that depend on it.</p>
+    <p>Every manufacturing product has a <mark>process route</mark> (sometimes called a routing or operation sheet) — a documented list of every step required to make that product, in the exact order they must be performed. Process routes are created by engineers and process experts, and they're based on both physical requirements and quality standards.</p>
+    <p>Here's a simple example for a steel bracket:</p>
+
+    <div class="seq-flow">
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 1</div><div class="seq-name">Laser Cut</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 2</div><div class="seq-name">Press Bend</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 3</div><div class="seq-name">Weld</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 4</div><div class="seq-name">Weld Inspect</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 5</div><div class="seq-name">Primer Coat</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 6</div><div class="seq-name">Final Inspect</div></div>
+      </div>
+      <div class="seq-arrow">→</div>
+      <div class="seq-step">
+        <div class="seq-box ok"><div class="seq-num">Step 7</div><div class="seq-name">Package</div></div>
+      </div>
+    </div>
+
+    <p>This is the correct sequence. Every step passes its output to the next step. No step can skip ahead. Now let's look at what happens when the sequence gets violated — intentionally or accidentally.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Real Manufacturing Examples: What Goes Wrong When Sequence Breaks</h2>
+    <p>These aren't made-up scenarios. These are the kinds of sequencing failures that happen in real factories when planning is rushed or when workers improvise the order of steps without understanding the downstream consequences.</p>
+
+    <div class="example-cards">
+      <div class="ex-card">
+        <div class="ex-header"><div class="ex-icon">🎨</div><div class="ex-product">Coating Before Inspection</div></div>
+        <div class="ex-body">
+          <div class="ex-right">
+            <div class="ex-right-label">✅ Correct Sequence</div>
+            <div class="ex-seq">
+              <span class="ex-step ok">Weld</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Weld Inspect</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Primer Coat</span>
+            </div>
+            <div class="ex-why good">The weld inspector checks the joint before coating is applied. If there's a defect, the weld can be ground out, repaired, and re-inspected before any coating is wasted on a bad part.</div>
+          </div>
+          <div class="ex-right-label">❌ Wrong Sequence</div>
+          <div class="ex-seq">
+            <span class="ex-step ok">Weld</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Primer Coat</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Weld Inspect</span>
+          </div>
+          <div class="ex-why bad">The coating is applied before the weld is inspected. Inspector finds a defect. Now the coating has to be stripped off so the weld can be ground and repaired. Then the part has to be re-coated. Cost: 2–4 extra hours of work, wasted coating material, and the part is late. This happens when someone thinks they're "saving time" by running coating and inspection in parallel.</div>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-header"><div class="ex-icon">🔩</div><div class="ex-product">Assembly Before Sub-Component Inspection</div></div>
+        <div class="ex-body">
+          <div class="ex-right">
+            <div class="ex-right-label">✅ Correct Sequence</div>
+            <div class="ex-seq">
+              <span class="ex-step ok">Make Part A</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Inspect Part A</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Assemble with Part B</span>
+            </div>
+            <div class="ex-why good">Part A is inspected before it's assembled with Part B. If Part A has a defect, it's caught and replaced before any assembly work happens. Disassembly is never needed.</div>
+          </div>
+          <div class="ex-right-label">❌ Wrong Sequence</div>
+          <div class="ex-seq">
+            <span class="ex-step ok">Make Part A</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Assemble</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Inspect Part A</span>
+          </div>
+          <div class="ex-why bad">Inspection happens after assembly. A defect in Part A is discovered — but now Part A is inside the assembled unit. Disassembling a completed assembly to replace one component can take 2–3 times longer than the original assembly took. Plus the good part (Part B) may be damaged during disassembly. This is a classic sequencing failure in both manufacturing and construction.</div>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-header"><div class="ex-icon">🌡️</div><div class="ex-product">Heat Treatment Timing</div></div>
+        <div class="ex-body">
+          <div class="ex-right">
+            <div class="ex-right-label">✅ Correct Sequence</div>
+            <div class="ex-seq">
+              <span class="ex-step ok">Machine</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Heat Treat</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Grind to Final Dimension</span>
+            </div>
+            <div class="ex-why good">The part is machined slightly oversized, heat-treated (which hardens the metal but also causes slight dimensional changes), then ground to the final precise dimension after heat treatment. This is the only way to achieve both hardness AND dimensional accuracy.</div>
+          </div>
+          <div class="ex-right-label">❌ Wrong Sequence</div>
+          <div class="ex-seq">
+            <span class="ex-step ok">Machine to final size</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Heat Treat</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Use as-is</span>
+          </div>
+          <div class="ex-why bad">The part is machined to final dimension, then heat-treated. The heat treatment causes the metal to distort slightly — now the part is out of tolerance. It either has to be scrapped (expensive) or re-machined (which may compromise the hardened surface). The entire machining operation was wasted. This is why heat treatment must always happen before final precision machining in engineering specifications.</div>
+        </div>
+      </div>
+
+      <div class="ex-card">
+        <div class="ex-header"><div class="ex-icon">📦</div><div class="ex-product">Packaging Before Final Inspection</div></div>
+        <div class="ex-body">
+          <div class="ex-right">
+            <div class="ex-right-label">✅ Correct Sequence</div>
+            <div class="ex-seq">
+              <span class="ex-step ok">Final Inspect</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Package</span><span class="ex-arr">→</span>
+              <span class="ex-step ok">Ship</span>
+            </div>
+            <div class="ex-why good">Final inspection happens before packaging. Defective parts are caught before they're packaged and before any shipping arrangements are made. Simple.</div>
+          </div>
+          <div class="ex-right-label">❌ Wrong Sequence</div>
+          <div class="ex-seq">
+            <span class="ex-step ok">Package</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Final Inspect</span><span class="ex-arr">→</span>
+            <span class="ex-step bad">Ship</span>
+          </div>
+          <div class="ex-why bad">Parts are packaged before final inspection. When a defect is found during inspection, everything has to be unpackaged, sorted, defects removed and reworked or scrapped, then everything re-packaged. This seems obviously wrong — but it happens in real facilities when end-of-shift pressure leads workers to "pre-package" to get ahead, before inspection has signed off.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Types of Dependencies: Why Tasks Are Connected</h2>
+    <p>The connections between tasks are called <mark>dependencies</mark>. There are several types — understanding them helps you recognize why a sequence is what it is, and when it might be possible to adjust it.</p>
+    <div class="dep-types">
+      <div class="dt-card">
+        <div class="dt-icon">🔗</div>
+        <div class="dt-title">Physical Dependency</div>
+        <div class="dt-desc">The output of Step A literally becomes the input of Step B. You cannot do Step B without a completed Step A to work on. This is the most rigid type of dependency — it cannot be reordered under any circumstances.</div>
+        <div class="dt-example">Example: You cannot weld a bracket that hasn't been cut and bent yet. The pressed part is the physical input to the weld step.</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">⚗️</div>
+        <div class="dt-title">Chemical/Material Dependency</div>
+        <div class="dt-desc">A previous step changes the material in a way that must happen before the next step can work correctly. The wrong sequence produces a defective or unusable result even if both steps are executed perfectly.</div>
+        <div class="dt-example">Example: Primer coat must be applied after welding — not before. Weld heat would burn or bubble any coating applied earlier.</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">✅</div>
+        <div class="dt-title">Quality Gate Dependency</div>
+        <div class="dt-desc">A quality inspection step must be completed and passed before the next production step can begin. This protects downstream operations from wasting time and materials on a defective part.</div>
+        <div class="dt-example">Example: Weld inspection must be passed before coating begins. No inspector sign-off = no coating, regardless of time pressure.</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">⏱️</div>
+        <div class="dt-title">Time/Cure Dependency</div>
+        <div class="dt-desc">A step requires elapsed time before the next step can begin — for a coating to dry, adhesive to cure, or metal to cool. This dependency is about waiting, not about work being done. Rushing it produces defects.</div>
+        <div class="dt-example">Example: After powder coating, parts must cool for 2 hours before handling. If picked up too soon, the finish is damaged. The wait is not optional.</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">📋</div>
+        <div class="dt-title">Regulatory Dependency</div>
+        <div class="dt-desc">A step is required by a safety standard, industry regulation, or customer specification before another step can proceed. Skipping it may be physically possible but is legally or contractually prohibited.</div>
+        <div class="dt-example">Example: For aerospace or medical parts, specific inspection steps with documented sign-off are legally required before the part can move forward in the process — regardless of time pressure.</div>
+      </div>
+      <div class="dt-card">
+        <div class="dt-icon">🔄</div>
+        <div class="dt-title">Soft / Efficiency Dependency</div>
+        <div class="dt-desc">Two steps could technically happen in either order, but one order is significantly more efficient or less risky. This is the only type of dependency where AI scheduling tools might explore reordering — with human review.</div>
+        <div class="dt-example">Example: Deburring (removing sharp edges) and cleaning can sometimes swap order depending on the next step. Neither physically prevents the other, but one sequence produces less cleaning work.</div>
+      </div>
+    </div>
+    <p>When an AI scheduling system suggests a different task order, it is typically only adjusting soft dependencies or the scheduling of independent jobs — not reordering steps within a fixed process route. The physical, chemical, quality gate, and regulatory dependencies are hard constraints that AI scheduling tools respect automatically.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Simulation: Can You Put the Steps in Order?</h2>
+    <p>Let's test your understanding of task sequencing with a real scenario. You'll arrange the steps in the correct manufacturing sequence. Think about what each step does and what it needs to have happened first before it can begin.</p>
+
+    <div class="sort-sim">
+      <div class="ss-label">Sequencing Simulation</div>
+      <div class="ss-title">Put the Steps in the Right Order</div>
+      <div class="ss-sub">Drag and drop the steps to arrange them correctly, or use the number buttons to select your order. Then click Check Sequence.</div>
+      <div class="ss-progress" id="ss-progress">Scenario 1 of 3</div>
+      <div class="ss-scenario" id="ss-scenario">
+        <div class="ss-scenario-title" id="ss-scenario-title"></div>
+        <div class="ss-scenario-text" id="ss-scenario-text"></div>
+      </div>
+      <div class="ss-steps" id="ss-steps"></div>
+      <button class="ss-btn" onclick="checkSeq()">Check My Sequence</button>
+      <div class="ss-result" id="ss-result"></div>
+      <div class="ss-nav" id="ss-nav">
+        <button class="ss-btn" style="margin-top:10px;background:var(--white);color:var(--purple);border:1.5px solid var(--purple);" onclick="nextScenario()">Next Scenario →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>How AI Uses Sequencing Knowledge</h2>
+    <p>AI scheduling tools don't invent process routes — they receive them. The correct sequence for every product is defined by engineers and loaded into the system. When an AI builds a schedule, it treats the process route as a hard constraint that cannot be violated.</p>
+    <p>What AI does with sequencing is different: it figures out the most efficient way to <em>schedule</em> the fixed sequence across available machines and workers. It might ask questions like:</p>
+    <p>If three different jobs all need the welding bay as their third step, in what order should they go through — which one first? What if we move Job A's laser cutting to Monday instead of Tuesday so the press station is free sooner? Can we run Job B's coating step during the gap while Job A is waiting for its weld inspection to complete?</p>
+    <p>These are <mark>scheduling decisions</mark> — not sequencing decisions. The steps within each job stay in their fixed order. The AI optimizes when and where each step happens across the whole facility.</p>
+    <p>Understanding this distinction is important when you're reviewing an AI-generated schedule. If the AI suggests moving a bar earlier or later, that's a scheduling adjustment — and it might be worth evaluating. If anyone ever suggests reordering steps within a job's process route, that's a different kind of decision entirely — one that requires engineering review and quality sign-off, not just production planning approval.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-box">
+      <div class="quiz-label">Quick Check</div>
+      <div class="quiz-q">An AI scheduling tool suggests moving Job A's coating step earlier in the week — from Thursday to Wednesday — to take advantage of a gap in Coating Line C's schedule. This adjustment would maintain the correct sequence of steps within Job A. Should you approve this change?</div>
+      <div class="quiz-opts" id="q1-opts">
+        <button class="quiz-opt" onclick="doQ(0,false,'q1')">No — you should never change any part of an AI-generated schedule without re-running the AI to generate a new complete plan</button>
+        <button class="quiz-opt" onclick="doQ(1,false,'q1')">No — the process route is fixed and no steps can ever be moved earlier or later than originally planned</button>
+        <button class="quiz-opt" onclick="doQ(2,true,'q1')">Yes, with verification — moving the coating step earlier is a scheduling adjustment (when/where), not a sequencing violation (the steps stay in the same order). Confirm that Job A's previous steps will actually be complete by Wednesday, that materials are ready, and that no other jobs are displaced from that coating slot.</button>
+        <button class="quiz-opt" onclick="doQ(3,false,'q1')">Yes automatically — if the AI suggested it and the step sequence is maintained, no human review is needed</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. Moving a step to a different time slot is a scheduling decision — as long as the dependency chain is respected (all previous steps complete before coating begins), this kind of adjustment is exactly what AI scheduling optimization is designed to find. But you still verify: will the press and weld steps actually be done by Wednesday? Are there materials ready? Is there another job in that coating slot that gets bumped? AI suggests, humans verify and approve.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ Moving a step to a different time slot (scheduling adjustment) is different from reordering steps within a job (sequencing change). As long as the coating step still happens after all its prerequisites are complete, moving it from Thursday to Wednesday is a legitimate scheduling optimization — exactly what AI tools are designed to find. The key verification step: confirm the prior steps will genuinely be finished before the coating step starts on Wednesday, and check that no other job is displaced.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Task sequencing is the process of determining the correct order of manufacturing operations. Process routes document that order for each product and are defined by engineers — not scheduling tools.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Violating sequence creates costly real-world consequences: wasted coatings stripped and reapplied, assemblies disassembled to fix components, heat treatments that distort precision work done before them.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">There are six types of dependencies: physical, chemical/material, quality gate, time/cure, regulatory, and soft/efficiency. Only soft dependencies might be adjustable — all others are hard constraints.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI scheduling tools respect process routes as fixed constraints. What they optimize is when and where each step happens across available machines and workers — not the order of steps within a job.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">When reviewing AI schedule adjustments, the key check is: does this change respect all dependency chains? If yes, it's a scheduling adjustment worth evaluating. If it would violate a dependency, it must not be approved.</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const scenarios=[
+  {
+    title:'Scenario 1: Making a Painted Steel Panel',
+    text:'A steel panel needs to go through several operations. The scrambled steps below need to be put in the correct manufacturing sequence. Think about what each step produces and what the next step needs as its input.',
+    steps:['Apply spray paint','Cut steel sheet to size','Sand surface smooth','Final quality inspection','Package for shipping','Degrease and clean surface'],
+    correct:[1,5,2,0,3,4],
+    explanation:'Correct order: Cut → Clean/Degrease → Sand → Paint → Inspect → Package. You must cut before you can clean (nothing to clean yet). Clean before sanding (removes surface contaminants that would clog sandpaper). Sand before painting (paint needs a smooth, clean surface to adhere). Paint before inspection (nothing to inspect until surface treatment is done). Inspect before packaging (catch defects before they\'re sealed in a box).'
+  },
+  {
+    title:'Scenario 2: Assembling a Gearbox',
+    text:'A precision gearbox is being assembled from machined parts. The steps below must happen in the right order — getting this wrong could mean disassembling hours of work to fix an early mistake.',
+    steps:['Install output shaft seal','Fill with gear oil','Install gear set and bearings','Inspect all internal components','Bolt on gearbox cover','Test run under load'],
+    correct:[3,2,0,4,1,5],
+    explanation:'Correct order: Inspect components → Install gear set & bearings → Install output shaft seal → Bolt on cover → Fill with gear oil → Test run. Inspect parts before installing (can\'t fix a bad bearing after it\'s assembled). Install gear set before seals (seals go in last during installation to protect them). Seal before cover (seal is part of the housing). Cover before oil fill (oil would pour out of an open housing). Fill oil before test run (running dry destroys bearings immediately).'
+  },
+  {
+    title:'Scenario 3: Manufacturing a Medical Device Component',
+    text:'A stainless steel medical component has strict regulatory requirements. Several steps have mandatory quality checkpoints that cannot be skipped. Place the steps in the correct sequence.',
+    steps:['Laser engrave serial number','Machine to engineering specifications','Package in sterile container','Passivation treatment (removes iron from surface to prevent rust)','Dimensional inspection with documentation','Sterilization process'],
+    correct:[1,4,3,0,5,2],
+    explanation:'Correct order: Machine → Dimensional inspection (documented) → Passivation → Laser engrave serial number → Sterilization → Sterile packaging. Machine first (creates the part). Inspect and document before any surface treatment (regulatory requirement — must verify dimensions before altering surface chemistry). Passivation before engraving (surface treatment could affect engraving quality). Engrave before sterilization (engraving creates particles that must be removed by sterilization). Sterilize before sterile packaging (packaging a non-sterile part in sterile packaging defeats the purpose). Sterile packaging last (once packaged, no further operations possible).'
+  }
+];
+let sIdx=0;
+let currentOrder=[];
+let dragging=null;
+
+function renderScenario(){
+  const s=scenarios[sIdx];
+  document.getElementById('ss-progress').textContent=`Scenario ${sIdx+1} of ${scenarios.length}`;
+  document.getElementById('ss-scenario-title').textContent=s.title;
+  document.getElementById('ss-scenario-text').textContent=s.text;
+  currentOrder=[...s.steps.map((_,i)=>i)];
+  renderSteps();
+  document.getElementById('ss-result').className='ss-result';
+  document.getElementById('ss-nav').className='ss-nav';
+}
+function renderSteps(){
+  const s=scenarios[sIdx];
+  const el=document.getElementById('ss-steps');el.innerHTML='';
+  currentOrder.forEach((stepIdx,pos)=>{
+    const div=document.createElement('div');
+    div.className='ss-step-item';div.draggable=true;div.dataset.pos=pos;
+    div.innerHTML=`<div class="ss-step-num">${pos+1}</div><div class="ss-step-text">${s.steps[stepIdx]}</div><div class="ss-step-drag">⠿</div>`;
+    div.addEventListener('dragstart',e=>{dragging=pos;div.classList.add('dragging');});
+    div.addEventListener('dragend',()=>div.classList.remove('dragging'));
+    div.addEventListener('dragover',e=>{e.preventDefault();div.classList.add('over');});
+    div.addEventListener('dragleave',()=>div.classList.remove('over'));
+    div.addEventListener('drop',e=>{e.preventDefault();div.classList.remove('over');if(dragging===null||dragging===pos)return;const a=[...currentOrder];const t=a.splice(dragging,1)[0];a.splice(pos,0,t);currentOrder=a;renderSteps();dragging=null;});
+    el.appendChild(div);
+  });
+}
+function checkSeq(){
+  const s=scenarios[sIdx];
+  const correct=s.correct;
+  let matches=0;
+  currentOrder.forEach((stepIdx,pos)=>{if(stepIdx===correct[pos])matches++;});
+  const r=document.getElementById('ss-result');
+  if(matches===correct.length){
+    r.className='ss-result show good';
+    r.innerHTML='✅ <strong>Perfect sequence!</strong> '+s.explanation;
+  } else if(matches>=correct.length-2){
+    r.className='ss-result show partial';
+    r.innerHTML=`⚠️ <strong>Almost there — ${matches} of ${correct.length} steps in the right position.</strong> Here\'s the correct order and why:<br><br>${s.explanation}`;
+  } else {
+    r.className='ss-result show bad';
+    r.innerHTML=`❌ <strong>${matches} of ${correct.length} steps correct.</strong> This one is tricky — here\'s the correct order and the reasoning behind it:<br><br>${s.explanation}`;
+  }
+  if(sIdx<scenarios.length-1)document.getElementById('ss-nav').className='ss-nav show';
+}
+function nextScenario(){sIdx++;renderScenario();}
+renderScenario();
+
+const qDone={};
+function doQ(idx,correct,qid){
+  if(qDone[qid])return;qDone[qid]=true;
+  const opts=document.querySelectorAll(`#${qid}-opts .quiz-opt`);
+  opts.forEach(b=>b.disabled=true);
+  opts[idx].classList.add(correct?'correct':'wrong');
+  document.getElementById(`${qid}-${correct?'good':'bad'}`).classList.add('show');
+}
+</script>
+</body>
+</html>

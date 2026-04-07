@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-World Spotlight: How Wrkspce.ai Helped PrecisionTech Schedule a Production Floor</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* company card */
+.company-card{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.cc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.cc-title{font-family:"Fraunces",serif;font-size:22px;font-weight:700;margin-bottom:18px;}
+.cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.cc-box{background:rgba(255,255,255,.07);border-radius:12px;padding:14px 18px;}
+.cc-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:6px;}
+.cc-box-text{font-size:13px;line-height:1.75;color:rgba(255,255,255,.85);}
+@media(max-width:520px){.cc-grid{grid-template-columns:1fr;}}
+
+/* system explainer */
+.system-cards{display:flex;flex-direction:column;gap:16px;margin:24px 0;}
+.sys-card{border-radius:20px;overflow:hidden;border:2px solid;}
+.sys-card.sap{border-color:#3B82F6;}
+.sys-card.mes{border-color:var(--green);}
+.sys-card.ai{border-color:var(--purple);}
+.sys-head{padding:16px 22px;display:flex;align-items:center;gap:14px;}
+.sys-card.sap .sys-head{background:#EFF6FF;}
+.sys-card.mes .sys-head{background:var(--green-pale);}
+.sys-card.ai  .sys-head{background:var(--purple-pale);}
+.sys-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.sys-card.sap .sys-icon{background:#DBEAFE;}
+.sys-card.mes .sys-icon{background:#D1FAE5;}
+.sys-card.ai  .sys-icon{background:var(--purple-mid);}
+.sys-name{font-family:"Fraunces",serif;font-size:17px;font-weight:700;}
+.sys-card.sap .sys-name{color:var(--blue);}
+.sys-card.mes .sys-name{color:var(--green);}
+.sys-card.ai  .sys-name{color:var(--purple-dark);}
+.sys-full{font-size:11px;font-weight:600;margin-top:2px;}
+.sys-card.sap .sys-full{color:#6B8FC2;}
+.sys-card.mes .sys-full{color:#5A8A72;}
+.sys-card.ai  .sys-full{color:var(--gray-muted);}
+.sys-body{padding:0 22px 20px;}
+.sys-body p{font-size:14px;line-height:1.8;margin-bottom:10px;}
+.sys-body p:last-child{margin-bottom:0;}
+.sys-what{margin-top:10px;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.7;}
+.sys-card.sap .sys-what{background:#EFF6FF;color:var(--blue);}
+.sys-card.mes .sys-what{background:var(--green-pale);color:var(--green);}
+.sys-card.ai  .sys-what{background:var(--purple-pale);color:var(--purple-dark);}
+
+/* integration diagram using table */
+.integration-diagram{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.id-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.id-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.id-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;row-gap:14px;}
+.id-node{background:var(--white);border:2px solid;border-radius:14px;padding:16px 18px;text-align:center;min-width:140px;max-width:170px;flex:1;}
+.id-node.sap{border-color:#3B82F6;}
+.id-node.mes{border-color:var(--green);}
+.id-node.wrk{border-color:var(--purple);}
+.id-node.floor{border-color:var(--orange);}
+.id-node-icon{font-size:26px;margin-bottom:6px;}
+.id-node-name{font-weight:700;font-size:13px;margin-bottom:4px;}
+.id-node.sap .id-node-name{color:var(--blue);}
+.id-node.mes .id-node-name{color:var(--green);}
+.id-node.wrk .id-node-name{color:var(--purple-dark);}
+.id-node.floor .id-node-name{color:var(--orange);}
+.id-node-desc{font-size:11px;line-height:1.6;color:var(--gray-muted);}
+.id-arrow{display:flex;align-items:center;padding:0 8px;font-size:22px;color:var(--purple-mid);flex-shrink:0;}
+.id-caption{margin-top:16px;font-size:13px;line-height:1.7;color:var(--gray-muted);font-style:italic;text-align:center;}
+
+/* metrics */
+.metrics-row{display:flex;gap:14px;margin:24px 0;flex-wrap:wrap;}
+.metric-card{flex:1;min-width:160px;border-radius:18px;padding:22px;text-align:center;}
+.metric-card.throughput{background:var(--purple-pale);border:2px solid var(--purple-mid);}
+.metric-card.downtime{background:var(--green-pale);border:2px solid #A7F3D0;}
+.metric-num{font-family:"Fraunces",serif;font-size:44px;font-weight:900;line-height:1;}
+.metric-card.throughput .metric-num{color:var(--purple-dark);}
+.metric-card.downtime  .metric-num{color:var(--green);}
+.metric-label{font-size:13px;font-weight:700;margin-top:6px;margin-bottom:8px;}
+.metric-card.throughput .metric-label{color:var(--purple);}
+.metric-card.downtime  .metric-label{color:var(--green);}
+.metric-desc{font-size:12px;line-height:1.65;color:var(--gray-muted);}
+
+/* what it means for workers */
+.worker-perspectives{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.wp-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;}
+.wp-head{background:var(--white);border-bottom:1.5px solid var(--purple-mid);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.wp-icon{font-size:20px;}
+.wp-role{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.wp-body{padding:14px 20px;}
+.wp-before{margin-bottom:10px;}
+.wp-before-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:4px;}
+.wp-after-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:4px;}
+.wp-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* timeline of a day */
+.day-timeline{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.dt-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.dt-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.dt-events{display:flex;flex-direction:column;gap:0;}
+.dt-event{display:flex;gap:0;align-items:stretch;}
+.dt-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.dt-dot{width:16px;height:16px;border-radius:50%;border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);background:var(--purple);flex-shrink:0;margin-top:16px;}
+.dt-dot.ai{background:var(--blue);}
+.dt-dot.human{background:var(--orange);}
+.dt-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.dt-event:last-child .dt-line{display:none;}
+.dt-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:14px 18px;margin-bottom:12px;}
+.dt-time{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:3px;}
+.dt-action{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.dt-detail{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.dt-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px;}
+.dt-tag.ai{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.dt-tag.human{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.dt-tag.both{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 &middot; Real-World Spotlight</div>
+  <h1>How Wrkspce.ai Helped PrecisionTech Schedule a Production Floor</h1>
+  <p class="hero-sub">The lesson video mentions PrecisionTech's 28% throughput increase and 35% downtime reduction. This article explains what those numbers actually mean, how the AI system worked, and what changed for every worker on the floor.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Meet PrecisionTech Manufacturing</h2>
+  <p>PrecisionTech is a mid-size metal fabrication company. They make custom precision components — things like brackets, housings, and machined shafts — for the automotive and industrial equipment industries. Their customers demand tight tolerances, strict quality standards, and on-time delivery. Being late or delivering defective parts isn't just embarrassing — it can mean losing a major account.</p>
+  <p>Before implementing AI scheduling, PrecisionTech ran their production floor the way most mid-size manufacturers did: a combination of ERP software, Excel spreadsheets, and experienced planners who carried a lot of scheduling knowledge in their heads. It worked — until it didn't.</p>
+
+  <div class="company-card">
+    <div class="cc-label">&#x1F3ED; Company Profile</div>
+    <div class="cc-title">PrecisionTech Manufacturing</div>
+    <div class="cc-grid">
+      <div class="cc-box">
+        <div class="cc-box-label">What They Make</div>
+        <div class="cc-box-text">Custom precision metal components — brackets, housings, machined shafts, and structural plates — for automotive and industrial equipment companies.</div>
+      </div>
+      <div class="cc-box">
+        <div class="cc-box-label">Facility Size</div>
+        <div class="cc-box-text">Mid-size operation: approximately 200 workers, three production shifts, 40+ active machines including CNC mills, laser cutters, welding bays, and coating lines.</div>
+      </div>
+      <div class="cc-box">
+        <div class="cc-box-label">The Challenge</div>
+        <div class="cc-box-text">Increasing order volume + more complex custom jobs + machine breakdowns and worker variability = scheduling falling apart multiple times per week. Manual re-planning was taking hours. Customer complaints were rising.</div>
+      </div>
+      <div class="cc-box">
+        <div class="cc-box-label">What They Implemented</div>
+        <div class="cc-box-text">Wrkspce.ai, an AI scheduling and production optimization tool, integrated with their existing SAP ERP system and Siemens MES. Deployed across all three production shifts over a 6-month rollout.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Three Systems Working Together</h2>
+  <p>Before we explain what Wrkspce.ai does, you need to understand what it plugs into. At PrecisionTech — and at most modern manufacturing facilities — there are three layers of software managing the operation. Each one does something different, and they're most powerful when connected.</p>
+
+  <div class="system-cards">
+    <div class="sys-card sap">
+      <div class="sys-head">
+        <div class="sys-icon">&#x1F4CA;</div>
+        <div>
+          <div class="sys-name">SAP ERP</div>
+          <div class="sys-full">Enterprise Resource Planning — the business management system</div>
+        </div>
+      </div>
+      <div class="sys-body">
+        <p>SAP is one of the world's most widely used business software systems. ERP stands for <strong>Enterprise Resource Planning</strong> — think of it as the central database that runs the entire business. It stores customer orders, inventory levels, supplier information, financial data, employee records, and production history.</p>
+        <p>When a customer places an order with PrecisionTech, SAP records it. When materials arrive from a supplier, SAP updates the inventory count. When a work order is created, SAP stores all the details. Every major business event flows through SAP.</p>
+        <div class="sys-what"><strong>What SAP gives Wrkspce.ai:</strong> The current work orders and their deadlines, material inventory levels, worker certifications, machine capability records, and historical job completion data — all the inputs the AI needs to build an intelligent schedule.</div>
+      </div>
+    </div>
+
+    <div class="sys-card mes">
+      <div class="sys-head">
+        <div class="sys-icon">&#x1F3ED;</div>
+        <div>
+          <div class="sys-name">Siemens MES</div>
+          <div class="sys-full">Manufacturing Execution System — the real-time floor monitor</div>
+        </div>
+      </div>
+      <div class="sys-body">
+        <p>MES stands for <strong>Manufacturing Execution System</strong>. While SAP manages the business side, the MES manages the production floor in real time. Siemens is one of the leading MES providers for industrial manufacturing.</p>
+        <p>The MES is connected to sensors on every machine — monitoring temperature, vibration, speed, output rate, and error signals. When a machine starts a job, the MES tracks it. When the job finishes, the MES records the actual completion time. When a machine goes down, the MES knows within seconds and flags the event.</p>
+        <div class="sys-what"><strong>What Siemens MES gives Wrkspce.ai:</strong> Live machine status data — which machines are running, which are idle, which just flagged an anomaly. This is the "what's actually happening on the floor right now" feed that allows AI to replan in real time instead of working from yesterday's data.</div>
+      </div>
+    </div>
+
+    <div class="sys-card ai">
+      <div class="sys-head">
+        <div class="sys-icon">&#x1F9E0;</div>
+        <div>
+          <div class="sys-name">Wrkspce.ai</div>
+          <div class="sys-full">AI Scheduling Agent — the optimizer that sits on top</div>
+        </div>
+      </div>
+      <div class="sys-body">
+        <p>Wrkspce.ai is described as an <strong>AI scheduling agent</strong> — not just software that stores information, but software that actively makes recommendations and optimizes decisions. It sits on top of SAP and Siemens MES, reading data from both and using AI algorithms to generate, monitor, and update production schedules.</p>
+        <p>An "agent" in AI means it doesn't just respond when asked — it continuously monitors conditions and proactively surfaces issues. If the MES signals that a machine is running slow at 9 AM, Wrkspce.ai doesn't wait for a planner to notice. It immediately calculates the downstream impact and generates recovery options.</p>
+        <div class="sys-what"><strong>What Wrkspce.ai does with all that data:</strong> Generates optimized production schedules, monitors schedule execution in real time, flags developing problems before they become crises, and offers re-plan options when disruptions hit — all presented as Gantt charts the production team can review and approve.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="integration-diagram">
+    <div class="id-label">How the Three Systems Connect</div>
+    <div class="id-title">Data Flows From the Floor Up — Decisions Flow Back Down</div>
+    <div class="id-flow">
+      <div class="id-node sap">
+        <div class="id-node-icon">&#x1F4CA;</div>
+        <div class="id-node-name">SAP ERP</div>
+        <div class="id-node-desc">Work orders, inventory, deadlines, worker records, historical data</div>
+      </div>
+      <div class="id-arrow">&#x2192;</div>
+      <div class="id-node wrk">
+        <div class="id-node-icon">&#x1F9E0;</div>
+        <div class="id-node-name">Wrkspce.ai</div>
+        <div class="id-node-desc">Reads all data, optimizes schedules, flags issues, generates re-plans</div>
+      </div>
+      <div class="id-arrow">&#x2192;</div>
+      <div class="id-node floor">
+        <div class="id-node-icon">&#x1F477;</div>
+        <div class="id-node-name">Production Team</div>
+        <div class="id-node-desc">Reviews AI recommendations, approves or adjusts, releases to floor</div>
+      </div>
+    </div>
+    <div class="id-flow" style="margin-top:10px;">
+      <div class="id-node floor" style="max-width:170px;">
+        <div class="id-node-icon">&#x2699;&#xFE0F;</div>
+        <div class="id-node-name">Shop Floor Machines</div>
+        <div class="id-node-desc">Execute the plan, generate real-time sensor data</div>
+      </div>
+      <div class="id-arrow">&#x2192;</div>
+      <div class="id-node mes">
+        <div class="id-node-icon">&#x1F3ED;</div>
+        <div class="id-node-name">Siemens MES</div>
+        <div class="id-node-desc">Captures live machine status, anomalies, and actual completion times</div>
+      </div>
+      <div class="id-arrow">&#x2192;</div>
+      <div class="id-node wrk">
+        <div class="id-node-icon">&#x1F504;</div>
+        <div class="id-node-name">Wrkspce.ai</div>
+        <div class="id-node-desc">Continuously updates schedule based on live floor reality</div>
+      </div>
+    </div>
+    <div class="id-caption">This is a feedback loop — not a one-time input. The AI continually reads what's happening on the floor and updates its recommendations accordingly.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What a Day With Wrkspce.ai Looks Like</h2>
+  <p>It's easy to talk about AI scheduling in abstract terms. Let's make it concrete. Here's how a typical production day at PrecisionTech actually runs with Wrkspce.ai in place — tracking which actions are AI-driven, which are human decisions, and which are a combination of both.</p>
+
+  <div class="day-timeline">
+    <div class="dt-label">A Day in the Life</div>
+    <div class="dt-title">Monday at PrecisionTech — AI + Human at Work</div>
+    <div class="dt-events">
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot ai"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">5:30 AM — Before the Shift Starts</div>
+          <div class="dt-action">Wrkspce.ai generates Monday's optimized schedule overnight</div>
+          <div class="dt-detail">While the facility is quiet, the AI has already pulled Monday's work orders from SAP, checked current inventory levels, confirmed which machines are scheduled for maintenance, and generated an optimized Gantt chart for the full day shift. The production manager receives it by email and on their tablet dashboard.</div>
+          <div class="dt-tag ai">AI Action</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot human"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">6:45 AM — Production Manager Reviews</div>
+          <div class="dt-action">Human reviews AI schedule before approving it</div>
+          <div class="dt-detail">Maria, the production manager, reviews the AI-generated Gantt chart on her tablet. She notices the AI has assigned a complex CNC job to Jordan — who completed their certification just three weeks ago. The AI doesn't know Jordan is still building speed. Maria reassigns that job to Alex and approves the rest of the schedule as-is. She releases it to the floor at 6:55 AM.</div>
+          <div class="dt-tag human">Human Decision</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">7:00 AM — Shift Starts</div>
+          <div class="dt-action">Workers receive digital work assignments on floor terminals and tablets</div>
+          <div class="dt-detail">Workers clock in and check their assignments on floor terminals — digital screens mounted near each workstation. Each worker sees their first job, which machine, what materials to pull from the staging area, and what the target completion time is. No paper. No walking to a central board. No ambiguity.</div>
+          <div class="dt-tag both">AI + Human</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot ai"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">8:22 AM — Anomaly Detected</div>
+          <div class="dt-action">Wrkspce.ai flags elevated vibration on CNC Mill #3</div>
+          <div class="dt-detail">The Siemens MES feeds live sensor data to Wrkspce.ai. At 8:22 AM, CNC Mill #3's vibration sensor crosses a threshold — not a full alarm, but above the normal range. Wrkspce.ai immediately calculates: if Mill #3 goes down, three jobs are affected. It generates two recovery options and flags the issue on Maria's dashboard within 90 seconds of the anomaly appearing.</div>
+          <div class="dt-tag ai">AI Action</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot human"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">8:35 AM — Maintenance Called, Decision Made</div>
+          <div class="dt-action">Maria reviews AI options, calls maintenance, approves re-plan</div>
+          <div class="dt-detail">Maria walks to Mill #3 herself — it does sound slightly off. She calls maintenance for an assessment. The tech confirms: a bearing is wearing unevenly. Not critical yet, but should be addressed today. Maria picks the AI's Option B: shift Mill #3's afternoon jobs to Mill #4 and do the bearing swap during lunch. The updated schedule is pushed to all worker terminals within minutes.</div>
+          <div class="dt-tag human">Human Decision</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot ai"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">11:45 AM — Mid-Shift Progress Check</div>
+          <div class="dt-action">AI compares actual progress vs. planned schedule, flags one job running 18 minutes behind</div>
+          <div class="dt-detail">The MES tracks actual job completion times against the plan. By late morning, the AI has identified that WO-2214 on the laser cutter is running about 18 minutes behind — not because of a machine issue, but because the material setup took longer than estimated. The AI automatically calculates whether this delay affects any downstream deadlines. It doesn't — there's a natural buffer in the afternoon. No action needed. The flag is logged but no alert is escalated.</div>
+          <div class="dt-tag ai">AI Action</div>
+        </div>
+      </div>
+
+      <div class="dt-event">
+        <div class="dt-spine"><div class="dt-dot both"></div><div class="dt-line"></div></div>
+        <div class="dt-card">
+          <div class="dt-time">3:30 PM — Shift Handoff</div>
+          <div class="dt-action">AI generates evening shift briefing; shift supervisor reviews and hands off</div>
+          <div class="dt-detail">Wrkspce.ai automatically generates a shift handoff report: what was completed, what's in progress, what the evening shift is inheriting, and what to watch for. The day shift supervisor reviews it, adds a note about the Mill #3 bearing swap, and the evening shift supervisor starts their shift with full context — instead of spending 20 minutes being verbally briefed.</div>
+          <div class="dt-tag both">AI + Human</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Numbers: What Do 28% and 35% Actually Mean?</h2>
+  <p>The lesson video mentions two headline results from PrecisionTech's Wrkspce.ai implementation: a <strong>28% increase in throughput</strong> and a <strong>35% reduction in unplanned downtime</strong>. These sound impressive — but what do they actually mean for the people working on the floor every day?</p>
+
+  <div class="metrics-row">
+    <div class="metric-card throughput">
+      <div class="metric-num">28%</div>
+      <div class="metric-label">Increase in Throughput</div>
+      <div class="metric-desc">The factory is producing 28% more finished output per shift — without adding machines, workers, or hours. The same resources are being used more efficiently.</div>
+    </div>
+    <div class="metric-card downtime">
+      <div class="metric-num">35%</div>
+      <div class="metric-label">Reduction in Unplanned Downtime</div>
+      <div class="metric-desc">Machines are unexpectedly stopping 35% less often — because the AI catches early warning signs before they become full breakdowns.</div>
+    </div>
+  </div>
+
+  <p>But percentages alone don't tell the human story. Let's translate each number into what it actually changed for the people doing the work.</p>
+
+  <div class="worker-perspectives">
+    <div class="wp-card">
+      <div class="wp-head"><div class="wp-icon">&#x1F4C8;</div><div class="wp-role">28% Throughput Increase — What It Means in Practice</div></div>
+      <div class="wp-body">
+        <div class="wp-before">
+          <div class="wp-before-label">Before Wrkspce.ai</div>
+          <div class="wp-text">Machines regularly sat idle for 20–40 minutes between jobs while planners figured out what came next, materials were located, and workers received their new assignments. Rush orders disrupted the entire week's schedule because re-planning manually took hours. Jobs frequently queued up at bottleneck machines — workers waiting with nothing to do while other machines downstream sat empty.</div>
+        </div>
+        <div class="wp-after-label">After Wrkspce.ai</div>
+        <div class="wp-text">Workers see their next assignment before their current job finishes. Materials are pre-staged at the next workstation. When a disruption hits, a new plan is available in minutes rather than hours. The gaps between jobs shrank. Machine utilization increased. The same 200 workers running the same 40+ machines are producing roughly 28% more output — not by working harder, but by working with less wasted time between tasks.</div>
+      </div>
+    </div>
+
+    <div class="wp-card">
+      <div class="wp-head"><div class="wp-icon">&#x1F527;</div><div class="wp-role">35% Downtime Reduction — What It Means in Practice</div></div>
+      <div class="wp-body">
+        <div class="wp-before">
+          <div class="wp-before-label">Before Wrkspce.ai</div>
+          <div class="wp-text">Machines broke down without warning — mid-job, mid-shift, mid-week. When a key machine went down unexpectedly, everything behind it in the schedule stopped. Workers waited. Jobs missed deadlines. Emergency maintenance crews worked under pressure. The chaos of an unplanned breakdown could affect multiple customers' orders and take days to recover from.</div>
+        </div>
+        <div class="wp-after-label">After Wrkspce.ai</div>
+        <div class="wp-text">The AI reads live sensor data from every machine continuously. When vibration patterns, temperature curves, or current draws start drifting from normal — even slightly — Wrkspce.ai flags the machine for maintenance review before the breakdown happens. Maintenance now does more planned work (scheduled during low-production windows) and less emergency repair work. Workers experience fewer mid-shift surprises. Customers see fewer late deliveries caused by machine failures.</div>
+      </div>
+    </div>
+
+    <div class="wp-card">
+      <div class="wp-head"><div class="wp-icon">&#x1F9D1;&#x200D;&#x1F4BC;</div><div class="wp-role">What Changed for the Production Planner</div></div>
+      <div class="wp-body">
+        <div class="wp-before">
+          <div class="wp-before-label">Before Wrkspce.ai</div>
+          <div class="wp-text">Building the weekly schedule took 3–4 hours every Sunday. When something disrupted the plan on Monday morning, re-planning could take another 1–2 hours. The planner spent most of their day reacting — moving jobs around, fielding calls from supervisors about machine conflicts, manually tracking which jobs were behind. Little time for anything else.</div>
+        </div>
+        <div class="wp-after-label">After Wrkspce.ai</div>
+        <div class="wp-text">The AI generates the initial weekly schedule in under a minute. The planner reviews it, applies their judgment (like Maria's reassignment of Jordan's job), and approves — typically in 20–30 minutes instead of hours. When disruptions hit, recovery options appear within minutes rather than requiring manual recalculation. The planner now spends more time on process improvement, customer communication, and training — work that AI genuinely cannot do.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What the AI Still Couldn't Do</h2>
+  <p>PrecisionTech's results are real and significant. But it's important to be clear about what Wrkspce.ai did <em>not</em> do — because understanding the limits is just as important as understanding the benefits.</p>
+  <p>The AI did not know that Jordan was still learning. Maria had to catch that. The AI did not walk to Mill #3 to listen to the bearing sound and make a judgment call about urgency. Maria did that. The AI did not explain to a customer why their order was running two hours late and negotiate an acceptable delivery window. That was a human relationship conversation the AI couldn't participate in.</p>
+  <div class="pull-quote"><p>Wrkspce.ai didn't replace PrecisionTech's production team. It gave them back the hours they were spending on manual calculation — so they could spend those hours on the judgment work that actually requires a human.</p></div>
+  <p>The 28% throughput increase and 35% downtime reduction didn't come from the AI doing everything. They came from the AI handling the high-volume, fast-calculation work (scheduling, monitoring, flagging), freeing humans to focus on the contextual, relational, and judgment-intensive work that the AI couldn't reach.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">Wrkspce.ai detected an anomaly on CNC Mill #3's vibration sensor and generated two recovery options. Maria, the production manager, reviewed them and chose Option B. What does this sequence of events illustrate about how AI scheduling tools are supposed to work?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The AI should have made the choice automatically — having a human approve slows down the response time when machines are at risk</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Maria's involvement was unnecessary — if the AI generated the options, it should also select the best one based on its optimization model</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">The AI did what it does best (detected the problem early and calculated options quickly) and the human did what she does best (walked to the machine, heard the bearing, applied contextual judgment to pick the right option) — this is the intended human-AI partnership</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">This shows a limitation of AI — a better system would have detected the bearing problem earlier and prevented the vibration anomaly from occurring at all</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. The AI caught the anomaly in the sensor data within 90 seconds and calculated the downstream implications across all affected jobs — work that would have taken a human planner 30+ minutes to analyze manually, if they noticed the issue at all. Maria brought what the AI couldn't: she physically walked to the machine, she listened to the bearing sound, and she applied 12 years of production experience to calibrate the urgency correctly. Neither the AI alone nor Maria alone would have handled this as well as the combination of both.</div>
+    <div class="quiz-fb bad"  id="q1-bad">&#x274C; The partnership is the point. The AI's value was catching the anomaly early (before a breakdown) and generating options quickly (within 90 seconds). But choosing which option to implement required information the AI couldn't access — like the actual sound the bearing was making, or Maria's knowledge of how that particular machine tends to behave when it's nearing a failure. Auto-selecting an option without human review would mean the AI is acting on incomplete information. That's exactly when expensive mistakes happen.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">PrecisionTech implemented Wrkspce.ai across a 200-worker, 40-machine facility — integrated with SAP ERP (business data) and Siemens MES (live floor data) to give the AI a complete view of both the plan and the real-time reality.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">SAP ERP manages business data: orders, inventory, certifications, history. Siemens MES monitors the production floor in real time: machine status, sensor readings, actual job times. Wrkspce.ai sits above both, reading from each and generating schedules and alerts.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The 28% throughput increase came from reducing idle time between jobs, faster re-planning after disruptions, and better resource matching. The 35% downtime reduction came from catching machine anomalies early — before they became mid-shift breakdowns.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Every human on the floor — operator, planner, supervisor — still had essential work to do. The AI didn't replace judgment. It freed up the time humans had previously spent on manual calculation so they could focus on the work that requires human context and relationships.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

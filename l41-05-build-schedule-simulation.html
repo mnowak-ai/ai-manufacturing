@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation: Build Your Own Production Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* Setup briefing */
+.briefing{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.briefing-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.briefing-title{font-family:"Fraunces",serif;font-size:22px;font-weight:700;margin-bottom:18px;}
+.briefing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.briefing-box{background:rgba(255,255,255,.06);border-radius:12px;padding:14px 18px;}
+.briefing-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:8px;}
+.briefing-item{font-size:13px;line-height:1.8;color:rgba(255,255,255,.85);}
+.briefing-item strong{color:var(--white);}
+@media(max-width:520px){.briefing-grid{grid-template-columns:1fr;}}
+
+/* Phase indicator */
+.phase-bar{display:flex;gap:0;margin:24px 0;border-radius:12px;overflow:hidden;border:1.5px solid var(--purple-mid);}
+.phase-seg{flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
+.phase-seg.active{background:var(--purple);color:var(--white);}
+.phase-seg.done{background:var(--green-pale);color:var(--green);}
+.phase-seg.locked{background:var(--gray-soft);color:var(--gray-muted);cursor:default;}
+.phase-seg:not(:last-child){border-right:1px solid var(--purple-mid);}
+
+/* Task cards */
+.task-pool{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+.task-card{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:16px 20px;transition:all .2s;}
+.task-card.selected{border-color:var(--purple);background:var(--purple-pale);}
+.task-card.assigned{border-color:var(--green);background:var(--green-pale);opacity:.7;}
+.tc-row{display:flex;align-items:flex-start;gap:12px;}
+.tc-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--purple-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.task-card.selected .tc-check{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.task-card.assigned .tc-check{background:var(--green);border-color:var(--green);color:var(--white);}
+.tc-body{flex:1;}
+.tc-name{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.tc-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.tc-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px;}
+.tc-badge.machine{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.tc-badge.time{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.tc-badge.worker{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.tc-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.tc-dep{margin-top:6px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+.tc-assigned{margin-top:6px;font-size:12px;font-weight:600;color:var(--green);display:none;}
+.task-card.assigned .tc-assigned{display:block;}
+
+/* Worker + Machine assignment */
+.assignment-area{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:16px 0;}
+.aa-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:14px;}
+.aa-task-name{font-weight:700;font-size:15px;color:var(--purple);margin-bottom:12px;}
+.aa-section{margin-bottom:16px;}
+.aa-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:8px;}
+.aa-options{display:flex;gap:8px;flex-wrap:wrap;}
+.aa-option{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;}
+.aa-option:hover{border-color:var(--purple);background:var(--purple-pale);}
+.aa-option.selected{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.aa-option.invalid{border-color:var(--red);background:var(--red-pale);color:var(--red);cursor:not-allowed;}
+.aa-slot-options{display:flex;gap:8px;flex-wrap:wrap;}
+.slot-btn{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;}
+.slot-btn:hover{border-color:var(--purple);background:var(--purple-pale);}
+.slot-btn.selected{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.slot-btn.taken{background:var(--gray-soft);color:var(--gray-muted);cursor:not-allowed;border-color:var(--gray-muted);}
+.assign-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;}
+.assign-warning{background:var(--red-pale);border:1px solid var(--red);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);margin-top:8px;display:none;}
+.assign-warning.show{display:block;}
+
+/* Schedule display */
+.schedule-display{background:var(--white);border:2px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:16px 0;}
+.sd-header{background:var(--purple-dark);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;}
+.sd-title{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--white);}
+.sd-stat{font-size:11px;color:rgba(255,255,255,.7);}
+.sd-grid{overflow-x:auto;}
+.sd-table{min-width:500px;width:100%;}
+.sd-col-row{display:grid;border-bottom:1.5px solid var(--purple-mid);}
+.sd-col-head{padding:8px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--purple);text-align:center;border-right:1px solid var(--purple-mid);}
+.sd-col-head:first-child{text-align:left;padding-left:12px;}
+.sd-row{display:grid;border-bottom:1px solid var(--purple-mid);}
+.sd-row:last-child{border-bottom:none;}
+.sd-machine-label{padding:10px 12px;font-size:12px;font-weight:700;color:var(--purple-dark);background:var(--gray-soft);border-right:1px solid var(--purple-mid);display:flex;align-items:center;}
+.sd-cell{border-right:1px solid var(--purple-mid);padding:4px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+.sd-cell:last-child{border-right:none;}
+.sd-bar{border-radius:8px;padding:6px 8px;font-size:10px;font-weight:700;color:var(--white);width:100%;text-align:center;line-height:1.3;}
+.sd-bar.t0{background:var(--purple);}
+.sd-bar.t1{background:#3B82F6;}
+.sd-bar.t2{background:var(--green);}
+.sd-bar.t3{background:var(--orange);}
+.sd-bar.t4{background:#EC4899;}
+.sd-bar.ai{background:var(--purple-dark);opacity:.85;}
+.sd-empty{font-size:10px;color:var(--gray-muted);}
+
+/* AI reveal section */
+.ai-reveal{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:20px 0;display:none;}
+.ai-reveal.show{display:block;}
+.ar-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ar-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:10px;}
+.ar-text{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;}
+.ar-differences{display:flex;flex-direction:column;gap:10px;margin:14px 0;}
+.ar-diff{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;}
+.ar-diff-q{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);margin-bottom:6px;}
+.ar-diff-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.ar-decision{margin-top:14px;}
+.ar-decision-label{font-size:12px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.ar-dec-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.ar-dec-btn{border:1.5px solid var(--purple-mid);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);background:var(--white);transition:all .2s;}
+.ar-dec-btn:hover{border-color:var(--purple);}
+.ar-dec-btn.chosen{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.ar-dec-result{margin-top:12px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.ar-dec-result.show{display:block;background:var(--purple-pale);border:1px solid var(--purple-mid);color:var(--purple-dark);}
+
+/* Summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+.phase-panel{display:none;}
+.phase-panel.active{display:block;}
+.step-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;transition:opacity .2s;}
+.step-btn:hover{opacity:.85;}
+.step-btn.secondary{background:var(--white);color:var(--purple);border:1.5px solid var(--purple);}
+.info-box{background:var(--blue-pale);border:1.5px solid var(--blue-mid);border-radius:14px;padding:16px 20px;margin:14px 0;}
+.info-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:6px;}
+.info-box-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.progress-indicator{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.pi-label{font-size:12px;color:var(--gray-muted);}
+.pi-bar-wrap{flex:1;height:6px;background:var(--purple-mid);border-radius:3px;overflow:hidden;}
+.pi-bar{height:100%;background:var(--purple);border-radius:3px;transition:width .4s;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.1 · Hands-On Activity</div>
+  <h1>Simulation: Build Your Own Production Schedule</h1>
+  <p class="hero-sub">You're the production planner. Five tasks, three workers, two machines, one deadline. Build the schedule — then see what AI suggests instead. You decide whether to accept it, adjust it, or push back.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Your Scenario: Monday Morning at Ridgeline Manufacturing</h2>
+    <p>It's 6:45 AM on Monday. You're the production planner at Ridgeline Manufacturing, a mid-size metal fabrication shop in Ohio. One job just got authorized for today: <strong>Work Order #WO-2204</strong>, a batch of 100 custom aluminum mounting plates for a robotics company.</p>
+    <p>The customer deadline is <strong>today at 5:00 PM</strong>. This is a same-day job — tight, but doable if the schedule is solid. Your job in this simulation is to build the schedule yourself, then compare your plan to what the AI suggests.</p>
+
+    <div class="briefing">
+      <div class="briefing-label">📋 Your Job Brief</div>
+      <div class="briefing-title">WO-2204 — 100 Aluminum Mounting Plates · Due: 5:00 PM Today</div>
+      <div class="briefing-grid">
+        <div class="briefing-box">
+          <div class="briefing-box-label">Your Two Machines</div>
+          <div class="briefing-item"><strong>CNC Mill (M1)</strong> — Can cut, drill, and contour aluminum. Currently idle and ready.</div>
+          <div class="briefing-item" style="margin-top:8px;"><strong>Deburring Station (M2)</strong> — Removes sharp edges after machining. Manual station, one worker at a time. Currently idle.</div>
+        </div>
+        <div class="briefing-box">
+          <div class="briefing-box-label">Your Three Workers</div>
+          <div class="briefing-item"><strong>Alex</strong> — Senior CNC operator, 8 years experience. CNC certified, deburring certified. Full day available.</div>
+          <div class="briefing-item" style="margin-top:6px;"><strong>Sam</strong> — CNC operator, 6 months experience, still building speed. CNC certified (just). Deburring certified. Full day available.</div>
+          <div class="briefing-item" style="margin-top:6px;"><strong>Riley</strong> — Quality inspector. Not CNC certified. Inspection certified. Available after 9 AM (off-site morning meeting).</div>
+        </div>
+        <div class="briefing-box">
+          <div class="briefing-box-label">The 5 Tasks (Process Route)</div>
+          <div class="briefing-item"><strong>Task 1:</strong> CNC Mill — Rough cut all 100 plates (2.5 hrs) — needs CNC-certified operator</div>
+          <div class="briefing-item"><strong>Task 2:</strong> CNC Mill — Drill & contour all 100 plates (1.5 hrs) — needs CNC-certified operator, must follow Task 1</div>
+          <div class="briefing-item"><strong>Task 3:</strong> Deburring Station — Remove all burrs (2 hrs) — any certified worker, must follow Task 2</div>
+          <div class="briefing-item"><strong>Task 4:</strong> Quality Inspection — Inspect all 100 plates (1 hr) — Riley only, must follow Task 3</div>
+          <div class="briefing-item"><strong>Task 5:</strong> Package & Label — Box and label all 100 plates (30 min) — any worker, must follow Task 4</div>
+        </div>
+        <div class="briefing-box">
+          <div class="briefing-box-label">Time Slots Available</div>
+          <div class="briefing-item"><strong>7:00–9:00 AM</strong> (Slot A)</div>
+          <div class="briefing-item"><strong>9:00–11:00 AM</strong> (Slot B)</div>
+          <div class="briefing-item"><strong>11:00 AM–1:00 PM</strong> (Slot C)</div>
+          <div class="briefing-item"><strong>1:00–3:00 PM</strong> (Slot D)</div>
+          <div class="briefing-item"><strong>3:00–5:00 PM</strong> (Slot E — last slot before deadline)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in" id="sim-section">
+    <h2>Build Your Schedule</h2>
+    <p>Work through the three phases below. In Phase 1, assign each task a worker and a machine. In Phase 2, assign each task a time slot. In Phase 3, compare your plan to the AI's suggestion and make your final decision.</p>
+
+    <div class="phase-bar">
+      <div class="phase-seg active" id="phase-btn-0">Phase 1: Assign</div>
+      <div class="phase-seg locked" id="phase-btn-1">Phase 2: Schedule</div>
+      <div class="phase-seg locked" id="phase-btn-2">Phase 3: Compare</div>
+    </div>
+
+    <div class="progress-indicator">
+      <span class="pi-label" id="pi-label">Assigning tasks: 0 of 5</span>
+      <div class="pi-bar-wrap"><div class="pi-bar" id="pi-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- Phase 1: Assign workers + machines -->
+    <div class="phase-panel active" id="phase-0">
+      <p style="font-size:14px;color:var(--gray-muted);margin-bottom:16px;">For each task, select the correct worker and machine (where applicable). Some assignments are invalid — you'll find out why if you try them.</p>
+      <div id="assignment-cards"></div>
+      <button class="step-btn" onclick="goPhase2()" id="phase1-next" style="display:none;">Go to Phase 2: Schedule the Tasks →</button>
+    </div>
+
+    <!-- Phase 2: Schedule time slots -->
+    <div class="phase-panel" id="phase-1">
+      <p style="font-size:14px;color:var(--gray-muted);margin-bottom:16px;">Now assign each task a time slot. Remember: tasks must follow the process route order. Check for machine and worker conflicts. Each machine can only run one task per slot, and each worker can only be in one place at a time.</p>
+      <div id="schedule-cards"></div>
+      <div class="schedule-display" id="gantt-display" style="margin-top:20px;">
+        <div class="sd-header">
+          <span class="sd-title">Your Schedule — WO-2204</span>
+          <span class="sd-stat" id="gantt-stat">0 of 5 tasks scheduled</span>
+        </div>
+        <div class="sd-grid"><div class="sd-table" id="gantt-table"></div></div>
+      </div>
+      <button class="step-btn" onclick="goPhase3()" id="phase2-next" style="display:none;">See AI's Suggestion →</button>
+    </div>
+
+    <!-- Phase 3: Compare with AI -->
+    <div class="phase-panel" id="phase-2">
+      <p style="font-size:14px;color:var(--gray-muted);margin-bottom:16px;">Here's your schedule side by side with what the AI scheduling system recommended. Read both carefully, then make your decisions.</p>
+      <div id="compare-display"></div>
+      <div class="ai-reveal show" id="ai-reveal">
+        <div class="ar-label">🤖 The AI's Recommendation</div>
+        <div class="ar-title" id="ai-title"></div>
+        <div class="ar-text" id="ai-text"></div>
+        <div class="ar-differences" id="ai-diffs"></div>
+        <div class="ar-decision">
+          <div class="ar-decision-label">Now you decide: How will you respond to the AI's suggestion?</div>
+          <div class="ar-dec-opts">
+            <button class="ar-dec-btn" onclick="doDecision('accept',this)">Accept AI plan as-is</button>
+            <button class="ar-dec-btn" onclick="doDecision('partial',this)">Accept part of it, keep part of mine</button>
+            <button class="ar-dec-btn" onclick="doDecision('override',this)">Override — keep my original plan</button>
+          </div>
+          <div class="ar-dec-result" id="ar-dec-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What This Simulation Teaches</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Building a schedule from scratch — even for a small 5-task job — requires tracking worker certifications, machine availability, task dependencies, and time slot conflicts simultaneously. This is why AI tools are valuable.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The AI suggestion isn't automatically better than a human plan — it's different, based on optimization goals you may or may not share. Comparing both plans develops your judgment about when to follow AI and when to push back.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Critical planning details — like Sam being new and slower, or Riley not being available until 9 AM — matter enormously. If those facts aren't in the system, the AI doesn't know them.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The right answer isn't always "accept the AI plan" or "reject it" — often the best response is a thoughtful combination: accept parts of the AI's optimization while preserving the human context it missed.</div></div>
+    </div>
+  </div>
+
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const tasks=[
+  {id:0,name:'Task 1: CNC Mill — Rough Cut',machine:'M1',duration:'2.5 hrs',dep:null,workers:['Alex','Sam'],workerNote:'CNC certified required. Sam is certified but new — will run slower.',machineRequired:'M1',color:'t0'},
+  {id:1,name:'Task 2: CNC Mill — Drill & Contour',machine:'M1',duration:'1.5 hrs',dep:0,workers:['Alex','Sam'],workerNote:'Must follow Task 1. CNC certified required.',machineRequired:'M1',color:'t1'},
+  {id:2,name:'Task 3: Deburring Station — Remove Burrs',machine:'M2',duration:'2 hrs',dep:1,workers:['Alex','Sam','Riley'],workerNote:'Riley not available until 9 AM. Any certified worker.',machineRequired:'M2',color:'t2'},
+  {id:3,name:'Task 4: Quality Inspection',machine:null,duration:'1 hr',dep:2,workers:['Riley'],workerNote:'Riley only — inspection certified. Riley available after 9 AM.',machineRequired:null,color:'t3'},
+  {id:4,name:'Task 5: Package & Label',machine:null,duration:'30 min',dep:3,workers:['Alex','Sam','Riley'],workerNote:'Any available worker. Can use any space.',machineRequired:null,color:'t4'},
+];
+const slots=['A: 7–9 AM','B: 9–11 AM','C: 11 AM–1 PM','D: 1–3 PM','E: 3–5 PM'];
+const slotKeys=['A','B','C','D','E'];
+const workerNames=['Alex','Sam','Riley'];
+let assignments={};// taskId -> {worker, slot}
+let machineSlots={M1:{},M2:{}};// machine -> slot -> taskId
+let workerSlots={Alex:{},Sam:{},Riley:{}};// worker -> slot -> taskId
+
+function renderAssignmentCards(){
+  const c=document.getElementById('assignment-cards');c.innerHTML='';
+  tasks.forEach(t=>{
+    const div=document.createElement('div');
+    div.className='assignment-area';div.id='acard-'+t.id;
+    const assigned=assignments[t.id];
+    div.innerHTML=`
+      <div class="aa-title">Assign: <span class="aa-task-name">${t.name}</span></div>
+      <div style="font-size:13px;color:var(--gray-muted);margin-bottom:12px;">Duration: ${t.duration} ${t.machineRequired?'· Machine: '+t.machineRequired:''} ${t.dep!==null?'· Must follow Task '+(t.dep+1):'· First task — no dependency'}</div>
+      <div class="aa-section">
+        <div class="aa-section-label">Choose Worker</div>
+        <div class="aa-options" id="workers-${t.id}">
+          ${workerNames.map(w=>{
+            const avail=t.workers.includes(w);
+            return `<button class="aa-option${!avail?' invalid':''}" onclick="selectWorker(${t.id},'${w}',this)" id="w-${t.id}-${w}" ${!avail?'disabled title="Not qualified for this task"':''}>${w}${!avail?' ✗':''}</button>`;
+          }).join('')}
+        </div>
+        <div style="font-size:12px;font-style:italic;color:var(--gray-muted);margin-top:6px;">${t.workerNote}</div>
+      </div>
+      ${assigned?`<div style="background:var(--green-pale);border:1px solid var(--green);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--green);margin-top:8px;">✅ Assigned: ${assigned.worker}</div>`:''}
+    `;
+    c.appendChild(div);
+  });
+}
+function selectWorker(taskId,worker,btn){
+  if(!tasks[taskId].workers.includes(worker)){return;}
+  if(!assignments[taskId])assignments[taskId]={worker:null,slot:null};
+  assignments[taskId].worker=worker;
+  document.querySelectorAll(`#workers-${taskId} .aa-option`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkPhase1Complete();
+}
+function checkPhase1Complete(){
+  const done=tasks.filter(t=>assignments[t.id]&&assignments[t.id].worker).length;
+  document.getElementById('pi-label').textContent=`Assigning tasks: ${done} of 5`;
+  document.getElementById('pi-bar').style.width=(done/5*100)+'%';
+  if(done===5){
+    document.getElementById('phase1-next').style.display='inline-block';
+  }
+}
+function goPhase2(){
+  setPhase(1);
+  renderScheduleCards();
+  renderGantt();
+}
+function renderScheduleCards(){
+  const c=document.getElementById('schedule-cards');c.innerHTML='';
+  tasks.forEach(t=>{
+    const div=document.createElement('div');
+    div.className='assignment-area';div.id='scard-'+t.id;
+    const worker=assignments[t.id]?assignments[t.id].worker:'?';
+    div.innerHTML=`
+      <div class="aa-title">Schedule: <span class="aa-task-name">${t.name}</span></div>
+      <div style="font-size:13px;color:var(--gray-muted);margin-bottom:12px;">Worker: <strong>${worker}</strong> · Duration: ${t.duration} ${t.dep!==null?'· ⚠️ Cannot start until Task '+(t.dep+1)+' is complete':''}</div>
+      <div class="aa-section">
+        <div class="aa-section-label">Choose Time Slot</div>
+        <div class="aa-slot-options" id="slots-${t.id}">
+          ${slotKeys.map((sk,si)=>{
+            return `<button class="slot-btn" onclick="selectSlot(${t.id},${si},this)" id="slot-${t.id}-${si}">${slots[si]}</button>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="assign-warning" id="warn-${t.id}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+function selectSlot(taskId,slotIdx,btn){
+  const t=tasks[taskId];
+  const worker=assignments[taskId].worker;
+  const slotKey=slotKeys[slotIdx];
+  // Check dependency
+  if(t.dep!==null){
+    const depSlot=assignments[t.dep]?assignments[t.dep].slot:null;
+    if(depSlot===null){showWarn(taskId,'⚠️ Task '+(t.dep+1)+' hasn\'t been scheduled yet — schedule it first.');return;}
+    if(slotIdx<=assignments[t.dep].slot){showWarn(taskId,'❌ This task depends on Task '+(t.dep+1)+', which ends in slot '+slots[assignments[t.dep].slot]+'. You cannot schedule this task in the same or earlier slot.');return;}
+  }
+  // Check Riley availability
+  if(worker==='Riley'&&slotIdx===0){showWarn(taskId,'❌ Riley is not available until 9 AM — Slot A (7–9 AM) is not possible for Riley.');return;}
+  // Check machine conflict
+  if(t.machineRequired){
+    const mSlots=machineSlots[t.machineRequired];
+    if(mSlots[slotKey]!==undefined&&mSlots[slotKey]!==taskId){showWarn(taskId,'❌ '+t.machineRequired+' is already scheduled in this slot for Task '+(mSlots[slotKey]+1)+'. Choose a different slot.');return;}
+  }
+  // Check worker conflict
+  const wSlots=workerSlots[worker];
+  if(wSlots[slotKey]!==undefined&&wSlots[slotKey]!==taskId){showWarn(taskId,'❌ '+worker+' is already assigned in this slot for Task '+(wSlots[slotKey]+1)+'. Choose a different slot.');return;}
+  // Check slot E task5 (30min fits in E)
+  hideWarn(taskId);
+  // Clear previous slot for this task
+  if(assignments[taskId].slot!==null){
+    const old=slotKeys[assignments[taskId].slot];
+    if(t.machineRequired&&machineSlots[t.machineRequired][old]===taskId)delete machineSlots[t.machineRequired][old];
+    if(workerSlots[worker][old]===taskId)delete workerSlots[worker][old];
+  }
+  assignments[taskId].slot=slotIdx;
+  if(t.machineRequired)machineSlots[t.machineRequired][slotKey]=taskId;
+  workerSlots[worker][slotKey]=taskId;
+  document.querySelectorAll(`#slots-${taskId} .slot-btn`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderGantt();
+  const scheduled=tasks.filter(t=>assignments[t.id]&&assignments[t.id].slot!==null).length;
+  document.getElementById('gantt-stat').textContent=`${scheduled} of 5 tasks scheduled`;
+  if(scheduled===5)document.getElementById('phase2-next').style.display='inline-block';
+}
+function showWarn(taskId,msg){const w=document.getElementById('warn-'+taskId);w.textContent=msg;w.classList.add('show');}
+function hideWarn(taskId){document.getElementById('warn-'+taskId).classList.remove('show');}
+function renderGantt(){
+  const cols=6;
+  const machines=['CNC Mill (M1)','Deburring (M2)','Inspection / Pack'];
+  const gt=document.getElementById('gantt-table');
+  let html=`<div class="sd-col-row" style="grid-template-columns:130px repeat(5,1fr);">
+    <div class="sd-col-head">Resource</div>
+    ${slotKeys.map((s,i)=>`<div class="sd-col-head">${slots[i].split(':')[0]}</div>`).join('')}
+  </div>`;
+  // M1 row
+  html+=`<div class="sd-row" style="grid-template-columns:130px repeat(5,1fr);"><div class="sd-machine-label">CNC Mill (M1)</div>`;
+  slotKeys.forEach((sk,si)=>{
+    const taskId=machineSlots['M1'][sk];
+    if(taskId!==undefined){const t=tasks[taskId];html+=`<div class="sd-cell"><div class="sd-bar ${t.color}">T${taskId+1}: ${assignments[taskId].worker}</div></div>`;}
+    else html+=`<div class="sd-cell"><div class="sd-empty">—</div></div>`;
+  });
+  html+=`</div>`;
+  // M2 row
+  html+=`<div class="sd-row" style="grid-template-columns:130px repeat(5,1fr);"><div class="sd-machine-label">Deburring (M2)</div>`;
+  slotKeys.forEach((sk,si)=>{
+    const taskId=machineSlots['M2'][sk];
+    if(taskId!==undefined){const t=tasks[taskId];html+=`<div class="sd-cell"><div class="sd-bar ${t.color}">T${taskId+1}: ${assignments[taskId].worker}</div></div>`;}
+    else html+=`<div class="sd-cell"><div class="sd-empty">—</div></div>`;
+  });
+  html+=`</div>`;
+  // Inspect/Pack row
+  html+=`<div class="sd-row" style="grid-template-columns:130px repeat(5,1fr);"><div class="sd-machine-label">Inspect / Pack</div>`;
+  slotKeys.forEach((sk,si)=>{
+    let found=null;
+    [3,4].forEach(tid=>{if(assignments[tid]&&assignments[tid].slot===si)found=tid;});
+    if(found!==null){const t=tasks[found];html+=`<div class="sd-cell"><div class="sd-bar ${t.color}">T${found+1}: ${assignments[found].worker}</div></div>`;}
+    else html+=`<div class="sd-cell"><div class="sd-empty">—</div></div>`;
+  });
+  html+=`</div>`;
+  gt.innerHTML=html;
+}
+function goPhase3(){
+  setPhase(2);
+  renderComparison();
+  showAIReveal();
+}
+function renderComparison(){
+  const c=document.getElementById('compare-display');
+  let rows='';
+  tasks.forEach(t=>{
+    const a=assignments[t.id];
+    rows+=`<div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;background:var(--gray-soft);border-radius:10px;padding:10px 14px;">
+      <div style="flex:2;font-size:13px;font-weight:600;color:var(--purple-dark);">Task ${t.id+1}: ${t.name.split('—')[1].trim()}</div>
+      <div style="flex:1;font-size:13px;"><strong>Your plan:</strong><br>${a.worker}, Slot ${slotKeys[a.slot]} (${slots[a.slot].split(':')[0].trim()})</div>
+    </div>`;
+  });
+  c.innerHTML=`<div style="margin-bottom:16px;"><div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;">Your Schedule Summary</div>${rows}</div>`;
+}
+function showAIReveal(){
+  // Determine if user assigned Sam to Task 1 (suboptimal) or Alex (better)
+  const task1worker=assignments[0].worker;
+  const task2worker=assignments[1].worker;
+  const task3worker=assignments[2].worker;
+  const task3slot=assignments[2].slot;
+  const task4slot=assignments[3].slot;
+  const task5slot=assignments[4].slot;
+
+  let aiTitle='The AI recommends a slightly different arrangement — here\'s what it found:';
+  let aiText='The AI scheduling system analyzed the task requirements, worker certifications, machine availability, and the 5 PM deadline. It generated the following optimized plan and flagged one important consideration for human review.';
+  
+  let diffs=[
+    {q:'Task 1 & 2 (CNC Mill Steps): AI Recommendation',text:'The AI assigns both CNC steps to <strong>Alex</strong> (Slots A and B — 7 AM to 11 AM). Alex\'s historical cycle time is 12% faster than the facility average on this type of job. By keeping Alex on both CNC steps, the AI calculates a completion by 11 AM rather than later in the day — protecting the deadline buffer.'},
+    {q:'Task 3 (Deburring): AI Recommendation',text:'The AI assigns Task 3 to <strong>Sam</strong> in Slot C (11 AM–1 PM). Sam is fully certified and capable for deburring. This keeps Sam productive while Alex finishes the CNC steps. The AI notes that if Sam has never done this specific part before, supervision may be worth verifying — but flags this for human review, not as a disqualifier.'},
+    {q:'What the AI Flagged for Human Review',text:'⚠️ The AI cannot confirm Riley\'s 9 AM availability. It knows Riley is scheduled but cannot see the off-site meeting. <strong>You need to confirm Riley will definitely be back by Slot C or D</strong> to run the inspection. If the meeting runs long, Task 4 (Inspection) may need to shift to Slot D — which still allows Task 5 to complete by 5 PM, but leaves no buffer.'},
+  ];
+  
+  if(task1worker==='Alex'){
+    diffs[0].text='<strong>Your plan and the AI agree here</strong> — Alex on the CNC steps is the right call. Alex\'s experience protects the deadline on the most time-sensitive steps.';
+  }
+  if(task1worker==='Sam'){
+    diffs[0].text='The AI assigned Alex to the CNC steps instead of Sam. The AI\'s historical data shows Alex runs this type of CNC operation 12% faster than the facility average. Sam is still learning and may run 20–30% slower, which risks the 5 PM deadline with no buffer. <strong>This is the AI\'s most significant recommendation — and it\'s worth taking seriously.</strong>';
+  }
+
+  document.getElementById('ai-title').textContent=aiTitle;
+  document.getElementById('ai-text').textContent=aiText;
+  const diffsEl=document.getElementById('ai-diffs');diffsEl.innerHTML='';
+  diffs.forEach(d=>{
+    const div=document.createElement('div');div.className='ar-diff';
+    div.innerHTML=`<div class="ar-diff-q">${d.q}</div><div class="ar-diff-text">${d.text}</div>`;
+    diffsEl.appendChild(div);
+  });
+}
+const decisionResponses={
+  accept:'✅ Solid choice. The AI\'s plan accounts for Alex\'s speed advantage on the CNC steps and keeps Sam productive on deburring. The most important follow-up: personally confirm Riley\'s return time from the morning meeting before the shift gets deep into Task 3. If Riley is delayed, you need to know now — not at 1 PM when inspection was supposed to start.',
+  partial:'✅ Good professional judgment. Taking the best elements of both plans — the AI\'s optimal task assignments and your own local knowledge — is often the right move. The key is documenting why you made each choice so there\'s a clear record if something goes wrong and someone asks why the plan looked the way it did.',
+  override:'⚠️ You can override the AI — that\'s your right as the planner. But make sure you have a clear reason. If Sam is on the CNC steps and runs 25% slower than Alex, do the math: Task 1 goes from 2.5 hrs to 3+ hrs. That may push Task 2 into Slot C, Task 3 into Slot D, inspection into Slot E, and packaging off the clock. Your override needs a reason that outweighs that risk — or adjust Sam\'s time estimates before committing to the plan.'
+};
+function doDecision(key,btn){
+  document.querySelectorAll('.ar-dec-btn').forEach(b=>b.classList.remove('chosen'));
+  btn.classList.add('chosen');
+  const r=document.getElementById('ar-dec-result');
+  r.innerHTML=decisionResponses[key];
+  r.classList.add('show');
+}
+function setPhase(idx){
+  [0,1,2].forEach(i=>{
+    document.getElementById('phase-'+i).className='phase-panel'+(i===idx?' active':'');
+    const btn=document.getElementById('phase-btn-'+i);
+    if(i<idx)btn.className='phase-seg done';
+    else if(i===idx)btn.className='phase-seg active';
+    else btn.className='phase-seg locked';
+  });
+}
+renderAssignmentCards();
+</script>
+</body>
+</html>
