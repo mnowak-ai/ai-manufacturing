@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Technician to Supervisor: How AI Skills Open the Door to Career Advancement</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* CAREER PATH EXPLORER */
+.path-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.pe-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pe-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.pe-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.pe-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.pe-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.pe-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.pe-panel{display:none;}
+.pe-panel.active{display:block;}
+.pe-steps{display:flex;flex-direction:column;gap:0;}
+.pe-step{display:flex;gap:0;align-items:stretch;}
+.pe-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.pe-dot{width:18px;height:18px;border-radius:50%;background:var(--purple);flex-shrink:0;z-index:1;border:3px solid var(--white);}
+.pe-line{width:2px;background:var(--purple-mid);flex:1;min-height:14px;}
+.pe-step:last-child .pe-line{background:transparent;}
+.pe-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;margin-bottom:12px;margin-left:10px;}
+.pe-card.highlight{border-color:var(--purple);background:var(--purple-pale);}
+.pe-role-level{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
+.pe-role-title{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;margin-bottom:4px;}
+.pe-role-pay{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;}
+.pe-role-time{font-size:12px;color:var(--gray-muted);margin-bottom:8px;}
+.pe-ai-unlock{background:var(--purple-pale);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+.pe-ai-unlock strong{color:var(--purple);}
+
+/* WHAT MAKES THE DIFFERENCE */
+.diff-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ds-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ds-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ds-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ds-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.ds-compare{grid-template-columns:1fr;}}
+.ds-col{}
+.ds-col-header{font-family:"Fraunces",serif;font-size:16px;font-weight:700;padding:12px 16px;border-radius:12px 12px 0 0;margin-bottom:0;}
+.ds-col.advance .ds-col-header{background:var(--purple-dark);color:#fff;}
+.ds-col.stagnate .ds-col-header{background:#374151;color:#fff;}
+.ds-items{display:flex;flex-direction:column;gap:0;border:1.5px solid var(--purple-mid);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;}
+.ds-item{padding:12px 14px;font-size:13px;line-height:1.7;border-bottom:1px solid var(--purple-mid);}
+.ds-item:last-child{border-bottom:none;}
+.ds-col.advance .ds-item{background:var(--green-pale);color:var(--green);}
+.ds-col.stagnate .ds-item{background:#F9FAFB;color:#6B7280;}
+
+/* SALARY JUMP SIM */
+.salary-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:24px 0;}
+.salary-grid{display:flex;flex-direction:column;gap:12px;}
+.salary-row{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;}
+.salary-role{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.salary-bars{display:flex;gap:10px;align-items:center;margin-bottom:4px;flex-wrap:wrap;}
+.salary-label{font-size:11px;color:var(--gray-muted);width:90px;flex-shrink:0;}
+.salary-bar-wrap{flex:1;height:18px;background:var(--purple-mid);border-radius:100px;overflow:hidden;min-width:80px;}
+.salary-bar{height:100%;border-radius:100px;transition:width 1.4s ease;width:0;}
+.salary-bar.without-ai{background:#9CA3AF;}
+.salary-bar.with-ai{background:var(--purple);}
+.salary-num{font-size:11px;font-weight:700;width:60px;flex-shrink:0;}
+.salary-num.without-ai{color:#6B7280;}
+.salary-num.with-ai{color:var(--purple);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>From Technician to Supervisor: How AI Skills Open the Door to Career Advancement</h1>
+  <p class="hero-sub">The lesson says "AI skills open more doors." This article shows you exactly which doors, the specific progression from entry-level to leadership, what the salary jumps look like, and what actually separates workers who advance from workers who stay in the same role for years.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Honest Truth About Career Advancement in Manufacturing</h2>
+  <p>Here's something nobody tells you when you start a manufacturing career: <mark>most people who stay entry-level don't stay there because they lack skill</mark>. They stay there because they never build the specific combination of things that gets them noticed for something bigger.</p>
+  <p>Technical skill gets you hired. It keeps you employed. But technical skill alone — even excellent technical skill — is usually not what gets you promoted. What gets you promoted is a combination of technical competence, the ability to think beyond your immediate task, communication that makes supervisors trust you, and increasingly, the ability to work confidently with the AI tools that are now running alongside every manufacturing role.</p>
+  <p>AI skill is not a magic key. But it is a real accelerant — because it's a specific, observable thing that demonstrates several of the qualities supervisors look for when they decide who to promote.</p>
+
+  <div class="pull-quote">
+    <p>A worker who can explain what the AI is doing, decide when to trust it, and communicate clearly about both — is demonstrating leadership before they have the title.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Three Career Paths — Step by Step</h2>
+  <p>Here are three realistic career paths in manufacturing with AI skills woven in. Click each path to see the full progression — every step, typical timeline, salary range, and what the AI skill unlocked at that stage.</p>
+
+  <div class="path-explorer">
+    <div class="pe-label">Career Path Explorer</div>
+    <div class="pe-title">Select a Starting Point</div>
+    <div class="pe-sub">Each path starts at entry-level and shows what advancement looks like over 8–12 years. The highlighted steps show where AI skill made the biggest difference.</div>
+    <div class="pe-tabs" id="pe-tabs"></div>
+    <div id="pe-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Actually Makes the Difference</h2>
+  <p>Two workers can start the same job on the same day, with similar skills and similar performance. Five years later, one is a supervisor. One is still at the same level. What happened?</p>
+  <p>It's almost never one dramatic moment. It's the accumulation of small, consistent behaviors over time. Here's how those behaviors look different:</p>
+
+  <div class="diff-sim">
+    <div class="ds-label">Behavior Comparison</div>
+    <div class="ds-title">Worker A vs. Worker B — Same Starting Point</div>
+    <div class="ds-sub">These two workers have the same technical skills on Day 1. Five years later, Worker A is a supervisor. Worker B is still at entry level. Here's what actually made the difference.</div>
+    <div class="ds-compare" id="ds-compare"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What the Salary Difference Looks Like</h2>
+  <p>Career advancement isn't just about the title. It's about what you earn. Here's what the salary progression looks like across two scenarios — with and without deliberate AI skill development — over a 10-year career in manufacturing maintenance:</p>
+
+  <div class="salary-sim">
+    <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#6B7280;"><div style="width:14px;height:14px;border-radius:3px;background:#9CA3AF;flex-shrink:0;"></div>Without AI skill focus</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--purple);"><div style="width:14px;height:14px;border-radius:3px;background:var(--purple);flex-shrink:0;"></div>With AI skill development</div>
+    </div>
+    <div class="salary-grid" id="salary-grid"></div>
+  </div>
+  <p>The difference compounds over time. A worker without AI skill development reaches a salary ceiling relatively early and has fewer opportunities to break through it. A worker who actively builds AI competency keeps finding new doors open as their skills become more relevant to higher-level responsibilities.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A maintenance technician with excellent mechanical skills has been at the same level for 4 years. Her supervisor says she's technically very good but hasn't been considered for the Lead Technician opening. Based on what you've learned in this article, what is MOST likely holding her back?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Her mechanical skills aren't strong enough for a leadership role</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">She needs a degree before she can be promoted to Lead Technician</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Technical excellence alone rarely gets people promoted — she likely hasn't built the combination of broader skills (communication, AI tool fluency, documentation habits, initiative) that supervisors look for in someone ready for more responsibility</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">She has been at the company too long and would need to move to a new company to advance</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Exactly right. The article is clear: technical excellence gets you hired and keeps you employed, but it's rarely what gets you promoted. What supervisors look for is the combination — technical competence plus communication, plus evidence that you think beyond your immediate task, plus comfort with the tools and data that now define every senior role. A technician who only does excellent technical work and nothing else often gets overlooked because supervisors don't see evidence that she's ready for something bigger.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Technical skill is necessary but not sufficient for promotion in manufacturing. Degrees are rarely required for Lead Technician roles, and company tenure isn't what holds people back. The most common reason technically strong workers don't advance is that they haven't demonstrated the broader combination of skills — communication, initiative, AI tool fluency, accountability — that leadership roles require. That's the gap to close.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Technical skill gets you hired, but advancement requires more: communication, initiative, the ability to work with data and AI tools, and consistent behavior that supervisors notice and trust over time.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">All three career paths in manufacturing (maintenance, quality, operations) have clear progression ladders — from entry-level positions to specialist, supervisor, and management roles — with significant salary increases at each step.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI skill accelerates advancement because it demonstrates several of the things supervisors look for: the ability to work with data, adapt to new tools, make judgment calls, and communicate about complex situations clearly.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The salary difference between a worker who develops AI competency and one who doesn't compounds significantly over a 10-year career — the gap between a ceiling and a trajectory.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');if(x.target.querySelector('.salary-bar'))animateSalary();}});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var paths=[
+  {name:"🔧 Maintenance",steps:[
+    {level:"Entry",title:"Production Operator / Helper",pay:"$36k–$44k",time:"0–1 year",ai:"AI connection: Begin learning to read basic machine dashboards. Notice that the facility has equipment sensors — start understanding what they track.",highlight:false},
+    {level:"Entry-Mid",title:"Maintenance Technician I",pay:"$44k–$56k",time:"1–3 years",ai:"🔓 AI unlock: Complete predictive maintenance training. Begin using the facility's CMMS (maintenance software). Learn to evaluate alerts from the monitoring system. This is when AI skill starts differentiating you from peers with equal mechanical skill.",highlight:true},
+    {level:"Mid",title:"Maintenance Technician II / Senior Technician",pay:"$56k–$72k",time:"3–6 years",ai:"🔓 AI unlock: Become the person coworkers ask about predictive alerts. Document your investigations clearly. Start identifying patterns in the alert data — trending issues, seasonal failures. Supervisors notice workers who bring data to conversations, not just observations.",highlight:true},
+    {level:"Senior",title:"Lead Maintenance Technician",pay:"$68k–$82k",time:"5–8 years",ai:"🔓 AI unlock: Review and prioritize AI-generated work order queues for the team. Help train newer technicians on alert investigation. Become the person who bridges AI tool outputs and physical maintenance decisions.",highlight:true},
+    {level:"Management",title:"Maintenance Supervisor",pay:"$80k–$100k+",time:"8–12 years",ai:"AI is now table stakes: You're expected to interpret maintenance dashboards for leadership, present reliability metrics, and drive decisions about maintenance strategy. Workers who built AI literacy early arrive here ready; those who didn't often get passed over.",highlight:false}
+  ]},
+  {name:"🔍 Quality",steps:[
+    {level:"Entry",title:"Production Operator / Assembly Worker",pay:"$36k–$46k",time:"0–1 year",ai:"AI connection: Learn the production process and quality standards for the products you're making. Begin observing how the quality monitoring systems work near your station.",highlight:false},
+    {level:"Entry-Mid",title:"Quality Inspector",pay:"$44k–$58k",time:"1–3 years",ai:"🔓 AI unlock: Learn to work with the AI vision inspection system or automated measurement equipment. Understand what types of defects the system catches reliably versus where it generates false positives. Document your inspection findings consistently.",highlight:true},
+    {level:"Mid",title:"Quality Control Analyst",pay:"$54k–$72k",time:"3–5 years",ai:"🔓 AI unlock: Begin using the quality management software to run defect trend reports. Identify patterns in what the AI flags correctly versus incorrectly. Bring data to quality meetings rather than just anecdotes. This is a significant differentiator.",highlight:true},
+    {level:"Senior",title:"Quality Engineer / Senior Quality Analyst",pay:"$68k–$90k",time:"5–9 years",ai:"🔓 AI unlock: Design inspection sampling plans that account for AI vision system capabilities. Evaluate AI system performance over time and recommend configuration improvements. Become the person who knows both the quality standards and the technology.",highlight:true},
+    {level:"Management",title:"Quality Manager",pay:"$85k–$115k+",time:"9–14 years",ai:"AI drives strategy: You're presenting quality trend data to operations leadership, managing the AI quality systems as assets, and driving decisions about which quality technologies to invest in. Data fluency is non-negotiable at this level.",highlight:false}
+  ]},
+  {name:"📊 Operations",steps:[
+    {level:"Entry",title:"Production Coordinator / Material Handler",pay:"$38k–$50k",time:"0–2 years",ai:"AI connection: Learn the production process and the flow of materials through the facility. Start observing how production schedules are communicated and adjusted throughout the day.",highlight:false},
+    {level:"Entry-Mid",title:"Shift Lead / Production Coordinator",pay:"$48k–$62k",time:"2–4 years",ai:"🔓 AI unlock: Get access to the production scheduling software. Learn to read the AI-generated schedule and understand what inputs drive it. Begin identifying where the AI's recommendations don't match floor reality — and speaking up about those gaps.",highlight:true},
+    {level:"Mid",title:"Production Planner",pay:"$54k–$75k",time:"3–6 years",ai:"🔓 AI unlock: Review and modify AI-generated production schedules daily. Use inventory AI alerts to coordinate material management. Pull production performance data and translate it into actionable recommendations for supervisors. You become fluent in the planning tools.",highlight:true},
+    {level:"Senior",title:"Senior Planner / Operations Analyst",pay:"$70k–$88k",time:"6–10 years",ai:"🔓 AI unlock: You're analyzing AI-generated capacity and efficiency recommendations across multiple production lines. Presenting performance data to leadership. Driving continuous improvement initiatives informed by production analytics.",highlight:true},
+    {level:"Management",title:"Operations Manager / Plant Manager",pay:"$90k–$130k+",time:"10–15 years",ai:"AI is now leadership language: Strategic decisions about production investment, headcount, and technology are increasingly driven by AI-generated operational data. Leaders who can fluently read and act on that data are the ones who get to this level.",highlight:false}
+  ]}
+];
+
+var tabsEl=document.getElementById('pe-tabs'),panelsEl=document.getElementById('pe-panels'),activeTab=0;
+paths.forEach(function(p,i){
+  var tab=document.createElement('div');tab.className='pe-tab'+(i===0?' active':'');tab.textContent=p.name;
+  tab.onclick=function(){activeTab=i;document.querySelectorAll('.pe-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.pe-panel').forEach(function(pan,j){pan.classList.toggle('active',j===i);});};
+  tabsEl.appendChild(tab);
+  var panel=document.createElement('div');panel.className='pe-panel'+(i===0?' active':'');
+  var html='<div class="pe-steps">';
+  p.steps.forEach(function(step){
+    html+='<div class="pe-step"><div class="pe-left"><div class="pe-dot"></div><div class="pe-line"></div></div>'
+      +'<div class="pe-card'+(step.highlight?' highlight':'')+'"><div class="pe-role-level">'+step.level+'</div><div class="pe-role-title">'+step.title+'</div>'
+      +'<div class="pe-role-pay">'+step.pay+'</div><div class="pe-role-time">Typical timeline: '+step.time+'</div>'
+      +'<div class="pe-ai-unlock">'+step.ai+'</div></div></div>';
+  });
+  html+='</div><div style="margin-top:10px;font-size:12px;color:var(--gray-muted);line-height:1.6;">🔓 Highlighted steps are where AI skill most directly accelerated advancement in this path.</div>';
+  panel.innerHTML=html;
+  panelsEl.appendChild(panel);
+});
+
+var behaviors=[
+  {advance:"Asks questions when a new tool or system is introduced",stagnate:"Waits for someone else to figure out the new tool"},
+  {advance:"Documents maintenance investigations and AI alert outcomes clearly",stagnate:"Fixes things but rarely writes anything down"},
+  {advance:"Brings data to conversations with supervisors — 'Here's what the trend is showing'",stagnate:"Reports problems verbally without data to back them up"},
+  {advance:"Learns the AI monitoring platform well enough to teach it to others",stagnate:"Uses the minimum required and doesn't go deeper"},
+  {advance:"Volunteers for new projects and cross-training opportunities",stagnate:"Stays strictly within assigned responsibilities"},
+  {advance:"Communicates clearly when an AI alert turns out to be a false positive and why",stagnate:"Dismisses alerts without logging the investigation"},
+  {advance:"Thinks about why something happened, not just what happened",stagnate:"Fixes the symptom and moves on"}
+];
+var cmpEl=document.getElementById('ds-compare');
+var aCol=document.createElement('div');aCol.className='ds-col advance';
+var bCol=document.createElement('div');bCol.className='ds-col stagnate';
+aCol.innerHTML='<div class="ds-col-header">✅ Worker A — Advances</div>';
+bCol.innerHTML='<div class="ds-col-header">⬛ Worker B — Same level 5 years later</div>';
+var aItems=document.createElement('div');aItems.className='ds-items';
+var bItems=document.createElement('div');bItems.className='ds-items';
+behaviors.forEach(function(b){
+  var ai=document.createElement('div');ai.className='ds-item';ai.textContent=b.advance;aItems.appendChild(ai);
+  var bi=document.createElement('div');bi.className='ds-item';bi.textContent=b.stagnate;bItems.appendChild(bi);
+});
+aCol.appendChild(aItems);bCol.appendChild(bItems);
+cmpEl.appendChild(aCol);cmpEl.appendChild(bCol);
+
+var salaryData=[
+  {role:"Year 1–2: Entry-Level Technician",without:"$40k",withAI:"$42k",wpct:31,aipct:33},
+  {role:"Year 3–4: Technician II",without:"$50k",withAI:"$56k",wpct:38,aipct:43},
+  {role:"Year 5–6: Senior Technician",without:"$58k",withAI:"$68k",wpct:45,aipct:52},
+  {role:"Year 7–8: Lead / Specialist",without:"$62k",withAI:"$78k",wpct:48,aipct:60},
+  {role:"Year 9–10: Supervisor / Engineer",without:"$65k",withAI:"$92k",wpct:50,aipct:71}
+];
+var sgEl=document.getElementById('salary-grid');
+salaryData.forEach(function(s){
+  var div=document.createElement('div');div.className='salary-row';
+  div.innerHTML='<div class="salary-role">'+s.role+'</div>'
+    +'<div class="salary-bars"><span class="salary-label">Without AI</span><div class="salary-bar-wrap"><div class="salary-bar without-ai" data-pct="'+s.wpct+'"></div></div><span class="salary-num without-ai">'+s.without+'</span></div>'
+    +'<div class="salary-bars"><span class="salary-label">With AI skill</span><div class="salary-bar-wrap"><div class="salary-bar with-ai" data-pct="'+s.aipct+'"></div></div><span class="salary-num with-ai">'+s.withAI+'</span></div>';
+  sgEl.appendChild(div);
+});
+var salaryAnimated=false;
+function animateSalary(){if(salaryAnimated)return;salaryAnimated=true;document.querySelectorAll('.salary-bar').forEach(function(b){b.style.width=b.getAttribute('data-pct')+'%';});}
+var salaryObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)animateSalary();});},{threshold:0.3});
+var sg=document.getElementById('salary-grid');if(sg)salaryObs.observe(sg);
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

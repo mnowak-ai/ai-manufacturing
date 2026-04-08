@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Tech Adaptability — And Can You Learn It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* MYTH BUSTER */
+.myth-grid{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.myth-card{border-radius:14px;overflow:hidden;}
+.myth-header{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;cursor:pointer;background:var(--gray-soft);border:1.5px solid var(--purple-mid);}
+.myth-header.revealed{border-radius:14px 14px 0 0;border-bottom:none;}
+.myth-icon{font-size:20px;flex-shrink:0;}
+.myth-text{font-size:15px;font-weight:600;color:var(--gray-text);flex:1;line-height:1.5;}
+.myth-toggle{font-size:14px;color:var(--purple);font-weight:700;flex-shrink:0;white-space:nowrap;}
+.myth-reveal{display:none;background:var(--green-pale);border:1.5px solid var(--green);border-top:none;border-radius:0 0 14px 14px;padding:14px 18px;font-size:14px;line-height:1.8;color:var(--green);}
+.myth-reveal.show{display:block;}
+
+/* SCENARIO WALK */
+.scenario-walk{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sw-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sw-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sw-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sw-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.sw-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.sw-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.sw-panel{display:none;}
+.sw-panel.active{display:block;}
+.sw-event{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--purple-mid);}
+.sw-event:last-child{border-bottom:none;}
+.sw-phase{width:80px;flex-shrink:0;}
+.sw-phase-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);}
+.sw-phase-day{font-family:"Fraunces",serif;font-size:13px;color:var(--purple-dark);font-weight:700;}
+.sw-event-body{}
+.sw-event-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.sw-event-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.sw-adapt-tag{display:inline-flex;align-items:center;gap:4px;background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px;}
+.sw-avoid-tag{display:inline-flex;align-items:center;gap:4px;background:var(--red-pale);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px;}
+
+/* HABIT BUILDER */
+.habit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+@media(max-width:560px){.habit-grid{grid-template-columns:1fr;}}
+.habit-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;}
+.habit-num{font-family:"Fraunces",serif;font-size:32px;font-weight:900;color:var(--purple-mid);line-height:1;margin-bottom:6px;}
+.habit-title{font-family:"Fraunces",serif;font-size:15px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.habit-body{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.habit-example{margin-top:8px;background:var(--purple-pale);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--purple-dark);line-height:1.6;}
+
+/* SELF ASSESSMENT */
+.self-assess{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sa-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sa-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sa-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sa-items{display:flex;flex-direction:column;gap:14px;}
+.sa-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:16px 18px;}
+.sa-situation{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:10px;}
+.sa-situation::before{content:"Situation: ";color:var(--purple);}
+.sa-opts{display:flex;flex-direction:column;gap:6px;}
+.sa-opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;cursor:pointer;border:1.5px solid transparent;transition:all .2s;}
+.sa-opt:hover{background:var(--purple-pale);border-color:var(--purple-mid);}
+.sa-opt input{margin-top:3px;flex-shrink:0;accent-color:var(--purple);}
+.sa-opt-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.sa-btn{margin-top:14px;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.sa-result{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75;}
+.sa-result.show{display:block;}
+.sa-result.adaptive{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.sa-result.developing{background:var(--orange-pale);border:1px solid var(--orange);color:var(--orange);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>What Is Tech Adaptability — And Can You Learn It?</h1>
+  <p class="hero-sub">Employers list "tech adaptability" as one of the most in-demand skills in manufacturing. But they rarely explain what it means. This article does — and makes the case that it's a mindset anyone can build, not a talent you either have or don't.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Honest Definition</h2>
+  <p>Tech adaptability is not about knowing every piece of software. It's not about being "good with computers." It's not a personality trait you were born with or missed out on.</p>
+  <p><mark>Tech adaptability is how you respond when you encounter something unfamiliar</mark>. Do you lean toward it or away from it? Do you ask questions or hope someone else handles it? Do you try things and accept that you'll make some mistakes while learning? Or do you decide you're "not a tech person" and keep your distance?</p>
+  <p>That's it. Tech adaptability is a behavioral pattern — a set of choices you make repeatedly, in small moments, that add up over time to either make you someone who grows alongside changing technology or someone who gets left behind by it.</p>
+  <p>And because it's a behavioral pattern, <mark>it can absolutely be learned</mark>. It's not wired into you at birth. It develops through practice, reflection, and the decision to keep leaning in.</p>
+
+  <div class="pull-quote">
+    <p>Nobody is born knowing how to use a predictive maintenance dashboard. Every person who uses one confidently today had a first day looking at it — confused, a little intimidated, figuring it out. The difference is they didn't stop there.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Five Myths About Tech Adaptability</h2>
+  <p>Before going further, let's address the most common things people believe about tech adaptability that hold them back. Click each myth to see the reality.</p>
+
+  <div class="myth-grid" id="myth-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Tech Adaptability Looks Like on the Job</h2>
+  <p>The clearest way to understand tech adaptability is to watch it play out in real situations. Below are three scenarios that happen constantly in manufacturing — a new software system, a new machine, and a new process. For each one, see what an adaptable worker does versus what an avoidant worker does.</p>
+
+  <div class="scenario-walk">
+    <div class="sw-label">Side-by-Side Scenarios</div>
+    <div class="sw-title">Adaptable vs. Avoidant — What Does It Actually Look Like?</div>
+    <div class="sw-sub">Select a scenario to see how two workers respond to the same situation — and what the difference costs each of them.</div>
+    <div class="sw-tabs" id="sw-tabs"></div>
+    <div id="sw-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Six Habits of Highly Adaptable Workers</h2>
+  <p>Tech adaptability doesn't come from one big dramatic decision. It comes from small habits practiced consistently. Here are six that the most adaptable manufacturing workers tend to share:</p>
+
+  <div class="habit-grid" id="habit-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The One Question That Separates Adaptable Workers</h2>
+  <p>When something new and unfamiliar shows up at work — a new system, a new machine, a new process — every worker in the room hears it announced. But only some of them ask a question. That moment of asking is often the turning point.</p>
+  <p>Adaptable workers don't ask random questions. They ask <mark>the right kind of questions</mark>. These are questions that help them understand the new thing faster and position themselves as interested and engaged:</p>
+
+  <div style="background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:20px 0;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">Question Toolkit — Use These When Something New Arrives</div>
+    <div id="question-toolkit"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Yourself: How Adaptable Are You Right Now?</h2>
+  <p>This isn't graded. It's a chance to see where you are and where you might want to grow.</p>
+
+  <div class="self-assess">
+    <div class="sa-label">Self-Assessment</div>
+    <div class="sa-title">How would you respond?</div>
+    <div class="sa-sub">For each situation, pick the response that most honestly reflects what you would actually do — not what you think sounds best.</div>
+    <div class="sa-items" id="sa-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Your facility just installed a new digital quality inspection system. Your coworker says: "I've been here 12 years and never needed one of these. I'll just keep doing my inspection the way I always have." What does this response demonstrate, and what is it likely to cost her?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Expertise — her 12 years of experience is more valuable than a new system</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Good judgment — it's smart to stick with what works until the new system is proven</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Low tech adaptability — and over time it will likely cost her opportunities for advancement and make her less useful to the team as the facility continues to add AI tools</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Nothing — experience always outweighs new technology in manufacturing</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Her 12 years of experience is genuinely valuable — but refusing to engage with new tools is the definition of low tech adaptability. What it costs her: she misses the chance to be one of the early experts on the new system. Her colleagues who learn it will become the go-to people for quality inspection questions. She may be passed over for advancement as the facility adopts more AI tools that require the adaptability she's demonstrating she doesn't have. Experience and tech adaptability aren't opposites — the most valuable workers combine both.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Experience is valuable, but refusing to engage with a new tool is a textbook example of low tech adaptability. The cost isn't immediate — she'll still be able to do her current job for a while. But she misses the chance to become an expert in the new system, she positions herself as resistant to change (which supervisors notice), and as more AI tools arrive, her pattern of avoidance will compound into a real career limitation. Tech adaptability isn't about abandoning experience — it's about adding to it.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Tech adaptability is not a talent you're born with. It's a behavioral pattern — the consistent choice to lean toward new technology rather than away from it — and it can be deliberately built through practice.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The defining moment of tech adaptability is how you respond when something unfamiliar arrives: do you ask questions, try things, accept the learning curve? Or do you avoid, wait, and decide it's not for you?</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Six habits of adaptable workers: ask the first question, try before you're ready, expect a learning curve, look for the logic, teach what you learn, and never say "I'm not a tech person."</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Tech adaptability compounds over a career — each new tool you learn makes it easier to learn the next one. Workers who consistently adapt become the people a team relies on when change happens.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+// Myths
+var myths=[
+  {icon:"❌",myth:'"You either have it or you don\'t — some people are just tech people."',truth:"Tech adaptability is not a personality type. It's a practiced behavior. Researchers who study workplace adaptability consistently find that people who describe themselves as 'not tech people' in their 20s often become highly adaptable workers in their 30s and 40s — because they kept getting exposed to new tools and kept choosing to engage. The label is the problem, not the person."},
+  {icon:"❌",myth:'"You have to be young to be good at adapting to new technology."',truth:"This is one of the most persistent and most wrong beliefs about tech adaptability. Studies on workplace technology adoption show that age is not a reliable predictor of adaptability — motivation and habit are. A 50-year-old machinist who has spent 30 years choosing to learn each new technology that arrived in their shop is often more adaptable than a 22-year-old who has never been pushed outside their comfort zone."},
+  {icon:"❌",myth:'"If I need training, I must not be adaptable."',truth:"Needing training is not a failure of adaptability — it's what adaptability looks like. Adaptable workers seek out training proactively. They ask for demos. They watch tutorial videos on their own time. They ask coworkers who know the system to show them how it works. The opposite of adaptability isn't needing help — it's refusing to engage."},
+  {icon:"❌",myth:'"Tech adaptability means knowing a lot of different software programs."',truth:"It means being willing to learn them, which is different from already knowing them. A worker who knows 20 software programs but panics when number 21 arrives is not tech-adaptable. A worker who only knows 3 programs but approaches each new one with curiosity and confidence is exactly what employers mean by the term."},
+  {icon:"❌",myth:'"Once you fall behind on technology, it\'s too late to catch up."',truth:"Manufacturing technology changes fast, but it doesn't change so fast that a motivated worker can't get current. The workers who feel most \"behind\" are often the ones who stopped engaging — not the ones who got left behind by the technology itself. Engaging now, with this certification, is exactly the kind of catch-up move that changes a career trajectory."}
+];
+var mg=document.getElementById('myth-grid');
+myths.forEach(function(m,i){
+  var d=document.createElement('div');d.className='myth-card';
+  d.innerHTML='<div class="myth-header" id="mh'+i+'" onclick="toggleMyth('+i+')">'
+    +'<div class="myth-icon">'+m.icon+'</div>'
+    +'<div class="myth-text">Myth: '+m.myth+'</div>'
+    +'<div class="myth-toggle" id="mt'+i+'">See reality →</div>'
+    +'</div>'
+    +'<div class="myth-reveal" id="mr'+i+'"><strong>Reality:</strong> '+m.truth+'</div>';
+  mg.appendChild(d);
+});
+function toggleMyth(i){
+  var r=document.getElementById('mr'+i),t=document.getElementById('mt'+i),h=document.getElementById('mh'+i);
+  var open=r.classList.contains('show');
+  r.classList.toggle('show',!open);
+  h.classList.toggle('revealed',!open);
+  t.textContent=open?'See reality →':'Hide ↑';
+}
+
+// Scenarios
+var scenarios=[
+  {name:"🖥️ New Software System",events:[
+    {phase:"Day 1",day:"First contact",adapt:"Attend the training session. Take notes, even if things don't fully make sense yet. After the session, spend 10 minutes just clicking around in the system — not trying to accomplish anything, just getting familiar with where things are.",tag:"adapt",what:"Adaptable"},
+    {phase:"Day 1",day:"First contact",adapt:"Go to the training but feel overwhelmed. Decide the system is too complicated. Plan to ask someone else to handle it when it comes up.",tag:"avoid",what:"Avoidant"},
+    {phase:"Week 1",day:"Building fluency",adapt:"Find one coworker who's been using the system longer. Ask them the one thing they wish they'd known at the start. Try to use the system for at least one real task each day, even if it's slow.",tag:"adapt",what:"Adaptable"},
+    {phase:"Week 1",day:"Building fluency",adapt:"Continue to sidestep situations that require using the new system. When it comes up, say you're still waiting for more training.",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 1",day:"Building confidence",adapt:"Make a mistake in the system — input the wrong value, submit something incorrectly. Fix it, understand why the error happened, and move on. Use the help documentation when stuck.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 1",day:"Building confidence",adapt:"Still avoiding the system. Have asked two different coworkers to handle system tasks on your behalf. Starting to feel embarrassed about it.",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 3",day:"The outcome",adapt:"Comfortable using the system for daily tasks. Supervisors notice. When the next system rolls out, people ask you for tips because you learned the last one quickly.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 3",day:"The outcome",adapt:"Still not using the system confidently. The supervisor has started assigning system tasks to someone else — which signals that you're not ready for responsibilities that require it.",tag:"avoid",what:"Avoidant"}
+  ]},
+  {name:"🔧 New Machine",events:[
+    {phase:"Day 1",day:"Introduction",adapt:"During the machine walkthrough, ask: 'What are the most common operator errors on this machine?' and 'What does the error code display mean?' Write the answers down.",tag:"adapt",what:"Adaptable"},
+    {phase:"Day 1",day:"Introduction",adapt:"Watch the walkthrough. Don't ask questions because you don't want to look like you don't understand. Plan to figure it out as you go.",tag:"avoid",what:"Avoidant"},
+    {phase:"Week 1",day:"First runs",adapt:"Run the machine slowly at first. Accept that you'll be slower than the target rate. Focus on understanding each step before speeding up. Ask the setup technician to watch your first changeover and give feedback.",tag:"adapt",what:"Adaptable"},
+    {phase:"Week 1",day:"First runs",adapt:"Try to match the previous operator's pace immediately. Make mistakes, correct them quietly, try not to let anyone notice. Feel frustrated and stressed.",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 1",day:"Getting comfortable",adapt:"Read the machine's operator manual — at least the sections on common faults and safety procedures. Understand what the AI dashboard on the machine control panel is showing you.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 1",day:"Getting comfortable",adapt:"Doing the job but still not fully comfortable. Avoids running the machine in unfamiliar conditions. Calls maintenance for issues that the operator manual would explain.",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 3",day:"The outcome",adapt:"Considered a reliable operator of the machine. Starting to help orient other new operators. Supervisors see someone who can be trusted with new equipment when it arrives.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 3",day:"The outcome",adapt:"Functional but not confident. When a second new machine arrives, the supervisor doesn't think of this person as someone to put on it first.",tag:"avoid",what:"Avoidant"}
+  ]},
+  {name:"📱 New Process or Tool",events:[
+    {phase:"Day 1",day:"Announcement",adapt:"When the new predictive maintenance app is announced, ask: 'Who's the best person to talk to if I have questions about the alerts?' Identify the internal expert before you need them.",tag:"adapt",what:"Adaptable"},
+    {phase:"Day 1",day:"Announcement",adapt:"Hear the announcement. Think: 'One more thing to learn.' Wait to see if it actually becomes required before putting in any effort.",tag:"avoid",what:"Avoidant"},
+    {phase:"Week 1",day:"Trying it out",adapt:"Open the app on the first day it's available. Try the features you understand. Accept that some things won't make sense yet. Note the questions you have.",tag:"adapt",what:"Adaptable"},
+    {phase:"Week 1",day:"Trying it out",adapt:"Hasn't opened the app yet. Figured someone would give more training before it was really needed.",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 1",day:"Using it for real",adapt:"Review the app's alerts every shift. Investigate two flagged alerts and log the outcomes. Start to see which alert types tend to be reliable versus which generate false positives.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 1",day:"Using it for real",adapt:"Uses the app only when a supervisor specifically asks. Doesn't feel confident about what the alerts mean. Defers to coworkers who 'know the system better.'",tag:"avoid",what:"Avoidant"},
+    {phase:"Month 3",day:"The outcome",adapt:"Recognized as one of the team's more reliable alert evaluators. Has a clear mental model of what the tool does well and where it needs human judgment. Gets asked to help train a new technician.",tag:"adapt",what:"Adaptable"},
+    {phase:"Month 3",day:"The outcome",adapt:"Still uncomfortable with the app. Supervisor has quietly started routing alert reviews through other team members. An advancement opportunity that requires AI tool experience goes to someone else.",tag:"avoid",what:"Avoidant"}
+  ]}
+];
+var swTabs=document.getElementById('sw-tabs'),swPanels=document.getElementById('sw-panels'),swActive=0;
+scenarios.forEach(function(s,i){
+  var tab=document.createElement('div');tab.className='sw-tab'+(i===0?' active':'');tab.textContent=s.name;
+  tab.onclick=function(){swActive=i;document.querySelectorAll('.sw-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.sw-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  swTabs.appendChild(tab);
+  var panel=document.createElement('div');panel.className='sw-panel'+(i===0?' active':'');
+  var html='<div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--purple);">🟣 Adaptable response</div><div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--red);">🔴 Avoidant response</div></div>';
+  html+='<div style="display:flex;flex-direction:column;gap:0;">';
+  s.events.forEach(function(e){
+    var isAdapt=e.tag==='adapt';
+    html+='<div class="sw-event">'
+      +'<div class="sw-phase"><div class="sw-phase-label">'+e.phase+'</div><div class="sw-phase-day">'+e.day+'</div></div>'
+      +'<div class="sw-event-body"><div class="sw-event-desc">'+e.adapt+'</div>'
+      +(isAdapt?'<span class="sw-adapt-tag">🟣 Adaptable</span>':'<span class="sw-avoid-tag">🔴 Avoidant</span>')
+      +'</div></div>';
+  });
+  html+='</div>';
+  panel.innerHTML=html;
+  swPanels.appendChild(panel);
+});
+
+// Habits
+var habits=[
+  {num:"01",title:"Ask the first question",body:"When something new is introduced, be the first person in the room to ask a question. Not to show off — to understand. This single habit does two things: it gets you the information you need, and it signals to supervisors that you're engaged.",example:"\"What's the most common mistake people make when they first start using this?\""},
+  {num:"02",title:"Try before you're ready",body:"Adaptable workers don't wait until they feel completely prepared before using a new tool. They accept that learning requires doing, and doing involves making mistakes. The learning curve is steeper at the start and gets easier.",example:"Open the new scheduling software on Day 1, even if you don't know what you're doing. Just explore."},
+  {num:"03",title:"Expect the learning curve and name it",body:"When something is hard at first, tell yourself: 'This is the learning curve. Everyone who's good at this went through it. I'm in the middle of it — not failing.' This reframe prevents the early confusion from becoming permanent avoidance.",example:"\"I don't understand this yet\" is very different from \"I'm not a tech person.\""},
+  {num:"04",title:"Look for the logic",body:"Every new tool has a reason it was built the way it was. When you understand the logic behind a system — what problem it's solving, why the interface works the way it does — it becomes much easier to remember and use correctly.",example:"\"Why does this predictive maintenance platform flag at 3 weeks — what's the logic behind that threshold?\""},
+  {num:"05",title:"Teach what you learn",body:"The fastest way to solidify something you've learned is to explain it to someone else. Adaptable workers look for opportunities to share what they just figured out — not to show off, but because explaining forces you to really understand it.",example:"After you've used the new quality system for 2 weeks, offer to walk a newer coworker through the basics."},
+  {num:"06",title:"Never say 'I'm not a tech person'",body:"This phrase is a self-fulfilling prophecy. Every time you say it, you're reinforcing a story about yourself that isn't true and doesn't serve you. Replace it with: 'I'm still learning this one.' That's honest and leaves the door open.",example:"The label closes doors. The honest description keeps them open."}
+];
+var hg=document.getElementById('habit-grid');
+habits.forEach(function(h){
+  var d=document.createElement('div');d.className='habit-card';
+  d.innerHTML='<div class="habit-num">'+h.num+'</div><div class="habit-title">'+h.title+'</div><div class="habit-body">'+h.body+'</div><div class="habit-example">💬 '+h.example+'</div>';
+  hg.appendChild(d);
+});
+
+// Question toolkit
+var questions=[
+  {q:"What problem is this tool designed to solve?",why:"Understanding the 'why' behind a tool makes it much easier to learn how to use it. It also immediately connects you to the tool's value."},
+  {q:"What's the most common mistake people make when they first start?",why:"This gets you the most useful single piece of information fastest — and positions you as someone who learns from others' experience."},
+  {q:"When something goes wrong, what do I do first?",why:"Knowing the error response procedure before you need it means you won't panic when it happens."},
+  {q:"Who's the best person to ask if I get stuck?",why:"Identifying your internal resource now means you have somewhere to go before you're frustrated and behind."},
+  {q:"Is there documentation or a guide I can reference?",why:"Written resources exist for almost every system. Knowing where they are means you can learn at your own pace outside of the initial training."},
+  {q:"How will this change my daily workflow?",why:"Knowing what specifically changes in your routine helps you prepare and adapt faster."}
+];
+var qtEl=document.getElementById('question-toolkit');
+questions.forEach(function(q){
+  var d=document.createElement('div');
+  d.style.cssText='display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--purple-mid);';
+  d.innerHTML='<div style="font-size:16px;flex-shrink:0;margin-top:2px;">❓</div>'
+    +'<div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">'+q.q+'</div>'
+    +'<div style="font-size:13px;color:var(--gray-muted);line-height:1.6;"><em>Why this works:</em> '+q.why+'</div></div>';
+  qtEl.appendChild(d);
+});
+qtEl.lastChild.style.borderBottom='none';
+
+// Self assessment
+var saItems=[
+  {situation:"Your facility announces that all maintenance requests will now be submitted through a new app instead of paper forms. You've never used the app.",opts:[
+    {text:"Ask who to contact if you have questions, then download the app on your lunch break and try a test submission",adaptive:true},
+    {text:"Wait for someone to officially train you before doing anything with it",adaptive:false},
+    {text:"Figure the supervisor will remind everyone when it's actually required",adaptive:false},
+    {text:"Ask a coworker to show you how it works as soon as you can find them",adaptive:true}
+  ]},
+  {situation:"You're watching a demo of a new quality inspection software. The trainer goes fast and you're only following about half of it.",opts:[
+    {text:"Raise your hand and ask them to slow down or repeat the step you missed",adaptive:true},
+    {text:"Stay quiet and plan to figure it out later",adaptive:false},
+    {text:"Decide the software is probably too complicated and mentally check out",adaptive:false},
+    {text:"Write down the things you didn't understand and find answers after the session",adaptive:true}
+  ]},
+  {situation:"You've been using the new ERP system for two weeks. You made a data entry error that had to be corrected by your supervisor.",opts:[
+    {text:"Feel embarrassed but ask your supervisor to explain what happened so you understand how to avoid it",adaptive:true},
+    {text:"Decide you're just not good at computer systems and let others handle the data entry",adaptive:false},
+    {text:"Try to avoid data entry tasks for the next few weeks until the embarrassment fades",adaptive:false},
+    {text:"Look up the correct procedure in the system documentation so you understand the right way",adaptive:true}
+  ]}
+];
+var saEl=document.getElementById('sa-items');
+saItems.forEach(function(s,i){
+  var d=document.createElement('div');d.className='sa-item';
+  var optsHtml=s.opts.map(function(o,j){
+    return '<label class="sa-opt"><input type="radio" name="sa'+i+'" value="'+j+'" data-adaptive="'+o.adaptive+'"> <span class="sa-opt-text">'+o.text+'</span></label>';
+  }).join('');
+  d.innerHTML='<div class="sa-situation">'+s.situation+'</div><div class="sa-opts">'+optsHtml+'</div>'
+    +'<button class="sa-btn" onclick="checkSA('+i+')">See feedback</button>'
+    +'<div class="sa-result" id="sar'+i+'"></div>';
+  saEl.appendChild(d);
+});
+var saDone={};
+function checkSA(i){
+  if(saDone[i])return;
+  var sel=document.querySelector('input[name="sa'+i+'"]:checked');
+  if(!sel){return;}
+  saDone[i]=true;
+  var adaptive=sel.getAttribute('data-adaptive')==='true';
+  var r=document.getElementById('sar'+i);
+  r.classList.add('show');
+  if(adaptive){
+    r.className='sa-result show adaptive';
+    r.textContent='✓ Adaptive response. You leaned in — asked questions, tried the system, sought understanding. That pattern, practiced consistently, is exactly what tech adaptability looks like.';
+  } else {
+    r.className='sa-result show developing';
+    r.textContent='→ Room to grow. This response leans toward waiting or avoiding — which is understandable, but it\'s the pattern that holds workers back. The good news: you can choose differently next time. That choice, made consistently, is how tech adaptability is built.';
+  }
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

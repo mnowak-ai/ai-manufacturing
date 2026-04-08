@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Is Already in Your Future Workplace — Here's Proof</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* TRADE EXPLORER */
+.trade-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.te-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.te-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.te-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.te-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.te-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.te-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.te-panel{display:none;}
+.te-panel.active{display:block;}
+.te-tool{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.te-tool-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;}
+.te-tool-icon{font-size:24px;flex-shrink:0;}
+.te-tool-name{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:2px;}
+.te-tool-company{font-size:12px;color:var(--gray-muted);}
+.te-tool-body{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:10px;}
+.te-human-role{background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:8px 12px;font-size:13px;color:var(--green);line-height:1.6;}
+.te-human-role strong{font-weight:700;}
+
+/* PROOF STAT */
+.proof-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:600px){.proof-grid{grid-template-columns:1fr;}}
+.proof-card{background:var(--purple-dark);border-radius:16px;padding:20px;color:#fff;text-align:center;}
+.proof-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:#c084fc;line-height:1;}
+.proof-label{font-size:12px;color:rgba(255,255,255,.75);margin-top:6px;line-height:1.5;}
+
+/* SCENARIO SIM */
+.scenario-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ss-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ss-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+.ss-header{background:linear-gradient(135deg,#0f172a,#1e1547);padding:14px 18px;}
+.ss-header-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:4px;}
+.ss-header-text{font-size:14px;color:rgba(255,255,255,.9);line-height:1.7;}
+.ss-body{padding:16px 18px;}
+.ss-q{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:12px;}
+.ss-opts{display:flex;flex-direction:column;gap:8px;}
+.ss-opt{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:10px;padding:11px 14px;font-size:13px;cursor:pointer;color:var(--gray-text);text-align:left;font-family:"DM Sans",sans-serif;transition:all .2s;line-height:1.5;}
+.ss-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.ss-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.ss-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ss-fb{margin-top:10px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75;display:none;}
+.ss-fb.show{display:block;}
+.ss-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.ss-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>AI Is Already in Your Future Workplace — Here's Proof</h1>
+  <p class="hero-sub">The lesson says "AI isn't the future — it's already here." This article proves it with real tools, real companies, and real workers whose jobs look different because of AI right now.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Not a Prediction. A Description.</h2>
+  <p>When people talk about AI changing jobs, they often talk about it like it's coming someday. But in manufacturing and the trades, <mark>"someday" already happened</mark>. The tools are installed. The alerts are running. The dashboards are live. Workers are using them on every shift.</p>
+  <p>This article is not about what might happen to your career. It's about what is happening right now — in the exact trades you're training for. By the end, you'll be able to name specific AI tools in specific fields, describe what they do, and explain what the human worker still controls. That's the kind of knowledge that turns a job interview from vague to specific.</p>
+
+  <div class="proof-grid">
+    <div class="proof-card"><div class="proof-num">73%</div><div class="proof-label">of large US manufacturers have deployed at least one AI system on the production floor</div></div>
+    <div class="proof-card"><div class="proof-num">$26B</div><div class="proof-label">spent on AI in manufacturing globally in 2024 — up from $3.8B in 2019</div></div>
+    <div class="proof-card"><div class="proof-num">4 in 5</div><div class="proof-label">maintenance supervisors say AI alerts are now part of their daily workflow</div></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Pick Your Trade — See the AI</h2>
+  <p>Below are four major trade areas that CTE students commonly train for. Select the one closest to your career path — or explore all four. For each one, you'll see the actual AI tools in use, what they do, and what the human worker still owns.</p>
+
+  <div class="trade-explorer">
+    <div class="te-label">Trade-by-Trade AI Explorer</div>
+    <div class="te-title">What AI Actually Does in Your Field</div>
+    <div class="te-sub">Select a trade to see named real-world AI tools and what they mean for workers in that field.</div>
+    <div class="te-tabs" id="te-tabs"></div>
+    <div id="te-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Part That Doesn't Change: The Human Role</h2>
+  <p>Here's what every one of those tools has in common: <mark>they generate information, not decisions</mark>. The predictive maintenance platform flags the bearing — a technician decides whether to replace it now or monitor it further. The weld inspection AI identifies a potential flaw — a welder checks it and makes the call. The HVAC energy optimizer suggests a setpoint — a controls technician reviews whether that makes sense given what's actually happening in the building.</p>
+  <p>This is the pattern you need to understand and be able to articulate. AI accelerates the detection. Humans apply the judgment. The two work together — and the human is always accountable for the outcome.</p>
+
+  <div class="pull-quote">
+    <p>The workers who thrive alongside AI aren't the ones who fear it or blindly follow it. They're the ones who can read what it's telling them, decide if it's right, and act with confidence either way.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Simulation: AI Alert on the Floor — What Do You Do?</h2>
+  <p>You've seen what these tools do. Now practice thinking like someone who uses them. Each scenario below gives you an AI alert and asks what you should do. This is the kind of thinking employers are now looking for.</p>
+
+  <div class="scenario-sim">
+    <div class="ss-label">Quick Decision Simulation</div>
+    <div class="ss-title">AI Alert — You Decide</div>
+    <div class="ss-sub">Read each AI alert and the floor context. Choose the best response.</div>
+    <div id="ss-scenarios"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI tools are already deployed in welding, HVAC, machining, electrical, and other trades — not as a future possibility but as current workplace reality that workers encounter on every shift.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Real tools include: Lincoln Electric's CheckPoint (welding quality), Carrier's i-Vu (HVAC), Machina Labs' AI forming system (machining), Eaton's AI power monitoring (electrical), and many others. These have specific names, specific functions, and specific limits.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">In every trade, the AI generates information — alerts, flags, recommendations. The human worker reviews that information, applies professional judgment, and makes the call. That division of responsibility is non-negotiable and won't change.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Being able to name specific AI tools in your trade field and explain what they do — and what they don't do — is exactly the kind of preparation that stands out in a job interview.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var trades=[
+  {name:"⚙️ Machining & CNC",tools:[
+    {icon:"🔧",name:"Mastercam with AI Toolpath Optimization",company:"CNC Software / Mastercam",body:"Mastercam is one of the most widely used CNC programming software platforms in the US. Its AI-assisted features analyze the geometry of a part and suggest efficient cutting paths — choosing the right tool, the right speed, and the right sequence to minimize time and tool wear. Shops that used to spend hours optimizing a program manually can now get a solid starting point in minutes.",human:"Your role: The AI suggests the path — a machinist or programmer reviews it, checks it against the material and machine limitations they know from experience, and approves or adjusts before running. No AI-generated program goes straight to the machine without a human check."},
+    {icon:"📊",name:"Predictive Tool Wear Monitoring",company:"Sandvik Coromant CoroPlus Tool Guide",body:"Tool wear is one of the biggest causes of scrap parts in machining. Sandvik's CoroPlus system monitors vibration, cutting force, and acoustic signals during machining to detect when a cutting insert is wearing out — before it breaks and ruins the part. It alerts the operator when replacement is recommended.",human:"Your role: The alert tells you the tool is wearing. You decide: does the data match what you're seeing and hearing? Is this a normal wear pattern or something unusual? Should you replace it now or complete the current part? That judgment call is yours."},
+    {icon:"🎯",name:"AI-Assisted Quality Inspection (CMM)",company:"Hexagon Manufacturing Intelligence",body:"Coordinate Measuring Machines (CMMs) use probes to measure parts with extreme precision. Hexagon's AI-assisted CMM software uses past inspection data to identify patterns — which features on a part tend to drift out of spec, under what conditions, and in what sequence — and can flag developing quality problems before they become full production issues.",human:"Your role: Reviewing the CMM report, investigating when a feature is trending toward its tolerance limit, and deciding whether to adjust the process or escalate to the engineer. The machine measures — you interpret."}
+  ]},
+  {name:"🔥 Welding",tools:[
+    {icon:"📡",name:"CheckPoint — AI Weld Quality Monitoring",company:"Lincoln Electric",body:"CheckPoint is Lincoln Electric's cloud-connected monitoring platform. Sensors attached to welding machines track arc voltage, wire feed speed, amperage, and heat input in real time. AI compares each weld against programmed quality parameters and flags welds that fall outside acceptable ranges. Supervisors can see every welder's output data across a shift from a single dashboard.",human:"Your role: When the system flags a weld, a human inspector physically checks it — visual inspection, potentially testing with tools. The AI found something; you determine whether it's a real defect, a sensor anomaly, or a process drift that needs to be corrected at the source."},
+    {icon:"🤖",name:"Cobot Welding Assistants",company:"Miller Electric / Yaskawa",body:"Collaborative robots (cobots) designed for welding don't replace welders — they work alongside them. A skilled welder programs the cobot's path for repetitive joints on a production run, and the cobot executes those joints with high consistency. The welder handles setup, complex geometry, inspection, and anything that requires physical judgment.",human:"Your role: Programming the cobot's path, monitoring output quality, handling any geometry the cobot can't reach or handle, and catching any deviations from expected weld appearance. The human skill sets the standard the cobot follows."},
+    {icon:"👁️",name:"AI Visual Weld Inspection",company:"Servo Robot / Meta Vision",body:"Camera systems mounted near welding stations capture high-resolution images of completed welds. AI algorithms trained on thousands of defect images identify potential porosity, undercut, cracks, or incomplete fusion — faster than a human eye can scan the same surface area. These systems flag welds for human secondary inspection.",human:"Your role: Reviewing the flagged welds, confirming or dismissing each flag, and making the final accept/reject decision. The AI scans — you verify. False positives are common, and only a trained eye can distinguish a real defect from a visual artifact."}
+  ]},
+  {name:"❄️ HVAC & Controls",tools:[
+    {icon:"🌡️",name:"i-Vu Building Automation System with AI Analytics",company:"Carrier",body:"i-Vu is a building automation system that controls HVAC equipment — chillers, air handling units, variable air volume boxes — across commercial buildings. Its AI analytics layer monitors equipment performance data continuously, comparing actual operation to expected behavior and flagging anomalies: a chiller running less efficiently than it should, a zone that can't maintain setpoint, a filter that's approaching replacement.",human:"Your role: Reviewing the analytics dashboard, investigating flagged equipment, deciding what to adjust or dispatch for maintenance. You're the one who knows the building's quirks — which zone always runs hot in summer, which sensor tends to read high. The AI sees the data; you provide the context."},
+    {icon:"⚡",name:"AI Fault Detection and Diagnostics (FDD)",company:"Clockworks Analytics / SkySpark",body:"Fault Detection and Diagnostics platforms continuously analyze HVAC system data and apply rule-based and machine-learning models to identify faults — things like simultaneous heating and cooling (a common energy waste), economizer malfunctions, and equipment cycling too frequently. These platforms rank faults by energy impact and estimated repair cost so technicians can prioritize.",human:"Your role: Working through the fault queue, physically investigating flagged equipment, and deciding the right repair sequence. High-priority faults get attention first. But you also verify — sometimes the AI flags something that turns out to be a sensor calibration issue, not a real fault."},
+    {icon:"📱",name:"Smart Thermostat and Sensor Networks",company:"Ecobee / Johnson Controls",body:"Commercial smart thermostat and sensor networks collect temperature, humidity, occupancy, and CO2 data throughout a building. AI algorithms use this data to optimize setpoints and schedules — pre-cooling a space before occupancy peaks, adjusting ventilation based on CO2 levels, reducing conditioning in unoccupied zones.",human:"Your role: Commissioning the system (making sure sensors are placed correctly and reading accurately), reviewing AI-suggested schedule changes before they're applied, and troubleshooting when zones aren't behaving as expected. The system optimizes — you make sure it's optimizing toward the right goal."}
+  ]},
+  {name:"⚡ Electrical",tools:[
+    {icon:"🔌",name:"AI Power Quality Monitoring",company:"Eaton / Schneider Electric PowerLogic",body:"Power quality monitors track electrical system parameters — voltage fluctuations, harmonic distortion, power factor, and transient events — across a facility's electrical panels and distribution equipment. AI platforms analyze this data continuously, identifying patterns that indicate developing problems: a panel running with increasing harmonic content (often caused by failing variable frequency drives), voltage sags at specific times of day, or equipment drawing more power than expected.",human:"Your role: Investigating power quality alerts, using test equipment to confirm what the monitoring system flagged, and diagnosing the root cause. You understand what harmonics actually mean for motor life and equipment reliability — the monitoring system just tells you the numbers."},
+    {icon:"🛡️",name:"Predictive Arc Flash and Safety Monitoring",company:"ABB Ability EKIP",body:"Arc flash events — sudden, explosive electrical discharges — are one of the most serious hazards in electrical work. ABB's EKIP monitoring system uses AI to analyze circuit breaker performance data and predict when a breaker is developing faults that could increase arc flash risk. It monitors contact wear, operating time, and insulation resistance.",human:"Your role: Reviewing predictive alerts, scheduling breaker testing and maintenance before problems escalate, and making safety decisions about when it's appropriate to work on equipment versus when it needs to come offline first. Safety decisions are always human decisions."},
+    {icon:"📋",name:"AI-Assisted Load Analysis and Panel Scheduling",company:"Etap / EasyPower",body:"Load analysis software uses AI to model electrical system behavior under different loading conditions — identifying circuits approaching capacity, predicting peak demand, and recommending load balancing changes. This helps electricians and facility managers avoid overloading panels and plan for new equipment additions.",human:"Your role: Reviewing load analysis reports before adding new circuits or equipment, verifying that the model's assumptions match the actual facility, and making the final decisions about panel modifications. The software models the system — you know the physical installation."}
+  ]}
+];
+
+var tabsEl=document.getElementById('te-tabs'),panelsEl=document.getElementById('te-panels'),activeTab=0;
+trades.forEach(function(t,i){
+  var tab=document.createElement('div');tab.className='te-tab'+(i===0?' active':'');tab.textContent=t.name;
+  tab.onclick=function(){activeTab=i;document.querySelectorAll('.te-tab').forEach(function(x,j){x.classList.toggle('active',j===i);});document.querySelectorAll('.te-panel').forEach(function(x,j){x.classList.toggle('active',j===i);});};
+  tabsEl.appendChild(tab);
+  var panel=document.createElement('div');panel.className='te-panel'+(i===0?' active':'');
+  var html='';
+  t.tools.forEach(function(tool){
+    html+='<div class="te-tool"><div class="te-tool-head"><div class="te-tool-icon">'+tool.icon+'</div><div><div class="te-tool-name">'+tool.name+'</div><div class="te-tool-company">'+tool.company+'</div></div></div><div class="te-tool-body">'+tool.body+'</div><div class="te-human-role"><strong>👤 Your role as the worker:</strong> '+tool.human+'</div></div>';
+  });
+  panel.innerHTML=html;
+  panelsEl.appendChild(panel);
+});
+
+var scenarios=[
+  {trade:"Machining",alert:"🤖 AI Alert: Spindle vibration has increased 18% over the last 20 minutes. Tool wear probability: HIGH. Recommended action: Replace cutting insert immediately.",context:"You're running a batch of aluminum housings — 3 hours into a 4-hour production run. The parts have been coming out perfect. You look at the insert under a loupe — there's some wear, but it doesn't look near breaking.",q:"What's the best response?",opts:["Stop the machine immediately and replace the insert without checking anything else","Complete the current part (which is almost done), inspect it carefully, then replace the insert and inspect the first part of the new insert","Ignore the alert and run through the whole batch — the parts look fine","Email the supervisor and wait for their response before doing anything"],correct:1,good:"✅ Exactly right. The alert is a signal to investigate, not an automatic stop order. Completing the current part (which is almost done) and inspecting it carefully is sound professional judgment — if the part is good, that tells you the AI caught the wear before it became a quality problem. Then replacing the insert and checking the first part on the new insert confirms the fix worked. This is the human-AI partnership in action.",bad:"❌ The best response involves completing the current part carefully, inspecting it, then replacing the insert — not ignoring the alert, and not stopping mid-part (which can itself create a defect). The alert is information, not an automatic stop order. Use it to make a better decision, not to skip your own judgment."},
+  {trade:"Welding",alert:"🤖 AI Alert: Weld #247 flagged — arc voltage deviation detected. Quality score: 62/100. Recommended action: Mark for inspection.",context:"You're a welding supervisor. The CheckPoint system has flagged weld #247 on a batch of structural brackets. The welder who made it has 8 years of experience and has had zero quality issues this month.",q:"What do you do?",opts:["Automatically reject the bracket — the AI said quality score 62, that's below 70","Have the welder physically inspect weld #247, use a mirror and light to check for visual defects, and decide whether to mark it for NDT testing","Tell the welder to redo the weld before anyone inspects the original","Assume it's a sensor error and approve the bracket without looking at it"],correct:1,good:"✅ Correct. A quality score of 62 from the AI is a flag, not a verdict. A physical inspection by an experienced welder is the right next step. They can see things the sensor can't — visual defect indicators, the weld profile, evidence of proper fusion. If the inspection raises concerns, then escalate to nondestructive testing (NDT). But the AI score alone doesn't determine the outcome.",bad:"❌ The right answer is physical inspection first. An AI quality score is a flag that says 'look at this' — it doesn't replace the eye of an experienced inspector. Automatically rejecting without inspection wastes good parts; ignoring the flag is irresponsible. The welder's experience is part of the process."}
+];
+var ssEl=document.getElementById('ss-scenarios'),done={};
+scenarios.forEach(function(s,i){
+  var d=document.createElement('div');d.className='ss-scenario';
+  var optsHtml=s.opts.map(function(o,j){return '<button class="ss-opt" onclick="ssQ('+i+','+j+')" id="sso'+i+'_'+j+'">'+o+'</button>';}).join('');
+  d.innerHTML='<div class="ss-header"><div class="ss-header-label">'+s.trade+' — AI Alert</div><div class="ss-header-text">'+s.alert+'</div></div><div class="ss-body"><div class="ss-context-label" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-muted);margin-bottom:6px;">Floor Context</div><div style="font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:14px;">'+s.context+'</div><div class="ss-q">'+s.q+'</div><div class="ss-opts">'+optsHtml+'</div><div class="ss-fb good" id="ssfb'+i+'g">✅ '+s.good+'</div><div class="ss-fb bad" id="ssfb'+i+'b">❌ '+s.bad+'</div></div>';
+  ssEl.appendChild(d);
+});
+function ssQ(si,oi){
+  if(done[si])return;done[si]=true;
+  var correct=scenarios[si].correct;
+  for(var j=0;j<scenarios[si].opts.length;j++){document.getElementById('sso'+si+'_'+j).disabled=true;}
+  document.getElementById('sso'+si+'_'+oi).classList.add(oi===correct?'correct':'wrong');
+  document.getElementById('ssfb'+si+(oi===correct?'g':'b')).classList.add('show');
+}
+</script>
+</body>
+</html>

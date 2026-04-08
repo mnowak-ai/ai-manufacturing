@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Certifications Actually Matter in AI-Assisted Manufacturing? A Buyer's Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* CERT CARDS */
+.cert-section{margin:28px 0;}
+.cert-section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.csh-icon{font-size:24px;}
+.csh-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;}
+.cert-grid{display:flex;flex-direction:column;gap:12px;}
+.cert-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.cert-card:hover{border-color:var(--purple);box-shadow:0 4px 16px rgba(123,47,190,.1);}
+.cc-header{padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.cc-left{}
+.cc-name{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:3px;}
+.cc-org{font-size:12px;color:var(--gray-muted);}
+.cc-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.cc-cost{font-size:12px;font-weight:700;color:var(--green);}
+.cc-time{font-size:11px;color:var(--gray-muted);}
+.cc-toggle{font-size:16px;color:var(--purple-mid);transition:transform .25s;}
+.cc-toggle.open{transform:rotate(45deg);}
+.cc-body{display:none;padding:0 20px 16px;border-top:1px solid var(--purple-mid);}
+.cc-body.open{display:block;}
+.cc-section-label{font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--purple);margin:12px 0 5px;}
+.cc-text{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.cc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.cc-tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:100px;border:1px solid var(--purple-mid);color:var(--gray-muted);}
+.cc-tag.free{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.cc-tag.employer{background:var(--blue-pale);border-color:#93c5fd;color:var(--blue);}
+.cc-tag.stackable{background:var(--purple-pale);border-color:var(--purple-mid);color:var(--purple);}
+.cc-rating{display:flex;gap:4px;margin-top:8px;}
+.cc-star{font-size:14px;}
+
+/* STACK BUILDER */
+.stack-builder{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sb-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sb-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.sb-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.sb-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.sb-panel{display:none;}
+.sb-panel.active{display:block;}
+.sb-stack{display:flex;flex-direction:column;gap:0;}
+.sb-step{display:flex;gap:0;align-items:stretch;}
+.sb-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.sb-dot{width:14px;height:14px;border-radius:50%;background:var(--purple);flex-shrink:0;border:2px solid var(--white);}
+.sb-line{width:2px;background:var(--purple-mid);flex:1;min-height:12px;}
+.sb-step:last-child .sb-line{background:transparent;}
+.sb-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin-bottom:10px;margin-left:10px;}
+.sb-card-phase{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
+.sb-card-cert{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.sb-card-why{font-size:12px;line-height:1.65;color:var(--gray-text);}
+.sb-card-cost{font-size:11px;font-weight:700;color:var(--green);margin-top:4px;}
+
+/* WARNING BOX */
+.warning-box{background:var(--orange-pale);border:1.5px solid #FCD34D;border-radius:16px;padding:20px 22px;margin:20px 0;}
+.wb-title{font-family:"Fraunces",serif;font-size:16px;color:#92400E;font-weight:700;margin-bottom:8px;}
+.wb-body{font-size:14px;line-height:1.8;color:#92400E;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>What Certifications Actually Matter in AI-Assisted Manufacturing? A Buyer's Guide</h1>
+  <p class="hero-sub">Not all certifications are equal. Some open doors. Some are expensive paper that employers don't recognize. This guide separates what's worth your time and money from what's not — and shows you how to stack credentials strategically for a manufacturing career powered by AI.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Honest Reality About Certifications</h2>
+  <p>The certification market is full of options — some genuinely valuable, some expensive and largely meaningless to employers. Before spending time or money on anything, you need to understand a few key rules:</p>
+  <p><mark>Rule 1: What the employer recognizes matters more than what the certificate says.</mark> A certification that looks impressive but that hiring managers have never heard of adds little value. The best certifications are ones that show up in job postings, that employers request in interviews, or that come from organizations your industry already trusts.</p>
+  <p><mark>Rule 2: Demonstrated skill beats a certificate every time.</mark> A certificate says "I completed training." Demonstrated skill says "I can actually do this." The best career strategy combines credentials (to get through the door) with demonstrated skill (to get the job and get promoted). Don't let collecting certificates become a substitute for building real ability.</p>
+  <p><mark>Rule 3: Free and low-cost first.</mark> Many of the most employer-recognized certifications in manufacturing and AI are either free or under $200. Expensive programs should only come after you've exhausted the high-value free options.</p>
+
+  <div class="warning-box">
+    <div class="wb-title">⚠️ Watch Out for These</div>
+    <div class="wb-body">Some online certification providers charge hundreds or thousands of dollars for credentials that manufacturing employers don't recognize and won't value. Before buying any certification program, search for it in job postings in your target field. If you can't find it mentioned in at least a handful of real job descriptions, it's probably not worth the cost. Also be skeptical of any program that promises you'll "master AI" or "become an AI expert" in a few hours — genuine skill development takes more time and practice than that.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Certifications That Actually Matter — By Category</h2>
+  <p>Click any certification to see the full details: what it covers, who recognizes it, how to get it, and whether it's worth your time.</p>
+
+  <div id="cert-sections"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Stack Credentials Strategically</h2>
+  <p>The goal isn't to collect every certification on the list. It's to build a credential stack that tells a coherent story about your expertise — one that makes sense to an employer and demonstrates both foundation and depth. Below are three smart stacking paths based on where you want to go.</p>
+
+  <div class="stack-builder">
+    <div class="sb-label">Credential Stack Builder</div>
+    <div class="sb-title">Choose Your Career Direction</div>
+    <div class="sb-sub">Select the path that best matches your target career — and see a recommended sequence of credentials to pursue, starting with the most accessible.</div>
+    <div class="sb-tabs" id="sb-tabs"></div>
+    <div id="sb-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Most Important Thing You Can Add to Any Certification</h2>
+  <p>Every certification is stronger when it's paired with a specific example of using the skill in real life. When you complete a credential, immediately ask yourself: where can I apply this? Where can I practice it? Where can I document that I used it?</p>
+  <p>A certification on a résumé says "I learned this." A certification paired with a bullet point like "Applied predictive maintenance alert analysis to reduce unplanned downtime by 15% during pilot implementation" says "I used this and it worked." The second one gets callbacks. The first one gets filed.</p>
+
+  <div class="pull-quote">
+    <p>The certification gets you the interview. The story of how you used the skill gets you the job.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A student spends $800 on a "Certified AI Specialist" online course from a provider she found through a social media ad. The course takes 10 hours and provides a certificate upon completion. What should she have done before purchasing?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Nothing — any AI certification is valuable in today's market</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Searched for the certification name in manufacturing job postings to see if employers mention it, and checked whether the organization offering it is recognized by the industry — before spending anything</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Asked a friend if they'd heard of the provider</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Looked at the certificate design to see if it looked professional</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The most important filter before any certification investment is whether employers actually recognize and value it — which you can check by searching for it in real job postings. A certification that never appears in job descriptions, from an organization the industry doesn't know, has very limited value regardless of how much it costs or how polished the certificate looks. Free and low-cost employer-recognized credentials from established bodies (MSSC, AWS, NIMS, OSHA) consistently outperform expensive unknown ones.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The right check is whether employers actually recognize and request the certification — which you verify by searching for it in job postings for your target role. A certificate from an unrecognized provider, regardless of cost, adds very little to a résumé in the eyes of manufacturing hiring managers. The most valuable certifications are ones that show up in job postings, come from established industry organizations, and can be verified by employers.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Not all certifications are equal. The ones that matter most are recognized by employers, show up in job postings, and come from established industry organizations — not necessarily the most expensive ones.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The highest-value manufacturing certifications include MSSC CPT, AWS welding certifications, NIMS machining credentials, OSHA 10/30, and vendor-specific credentials like Universal Robots' UR Academy and FANUC's Authorized Education Center programs.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Credential stacking is more powerful than any single certification — building a coherent sequence that tells a story about growing expertise across a career path.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A certification becomes most valuable when paired with a specific, concrete example of using the skill — which is what separates a credential that gets filed from one that gets callbacks.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var certData=[
+  {icon:"🏭",title:"Manufacturing Foundation",certs:[
+    {name:"MSSC Certified Production Technician (CPT)",org:"Manufacturing Skill Standards Council",cost:"Free–$200 (exam fee; often covered by CTE programs)",time:"Course + exam",stars:5,why:"The single most recognized entry-level manufacturing certification in the US. Accepted by thousands of employers. Covers safety, quality, manufacturing processes, and maintenance. Many CTE programs are MSSC testing sites. This is the first credential to pursue.",employers:"Very widely recognized by manufacturing employers — appears in job postings across automotive, food processing, aerospace, and general manufacturing.",how:"Through your CTE program, community college, or directly through MSSC.org. Many programs offer this at no cost to students.",tags:["free","employer","stackable"]},
+    {name:"OSHA 10-Hour General Industry",org:"OSHA Training Institute",cost:"$30–$60",time:"10 hours (self-paced online)",stars:5,why:"Safety knowledge is expected in every manufacturing role. The OSHA 10 is widely recognized, inexpensive, and signals that you take workplace safety seriously — which every employer values from Day 1.",employers:"Expected by most manufacturing employers. Frequently listed as a 'preferred' or 'required' qualification in production and maintenance job postings.",how:"Available online through OSHA-authorized providers. Completion takes about 10 hours and can be done at your own pace.",tags:["employer","stackable"]},
+    {name:"OSHA 30-Hour General Industry",org:"OSHA Training Institute",cost:"$150–$200",time:"30 hours (self-paced)",stars:4,why:"The step up from OSHA 10. Recognized for supervisory and lead roles. Worth pursuing after you've completed OSHA 10 and are targeting a leadership-track position.",employers:"Increasingly required for lead technician, shift supervisor, and safety coordinator roles.",how:"Same providers as OSHA 10. Completes the OSHA training track alongside the 10-hour card.",tags:["employer","stackable"]}
+  ]},
+  {icon:"⚙️",title:"Maintenance & Automation",certs:[
+    {name:"CMRP — Certified Maintenance & Reliability Professional",org:"Society for Maintenance & Reliability Professionals (SMRP)",cost:"$250–$400 (exam fee)",time:"Self-study + exam",stars:4,why:"Highly regarded in industries with complex equipment — oil & gas, food processing, automotive. Demonstrates reliability engineering knowledge that aligns directly with AI-assisted predictive maintenance. Best pursued after 2–3 years of maintenance experience.",employers:"Recognized by plant managers and maintenance directors. Shows up in senior maintenance roles and reliability engineering postings.",how:"SMRP.org. Requires some maintenance experience; most valuable for mid-career maintenance professionals.",tags:["employer","stackable"]},
+    {name:"Universal Robots UR Academy — Core Track",org:"Universal Robots",cost:"Free",time:"4–6 hours online",stars:5,why:"UR cobots are among the most widely deployed collaborative robots in manufacturing. This free certification teaches programming, safety, and operation. Directly mentioned in automation technician job postings. The most accessible automation credential available.",employers:"Directly referenced in cobot programming and automation support job postings. Universal Robots is the market leader in collaborative robotics.",how:"academy.universal-robots.com — completely free, self-paced, accessible with no prerequisites.",tags:["free","employer","stackable"]},
+    {name:"FANUC Authorized Education Center Certifications",org:"FANUC America",cost:"Free–$200 (through partner schools)",time:"Course-based (16–40 hours)",stars:4,why:"FANUC is the most widely used industrial robot brand in North America. Their educational certifications are recognized by automotive and aerospace manufacturers specifically. Worth pursuing if you're targeting automation roles in high-volume manufacturing.",employers:"Specifically valued by automotive Tier 1 and Tier 2 suppliers, aerospace manufacturers, and facilities with FANUC robot installations.",how:"Through FANUC-authorized community colleges and technical schools. Some programs are available online.",tags:["employer","stackable"]}
+  ]},
+  {icon:"🔍",title:"Quality & Inspection",certs:[
+    {name:"ASQ Certified Quality Inspector (CQI)",org:"American Society for Quality",cost:"$200–$400 (exam; member discounts available)",time:"Self-study + exam",stars:4,why:"The most recognized quality credential for inspection-level roles. Covers measurement, statistical process control, quality auditing, and quality management systems. Frequently listed in quality inspector and quality technician job postings.",employers:"Widely recognized by quality departments in regulated industries (medical devices, aerospace, automotive, food processing). The standard credential for quality career paths.",how:"ASQ.org. Requires some quality experience; study materials are available through ASQ.",tags:["employer","stackable"]},
+    {name:"ASQ Certified Quality Technician (CQT)",org:"American Society for Quality",cost:"$200–$400",time:"Self-study + exam",stars:4,why:"Slightly higher than CQI — covers broader quality system knowledge. Good step after gaining experience as a quality inspector. Sets up the path toward quality engineer.",employers:"Recognized for mid-level quality roles and engineering track positions.",how:"ASQ.org. CQT and CQI are often pursued in sequence.",tags:["employer","stackable"]},
+    {name:"Six Sigma White/Yellow Belt",org:"ASQ, IASSC, or employer-sponsored",cost:"Free–$300",time:"8–24 hours",stars:3,why:"Entry-level Six Sigma knowledge signals process improvement mindset. White and Yellow Belt are entry level. The Green Belt becomes valuable after 2–3 years of quality or operations experience. Many employers offer these internally.",employers:"Mentioned in quality analyst and operations analyst postings. More valuable as part of a stack than alone.",how:"Through ASQ, IASSC, or directly through your employer's internal training program.",tags:["stackable"]}
+  ]},
+  {icon:"🤖",title:"AI & Digital Skills",certs:[
+    {name:"AI Essentials in Manufacturing Certification (this course)",org:"AI Essentials",cost:"Program-based",time:"Full course",stars:5,why:"The certification you're working on right now. Covers AI in diagnostics, safety, quality, planning, and workforce readiness in manufacturing contexts. Directly applicable to the roles and tools discussed throughout this course.",employers:"Increasingly recognized by CTE-aligned manufacturing employers. Directly maps to AI skill requirements now appearing in job postings.",how:"You're doing it. Complete the course and earn the credential.",tags:["employer","stackable"]},
+    {name:"Google Digital Garage — AI Fundamentals",org:"Google",cost:"Free",time:"4–6 hours",stars:3,why:"Free foundational AI literacy from a recognized tech brand. Not manufacturing-specific, but useful for demonstrating that you've studied AI concepts from a credible source. Supplements manufacturing-specific credentials.",employers:"Recognized as a general AI literacy signal. More valuable as part of a stack than alone.",how:"learndigital.withgoogle.com — completely free and self-paced.",tags:["free","stackable"]},
+    {name:"LinkedIn Learning — Manufacturing & Industry 4.0 Paths",org:"LinkedIn / Microsoft",cost:"Free with library card (many public libraries), or $30/month",time:"Variable (5–20 hours per path)",stars:3,why:"LinkedIn Learning offers curated learning paths on Industry 4.0, IIoT, and manufacturing technology. Completions appear directly on your LinkedIn profile — visible to recruiters. Quality varies, but the visibility benefit is real.",employers:"Employers see LinkedIn Learning completions in your profile. Not as credentialed as MSSC or ASQ, but demonstrates ongoing learning.",how:"LinkedIn.com/learning — free with many public library cards. Check your local library first.",tags:["free","stackable"]}
+  ]},
+  {icon:"🔥",title:"Trade-Specific Credentials",certs:[
+    {name:"AWS Certified Welder",org:"American Welding Society",cost:"$35–$250 (per procedure tested)",time:"Performance-based test",stars:5,why:"The gold standard welding credential. Unlike most certifications, AWS certification requires you to physically perform a weld that is then tested to written code standards. Employers universally recognize it. The specific procedures you test to (GMAW, GTAW, SMAW) determine which job postings you qualify for.",employers:"Required by most structural, aerospace, and pipeline welding employers. One of the few manufacturing certifications that is literally required to get certain jobs, not just preferred.",how:"AWS.org — through accredited test facilities. This is earned by welding performance, not a written exam.",tags:["employer"]},
+    {name:"NIMS Machining Level I Credentials",org:"National Institute for Metalworking Skills",cost:"$20–$70 per credential (exam fees)",time:"Skills-based assessment",stars:5,why:"NIMS credentialing is the machining equivalent of AWS certification — performance-based, employer-recognized, and directly tied to specific skills (turning, milling, measurement, CNC programming). CTE machining programs often incorporate NIMS assessment directly.",employers:"Recognized by job shops, automotive suppliers, and aerospace manufacturers. Appears in machining job postings as a preferred qualification.",how:"Nims-skills.org — through accredited schools and training centers. Many CTE programs are NIMS assessment sites.",tags:["employer","stackable"]},
+    {name:"EPA Section 608 Refrigerant Certification",org:"EPA-approved testing organizations",cost:"$20–$50",time:"Self-study + exam",stars:5,why:"Legally required to purchase and handle refrigerants in HVAC/R work. Not optional — you cannot legally do certain HVAC work without it. Type I, II, and Universal certifications cover different refrigerant types.",employers:"Required by law for HVAC technicians handling refrigerants. Not a nice-to-have — a legal requirement.",how:"Through HVAC training programs or EPA-approved testing organizations. Exam is affordable and the credential never expires.",tags:["employer"]}
+  ]}
+];
+
+var csEl=document.getElementById('cert-sections'),openCards={};
+certData.forEach(function(section,si){
+  var div=document.createElement('div');div.className='cert-section';
+  div.innerHTML='<div class="cert-section-header"><div class="csh-icon">'+section.icon+'</div><div class="csh-title">'+section.title+'</div></div><div class="cert-grid" id="cg'+si+'"></div>';
+  csEl.appendChild(div);
+  var grid=document.getElementById('cg'+si);
+  section.certs.forEach(function(c,ci){
+    var key=si+'_'+ci;
+    var stars='';for(var s=0;s<5;s++)stars+='<span class="cc-star">'+(s<c.stars?'★':'☆')+'</span>';
+    var tags=c.tags.map(function(t){var labels={free:'✓ Free or low-cost',employer:'Employer-recognized',stackable:'Stackable'};return '<span class="cc-tag '+t+'">'+labels[t]+'</span>';}).join('');
+    var d=document.createElement('div');d.className='cert-card';
+    d.innerHTML='<div class="cc-header" onclick="toggleCert(\''+key+'\')"><div class="cc-left"><div class="cc-name">'+c.name+'</div><div class="cc-org">'+c.org+'</div></div><div class="cc-right"><div class="cc-cost">'+c.cost+'</div><div class="cc-time">'+c.time+'</div><div class="cc-toggle" id="cct'+key+'">+</div></div></div>'
+      +'<div class="cc-body" id="ccb'+key+'">'
+      +'<div class="cc-rating">'+stars+'</div>'
+      +'<div class="cc-section-label">Why it matters</div><div class="cc-text">'+c.why+'</div>'
+      +'<div class="cc-section-label">Employer recognition</div><div class="cc-text">'+c.employers+'</div>'
+      +'<div class="cc-section-label">How to get it</div><div class="cc-text">'+c.how+'</div>'
+      +'<div class="cc-tags">'+tags+'</div></div>';
+    grid.appendChild(d);
+  });
+});
+function toggleCert(key){
+  var body=document.getElementById('ccb'+key),tog=document.getElementById('cct'+key);
+  var open=body.classList.contains('open');
+  if(openCards[key]&&!open){/* already handled */}
+  body.classList.toggle('open',!open);
+  tog.classList.toggle('open',!open);
+}
+
+// Stack builder
+var stacks=[
+  {name:"🔧 Maintenance Path",steps:[
+    {phase:"Start Now",cert:"MSSC Certified Production Technician (CPT)",why:"Foundation credential recognized across all manufacturing. Most CTE programs offer this. The baseline that signals you're serious.",cost:"Free–$200 or covered by program"},
+    {phase:"Month 1",cert:"OSHA 10-Hour General Industry",why:"Safety credential expected by all manufacturing employers. Quick, cheap, widely recognized.",cost:"$30–$60"},
+    {phase:"Month 2–3",cert:"AI Essentials in Manufacturing (this course)",why:"Your AI in manufacturing credential. Covers predictive maintenance, diagnostics, quality — directly relevant to maintenance work.",cost:"Program-based"},
+    {phase:"Month 3–4",cert:"Universal Robots UR Academy Core Track",why:"Free cobot programming certification. Immediately differentiates you from technicians without automation exposure.",cost:"Free"},
+    {phase:"Year 2–3",cert:"OSHA 30-Hour General Industry",why:"Step up for leadership track. Signals supervisor readiness.",cost:"$150–$200"},
+    {phase:"Year 3–5",cert:"CMRP — Certified Maintenance & Reliability Professional",why:"Senior maintenance credential. Most valuable after 2–3 years of real maintenance experience. Opens reliability engineering track.",cost:"$250–$400"}
+  ]},
+  {name:"🔍 Quality Path",steps:[
+    {phase:"Start Now",cert:"MSSC Certified Production Technician (CPT)",why:"Foundation credential. Quality roles require understanding of production processes — this proves it.",cost:"Free–$200 or covered"},
+    {phase:"Month 1",cert:"OSHA 10-Hour General Industry",why:"Expected by all manufacturing employers across all roles.",cost:"$30–$60"},
+    {phase:"Month 2–3",cert:"AI Essentials in Manufacturing (this course)",why:"AI quality monitoring, vision systems, defect detection — this cert maps directly to quality inspection work.",cost:"Program-based"},
+    {phase:"Month 3–6",cert:"Google Digital Garage — AI Fundamentals",why:"Free supplemental AI literacy from a recognizable brand. Appears on LinkedIn profile.",cost:"Free"},
+    {phase:"Year 1–2",cert:"ASQ Certified Quality Inspector (CQI)",why:"The standard quality credential. Opens quality engineering track. Best pursued after gaining inspection floor experience.",cost:"$200–$400"},
+    {phase:"Year 3–4",cert:"ASQ Certified Quality Technician (CQT) + Six Sigma Yellow Belt",why:"Stacking these two signals readiness for quality analyst and quality engineer roles.",cost:"$300–$600 combined"}
+  ]},
+  {name:"🤖 Automation Path",steps:[
+    {phase:"Start Now",cert:"Universal Robots UR Academy Core Track",why:"Free, directly employer-recognized, accessible with no prerequisites. Start here immediately.",cost:"Free"},
+    {phase:"Month 1",cert:"OSHA 10-Hour General Industry",why:"Safety is especially critical in automation — working near robots requires documented safety knowledge.",cost:"$30–$60"},
+    {phase:"Month 1–2",cert:"MSSC Certified Production Technician (CPT)",why:"Manufacturing foundation. Automation specialists need to understand production context.",cost:"Free–$200 or covered"},
+    {phase:"Month 2–4",cert:"AI Essentials in Manufacturing (this course)",why:"AI tools in manufacturing — from predictive maintenance to vision systems to production planning. The conceptual layer that makes automation work meaningful.",cost:"Program-based"},
+    {phase:"Year 1",cert:"FANUC Authorized Education Center Certification",why:"If you're targeting automotive or aerospace, FANUC is the brand. This credential opens doors at Tier 1 automotive suppliers.",cost:"Free–$200 through partner schools"},
+    {phase:"Year 2–3",cert:"Rockwell Automation Certified Professional Program",why:"PLC programming credential. PLCs control most automated equipment. This is the mid-career automation depth credential.",cost:"$200–$500"}
+  ]}
+];
+var sbTabsEl=document.getElementById('sb-tabs'),sbPanelsEl=document.getElementById('sb-panels'),sbActive=0;
+stacks.forEach(function(s,i){
+  var tab=document.createElement('div');tab.className='sb-tab'+(i===0?' active':'');tab.textContent=s.name;
+  tab.onclick=function(){sbActive=i;document.querySelectorAll('.sb-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.sb-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  sbTabsEl.appendChild(tab);
+  var panel=document.createElement('div');panel.className='sb-panel'+(i===0?' active':'');
+  var html='<div class="sb-stack">';
+  s.steps.forEach(function(step){
+    html+='<div class="sb-step"><div class="sb-left"><div class="sb-dot"></div><div class="sb-line"></div></div>'
+      +'<div class="sb-card"><div class="sb-card-phase">'+step.phase+'</div><div class="sb-card-cert">'+step.cert+'</div>'
+      +'<div class="sb-card-why">'+step.why+'</div>'
+      +'<div class="sb-card-cost">Cost: '+step.cost+'</div></div></div>';
+  });
+  html+='</div>';
+  panel.innerHTML=html;
+  sbPanelsEl.appendChild(panel);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

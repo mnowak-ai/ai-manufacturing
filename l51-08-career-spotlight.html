@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-World Career Spotlight: How Workers in Manufacturing Are Using AI to Get Promoted</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* STORY CARDS */
+.story{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;overflow:hidden;margin:32px 0;}
+.story-header{background:linear-gradient(135deg,var(--purple-dark),#5b21b6);padding:28px 32px;}
+.story-eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c084fc;margin-bottom:8px;}
+.story-name{font-family:"Fraunces",serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.15;}
+.story-role{font-size:15px;color:rgba(255,255,255,.75);margin-bottom:16px;}
+.story-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.story-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 12px;font-size:12px;font-weight:600;color:#fff;}
+.story-body{padding:28px 32px;}
+.story-section{margin-bottom:22px;}
+.story-section-label{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.story-text{font-size:15px;line-height:1.8;color:var(--gray-text);}
+.story-quote{margin:16px 0;padding:16px 20px;background:var(--purple-pale);border-left:4px solid var(--purple);border-radius:0 12px 12px 0;font-family:"Fraunces",serif;font-size:17px;font-style:italic;color:var(--purple-dark);line-height:1.6;}
+.story-timeline{display:flex;flex-direction:column;gap:0;}
+.st-item{display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--purple-mid);}
+.st-item:last-child{border-bottom:none;}
+.st-year{font-size:11px;font-weight:700;color:var(--purple);width:46px;flex-shrink:0;padding-top:3px;}
+.st-body{}
+.st-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:2px;}
+.st-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.st-ai-moment{background:var(--purple-pale);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--purple-dark);margin-top:5px;}
+.story-salary{display:flex;gap:14px;align-items:stretch;margin:14px 0;flex-wrap:wrap;}
+.salary-block{flex:1;min-width:120px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;text-align:center;}
+.salary-block.highlight{border-color:var(--purple);background:var(--purple-pale);}
+.sb-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-muted);margin-bottom:4px;}
+.sb-label.highlight{color:var(--purple);}
+.sb-value{font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:var(--gray-text);}
+.sb-value.highlight{color:var(--purple-dark);}
+.sb-role{font-size:11px;color:var(--gray-muted);margin-top:2px;}
+.sb-arrow{font-size:24px;color:var(--purple-mid);align-self:center;flex-shrink:0;}
+.story-lessons{display:flex;flex-direction:column;gap:8px;}
+.sl-item{display:flex;gap:12px;align-items:flex-start;}
+.sl-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sl-text{font-size:14px;line-height:1.7;color:var(--gray-text);}
+
+/* PATTERN BOX */
+.pattern-box{background:var(--green-pale);border:1.5px solid var(--green);border-radius:20px;padding:26px 28px;margin:28px 0;}
+.pb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--green);font-weight:700;margin-bottom:14px;}
+.pb-items{display:flex;flex-direction:column;gap:10px;}
+.pb-item{display:flex;gap:12px;align-items:flex-start;}
+.pb-check{font-size:16px;flex-shrink:0;}
+.pb-text{font-size:15px;line-height:1.7;color:#166534;}
+
+/* REFLECTION SIM */
+.reflection-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.rs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.rs-prompts{display:flex;flex-direction:column;gap:12px;}
+.rs-prompt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;}
+.rs-prompt-q{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:8px;}
+.rs-textarea{width:100%;border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px 12px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--gray-text);resize:vertical;min-height:70px;line-height:1.6;transition:border-color .2s;}
+.rs-textarea:focus{outline:none;border-color:var(--purple);}
+.rs-save-btn{margin-top:14px;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:background .2s;}
+.rs-save-btn:hover{background:var(--purple-dark);}
+.rs-saved{display:none;margin-top:10px;font-size:13px;color:var(--green);font-weight:600;}
+.rs-saved.show{display:block;}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>Real-World Career Spotlight: How Workers in Manufacturing Are Using AI to Get Promoted</h1>
+  <p class="hero-sub">Three workers. Three different starting points. One pattern: deliberate AI skill development turned a job into a career. These are realistic composite stories based on real patterns across the manufacturing industry.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>Theory is easier to absorb when it's attached to a real person's story. The three people below are realistic composite profiles — built from patterns across hundreds of manufacturing workers who have used AI skill development to advance their careers. The details are illustrative, but the patterns are real and repeated across the industry.</p>
+  <p>Read each story looking for what they actually did — the specific choices that created momentum — not just the outcome. The outcome is inspiring. The choices are what you can repeat.</p>
+</div>
+
+<!-- STORY 1 -->
+<div class="section fade-in">
+  <div class="story">
+    <div class="story-header">
+      <div class="story-eyebrow">Career Spotlight 01</div>
+      <div class="story-name">Marcus, 28</div>
+      <div class="story-role">From Assembly Line Operator → Automation Support Specialist in 4 years</div>
+      <div class="story-badges">
+        <span class="story-badge">Automotive Parts Manufacturing</span>
+        <span class="story-badge">Southeast Michigan</span>
+        <span class="story-badge">No college degree</span>
+      </div>
+    </div>
+    <div class="story-body">
+      <div class="story-section">
+        <div class="story-section-label">Where He Started</div>
+        <div class="story-text">Marcus started as a production operator at an automotive parts plant when he was 24. His job was straightforward: feed metal blanks into a stamping press, remove finished parts, stack them in bins, repeat. He was good at it. Fast, reliable, zero quality escapes in his first year. But he was also bored and knew there had to be a next step somewhere.</div>
+        <div class="story-quote">"I could see the robots across the aisle doing assembly work, and there were always two or three maintenance guys keeping them running. I kept thinking — that's a more interesting job. What do I need to know to get there?"</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Turning Point</div>
+        <div class="story-text">When his facility installed a new vision inspection system on his line, most operators treated it as just another machine to load and unload. Marcus asked the installation technician if he could watch the calibration process. The technician said yes. Marcus watched for two hours and took notes. He asked questions: what causes false positives? What happens when lighting changes? How does the system decide something is defective?</div>
+        <div class="story-text">His supervisor noticed. Not because Marcus made a big announcement about it — he just saw Marcus standing there, asking good questions, taking notes. The next week, when the facility needed someone to monitor vision system performance on the night shift, the supervisor thought of Marcus first.</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Path</div>
+        <div class="story-timeline" id="marcus-timeline"></div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Salary Progression</div>
+        <div class="story-salary">
+          <div class="salary-block"><div class="sb-label">Year 1</div><div class="sb-value">$38k</div><div class="sb-role">Production Operator</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block"><div class="sb-label">Year 2</div><div class="sb-value">$46k</div><div class="sb-role">Vision System Monitor</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block"><div class="sb-label">Year 3</div><div class="sb-value">$58k</div><div class="sb-role">Automation Technician</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block highlight"><div class="sb-label highlight">Year 4</div><div class="sb-value highlight">$74k</div><div class="sb-role">Automation Support Specialist</div></div>
+        </div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">What Made the Difference — Marcus's Own Words</div>
+        <div class="story-quote">"I never waited to be assigned something. Every time a new system came in, I asked if I could learn it. The AI tools weren't intimidating to me — I was more curious than scared. That curiosity is the whole thing. If I'd just done my press job and gone home, I'd still be doing my press job."</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Lessons From Marcus's Story</div>
+        <div class="story-lessons">
+          <div class="sl-item"><div class="sl-num">1</div><div class="sl-text">He didn't wait to be assigned an opportunity — he created one by asking to watch the installation.</div></div>
+          <div class="sl-item"><div class="sl-num">2</div><div class="sl-text">His curiosity was visible to his supervisor, which is what generated the first new assignment.</div></div>
+          <div class="sl-item"><div class="sl-num">3</div><div class="sl-text">Each new AI tool he learned became the credential that qualified him for the next step.</div></div>
+          <div class="sl-item"><div class="sl-num">4</div><div class="sl-text">He went from $38k to $74k in four years — without a degree — by building a specific skill others weren't building.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY 2 -->
+<div class="section fade-in">
+  <div class="story">
+    <div class="story-header">
+      <div class="story-eyebrow">Career Spotlight 02</div>
+      <div class="story-name">Destiny, 32</div>
+      <div class="story-role">From Quality Inspector → Quality Engineer in 5 years</div>
+      <div class="story-badges">
+        <span class="story-badge">Medical Device Manufacturing</span>
+        <span class="story-badge">Minnesota</span>
+        <span class="story-badge">Associate's degree, CTE background</span>
+      </div>
+    </div>
+    <div class="story-body">
+      <div class="story-section">
+        <div class="story-section-label">Where She Started</div>
+        <div class="story-text">Destiny graduated from a two-year technical program and got hired as a quality inspector at a medical device manufacturer. The job was precise, detail-oriented work — inspecting parts under microscopes, checking dimensions with calipers, completing inspection records for FDA compliance. She was meticulous. But the pay was $44,000 a year and the path to quality engineer seemed to require years of experience she didn't have yet.</div>
+        <div class="story-quote">"Everyone told me I needed at least 5 years as an inspector before I could be considered for an engineering role. I decided to figure out if there was a way to compress that timeline."</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Turning Point</div>
+        <div class="story-text">Her facility installed an AI-powered automated optical inspection (AOI) system — cameras and algorithms that could scan parts at line speed for surface defects. The quality engineering team was responsible for the system, but the inspectors used it daily. Destiny noticed something: the system's false positive rate was high on one particular part, creating rework for her team.</div>
+        <div class="story-text">Instead of complaining about the false positives, Destiny started tracking them. She documented every false flag: what part, what feature, what lighting condition, what the AI called defective versus what physical inspection confirmed. After three weeks, she had a spreadsheet showing a clear pattern — the system was miscalibrated for one specific geometry type. She brought her data to the quality engineer.</div>
+        <div class="story-text">The engineer used her data to recalibrate the system. The false positive rate dropped by 60%. And Destiny had just demonstrated, in practice, the most important quality engineering skill: using data to identify and fix a systematic problem.</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Path</div>
+        <div class="story-timeline" id="destiny-timeline"></div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Salary Progression</div>
+        <div class="story-salary">
+          <div class="salary-block"><div class="sb-label">Year 1</div><div class="sb-value">$44k</div><div class="sb-role">Quality Inspector</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block"><div class="sb-label">Year 2</div><div class="sb-value">$52k</div><div class="sb-role">Sr. Quality Inspector</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block"><div class="sb-label">Year 3–4</div><div class="sb-value">$64k</div><div class="sb-role">Quality Analyst</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block highlight"><div class="sb-label highlight">Year 5</div><div class="sb-value highlight">$84k</div><div class="sb-role">Quality Engineer</div></div>
+        </div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">What Made the Difference</div>
+        <div class="story-quote">"I didn't get promoted because I was a great inspector. I got promoted because I used the AI system's data to solve a problem that the engineers hadn't solved yet. I proved I could think like an engineer before I had the title. That's the move."</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Lessons From Destiny's Story</div>
+        <div class="story-lessons">
+          <div class="sl-item"><div class="sl-num">1</div><div class="sl-text">She turned a frustration (high false positive rate) into a data project instead of a complaint.</div></div>
+          <div class="sl-item"><div class="sl-num">2</div><div class="sl-text">She used the AI system's outputs as data — tracking, analyzing, finding the pattern. That's data awareness in action.</div></div>
+          <div class="sl-item"><div class="sl-num">3</div><div class="sl-text">She solved a problem that created value for the engineering team, which made them want her on the team.</div></div>
+          <div class="sl-item"><div class="sl-num">4</div><div class="sl-text">She compressed a "5-year" timeline to 5 years by working smarter within the same environment — not by waiting.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY 3 -->
+<div class="section fade-in">
+  <div class="story">
+    <div class="story-header">
+      <div class="story-eyebrow">Career Spotlight 03</div>
+      <div class="story-name">Tomás, 41</div>
+      <div class="story-role">From Maintenance Technician → Maintenance Supervisor in 6 years — at 41</div>
+      <div class="story-badges">
+        <span class="story-badge">Food & Beverage Manufacturing</span>
+        <span class="story-badge">Texas</span>
+        <span class="story-badge">15 years experience, career stalled</span>
+      </div>
+    </div>
+    <div class="story-body">
+      <div class="story-section">
+        <div class="story-section-label">Where He Started</div>
+        <div class="story-text">Tomás had 15 years of experience as a maintenance technician at a food processing plant when his facility started rolling out a predictive maintenance platform. He was an excellent technician — deep mechanical knowledge, fast troubleshooter, trusted by the whole floor. But he'd been passed over for lead technician twice, and a younger colleague had been promoted to maintenance supervisor over him two years earlier.</div>
+        <div class="story-quote">"I had more experience than almost anyone in that building. But I couldn't explain what I knew in a way that translated to leadership. And I'll be honest — when the new monitoring software came in, I avoided it. I thought: 'I know these machines better than any computer. I don't need this.'"</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Turning Point</div>
+        <div class="story-text">The shift came when a new plant manager arrived and held a town hall about where the facility was going. She talked about predictive maintenance, AI-driven scheduling, and the skills she expected maintenance team members to develop. After the meeting, Tomás sat with that discomfort for a few days. Then he made a decision: he was going to become the most knowledgeable person in the building about the predictive maintenance platform.</div>
+        <div class="story-text">He started spending 30 minutes at the end of each shift reviewing the dashboard — not because anyone asked him to, but because he decided to. He asked the platform vendor's support team questions. He started correlating what the dashboard told him with what he observed physically on the machines — building a mental model of when the AI was right and when it was wrong. Within three months, he was the informal expert that newer technicians came to with questions about the alerts.</div>
+        <div class="story-text">He also changed how he communicated. Instead of telling his supervisor "Machine 7 is going to have a problem soon," he started saying "Machine 7's vibration signature is trending 18% above baseline over the last two weeks — based on the pattern, I'd recommend scheduling a bearing inspection before the end of the month." The data made his intuition credible in a new way.</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">The Path</div>
+        <div class="story-timeline" id="tomas-timeline"></div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Salary Progression</div>
+        <div class="story-salary">
+          <div class="salary-block"><div class="sb-label">Pre-AI (15 yrs)</div><div class="sb-value">$58k</div><div class="sb-role">Sr. Maint. Tech (stalled)</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block"><div class="sb-label">Year 2</div><div class="sb-value">$66k</div><div class="sb-role">Lead Technician</div></div>
+          <div class="sb-arrow">→</div>
+          <div class="salary-block highlight"><div class="sb-label highlight">Year 4</div><div class="sb-value highlight">$88k</div><div class="sb-role">Maintenance Supervisor</div></div>
+        </div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">What Made the Difference</div>
+        <div class="story-quote">"I had all the experience but I was communicating it wrong. The AI platform gave me the language to translate what I knew physically into data that leadership could see. My gut was right — it always had been. I just finally had the numbers to back it up. That changed everything."</div>
+      </div>
+      <div class="story-section">
+        <div class="story-section-label">Lessons From Tomás's Story</div>
+        <div class="story-lessons">
+          <div class="sl-item"><div class="sl-num">1</div><div class="sl-text">It's never too late. Tomás was 41 with 15 years of stalled career when he changed his approach — and got promoted to supervisor within 4 years.</div></div>
+          <div class="sl-item"><div class="sl-num">2</div><div class="sl-text">AI tools gave him the language to make his experience visible to leadership. Experience + data communication is more powerful than either alone.</div></div>
+          <div class="sl-item"><div class="sl-num">3</div><div class="sl-text">He became the informal expert before he had any formal recognition — which is exactly how you earn formal recognition.</div></div>
+          <div class="sl-item"><div class="sl-num">4</div><div class="sl-text">The shift from "Machine 7 has a problem" to "Machine 7's vibration is trending 18% above baseline" is the communication change that made leadership see him differently.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Pattern Across All Three</h2>
+  <p>Three different people, three different industries, three different starting points. But the same pattern runs through every story:</p>
+
+  <div class="pattern-box">
+    <div class="pb-title">What Every Promoted Worker Did</div>
+    <div class="pb-items">
+      <div class="pb-item"><div class="pb-check">✓</div><div class="pb-text"><strong>They leaned toward the AI tools instead of away from them.</strong> In every story, a moment came when a new system arrived and others avoided it. These workers got curious.</div></div>
+      <div class="pb-item"><div class="pb-check">✓</div><div class="pb-text"><strong>They made their learning visible.</strong> Not by bragging — by asking questions, documenting outcomes, and sharing what they figured out. Visibility is what creates opportunity.</div></div>
+      <div class="pb-item"><div class="pb-check">✓</div><div class="pb-text"><strong>They connected AI outputs to real problem-solving.</strong> They didn't just use the tools — they used the tools to find and fix things that mattered. That's what gets noticed.</div></div>
+      <div class="pb-item"><div class="pb-check">✓</div><div class="pb-text"><strong>They changed how they communicated.</strong> Numbers, trends, data — not just feelings and observations. AI tools gave them the language to make their expertise legible to leadership.</div></div>
+      <div class="pb-item"><div class="pb-check">✓</div><div class="pb-text"><strong>They didn't wait for permission.</strong> Marcus watched the installation. Destiny started her own tracking spreadsheet. Tomás spent 30 minutes a day on the dashboard. Nobody assigned them these tasks. They chose them.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Your Turn: Reflection</h2>
+  <p>These stories are about real patterns — but the most useful thing is to connect them to your own situation. Take a few minutes with these prompts. You don't have to share them with anyone.</p>
+
+  <div class="reflection-sim">
+    <div class="rs-label">Personal Reflection</div>
+    <div class="rs-title">Connecting Their Stories to Yours</div>
+    <div class="rs-sub">Write a few sentences for each prompt. These are just for you — they help make the lessons personal.</div>
+    <div class="rs-prompts" id="rs-prompts"></div>
+    <button class="rs-save-btn" onclick="saveReflection()">Save my reflections</button>
+    <div class="rs-saved" id="rs-saved">✓ Saved. Come back to these — they're worth revisiting as you progress through this course.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Workers from very different starting points — no degree, associate's degree, 15 years stalled — all used the same pattern: curiosity about AI tools, visible engagement, data-driven communication, and self-directed learning.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The specific career accelerator in every story was using an AI tool's output to solve a real problem — which demonstrated engineering-level thinking before they had engineering-level titles.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Changing how you communicate — from observations to data-backed insights — is one of the highest-leverage things any manufacturing worker can do to become visible to leadership.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">None of these workers waited for permission or for someone to assign them the opportunity. They created the opportunity by making themselves useful in relation to tools that others were avoiding.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+function buildTimeline(id,items){
+  var el=document.getElementById(id);
+  items.forEach(function(item){
+    var d=document.createElement('div');d.className='st-item';
+    d.innerHTML='<div class="st-year">'+item.year+'</div><div class="st-body"><div class="st-title">'+item.title+'</div><div class="st-desc">'+item.desc+'</div>'+(item.ai?'<div class="st-ai-moment">🤖 AI moment: '+item.ai+'</div>':'')+'</div>';
+    el.appendChild(d);
+  });
+}
+
+buildTimeline('marcus-timeline',[
+  {year:"Year 1",title:"Production Operator",desc:"Reliable, fast, zero quality issues. Starts asking questions about machines near his station.",ai:"Watches vision system calibration on his own initiative. Takes notes. Asks the right questions."},
+  {year:"Year 2",title:"Vision System Monitor (new assignment)",desc:"Supervisor taps him to review AI vision flags on night shift in addition to press operation. Becomes the go-to person for false positive investigation.",ai:"Learns what types of defects the AI catches reliably vs. where it generates noise. Develops a mental model of system behavior."},
+  {year:"Year 3",title:"Automation Technician (promotion)",desc:"Transfers off the press entirely. Works with the automation team maintaining robots and vision systems. Starts learning cobot programming through Universal Robots free online training.",ai:"Completes UR Academy cobot programming certification on his own time. Builds skills that directly qualify him for the next role."},
+  {year:"Year 4",title:"Automation Support Specialist (promotion)",desc:"Now responsible for programming, maintaining, and improving automated systems across three production lines. Mentors newer technicians on vision system calibration and cobot operation.",ai:"AI tools are now his job description — not just part of it."}
+]);
+
+buildTimeline('destiny-timeline',[
+  {year:"Year 1",title:"Quality Inspector",desc:"Meticulous, detailed work. Learns FDA compliance documentation requirements. Starts using the AOI system as part of her daily workflow.",ai:"Notices the high false positive rate on one part geometry. Starts informally tracking which flags are real vs. false."},
+  {year:"Year 2",title:"Senior Quality Inspector (promotion)",desc:"Promoted based on accuracy and the false positive data project. Now formally responsible for AOI flag review and documentation.",ai:"Presents her false positive tracking data to the quality engineering team. Her analysis drives a system recalibration that reduces false positives by 60%."},
+  {year:"Year 3–4",title:"Quality Analyst (new role)",desc:"The quality engineer creates a Quality Analyst position partly based on Destiny's demonstrated ability to work with quality data. She begins pulling and analyzing production defect trend data for the engineering team.",ai:"Learns SPC charting and starts using the quality management software to run defect trend reports. Brings data-backed recommendations to weekly quality meetings."},
+  {year:"Year 5",title:"Quality Engineer (promotion)",desc:"Promoted to Quality Engineer. Now responsible for inspection system performance, quality standards, and continuous improvement projects across the product line.",ai:"The AI quality inspection systems are now her responsibility to manage and improve — full circle from her first observation of a false positive in Year 1."}
+]);
+
+buildTimeline('tomas-timeline',[
+  {year:"Yrs 1–15",title:"Senior Maintenance Technician (stalled)",desc:"Deep mechanical expertise, trusted by the floor, passed over for promotions twice. Avoids the new predictive maintenance platform when it arrives.",ai:"Decision point: after the plant manager's town hall, commits to becoming the most knowledgeable person on the platform."},
+  {year:"Yr 16",title:"Informal platform expert emerges",desc:"Spends 30 min/shift reviewing the dashboard. Correlates AI alerts with physical observations. Starts becoming the person newer technicians ask about alerts.",ai:"Builds a mental model of the platform's accuracy — which alert types are reliable, which generate false positives, what physical signatures correlate with specific alert patterns."},
+  {year:"Yr 17",title:"Lead Maintenance Technician (promotion)",desc:"Promoted after a period of demonstrably changed communication style — bringing data to supervisor conversations, documenting AI alert investigations with data-backed reasoning.",ai:"\"Machine 7's vibration is trending 18% above baseline\" replaces \"Machine 7 is going to have a problem.\" This single communication change is what leadership noticed."},
+  {year:"Yr 19",title:"Maintenance Supervisor (promotion)",desc:"Promoted to supervisor. His ability to translate floor knowledge into data that leadership can act on — and his status as the internal AI platform expert — made the case for him over other candidates.",ai:"Now manages the predictive maintenance strategy for the entire facility, presenting reliability metrics to plant leadership and driving decisions about maintenance technology investment."}
+]);
+
+var prompts=[
+  "Which of the three workers' starting points is closest to where you are now — and what from their story feels most relevant to your situation?",
+  "What's one thing you've been avoiding at school, work, or in your training that might be worth leaning toward instead? What would it look like to make that shift?",
+  "What's one specific AI-related skill you could start building in the next 30 days — and how would you go about it?"
+];
+var prEl=document.getElementById('rs-prompts');
+prompts.forEach(function(q,i){
+  var d=document.createElement('div');d.className='rs-prompt';
+  d.innerHTML='<div class="rs-prompt-q">'+q+'</div><textarea class="rs-textarea" id="rsta'+i+'" placeholder="Write a few sentences here..."></textarea>';
+  prEl.appendChild(d);
+});
+function saveReflection(){
+  var responses=[];
+  prompts.forEach(function(q,i){var v=document.getElementById('rsta'+i).value.trim();if(v)responses.push({q:q,a:v});});
+  document.getElementById('rs-saved').classList.add('show');
+}
+</script>
+</body>
+</html>

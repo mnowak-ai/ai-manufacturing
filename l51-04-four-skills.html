@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Four Skills Employers Are Hunting For — And How to Show You Have Them</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* SKILL DEEP DIVES */
+.skill-block{border:1.5px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:28px 0;}
+.sb-header{padding:22px 26px;display:flex;gap:16px;align-items:flex-start;}
+.sb-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple-mid);line-height:1;flex-shrink:0;}
+.sb-title-block{}
+.sb-skill-tag{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.sb-skill-name{font-family:"Fraunces",serif;font-size:22px;color:var(--purple-dark);font-weight:700;margin-bottom:4px;}
+.sb-skill-sub{font-size:14px;color:var(--gray-muted);line-height:1.6;}
+.sb-body{background:var(--gray-soft);padding:22px 26px;}
+.sb-section{margin-bottom:18px;}
+.sb-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.sb-section-body{font-size:14px;line-height:1.8;color:var(--gray-text);}
+
+/* RESUME BUILDER */
+.resume-builder{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;margin-top:12px;}
+.rb-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.rb-phrases{display:flex;flex-direction:column;gap:6px;}
+.rb-phrase{background:var(--green-pale);border:1px solid var(--green);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--green);line-height:1.6;cursor:pointer;transition:all .2s;position:relative;}
+.rb-phrase:hover{filter:brightness(.97);}
+.rb-phrase::after{content:"Copy";position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--green);opacity:0.6;}
+.rb-phrase.copied{background:var(--purple-pale);border-color:var(--purple);color:var(--purple);}
+.rb-phrase.copied::after{content:"✓ Copied";}
+
+/* INTERVIEW PREP */
+.interview-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-top:12px;}
+.ic-q{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:8px;}
+.ic-q::before{content:"Interview Q: ";color:var(--purple);}
+.ic-a{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.ic-a::before{content:"Strong answer: ";font-weight:700;color:var(--green);}
+
+/* SHOW YOU HAVE IT SIMULATION */
+.scenario-check{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sc-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sc-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.sc-situation{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;padding:12px 14px;background:var(--gray-soft);border-radius:8px;}
+.sc-q{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:10px;}
+.sc-opts{display:flex;flex-direction:column;gap:7px;}
+.sc-opt{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer;color:var(--gray-text);text-align:left;font-family:"DM Sans",sans-serif;transition:all .2s;line-height:1.5;}
+.sc-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.sc-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.sc-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.sc-fb{margin-top:10px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75;display:none;}
+.sc-fb.show{display:block;}
+.sc-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.sc-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.sc-skill-tag{display:inline-block;background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-bottom:8px;}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>The Four Skills Employers Are Hunting For — And How to Show You Have Them</h1>
+  <p class="hero-sub">Problem-solving, data awareness, tech adaptability, and communication each get a single checkbox in the lesson video. This article defines each one in manufacturing terms, shows what it looks like on the job, and gives you exact language to demonstrate it on a résumé and in an interview.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why These Four Specifically?</h2>
+  <p>Manufacturing employers have always cared about technical skills — can you operate the machine, read the blueprint, follow the procedure? Those skills haven't gone away. But as AI tools have entered the factory, employers have realized something: <mark>the technical skills get you in the door, but these four skills determine who advances</mark>.</p>
+  <p>Here's why. AI tools generate a lot of information — alerts, recommendations, dashboards, flags. A worker who can only follow instructions isn't equipped to work with that information. A worker who can think through a problem, read and interpret data, adapt to new tools as they arrive, and communicate clearly about what they're seeing? That worker becomes more valuable the more AI gets added to their environment.</p>
+  <p>That's what employers mean when they list these skills. Let's look at each one in full.</p>
+</div>
+
+<div class="section fade-in" id="skills-section"></div>
+
+<div class="section fade-in">
+  <h2>Practice: Can You Spot Which Skill Is Being Demonstrated?</h2>
+  <p>Knowing the four skills and being able to recognize them in action are different things. This simulation gives you real workplace scenarios — your job is to identify which skill is most central to the situation.</p>
+
+  <div class="scenario-check">
+    <div class="sc-label">Skill Recognition Simulation</div>
+    <div class="sc-title">What skill is this worker showing?</div>
+    <div class="sc-sub">Read each scenario and identify which of the four in-demand skills the worker is primarily demonstrating.</div>
+    <div id="sc-scenarios"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Problem-solving in manufacturing means using a structured approach to find the root cause of problems — not just treating symptoms. It shows up when workers investigate AI alerts, diagnose equipment failures, or find the source of a quality trend.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Data awareness means being comfortable reading dashboards, interpreting production numbers, and asking "does this make sense?" It doesn't require programming — it requires curiosity and a willingness to look at numbers without fear.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Tech adaptability means being willing to learn new tools as they arrive, asking good questions, and maintaining a "figure it out" mindset. It's a behavior and an attitude, not a set of specific technical knowledge.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Communication at work means being clear, accurate, timely, and appropriate for the audience — whether you're writing a shift handoff note, reporting a safety issue, or updating a supervisor on a problem you found.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">All four skills can be demonstrated on a résumé and talked about in an interview. The key is being specific — give an example, name the situation, describe what you did and why.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var skills=[
+  {num:"01",tag:"In-Demand Skill",name:"Problem-Solving",sub:"Finding the real cause of a problem — not just treating the symptom",what:"Problem-solving in manufacturing means working through a problem systematically to find its root cause. When a machine produces a bad part, a problem-solver doesn't just throw out the part and keep going. They ask: why did this happen? What in the process changed? Is this an isolated event or a pattern? How do I make sure it doesn't happen again?",mfg:"In an AI-assisted factory, problem-solving shows up constantly. An AI alert tells you something is wrong — problem-solving determines what that is and why. A quality inspector sees an AI flag for defects on 6 consecutive parts — a problem-solver investigates the tooling and finds a worn insert before it creates more scrap. A production planner sees output 8% below target — a problem-solver pulls the data, identifies the bottleneck, and finds a fix before the shift ends.",resume:["Investigated root cause of recurring quality defect using 5-Why analysis, reducing scrap rate by 23%","Identified source of machine downtime through systematic fault isolation, reducing unplanned stops by 40%","Reviewed AI predictive maintenance alerts daily and investigated flagged equipment to verify root cause before scheduling repairs"],interview:{q:"Tell me about a time you solved a problem at work or school.",a:"\"I'm comfortable using a structured approach — I start by defining the problem clearly before jumping to solutions. I ask 'what changed?' and 'is this a pattern or a one-time event?' I've practiced this with AI alert scenarios where the system flags something that looks alarming, and I've learned to investigate whether the alert matches physical reality before taking action. That habit of verifying the data against what I can see and test is how I avoid overreacting to false positives and underreacting to real problems.\""}},
+  {num:"02",tag:"In-Demand Skill",name:"Data Awareness",sub:"Being comfortable with numbers, dashboards, and asking 'does this make sense?'",what:"Data awareness doesn't mean you're a mathematician or a data scientist. In manufacturing, it means you can look at a number and understand what it's telling you — and what it's not. It means you know the difference between a utilization rate of 85% (healthy) and 98% (dangerously close to the limit). It means you can look at a quality defect rate trending upward over three weeks and recognize that as a problem before it becomes a crisis. It means you're not afraid of dashboards.",mfg:"Almost every manufacturing role now has some form of data dashboard — production output numbers, machine utilization, defect rates, maintenance alert queues, inventory levels. Data awareness means you can look at that dashboard, read what's happening, identify what's unusual, and ask the right questions. You don't need to build the dashboard or write the code. You need to use it.",resume:["Monitored daily production dashboards and flagged anomalies requiring supervisor attention","Reviewed AI maintenance alert data to prioritize daily work orders by production impact","Tracked defect trend data using SPC charts and identified process drift before product failures occurred"],interview:{q:"Are you comfortable working with data and numbers?",a:"\"Yes. I understand that data awareness in manufacturing doesn't mean coding or statistics — it means being able to read a production dashboard, notice when something looks off, and know which questions to ask. I've studied how predictive maintenance dashboards work, how defect rate trends are tracked on SPC charts, and how production utilization data is used to identify bottlenecks. I'm comfortable looking at numbers and asking 'does this make sense given what's actually happening on the floor?'\""}},
+  {num:"03",tag:"In-Demand Skill",name:"Tech Adaptability",sub:"Learning new tools willingly and applying them confidently as they arrive",what:"Tech adaptability is not about already knowing every tool that exists. It's about how you respond when a new tool arrives that you've never seen before. Do you lean in and figure it out? Or do you avoid it and wait for someone else to handle it? Employers can tell the difference within weeks of hiring someone. And in a manufacturing environment where new tools are being added constantly, the workers who learn quickly are the ones who advance quickly.",mfg:"In a factory that's rolling out a new predictive maintenance platform, tech-adaptable workers ask questions, watch training videos, try things out, make mistakes, and learn. Workers who aren't tech-adaptable find reasons to avoid the new system and keep doing things the old way — until the old way is no longer an option. Tech adaptability is also about asking the right questions when you don't know something: 'How does this system decide to flag something?' 'What should I do when I see this type of alert?' 'Who do I call if the system shows something I don't understand?'",resume:["Completed AI in Manufacturing certification covering predictive maintenance, quality monitoring, and production planning systems","Quickly learned new production scheduling software during facility ERP transition; trained three colleagues within first month","Comfortable learning and adapting to new digital tools; proven track record of picking up software systems without extended training periods"],interview:{q:"How do you handle it when you're given a new tool or system you've never used before?",a:"\"I approach it with curiosity rather than anxiety. My first step is usually to understand what the tool is supposed to do before I try to use it — what problem does it solve? Then I explore it, ask questions, and learn from the people who know it well. I've had experience with this through this AI certification — many of the tools and concepts were new to me, and I got comfortable with them by working through real scenarios and understanding the reasoning behind how they work, not just memorizing steps.\""}},
+  {num:"04",tag:"In-Demand Skill",name:"Communication",sub:"Conveying accurate information clearly to the right person at the right time",what:"Communication at work means something specific. It's not about being talkative or having a big personality. It's about three things: accuracy (what you say is correct), clarity (the other person understands it without confusion), and timeliness (you say it when it matters, not an hour too late). Bad communication on a manufacturing floor causes delays, defects, and safety incidents. Good communication keeps work flowing and builds trust between workers and supervisors.",mfg:"In an AI-assisted factory, communication has a new dimension: you're now summarizing AI-generated information for other humans. A maintenance technician who finds that an AI alert was a false positive needs to communicate that clearly to their supervisor — not just 'it was fine' but 'I investigated the vibration alert on Motor 3. Physical inspection and current readings confirm normal operation. The alert appears to have been caused by temporary vibration during the scheduled material delivery. No action required.' That's professional communication that protects you, informs your team, and documents the decision.",resume:["Documented equipment inspection findings and AI alert investigations clearly and completely for supervisor review","Communicated shift handoff notes including AI alert status, actions taken, and outstanding items requiring follow-up","Maintained production reporting accuracy in ERP system for supervisor and planning team visibility"],interview:{q:"Can you give me an example of a time when clear communication made a difference?",a:"\"Communication is something I've deliberately practiced. I understand that in manufacturing, a vague update — 'it looked fine' — creates more problems than it solves. A good update tells someone what you checked, what you found, what you did about it, and what (if anything) they need to know going forward. I've practiced writing that kind of update in my training, including scenarios where I'm summarizing what an AI system flagged and explaining why I made the call I made. That kind of documented, specific communication is something I take seriously.\""}}
+];
+
+var sec=document.getElementById('skills-section'),copyDone={};
+skills.forEach(function(s,i){
+  var div=document.createElement('div');div.className='skill-block';
+  var resumeHtml=s.resume.map(function(r,j){return '<div class="rb-phrase" onclick="copyPhrase(this,\''+j+'_'+i+'\')">'+r+'</div>';}).join('');
+  div.innerHTML='<div class="sb-header"><div class="sb-num">'+s.num+'</div><div class="sb-title-block"><div class="sb-skill-tag">'+s.tag+'</div><div class="sb-skill-name">'+s.name+'</div><div class="sb-skill-sub">'+s.sub+'</div></div></div>'
+    +'<div class="sb-body">'
+    +'<div class="sb-section"><div class="sb-section-label">What It Actually Means</div><div class="sb-section-body">'+s.what+'</div></div>'
+    +'<div class="sb-section"><div class="sb-section-label">What It Looks Like in a Manufacturing Job</div><div class="sb-section-body">'+s.mfg+'</div></div>'
+    +'<div class="sb-section"><div class="sb-section-label">How to Show It on a Résumé</div><div class="resume-builder"><div class="rb-label">📋 Click any phrase to copy it for your résumé</div><div class="rb-phrases">'+resumeHtml+'</div></div></div>'
+    +'<div class="sb-section"><div class="sb-section-label">How to Talk About It in an Interview</div><div class="interview-card"><div class="ic-q">'+s.interview.q+'</div><div class="ic-a">'+s.interview.a+'</div></div></div>'
+    +'</div>';
+  sec.appendChild(div);
+});
+function copyPhrase(el,key){
+  if(copyDone[key])return;
+  var text=el.textContent.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(function(){
+    el.classList.add('copied');
+    copyDone[key]=true;
+    setTimeout(function(){el.classList.remove('copied');copyDone[key]=false;},2000);
+  }).catch(function(){el.classList.add('copied');setTimeout(function(){el.classList.remove('copied');},2000);});
+}
+
+var scenarios=[
+  {skill:"Tech Adaptability",situation:"Maria is a quality inspector. Her facility just installed a new AI vision inspection system. She has never used it before. On Day 1, instead of waiting for someone to show her, she asks the system installer if she can spend 20 minutes watching a demo. She takes notes. She asks what types of false positives the system tends to generate. By Day 3, she's faster with the new system than anyone else on her shift.",q:"What in-demand skill is Maria primarily demonstrating?",opts:["Problem-Solving","Data Awareness","Tech Adaptability","Communication"],correct:2,good:"✅ Exactly right — Tech Adaptability. Maria doesn't wait, doesn't avoid, and doesn't complain about the new system. She proactively seeks out the training she needs, asks the right questions to understand the tool's limitations, and applies what she learned quickly. That's the definition of tech adaptability in action.",bad:"❌ Tech Adaptability is the best answer here. Maria is responding to a new, unfamiliar tool by leaning in — asking questions, seeking training, and getting up to speed faster than her colleagues. That's the 'figure it out' mindset employers describe as tech adaptability. The other skills are valuable but not the primary thing being demonstrated here."},
+  {skill:"Problem-Solving",situation:"James is a maintenance technician. The AI flags a motor as running 12°C above its normal operating temperature. James doesn't just schedule a repair — he first checks the cooling fan, inspects the air filter, and looks at recent production history. He finds that the motor has been running at 110% of its rated load for three days because a downstream conveyor was slowing down and the motor was compensating. The real problem is the conveyor — not the motor.",q:"What in-demand skill is James primarily demonstrating?",opts:["Problem-Solving","Data Awareness","Tech Adaptability","Communication"],correct:0,good:"✅ Correct — Problem-Solving. James didn't just react to the surface alert (high temperature = fix the motor). He dug deeper to find the root cause: the conveyor slowdown that was overloading the motor. If he had only fixed the motor without finding the conveyor problem, the temperature would have come right back up. Root cause investigation is the core of manufacturing problem-solving.",bad:"❌ The best answer is Problem-Solving. The key detail is that James went beyond the alert to find the actual cause — the conveyor slowdown, not just the hot motor. Treating symptoms without finding root causes is the opposite of good problem-solving. What James did is exactly what structured, systematic problem-solving looks like on the floor."},
+  {skill:"Communication",situation:"Deja is a production coordinator ending her shift. She writes the following shift handoff note: 'AI scheduled 240 units of Part #A-1122 for Line 3, but I pushed it to Line 4 because Line 3's tooling is overdue for replacement and the quality team recommended avoiding precision runs until it's serviced. Line 4 ran clean all shift. The tooling service is scheduled for tomorrow's 6 AM downtime window.'",q:"What in-demand skill is Deja primarily demonstrating?",opts:["Problem-Solving","Data Awareness","Tech Adaptability","Communication"],correct:3,good:"✅ Correct — Communication. Deja's note tells the incoming team exactly what she did, why she did it, what the outcome was, and what's coming next. It doesn't just say 'I moved some work' — it explains the reasoning, documents the decision, and prepares the next person to do their job without confusion. That's professional workplace communication at its best.",bad:"❌ The best answer is Communication. The note Deja wrote is an excellent example of what clear, professional workplace communication looks like — accurate, specific, explains the reasoning, and sets up the next shift for success. Compare this to a vague note like 'moved some jobs around' and you can see why strong communication is such a meaningful differentiator in manufacturing."}
+];
+var scEl=document.getElementById('sc-scenarios'),sdone={};
+scenarios.forEach(function(s,i){
+  var div=document.createElement('div');div.className='sc-scenario';
+  var optsHtml=s.opts.map(function(o,j){return '<button class="sc-opt" onclick="scQ('+i+','+j+')" id="sco'+i+'_'+j+'">'+o+'</button>';}).join('');
+  div.innerHTML='<span class="sc-skill-tag">Scenario '+(i+1)+'</span>'
+    +'<div class="sc-situation">'+s.situation+'</div>'
+    +'<div class="sc-q">'+s.q+'</div>'
+    +'<div class="sc-opts">'+optsHtml+'</div>'
+    +'<div class="sc-fb good" id="scfb'+i+'g">'+s.good+'</div>'
+    +'<div class="sc-fb bad" id="scfb'+i+'b">'+s.bad+'</div>';
+  scEl.appendChild(div);
+});
+function scQ(si,oi){
+  if(sdone[si])return;sdone[si]=true;
+  var correct=scenarios[si].correct;
+  for(var j=0;j<scenarios[si].opts.length;j++)document.getElementById('sco'+si+'_'+j).disabled=true;
+  document.getElementById('sco'+si+'_'+oi).classList.add(oi===correct?'correct':'wrong');
+  document.getElementById('scfb'+si+(oi===correct?'g':'b')).classList.add('show');
+}
+</script>
+</body>
+</html>

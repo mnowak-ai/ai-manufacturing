@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Data Awareness? A Skill Every Manufacturing Worker Now Needs</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* DASHBOARD SIM */
+.dashboard-sim{background:#0f172a;border-radius:20px;padding:24px;margin:28px 0;overflow:hidden;}
+.db-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:gap;}
+.db-title{font-family:"Fraunces",serif;font-size:18px;color:#fff;font-weight:700;}
+.db-time{font-size:12px;color:rgba(255,255,255,.5);}
+.db-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+@media(max-width:560px){.db-grid{grid-template-columns:1fr 1fr;}}
+.db-tile{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;}
+.db-tile-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.db-tile-value{font-family:"Fraunces",serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:4px;}
+.db-tile-sub{font-size:11px;color:rgba(255,255,255,.5);}
+.db-tile.green .db-tile-value{color:#4ade80;}
+.db-tile.yellow .db-tile-value{color:#facc15;}
+.db-tile.red .db-tile-value{color:#f87171;}
+.db-tile.purple .db-tile-value{color:#c084fc;}
+.db-tile.blue .db-tile-value{color:#60a5fa;}
+.db-tile.white .db-tile-value{color:#fff;}
+.db-alerts{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;}
+.db-alert-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px;}
+.db-alert{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.db-alert:last-child{border-bottom:none;}
+.db-alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.db-alert-dot.high{background:#f87171;}
+.db-alert-dot.med{background:#facc15;}
+.db-alert-dot.low{background:#4ade80;}
+.db-alert-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.6;}
+
+/* DASHBOARD READING */
+.reading-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.rs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.rs-step{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.rs-step-num{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.rs-step-title{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;margin-bottom:8px;}
+.rs-step-body{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:10px;}
+.rs-example{background:var(--purple-pale);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.75;color:var(--purple-dark);}
+.rs-example strong{color:var(--purple);}
+
+/* NUMBERS EXPLAINED */
+.num-explainer{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.ne-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;cursor:pointer;transition:border-color .2s;}
+.ne-item:hover{border-color:var(--purple);}
+.ne-item-head{display:flex;justify-content:space-between;align-items:center;}
+.ne-number{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);}
+.ne-name{font-size:14px;font-weight:600;color:var(--purple-dark);flex:1;padding:0 12px;}
+.ne-toggle{font-size:18px;color:var(--purple-mid);transition:transform .25s;}
+.ne-toggle.open{transform:rotate(45deg);}
+.ne-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--purple-mid);font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ne-detail.open{display:block;}
+.ne-good{color:var(--green);font-weight:600;}
+.ne-bad{color:var(--red);font-weight:600;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>What Is Data Awareness? A Skill Every Manufacturing Worker Now Needs</h1>
+  <p class="hero-sub">The lesson lists "data awareness" as an in-demand skill without ever explaining what it means. This article fixes that — with a real dashboard, real manufacturing numbers, and a step-by-step guide to reading data without fear.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>First: What Data Awareness Is NOT</h2>
+  <p>Before explaining what data awareness is, it's important to say what it is not — because the phrase can sound intimidating in ways that shouldn't stop you.</p>
+  <p>Data awareness is NOT programming. You don't write code. You don't build spreadsheets from scratch. You don't need to know statistics. You don't need to be a "math person." You don't need a data science degree or any degree at all.</p>
+  <p><mark>Data awareness is the ability to look at a number and understand what it's telling you</mark> — and what it's not. It's asking "does this make sense?" It's noticing when something looks different from yesterday. It's being able to have a conversation with your supervisor that includes a number — not just a feeling. That's it.</p>
+
+  <div class="pull-quote">
+    <p>You've been reading "data" your whole life. Every time you checked the weather before going outside, or looked at a gas gauge before a road trip, you were practicing data awareness. Manufacturing dashboards work the same way — you just need to learn what the specific numbers mean.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What a Real Manufacturing Dashboard Looks Like</h2>
+  <p>Every shift in an AI-assisted manufacturing facility starts with a dashboard. Here's what one looks like — and what each number is actually telling you. Study this before reading the explanation below it.</p>
+
+  <div class="dashboard-sim">
+    <div class="db-header">
+      <div class="db-title">Ridgeline Manufacturing — Line 2 Dashboard</div>
+      <div class="db-time" id="db-clock">Loading...</div>
+    </div>
+    <div class="db-grid">
+      <div class="db-tile green"><div class="db-tile-label">OEE</div><div class="db-tile-value">82%</div><div class="db-tile-sub">Overall Equip Effectiveness</div></div>
+      <div class="db-tile yellow"><div class="db-tile-label">Utilization</div><div class="db-tile-value">94%</div><div class="db-tile-sub">Machine running time</div></div>
+      <div class="db-tile green"><div class="db-tile-label">Defect Rate</div><div class="db-tile-value">0.8%</div><div class="db-tile-sub">Parts rejected / total run</div></div>
+      <div class="db-tile red"><div class="db-tile-label">Unplanned Stops</div><div class="db-tile-value">3</div><div class="db-tile-sub">This shift (target: 0)</div></div>
+      <div class="db-tile purple"><div class="db-tile-label">Cycle Time</div><div class="db-tile-value">47s</div><div class="db-tile-sub">Standard: 45s (↑ 4.4%)</div></div>
+      <div class="db-tile blue"><div class="db-tile-label">Output</div><div class="db-tile-value">612</div><div class="db-tile-sub">Target: 650 (94% of target)</div></div>
+    </div>
+    <div class="db-alerts">
+      <div class="db-alert-label">Active AI Alerts</div>
+      <div class="db-alert"><div class="db-alert-dot high"></div><div class="db-alert-text"><strong>Station 4 — Bearing vibration:</strong> Trending 22% above baseline for 3 hours. Recommend inspection before next shift.</div></div>
+      <div class="db-alert"><div class="db-alert-dot med"></div><div class="db-alert-text"><strong>Coolant level — Machine 3:</strong> Auto-refill system triggered twice this shift. Monitor for leak.</div></div>
+      <div class="db-alert"><div class="db-alert-dot low"></div><div class="db-alert-text"><strong>Component inventory:</strong> Part #C-447 at 34% of daily buffer. Normal consumption rate.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What These Numbers Actually Mean — Click to Decode</h2>
+  <p>Each number on that dashboard has a meaning. Below are the most common manufacturing metrics — what they are, what a healthy value looks like, and what to think when the number is off. Click any one to see the full explanation.</p>
+
+  <div class="num-explainer" id="num-explainer"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Read Any Dashboard: A 4-Step Method</h2>
+  <p>The specific numbers on one facility's dashboard will be different from another's. But the approach to reading any manufacturing data dashboard is the same. Here's a four-step method you can use starting on your first day of any job.</p>
+
+  <div class="reading-sim">
+    <div class="rs-label">The 4-Step Dashboard Reading Method</div>
+    <div class="rs-title">How to Make Sense of Any Manufacturing Dashboard</div>
+    <div class="rs-sub">Use this process every time you look at a data screen — whether it's your first week or your tenth year.</div>
+    <div id="rs-steps"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Practice: Reading the Dashboard</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Dashboard Reading Check</div>
+    <div class="quiz-q">Looking at the Ridgeline Manufacturing dashboard above: Utilization is 94% and output is only 94% of target. The cycle time is 47 seconds, slightly above the 45-second standard. What does this combination of numbers most likely tell you?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The machine is barely running — low utilization is causing the output shortfall</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">The machine is running nearly constantly (94% utilization), but each cycle is taking slightly longer than standard — the output gap is from the slower cycle time, not from the machine sitting idle</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">The high defect rate is causing the output shortfall — too many parts being rejected</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The data is contradictory and doesn't make sense — high utilization should always mean high output</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Exactly right — and this is a great example of data awareness. The machine is barely idle (94% utilization), so the shortfall isn't from the machine sitting stopped. The defect rate is low (0.8%), so it's not a quality problem causing rejections. But the cycle time is 47 seconds versus a 45-second standard — that 4.4% slowdown is enough to explain the output gap when compounded over a full shift. A worker who reads the dashboard this way — connecting multiple numbers to tell a coherent story — is demonstrating exactly what employers mean when they ask for data awareness.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Look more carefully at each number and what it's telling you. Utilization (94%) tells you the machine is running almost constantly — so idle time is not the problem. Defect rate (0.8%) is low — so quality rejections are not the problem. The cycle time (47s vs. 45s standard) is the key: each part is taking slightly longer than planned, and over a full shift, that slowdown compounds into a meaningful output gap. Data awareness is connecting these numbers together to tell that story.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Data awareness is NOT coding, statistics, or math expertise. It's the ability to look at a number and understand what it's telling you — and asking "does this make sense?" That's a skill anyone can build.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Manufacturing dashboards show metrics like OEE, utilization, defect rate, cycle time, unplanned stops, and output — each with a target and a context. Knowing what each metric means is the first step to using them.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The 4-step method for reading any dashboard: (1) Scan for anything in red or flagged, (2) Ask what the number means, (3) Ask if it makes sense given the physical context, (4) Ask what question it raises that needs follow-up.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Real data awareness isn't about knowing the answer — it's about asking better questions. "Why is cycle time slightly elevated?" is more valuable than just ignoring the number or panicking about it.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+// Clock
+function updateClock(){var n=new Date();document.getElementById('db-clock').textContent=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+updateClock();setInterval(updateClock,1000);
+
+// Numbers explained
+var nums=[
+  {num:"OEE 82%",name:"Overall Equipment Effectiveness",detail:'OEE is a single number that combines three things: how often the machine was available (not broken down), how fast it ran when it was running, and how many of the parts it made were actually good. It\'s calculated as: Availability × Performance × Quality. <br><br><span class="ne-good">82% is good</span>. World-class OEE is considered 85%+. A machine at 82% is running well — it means that for every 100 minutes of planned production time, the machine is producing good parts for about 82 of those minutes. <br><br><span class="ne-bad">Below 60%</span> usually indicates a serious problem that needs investigation.'},
+  {num:"Utilization 94%",name:"Machine Utilization",detail:'Utilization measures how much of the planned production time the machine was actually running (not sitting idle or waiting for material, setup, or changeover). 94% means the machine ran for 94% of its planned operating time this shift. <br><br><span class="ne-good">94% utilization sounds excellent</span> — and it often is. But very high utilization (above 90-95%) can also be a warning sign: if the machine is always running, there\'s no buffer time for maintenance, changeovers, or unexpected issues. The Ridgeline dashboard shows 94% utilization but output is below target — meaning the machine ran constantly but slower than planned.'},
+  {num:"Defect Rate 0.8%",name:"Defect / Rejection Rate",detail:'Defect rate is the percentage of produced parts that failed quality inspection and were rejected. 0.8% means that for every 1,000 parts made, about 8 were rejected. <br><br><span class="ne-good">0.8% is typically healthy</span> for most manufacturing processes — though target rates vary by industry and product. Medical devices might target 0.001%. Automotive stamping might accept 0.5–2%. Context matters. <br><br><span class="ne-bad">A rising defect rate is a warning sign</span>, even if the number still seems small. If defect rate was 0.3% last week and 0.8% this week, that trend is important to investigate.'},
+  {num:"Unplanned Stops 3",name:"Unplanned Downtime Events",detail:'Unplanned stops are times when the machine stopped unexpectedly — not for a scheduled break, changeover, or preventive maintenance, but because something went wrong: a jam, a fault, a material shortage, a quality issue. Each stop costs production time and adds labor cost. <br><br><span class="ne-bad">Target is always zero</span>. Three unplanned stops in a shift is worth investigating — are they from the same station? The same cause? Is there a pattern? One stop might be random. Three in a shift suggests something needs attention.'},
+  {num:"Cycle Time 47s",name:"Cycle Time",detail:'Cycle time is how long it takes to produce one unit. If the machine is set up to produce a part in 45 seconds (the standard), but it\'s actually taking 47 seconds, the machine is running 4.4% slower than planned. <br><br>This sounds small. But over an 8-hour shift with a 45-second cycle time, you\'d expect to produce 640 parts. At 47 seconds, you produce only 612. <strong>That\'s the output gap on this dashboard — explained entirely by a 2-second cycle time increase.</strong> <br><br>Data awareness means connecting these two numbers. Cycle time going up is often a sign of tool wear, coolant issues, or a process parameter drifting.'},
+  {num:"Output 612",name:"Actual vs. Target Output",detail:'Output is simply how many units were produced this shift. The target is what was planned. 612 vs. a target of 650 means the line produced 94% of its planned output. <br><br>Alone, this number just tells you there\'s a gap. <span class="ne-good">Data awareness means asking why</span>: Was the machine down a lot? Were many parts rejected? Is the cycle time slower than planned? Was there a material shortage? <br><br>In this dashboard, the machine ran 94% of the time, the defect rate is healthy, and the cycle time is slightly elevated — so the most likely explanation is the slower cycle time, not stoppages or quality problems.'}
+];
+var neEl=document.getElementById('num-explainer'),neOpen=null;
+nums.forEach(function(n,i){
+  var d=document.createElement('div');d.className='ne-item';
+  d.innerHTML='<div class="ne-item-head" onclick="toggleNE('+i+')">'
+    +'<div class="ne-number">'+n.num+'</div><div class="ne-name">'+n.name+'</div><div class="ne-toggle" id="net'+i+'">+</div></div>'
+    +'<div class="ne-detail" id="ned'+i+'">'+n.detail+'</div>';
+  neEl.appendChild(d);
+});
+function toggleNE(i){
+  var detail=document.getElementById('ned'+i),tog=document.getElementById('net'+i);
+  var isOpen=detail.classList.contains('open');
+  if(neOpen!==null){document.getElementById('ned'+neOpen).classList.remove('open');document.getElementById('net'+neOpen).classList.remove('open');}
+  if(!isOpen){detail.classList.add('open');tog.classList.add('open');neOpen=i;}else{neOpen=null;}
+}
+
+// Reading steps
+var steps=[
+  {num:"Step 1",title:"Scan for anything in red, yellow, or flagged",body:"The fastest way to start: look for anything highlighted in red or orange, or any metric that shows an alert. These are the things the system has already decided you should look at first. On the dashboard above, that's the 'Unplanned Stops: 3' (a number that should be 0) and the HIGH-priority bearing vibration alert.",example:"<strong>In practice:</strong> 'I see three unplanned stops and a high-priority bearing alert. Those get my attention first before I look at anything else.'"},
+  {num:"Step 2",title:"Ask what each number means in plain language",body:"Don't just read the number — translate it into a sentence. 'Cycle time is 47 seconds' becomes 'each part is taking 2 seconds longer than it should.' 'Defect rate is 0.8%' becomes 'about 8 of every 1,000 parts are being rejected.' This translation habit is the foundation of data awareness.",example:"<strong>In practice:</strong> 'Utilization 94% means the machine ran almost the entire shift. But output is below target, which means it was running slow — not stopped.'"},
+  {num:"Step 3",title:"Ask if the numbers make sense together",body:"Individual numbers are less interesting than what they say together. High utilization plus low output means the machine ran but slowly — investigate cycle time. Low utilization plus low defect rate might mean the machine was down a lot, but when it ran it ran cleanly. This is where data awareness becomes genuinely valuable: connecting dots.",example:"<strong>In practice:</strong> 'Utilization is 94% and defect rate is 0.8%, but output is below target and cycle time is elevated. These numbers together tell me the machine ran constantly but each cycle was a little slow. The bearing alert on Station 4 might explain it.'"},
+  {num:"Step 4",title:"Ask what question this raises — and who needs to know",body:"Data doesn't make decisions — people do. After reading the dashboard, the question is: what action does this suggest? An elevated cycle time needs investigation. A bearing alert needs a maintenance work order. Three unplanned stops need a root cause conversation. Data awareness isn't complete until it connects to a next step.",example:"<strong>In practice:</strong> 'I'm going to flag the bearing alert to the maintenance team, ask the operator about the three stops, and check whether the cycle time issue could be related to the coolant alert on Machine 3.'"}
+];
+var rsEl=document.getElementById('rs-steps');
+steps.forEach(function(s){
+  var d=document.createElement('div');d.className='rs-step';
+  d.innerHTML='<div class="rs-step-num">'+s.num+'</div><div class="rs-step-title">'+s.title+'</div><div class="rs-step-body">'+s.body+'</div><div class="rs-example">'+s.example+'</div>';
+  rsEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

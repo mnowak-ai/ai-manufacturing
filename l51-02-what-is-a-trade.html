@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Trade, and How Is AI Changing Each One? A Plain-Language Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* TRADE CARDS */
+.trade-grid{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.trade-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:18px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,border-color .2s;}
+.trade-card:hover{border-color:var(--purple);box-shadow:0 6px 24px rgba(123,47,190,.1);}
+.tc-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.tc-left{display:flex;gap:14px;align-items:center;}
+.tc-icon{font-size:28px;}
+.tc-name{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;}
+.tc-tagline{font-size:13px;color:var(--gray-muted);margin-top:2px;}
+.tc-pay{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap;}
+.tc-toggle{font-size:20px;color:var(--purple-mid);transition:transform .25s;}
+.tc-toggle.open{transform:rotate(45deg);}
+.tc-body{display:none;padding:0 22px 18px;}
+.tc-body.open{display:block;}
+.tc-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin:14px 0 6px;}
+.tc-section-body{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:8px;}
+.tc-ai-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.tc-ai-item{background:var(--gray-soft);border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.7;color:var(--gray-text);}
+.tc-ai-item strong{color:var(--purple-dark);}
+.tc-human{background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13px;line-height:1.7;color:var(--green);}
+.tc-skills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.tc-skill{background:var(--purple-pale);color:var(--purple-dark);font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;border:1px solid var(--purple-mid);}
+
+/* WHAT VS WHAT NOT */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.versus{grid-template-columns:1fr;}}
+.versus-card{border-radius:16px;padding:20px 22px;}
+.versus-card.stays{background:var(--green-pale);border:1.5px solid var(--green);}
+.versus-card.changes{background:var(--orange-pale);border:1.5px solid #FCD34D;}
+.versus-title{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:12px;}
+.versus-card.stays .versus-title{color:var(--green);}
+.versus-card.changes .versus-title{color:var(--orange);}
+.versus-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.versus-list li{font-size:13px;line-height:1.7;color:var(--gray-text);padding-left:16px;position:relative;}
+.versus-list li::before{position:absolute;left:0;}
+.versus-card.stays .versus-list li::before{content:"✓";color:var(--green);font-weight:700;}
+.versus-card.changes .versus-list li::before{content:"→";color:var(--orange);font-weight:700;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.1 &middot; AI &amp; Career Awareness</div>
+  <h1>What Is a Trade, and How Is AI Changing Each One? A Plain-Language Guide</h1>
+  <p class="hero-sub">Before you can understand how AI is changing the trades, you need to understand what the trades actually are — and what makes each one different. This article builds both.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>What Is a "Trade"?</h2>
+  <p>A <mark>trade</mark> is a skilled job that requires specific hands-on training — usually through a vocational program, an apprenticeship, or a CTE (Career and Technical Education) course. Trades are sometimes called "skilled trades" or "blue-collar trades." They're the jobs that build things, fix things, and keep things running.</p>
+  <p>Here's what separates a trade from a regular job: you need specialized knowledge that most people don't have. An electrician knows how electrical systems work at a deep level — wire gauge, circuit breakers, code requirements, voltage calculations. A welder knows metallurgy, heat management, joint preparation, and how to read weld symbols. That knowledge takes years to develop and can't be picked up by just anyone.</p>
+  <p>Trades have another defining feature: <mark>they cannot be fully automated or outsourced</mark>. Someone has to physically install the HVAC system, run the electrical conduit, operate the CNC machine, and weld the structural steel. That "someone" will be better at their job — and harder to replace — if they also understand the AI tools being layered on top of that physical work.</p>
+
+  <div class="pull-quote">
+    <p>A trade is not just a job you do with your hands. It's a job that requires knowledge most people don't have. AI doesn't change that — it adds a new layer on top of it.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Major Trades — And What AI Is Doing in Each One</h2>
+  <p>Below are eight of the most common skilled trades. Click any one to see a full breakdown: what the trade actually involves, what AI tools are now used in that field, and what skills remain completely human.</p>
+
+  <div class="trade-grid" id="trade-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Changes — And What It Doesn't</h2>
+  <p>Across every trade, AI is changing the same types of tasks while leaving others completely in human hands. Here's the honest breakdown:</p>
+
+  <div class="versus">
+    <div class="versus-card stays">
+      <div class="versus-title">✅ What Stays Human</div>
+      <ul class="versus-list">
+        <li>Physical installation, operation, and repair of equipment</li>
+        <li>Judgment calls in ambiguous or unexpected situations</li>
+        <li>Safety decisions — always a human responsibility</li>
+        <li>Reading context that AI can't see (weather, building quirks, crew conditions)</li>
+        <li>Communication with clients, supervisors, and teammates</li>
+        <li>Accountability for the final work product</li>
+        <li>Adapting when reality doesn't match the plan</li>
+      </ul>
+    </div>
+    <div class="versus-card changes">
+      <div class="versus-title">→ What AI Is Changing</div>
+      <ul class="versus-list">
+        <li>How problems are detected (sensors, not just observation)</li>
+        <li>How much warning you get before something fails</li>
+        <li>How quickly you can access technical information</li>
+        <li>How work is scheduled and sequenced</li>
+        <li>How quality is checked and documented</li>
+        <li>How energy and material use is monitored</li>
+        <li>The speed at which some planning tasks happen</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>The pattern: AI makes information more available and problems more visible earlier. Humans decide what to do about it. That partnership between AI speed and human judgment is what every employer in the trades is now building their workflows around.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A plumbing company deploys an AI leak detection system in a commercial building. The system flags a possible slow leak behind a wall in the third floor bathroom. What's the most accurate description of what happens next?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">The AI automatically shuts off the water supply and fixes the leak without human involvement</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">A plumber is dispatched to investigate the flagged area, uses their physical skills and tools to locate and diagnose the leak, and makes the repair — using the AI's flag as a starting point, not a final answer</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">The plumber's job is no longer needed because the AI handles leak detection</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The AI's flag is automatically documented without anyone needing to respond</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Exactly right. The AI detects a signal that suggests a possible leak — that's its contribution. Everything after that is human: the plumber physically investigates, uses their training to open the right access point, confirms whether it's actually a leak or a sensor issue, locates the source, and makes the repair. The AI is the early warning system. The plumber is the professional who responds to it.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ AI leak detection systems flag possibilities — they don't make physical repairs, and they don't replace the plumber who investigates. The correct answer is that a plumber responds to the flag, uses their training to diagnose the situation, and makes the repair. The AI flag is the beginning of the process, not the end of it.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A trade is a skilled career requiring specialized hands-on training — electricians, welders, machinists, HVAC technicians, plumbers, pipefitters, carpenters, and industrial maintenance workers are all trades. Each requires knowledge most people don't have.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI is now present in every major trade — not replacing the physical skill, but adding a layer of data, detection, and recommendation on top of it. Workers who understand both layers are more valuable than workers who only know one.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">What stays human: safety decisions, physical installation and repair, judgment in ambiguous situations, communication, and accountability for the final work. These don't go away — they become the most valuable part of the job.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">What AI changes: when problems are detected (earlier), how work is scheduled, how quality is monitored, and how quickly information is available. AI speeds up detection — humans still decide what to do.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var trades=[
+  {icon:"⚡",name:"Electrician",tagline:"Install, maintain, and repair electrical systems",pay:"$55k–$98k/yr",what:"Electricians design and install electrical wiring systems in buildings and industrial facilities — running conduit, pulling wire, installing panels and breakers, connecting outlets and fixtures, and troubleshooting electrical faults. Journeyman electricians must know the National Electrical Code (NEC), which specifies exactly how electrical work must be done for safety and compliance.",ai:["<strong>Power quality monitoring AI</strong> — platforms like Schneider Electric's PowerLogic track voltage fluctuations, harmonics, and power factor in real time, flagging electrical problems developing in the system before they cause equipment failures or fires.","<strong>AI-assisted circuit design</strong> — software like AutoCAD Electrical uses AI to help check panel schedules, identify code violations in drawings, and optimize circuit layouts before installation begins.","<strong>Predictive fault detection</strong> — smart breakers and sensors in modern electrical panels detect arc faults and ground faults earlier than traditional protection, with AI identifying patterns that suggest developing insulation failures."],human:"Physical installation of conduit, wire, panels, and devices — AI cannot run wire through a wall. All safety decisions — whether it's safe to work on energized equipment, when to de-energize a system, how to protect other workers. Code compliance judgment — the NEC has thousands of requirements and real-world application often requires human interpretation. Final inspection and sign-off.",skills:["NEC Code","Power Quality","Panel Design","Troubleshooting","Safety Protocols"]},
+  {icon:"🔥",name:"Welder",tagline:"Join metals using heat, electricity, and precision",pay:"$42k–$78k/yr",what:"Welders use heat to fuse metal parts together permanently. Different welding processes — MIG, TIG, stick, flux-core — are used for different metals, thicknesses, and applications. Welders must read weld symbols on engineering drawings, prepare joint surfaces, control heat input precisely, and inspect their own work. Certified welders can work in structural steel, automotive, aerospace, shipbuilding, and pipe welding.",ai:["<strong>AI weld monitoring (Lincoln Electric CheckPoint)</strong> — sensors track voltage, amperage, and wire feed speed during welding and flag deviations from programmed quality parameters in real time.","<strong>AI visual inspection</strong> — camera systems at welding stations use machine learning to identify surface defects (porosity, undercut, cracks) faster than manual scanning.","<strong>Cobot welding assistance</strong> — collaborative robots handle repetitive weld joints in production environments, with human welders programming paths, inspecting output, and handling complex geometry."],human:"All physical welding — the cobot or camera cannot weld in a tight corner, overhead, or in a difficult position. Reading weld quality with trained eyes and touch — experienced welders catch things cameras miss. Final inspection and accountability for the weld's structural integrity. Judgment on when conditions (humidity, temperature, base metal condition) require process adjustment.",skills:["MIG/TIG/Stick","Blueprint Reading","Metallurgy Basics","Quality Inspection","Cobot Programming"]},
+  {icon:"❄️",name:"HVAC Technician",tagline:"Install and maintain heating, cooling, and ventilation systems",pay:"$48k–$88k/yr",what:"HVAC technicians install and service heating, ventilation, air conditioning, and refrigeration systems in homes, commercial buildings, and industrial facilities. The work involves refrigerant handling (which requires EPA certification), electrical troubleshooting, duct design and installation, controls programming, and preventive maintenance. HVAC technicians need to understand heat transfer, airflow, and refrigeration cycles at a deep level.",ai:["<strong>Building automation AI (Carrier i-Vu, Johnson Controls Metasys)</strong> — monitors all HVAC equipment continuously, flagging performance anomalies and energy waste in real time across an entire building portfolio.","<strong>Fault detection and diagnostics (Clockworks Analytics)</strong> — AI identifies complex faults by analyzing patterns across thousands of data points — things like simultaneous heating and cooling that waste energy without triggering obvious alarms.","<strong>Remote monitoring and diagnostics</strong> — connected equipment sends performance data back to service companies so technicians arrive at service calls with diagnostic information before they touch the equipment."],human:"Physical installation and replacement of equipment — compressors, coils, air handlers, ductwork. Refrigerant handling and leak repair — requires EPA certification and hands-on skill. Control system programming and commissioning. Complex troubleshooting when the AI flags something but the cause isn't obvious. Judgment about equipment condition and whether repair or replacement is more cost-effective.",skills:["Refrigeration Cycle","EPA 608 Cert","Controls Programming","Electrical Troubleshooting","Building Automation"]},
+  {icon:"⚙️",name:"Machinist / CNC Operator",tagline:"Create precision parts using cutting machines and computers",pay:"$45k–$82k/yr",what:"Machinists use machine tools — lathes, mills, grinders, and CNC machines — to cut metal and other materials into precise parts. CNC (Computer Numerical Control) machinists write or modify programs that control machine movements, set up tooling, monitor the cutting process, and inspect finished parts to tight tolerances (often within thousandths of an inch). Machinists must read engineering drawings, understand material properties, and select appropriate cutting speeds and tools.",ai:["<strong>AI toolpath optimization (Mastercam)</strong> — AI analyzes part geometry and suggests efficient cutting paths, reducing programming time and improving surface finish.","<strong>Tool wear prediction (Sandvik CoroPlus)</strong> — sensors detect vibration and cutting force changes that indicate tool wear, alerting machinists before the tool fails and ruins a part.","<strong>AI quality inspection (Hexagon CMMs)</strong> — coordinate measuring machines with AI analytics identify which part features trend toward tolerance limits and flag developing quality problems."],human:"Machine setup — fixturing the part correctly, selecting and installing tooling, setting work offsets. Program verification — running the AI-generated program through simulation and checking it before it touches material. Quality judgment — understanding why a dimension is drifting and what process adjustment will fix it. Surface finish evaluation — trained machinists can feel and see quality issues that instruments may not catch.",skills:["Blueprint Reading","GD&T","CNC Programming","Inspection Tools","Material Properties"]},
+  {icon:"🔧",name:"Industrial Maintenance",tagline:"Keep factory equipment running through repair and prevention",pay:"$48k–$85k/yr",what:"Industrial maintenance technicians (also called millwrights, maintenance mechanics, or maintenance technicians) keep the machines in a manufacturing facility running. They perform preventive maintenance, diagnose equipment failures, replace worn components, and work on mechanical, electrical, pneumatic, and hydraulic systems. In a modern facility, they may maintain conveyor systems, robots, CNC machines, compressors, and dozens of other systems.",ai:["<strong>Predictive maintenance platforms (IBM Maximo, SAP PM with AI)</strong> — integrate sensor data from all equipment to predict when components will fail and generate prioritized work orders.","<strong>Vibration analysis AI</strong> — analyzes motor and bearing vibration signatures to detect developing mechanical faults weeks before they cause failures.","<strong>CMMS with AI work order optimization</strong> — computerized maintenance management systems now use AI to optimize the sequence of maintenance tasks based on production schedules, technician skills, and parts availability."],human:"Physical repair work — replacing bearings, seals, belts, motors, hydraulic components. Multi-system troubleshooting — when a machine stops, the cause might be mechanical, electrical, pneumatic, or software. Experienced technicians trace through all these systems. Safety lockout/tagout procedures — always human. Judgment about whether to repair or replace, and whether a repair is holding correctly after completion.",skills:["Mechanical Systems","Electrical Troubleshooting","Hydraulics/Pneumatics","PLC Basics","Predictive Maintenance Tools"]},
+  {icon:"🚿",name:"Plumber / Pipefitter",tagline:"Install and maintain water, gas, and industrial piping systems",pay:"$52k–$95k/yr",what:"Plumbers install and repair water supply, drain, waste, and gas systems in buildings. Pipefitters (a related trade) work on industrial piping systems carrying steam, chemicals, compressed air, and other fluids in manufacturing and power generation facilities. Both trades require reading blueprints, understanding fluid systems, knowing code requirements, and doing precise physical installation work.",ai:["<strong>AI leak detection (Sensus, Badger Meter)</strong> — monitors flow data and pressure patterns to detect slow leaks in piping systems before they become major failures or water damage events.","<strong>Pipe design and layout software (AutoCAD MEP)</strong> — uses AI-assisted checking to identify conflicts between piping, ductwork, and structural elements before installation begins, reducing costly field conflicts.","<strong>Vibration and pressure monitoring in industrial systems</strong> — AI monitors industrial piping for developing issues like cavitation, water hammer, and pressure excursions that can damage equipment."],human:"Physical installation — cutting, joining, and pressure-testing pipe. Code compliance — plumbing codes are complex and real-world conditions require judgment about how code applies. Leak location and repair — AI detects; a plumber finds the exact source and fixes it. Customer communication on residential and commercial service calls. Judgment about material selection in renovation work where old and new systems must be compatible.",skills:["Blueprint Reading","Pipe Joining Methods","Code Compliance","Pressure Testing","System Troubleshooting"]},
+  {icon:"🏗️",name:"Carpenter / Construction Trades",tagline:"Frame, finish, and build the physical structures around us",pay:"$42k–$78k/yr",what:"Carpenters build and repair structures made of wood and other materials — from rough framing of buildings to finish carpentry, cabinetry, and formwork for concrete. Construction trades include framers, finish carpenters, form workers, and drywall specialists. The work requires reading blueprints, understanding structural requirements, precise measurement and cutting, and the ability to adapt to constantly changing field conditions.",ai:["<strong>AI-assisted blueprint review and clash detection (Procore, Autodesk BIM 360)</strong> — analyzes construction plans to identify conflicts before they become expensive field problems.","<strong>AI site monitoring and safety cameras</strong> — computer vision systems on job sites detect safety violations (missing hard hats, people in restricted zones) and alert safety managers in real time.","<strong>Prefabrication with AI-optimized cutting (automated panel fabricators)</strong> — wall panels and roof trusses can now be cut by AI-optimized systems in factories and delivered to the site for rapid assembly."],human:"All physical construction — framing, cutting, fastening, finishing. Field adaptation — blueprints rarely match reality exactly, and carpenters constantly solve discrepancies between the drawing and the actual building. Quality judgment — knowing when a surface is truly flat, when a joint is tight, when something isn't right. Safety decisions on the job site. Coordination with other trades.",skills:["Blueprint Reading","Structural Framing","Finish Work","Field Measurement","Material Estimation"]},
+  {icon:"🏭",name:"Manufacturing / Production Operator",tagline:"Operate machines and processes that make products",pay:"$36k–$58k/yr (+OT)",what:"Production operators run the machines that manufacture products in a factory. Depending on the industry, they might operate injection molding machines, stamping presses, assembly equipment, packaging lines, or food processing equipment. The job requires understanding the machine's function, feeding materials correctly, monitoring output quality, and responding quickly when something goes wrong. Production operators are the first line of quality control in any facility.",ai:["<strong>Machine HMI with AI dashboards (Rockwell FactoryTalk, Siemens MindSphere)</strong> — displays real-time machine data and AI-generated production efficiency metrics directly at the machine.","<strong>Vision system quality checks</strong> — cameras at production stations automatically inspect every part for dimensional accuracy, surface defects, or assembly errors at line speed.","<strong>AI-assisted production scheduling (DELMIA, Plex)</strong> — dynamically adjusts production sequencing based on machine availability, material supply, and order priorities."],human:"Machine setup and changeovers — transitioning a machine from one product to another is physical, skilled work. First-article inspection — checking the first parts of a new run against spec before running the batch. Responding to jams, errors, and unexpected machine behavior. Quality decisions that the vision system flags but humans must confirm. Communicating production status to supervisors.",skills:["Machine Operation","Quality Inspection","Basic Troubleshooting","Production Reporting","SOP Compliance"]}
+];
+var tgEl=document.getElementById('trade-grid'),openCard=null;
+trades.forEach(function(t,i){
+  var d=document.createElement('div');d.className='trade-card';
+  var aiHtml=t.ai.map(function(a){return '<div class="tc-ai-item">'+a+'</div>';}).join('');
+  var skillHtml=t.skills.map(function(s){return '<span class="tc-skill">'+s+'</span>';}).join('');
+  d.innerHTML='<div class="tc-header" onclick="toggleTrade('+i+')">'
+    +'<div class="tc-left"><div class="tc-icon">'+t.icon+'</div><div><div class="tc-name">'+t.name+'</div><div class="tc-tagline">'+t.tagline+'</div></div></div>'
+    +'<div style="display:flex;gap:14px;align-items:center;flex-shrink:0;"><div class="tc-pay">'+t.pay+'</div><div class="tc-toggle" id="tct'+i+'">+</div></div></div>'
+    +'<div class="tc-body" id="tcb'+i+'">'
+    +'<div class="tc-section-label">What the trade involves</div><div class="tc-section-body">'+t.what+'</div>'
+    +'<div class="tc-section-label">How AI shows up in this trade</div><div class="tc-ai-list">'+aiHtml+'</div>'
+    +'<div class="tc-section-label">What stays human</div><div class="tc-human">'+t.human+'</div>'
+    +'<div class="tc-section-label">Key skills employers look for</div><div class="tc-skills">'+skillHtml+'</div></div>';
+  tgEl.appendChild(d);
+});
+function toggleTrade(i){
+  var body=document.getElementById('tcb'+i),tog=document.getElementById('tct'+i);
+  var isOpen=body.classList.contains('open');
+  if(openCard!==null&&openCard!==i){document.getElementById('tcb'+openCard).classList.remove('open');document.getElementById('tct'+openCard).classList.remove('open');}
+  body.classList.toggle('open',!isOpen);tog.classList.toggle('open',!isOpen);
+  openCard=isOpen?null:i;
+}
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
