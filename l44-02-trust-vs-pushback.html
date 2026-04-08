@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When Should You Trust AI and When Should You Push Back? A Decision Framework for Manufacturing Workers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* framework questions */
+.framework{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.fq{border-radius:20px;border:1.5px solid var(--purple-mid);overflow:hidden;margin-bottom:14px;}
+.fq-head{padding:18px 24px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;background:var(--white);transition:background .15s;}
+.fq-head:hover{background:var(--gray-soft);}
+.fq-num{width:34px;height:34px;border-radius:50%;background:var(--purple);color:#fff;font-family:"Fraunces",serif;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fq-q{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);flex:1;}
+.fq-toggle{font-size:18px;color:var(--gray-muted);transition:transform .25s;}
+.fq-toggle.open{transform:rotate(45deg);}
+.fq-body{display:none;padding:0 24px 20px;background:var(--white);}
+.fq-body.open{display:block;}
+.fq-why{font-size:14px;line-height:1.85;color:var(--gray-text);margin-bottom:12px;}
+.fq-trust{background:var(--green-pale);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--green);line-height:1.65;margin-bottom:8px;}
+.fq-verify{background:var(--orange-pale);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--orange);line-height:1.65;margin-bottom:8px;}
+.fq-override{background:var(--red-pale);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);line-height:1.65;}
+
+/* action levels */
+.action-levels{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0;}
+.al{flex:1;min-width:160px;border-radius:16px;padding:18px;}
+.al.trust{background:var(--green-pale);border:2px solid var(--green);}
+.al.verify{background:var(--orange-pale);border:2px solid var(--orange);}
+.al.escalate{background:var(--blue-pale);border:2px solid var(--blue-mid);}
+.al.override{background:var(--red-pale);border:2px solid var(--red);}
+.al-icon{font-size:26px;margin-bottom:8px;}
+.al-title{font-weight:700;font-size:14px;margin-bottom:6px;}
+.al.trust .al-title{color:var(--green);}
+.al.verify .al-title{color:var(--orange);}
+.al.escalate .al-title{color:var(--blue);}
+.al.override .al-title{color:var(--red);}
+.al-desc{font-size:12px;line-height:1.65;}
+.al.trust .al-desc{color:#276749;}
+.al.verify .al-desc{color:#92400E;}
+.al.escalate .al-desc{color:var(--blue);}
+.al.override .al-desc{color:var(--red);}
+
+/* scenarios */
+.scenarios{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sc-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sc-progress{font-size:12px;color:var(--gray-muted);margin-bottom:12px;}
+.sc-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 22px;margin-bottom:12px;}
+.sc-ai-rec{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:10px;padding:12px 16px;margin-bottom:12px;}
+.sc-ai-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:4px;}
+.sc-ai-text{font-size:13px;color:rgba(255,255,255,.9);line-height:1.7;}
+.sc-context{font-size:14px;line-height:1.8;color:var(--gray-text);margin-bottom:12px;}
+.sc-q{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--purple-dark);margin-bottom:10px;}
+.sc-opts{display:flex;flex-direction:column;gap:8px;}
+.sc-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:11px 16px;font-size:13px;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;text-align:left;line-height:1.5;}
+.sc-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.sc-opt.best{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.sc-opt.ok{background:var(--orange-pale);border-color:var(--orange);color:var(--orange);}
+.sc-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.sc-fb{margin-top:10px;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.75;display:none;}
+.sc-fb.show{display:block;}
+.sc-fb.best{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.sc-fb.ok{background:var(--orange-pale);border:1px solid var(--orange);color:var(--orange);}
+.sc-fb.wrong{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.sc-next{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;display:none;}
+.sc-next.show{display:inline-block;}
+.sc-score{background:var(--white);border:2px solid var(--purple-mid);border-radius:14px;padding:18px 22px;display:none;margin-top:12px;}
+.sc-score.show{display:block;}
+.sc-score-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--purple-dark);}
+.sc-score-text{font-size:14px;color:var(--gray-text);margin-top:6px;line-height:1.75;}
+
+/* summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>When Should You Trust AI and When Should You Push Back? A Decision Framework for Manufacturing Workers</h1>
+  <p class="hero-sub">Knowing that you should evaluate AI recommendations is different from knowing how to evaluate them. This article gives you a practical framework — five questions to ask before acting on any AI suggestion — with concrete manufacturing examples for each.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Problem With "Just Follow the AI"</h2>
+  <p>In a perfect world, AI systems would always be right, would always account for current floor conditions, would always have perfect data, and would always understand the full context of a situation. In that world, "just follow the AI" would be reasonable advice.</p>
+  <p>We don't live in that world. AI recommendations are built on historical data that may not reflect today's conditions. They optimize for metrics that may not capture everything that matters. They can't see what happened on the floor this morning that hasn't been logged yet. They can't feel that a situation is "off" in a way that experienced workers sometimes recognize before they can articulate why.</p>
+  <div class="pull-quote"><p>The question is never "should I think about AI recommendations?" The answer is always yes. The question is how to think about them — what to ask, what to verify, and what to trust — and how to do it quickly enough to be useful on a fast-moving production floor.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Four Response Levels — Before the Questions</h2>
+  <p>Before walking through the framework, let's name the four responses available to you when an AI recommendation arrives. These are your options — and your goal is to choose the right one for each situation.</p>
+
+  <div class="action-levels">
+    <div class="al trust">
+      <div class="al-icon">✅</div>
+      <div class="al-title">Trust and Act</div>
+      <div class="al-desc">The recommendation is routine, well within the AI's proven accuracy range, low-consequence if wrong, and consistent with what you're seeing. Act on it.</div>
+    </div>
+    <div class="al verify">
+      <div class="al-icon">🔍</div>
+      <div class="al-title">Verify Before Acting</div>
+      <div class="al-desc">Something about the recommendation warrants a quick check — floor walk, supplier call, data review, conversation with a colleague — before you commit to it.</div>
+    </div>
+    <div class="al escalate">
+      <div class="al-icon">📣</div>
+      <div class="al-title">Escalate to Supervisor</div>
+      <div class="al-desc">The decision is above your authority level, involves safety or significant cost, or requires organizational context you don't have. Bring it to the right person.</div>
+    </div>
+    <div class="al override">
+      <div class="al-icon">🚫</div>
+      <div class="al-title">Override It</div>
+      <div class="al-desc">You have clear, specific reasons — based on floor knowledge, safety assessment, or recent context the AI doesn't have — to not follow the recommendation. Document why.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Five-Question Framework</h2>
+  <p>For each AI recommendation you encounter, work through these five questions. Not every question applies to every situation — but together they cover the main reasons AI recommendations go wrong. Click each question to see what it catches and how to apply it.</p>
+
+  <div class="framework" id="fq-container"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Apply the Framework — Three Scenarios</h2>
+  <p>Practice the framework on three realistic manufacturing situations. For each AI recommendation, decide which of the four responses is most appropriate and why.</p>
+
+  <div class="scenarios">
+    <div class="sc-label">Framework Practice</div>
+    <div class="sc-title">Apply Your Judgment</div>
+    <div class="sc-sub">Read each AI recommendation and the context provided, then choose the most appropriate response: Trust and Act, Verify Before Acting, Escalate, or Override.</div>
+    <div class="sc-progress" id="sc-prog">Scenario 1 of 3</div>
+    <div class="sc-card">
+      <div class="sc-ai-rec">
+        <div class="sc-ai-label">🤖 AI Recommendation</div>
+        <div class="sc-ai-text" id="sc-ai"></div>
+      </div>
+      <div class="sc-context" id="sc-context"></div>
+      <div class="sc-q" id="sc-q"></div>
+      <div class="sc-opts" id="sc-opts"></div>
+      <div class="sc-fb best" id="sc-best"></div>
+      <div class="sc-fb ok" id="sc-ok"></div>
+      <div class="sc-fb wrong" id="sc-wrong"></div>
+      <button class="sc-next" id="sc-next" onclick="nextSC()">Next Scenario →</button>
+      <div class="sc-score" id="sc-score">
+        <div class="sc-score-num" id="sc-score-num"></div>
+        <div class="sc-score-text" id="sc-score-text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The four response options for any AI recommendation: Trust and Act, Verify Before Acting, Escalate to Supervisor, and Override. Choosing the right response is the core professional judgment skill in AI-assisted manufacturing.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The five-question framework: Does this involve safety? Has anything changed that the AI might not know? Does this match what I'm seeing? Has the AI been accurate in similar situations before? Does this feel off?</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Safety overrides everything. Any AI recommendation that reduces or eliminates a safety control requires escalation or override — not just a faster approval. The question is not whether the AI's math is right, but whether it modeled the full risk.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">When you override an AI recommendation, document the reason. Not because the AI needs it — but because your reasoning is professional value that should be captured, shared, and potentially fed back into improving the system.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var fqs=[
+  {num:1,q:'Does this recommendation involve safety?',why:'Safety is the highest-priority filter. Any AI recommendation that changes a safety protocol, skips a safety check, reduces a safety buffer, or assigns personnel to tasks with safety certification requirements demands heightened scrutiny. AI systems optimize for throughput, efficiency, or cost — they don\'t have a safety instinct.',trust:'If the recommendation has no safety implications and involves routine operational decisions (inventory reorder, job sequencing, shift scheduling within normal parameters), this question doesn\'t raise a flag.',verify:'If the recommendation touches a safety-adjacent dimension — maintenance timing, inspection frequency, personnel assignment to safety-critical operations, or process parameters with safety specs — verify before acting. Confirm the safety implications are fully accounted for.',override:'If the recommendation would reduce or eliminate a safety control (skip an inspection, assign an uncertified worker to a safety-critical job, run a machine past its safety threshold), override it and escalate. The efficiency gain is never worth the safety cost.'},
+  {num:2,q:'Has anything changed recently that the AI might not know about?',why:'AI systems work from data that was available when the model was last updated. The maintenance tech\'s verbal caution about Machine #4 this morning isn\'t in the system yet. The conversation with the customer who extended their deadline isn\'t logged. The new material batch that arrived with an anomaly report isn\'t processed in the AI\'s inventory model yet. Recent context is exactly where AI has its biggest blind spot.',trust:'If the situation is routine, nothing unusual has happened recently, and the AI\'s data inputs are current, this question doesn\'t raise a flag.',verify:'If something relevant has changed in the last 24–48 hours that might not be reflected in the AI\'s data — a machine flagged, a delivery delayed, a customer communication received, a quality issue discovered — verify that the recommendation accounts for the new reality.',override:'If you know a critical recent change directly contradicts the AI\'s recommendation and there\'s no time to update the system, override the recommendation and act on the current reality you know.'},
+  {num:3,q:'Does this match what I\'m seeing on the floor?',why:'Your eyes and ears on the floor are real-time data sources that no AI system has direct access to. If an AI recommendation conflicts with observable floor conditions — a machine that looks or sounds wrong, a queue that\'s building faster than the dashboard shows, a worker who is clearly struggling — your observation is at least as valid as the system\'s data.',trust:'If the recommendation is consistent with what you\'re observing on the floor, this is a positive signal. Convergence between AI analysis and floor observation increases confidence.',verify:'If there\'s a discrepancy between the AI\'s recommendation and what you\'re observing — the system shows Station 4 at 72% utilization but you can see a significant queue building there — investigate the discrepancy before acting. Either the data is lagging or you\'re observing something the sensor isn\'t capturing.',override:'If the floor observation directly contradicts the AI recommendation in a way that has immediate safety or quality implications, act on what you\'re seeing and update the system. Your real-time observation overrides historical model outputs in time-critical situations.'},
+  {num:4,q:'Has this AI been accurate in similar situations before?',why:'Not all AI recommendations are equally reliable. A scheduling AI that has successfully optimized 10,000 similar production runs is more trustworthy on that task than the same system making its first recommendation for a new product type or a novel disruption scenario. Track record matters — and so does the question of whether this situation resembles the situations the AI has seen before.',trust:'If the AI\'s recommendations on this type of decision (same product family, same disruption type, same data inputs) have been consistently accurate, that track record justifies a higher level of trust in this recommendation.',verify:'If the current situation is unusual in some way — new product, unfamiliar disruption pattern, data from sensors that were recently installed, or a market condition that hasn\'t appeared before — verify before acting. The AI may be extrapolating beyond its training in ways that aren\'t reliable.',override:'If the AI is making a recommendation in a domain where you have specific evidence of its past inaccuracy under similar conditions, override it and note the pattern for the team\'s awareness.'},
+  {num:5,q:'Does something about this feel off?',why:'Experienced workers develop pattern recognition that sometimes registers as intuition — a sense that something isn\'t right before they can articulate exactly what. This isn\'t mystical; it\'s rapid pattern-matching based on accumulated experience. When a recommendation produces that "something is off" feeling, that signal is worth taking seriously rather than dismissing because the AI\'s confidence looks high.',trust:'If nothing about the recommendation triggers concern and it reads as consistent with your experience and expectations, the absence of a "feels off" signal is a meaningful positive indicator.',verify:'If something about the recommendation is nagging at you — it seems too aggressive, it doesn\'t account for something you feel is relevant, or it just doesn\'t match your mental model of how this situation should resolve — pause and investigate what\'s triggering the concern before acting.',override:'If you can articulate a specific reason the recommendation is wrong (even if you can\'t immediately produce data to support it), override it, document your reasoning, and escalate for review. Your accumulated experience is professional intelligence, not just a "hunch."'}
+];
+var openFQ=null;
+var fqC=document.getElementById('fq-container');
+fqs.forEach(function(f,i){
+  var div=document.createElement('div');div.className='fq';
+  div.innerHTML='<div class="fq-head" onclick="toggleFQ('+i+')">'
+    +'<div class="fq-num">'+f.num+'</div>'
+    +'<div class="fq-q">'+f.q+'</div>'
+    +'<div class="fq-toggle" id="fqt'+i+'">+</div></div>'
+    +'<div class="fq-body" id="fqb'+i+'">'
+    +'<p class="fq-why">'+f.why+'</p>'
+    +'<div class="fq-trust"><strong>✅ Trust and Act when:</strong> '+f.trust+'</div>'
+    +'<div class="fq-verify"><strong>🔍 Verify Before Acting when:</strong> '+f.verify+'</div>'
+    +'<div class="fq-override"><strong>🚫 Override / Escalate when:</strong> '+f.override+'</div>'
+    +'</div>';
+  fqC.appendChild(div);
+});
+function toggleFQ(i){
+  var body=document.getElementById('fqb'+i),tog=document.getElementById('fqt'+i);
+  if(openFQ===i){body.classList.remove('open');tog.classList.remove('open');openFQ=null;return;}
+  if(openFQ!==null){document.getElementById('fqb'+openFQ).classList.remove('open');document.getElementById('fqt'+openFQ).classList.remove('open');}
+  body.classList.add('open');tog.classList.add('open');openFQ=i;
+}
+
+var scenarios=[
+  {
+    ai:'Reorder M6 stainless bolts immediately — current inventory (4 boxes, 2,000 units) is projected to fall below the 2-box reorder point within 3 days based on current usage rates.',
+    context:'This is a routine reorder recommendation. The bolt is a standard commodity item with two reliable suppliers and a 2-day lead time. Current usage rate is consistent with the past 4 weeks. Nothing unusual has happened this week related to this material or its jobs.',
+    q:'What is the appropriate response to this recommendation?',
+    opts:['✅ Trust and Act — place the standard reorder immediately','🔍 Verify Before Acting — call the supplier to check availability first','📣 Escalate to Supervisor — bolt reorders should not be done without sign-off','🚫 Override — the AI\'s reorder point calculation is probably wrong'],
+    best:0,bestFB:'Correct. This recommendation passes all five framework questions: no safety implications, nothing has changed recently that would affect this decision, the usage rate is consistent with observation, the AI has presumably made accurate reorder calls on this item before, and nothing feels off. Routine reorder of a commodity item with reliable suppliers is exactly the kind of decision the AI handles reliably. Act on it.',
+    okFB:'Calling the supplier is reasonable if there were specific supply concerns, but the scenario describes a routine item with two reliable suppliers and standard lead times. An extra verification step adds time without meaningful risk reduction in this case. For routine commodity reorders with established suppliers, Trust and Act is the more efficient and appropriate response.',
+    wrongFB:'Escalating a routine commodity reorder to a supervisor or overriding a recommendation without cause both represent over-application of skepticism. The five-question framework is designed to help you apply the right level of scrutiny — not to make every decision require escalation. For low-consequence, routine decisions with well-performing AI track records, Trust and Act is correct.'
+  },
+  {
+    ai:'Assign WO-4418 (complex precision welding, aerospace specification) to Jordan K. — only certified MIG welder available on the afternoon shift.',
+    context:'Jordan completed their MIG welding certification 4 weeks ago. This is their 3rd week on the production floor. WO-4418 is a high-tolerance aerospace component with zero re-work tolerance — any defect requires full scrapping of the part ($840 material cost). A more experienced welder, Alex R., is certified and available but is currently assigned to a different job.',
+    q:'What is the appropriate response to this recommendation?',
+    opts:['✅ Trust and Act — Jordan is certified, the AI matched correctly','🔍 Verify Before Acting — check whether Jordan has done this specific part type before, or whether Alex can be reassigned','📣 Escalate to Supervisor — this decision should not be made at planner level given the aerospace spec and material cost','🚫 Override — reassign Alex to WO-4418 immediately and give Jordan a lower-complexity job'],
+    best:3,bestFB:'Correct. This is a clear override situation — and the framework supports it. Question 1 (safety/quality): aerospace zero-tolerance spec makes this high-consequence. Question 2 (recent context): the AI doesn\'t know Jordan is 4 weeks into certification — the system only sees "certified." Question 5 (feels off): assigning a 4-week-certified welder to an aerospace zero-rework-tolerance job should trigger immediate concern. The AI made the technically correct assignment from the certification database. You have context the database doesn\'t. Override, reassign Alex, and give Jordan appropriate-complexity work for their current experience level.',
+    okFB:'Verification is reasonable, but this situation has enough clear flags — new certification, zero-rework-tolerance, $840 scrap cost — that the override is actually the more decisive and appropriate response. In a high-consequence, low-time scenario, having already identified the right answer (Alex should do this job) makes the override more appropriate than a verification loop. Document the reasoning and proceed.',
+    wrongFB:'Trusting and acting or escalating without immediate action both risk the part being started by Jordan before the concern is addressed. The certification data is technically correct — Jordan is certified. But the context you have (4 weeks into certification, zero-rework-tolerance aerospace part, $840 scrap cost if defective) clearly justifies an immediate override. The framework\'s Question 2 ("has anything changed the AI might not know?") and Question 5 ("does this feel off?") both flag this recommendation strongly. Act on those flags.'
+  },
+  {
+    ai:'Reduce the preventive maintenance interval on Press Brake #2 from every 250 cycles to every 400 cycles. Analysis of the past 6 months shows no maintenance-relevant issues detected at the 250-cycle inspection, suggesting the interval may be over-specified.',
+    context:'Press Brake #2 runs 24/7 across three shifts. The 250-cycle interval was set by the equipment manufacturer and has been in place since installation 3 years ago. You are a shift supervisor. You have not noticed anything unusual with this machine recently. This recommendation came from an AI process optimization module, not from the maintenance team.',
+    q:'What is the appropriate response to this recommendation?',
+    opts:['✅ Trust and Act — if the AI has 6 months of data showing no issues, the interval reduction is justified','🔍 Verify Before Acting — discuss the recommendation with the maintenance team before making any change','📣 Escalate to Supervisor — this decision affects safety-adjacent equipment specifications and should not be made by a shift supervisor alone','🚫 Override — manufacturer-specified maintenance intervals should never be changed based on AI recommendation alone'],
+    best:2,bestFB:'Correct. This is an escalation situation. The recommendation involves changing a manufacturer-specified maintenance interval on a 24/7 machine — a decision with safety and warranty implications that exceed normal shift supervisor authority. The AI\'s reasoning (no issues detected in 6 months) is plausible but incomplete: it doesn\'t know if the 250-cycle interval is a safety requirement, a warranty condition, or a regulatory specification. The maintenance team and operations management need to evaluate this — ideally with the manufacturer\'s documentation in hand. Bring it up; don\'t act on it at shift-supervisor level.',
+    okFB:'Discussing with the maintenance team is correct and necessary — and that conversation will likely lead to the appropriate escalation to the operations manager or maintenance manager, who have the authority and technical expertise to evaluate a change to a manufacturer-specified maintenance interval. The escalation path in option 3 is the most complete response, but verification is a natural first step in that path.',
+    wrongFB:'Trusting and acting on a change to a manufacturer-specified maintenance interval — without consulting the maintenance team or management — is acting beyond your authority on a decision with safety-adjacent implications. Overriding it without escalation doesn\'t fully address the situation either; the recommendation deserves evaluation by people with appropriate authority and technical context. The right response is escalation.'
+  }
+];
+var scIdx=0,scScore=0,scAnswered=false;
+function renderSC(){
+  var s=scenarios[scIdx];
+  document.getElementById('sc-prog').textContent='Scenario '+(scIdx+1)+' of 3';
+  document.getElementById('sc-ai').textContent=s.ai;
+  document.getElementById('sc-context').textContent=s.context;
+  document.getElementById('sc-q').textContent=s.q;
+  var opts=document.getElementById('sc-opts');opts.innerHTML='';
+  s.opts.forEach(function(o,i){
+    var btn=document.createElement('button');btn.className='sc-opt';btn.textContent=o;
+    btn.onclick=function(){answerSC(i);};opts.appendChild(btn);
+  });
+  ['best','ok','wrong'].forEach(function(c){
+    var el=document.getElementById('sc-'+c);el.className='sc-fb '+c;
+  });
+  document.getElementById('sc-next').className='sc-next';
+  document.getElementById('sc-score').className='sc-score';
+  scAnswered=false;
+}
+function answerSC(i){
+  if(scAnswered)return;scAnswered=true;
+  var s=scenarios[scIdx];
+  var btns=document.querySelectorAll('#sc-opts .sc-opt');
+  btns.forEach(function(b){b.disabled=true;});
+  var isBest=(i===s.best);
+  var isOk=(Math.abs(i-s.best)===1&&i!==s.best);
+  var cls=isBest?'best':isOk?'ok':'wrong';
+  btns[i].classList.add(cls);
+  var fb=isBest?s.bestFB:isOk?s.okFB:s.wrongFB;
+  var prefix=isBest?'✅ ':isOk?'🔶 ':'❌ ';
+  var fbEl=document.getElementById('sc-'+cls);
+  fbEl.textContent=prefix+fb;
+  fbEl.classList.add('show');
+  if(isBest)scScore++;
+  if(scIdx<scenarios.length-1)document.getElementById('sc-next').classList.add('show');
+  else showScScore();
+}
+function nextSC(){scIdx++;renderSC();}
+function showScScore(){
+  document.getElementById('sc-score').classList.add('show');
+  document.getElementById('sc-score-num').textContent=scScore+' / 3';
+  var t=scScore===3?'Excellent framework application. You correctly identified Trust, Override, and Escalate as the right responses — applying each framework question appropriately to the specific context.':scScore===2?'Strong judgment. Review the scenario where your response differed from the optimal one and trace which framework question it was testing.':'Review the five-question framework and trace back through each scenario: which question (safety? recent context? floor observation? track record? gut check?) was the key signal for each response?';
+  document.getElementById('sc-score-text').textContent=t;
+}
+renderSC();
+</script>
+</body>
+</html>

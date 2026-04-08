@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Gives Advice — You Make the Call: Understanding Your Role in AI-Assisted Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* manifesto */
+.manifesto{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:36px;margin:28px 0;color:#fff;}
+.mf-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:20px;}
+.mf-items{display:flex;flex-direction:column;gap:14px;}
+.mf-item{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,.07);border-radius:14px;padding:16px 20px;}
+.mf-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.mf-body{}
+.mf-title{font-weight:700;font-size:15px;color:#fff;margin-bottom:4px;}
+.mf-text{font-size:13px;line-height:1.75;color:rgba(255,255,255,.8);}
+
+/* role split */
+.role-split{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0;}
+.rs-card{flex:1;min-width:200px;border-radius:18px;padding:22px;}
+.rs-card.ai{background:var(--blue-pale);border:2px solid var(--blue-mid);}
+.rs-card.human{background:var(--purple-pale);border:2px solid var(--purple-mid);}
+.rs-title{font-weight:700;font-size:15px;margin-bottom:12px;}
+.rs-card.ai .rs-title{color:var(--blue);}
+.rs-card.human .rs-title{color:var(--purple-dark);}
+.rs-item{font-size:13px;line-height:1.7;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.rs-item:last-child{border-bottom:none;}
+.rs-card.ai .rs-item::before{content:"🤖 ";font-size:11px;}
+.rs-card.human .rs-item::before{content:"🧠 ";font-size:11px;}
+
+/* day in the life */
+.day-flow{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.df-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.df-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.df-events{display:flex;flex-direction:column;gap:0;}
+.df-event{display:flex;gap:0;align-items:stretch;}
+.df-spine{width:44px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.df-dot{width:16px;height:16px;border-radius:50%;border:2px solid #fff;flex-shrink:0;margin-top:16px;}
+.df-dot.ai{background:var(--blue);box-shadow:0 0 0 2px var(--blue);}
+.df-dot.human{background:var(--purple);box-shadow:0 0 0 2px var(--purple);}
+.df-dot.both{background:var(--green);box-shadow:0 0 0 2px var(--green);}
+.df-line{width:3px;flex:1;background:var(--purple-mid);margin:3px 0;}
+.df-event:last-child .df-line{display:none;}
+.df-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;margin-bottom:10px;}
+.df-time{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:2px;}
+.df-action{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.df-detail{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.df-tag{display:inline-flex;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;margin-top:4px;}
+.df-tag.ai{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.df-tag.human{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.df-tag.both{background:var(--green-pale);color:var(--green);border:1px solid #6EE7B7;}
+
+/* empowerment cards */
+.empower-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ec{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;}
+.ec-icon{font-size:22px;flex-shrink:0;}
+.ec-body{}
+.ec-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.ec-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>AI Gives Advice — You Make the Call: Understanding Your Role in AI-Assisted Manufacturing</h1>
+  <p class="hero-sub">AI is a powerful tool in modern manufacturing. But no matter how good the tool, a tool cannot be held responsible. The person using it can. This article is about what that means — and why your judgment, context, and professional responsibility matter more than ever in an AI-assisted workplace.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Two Things That Are Both True</h2>
+  <p>Here are two statements that might seem to be in tension with each other — but both are accurate, and understanding both is the foundation of working effectively alongside AI:</p>
+  <p><strong>Statement 1:</strong> AI tools in manufacturing are genuinely impressive. They analyze more data, faster, than any human team. They detect patterns that would take a person months to notice manually. They generate scheduling options, inventory alerts, bottleneck findings, and process improvement suggestions that make the humans using them significantly more capable.</p>
+  <p><strong>Statement 2:</strong> AI tools in manufacturing are tools. They have no awareness of your specific floor, your specific team, the conversation you had with the maintenance tech this morning, the customer relationship your supervisor is trying to protect, or the safety risk that didn't make it into any database. They have no judgment. They have no responsibility. They cannot be held accountable.</p>
+  <div class="pull-quote"><p>You are not a gatekeeper who rubber-stamps AI decisions. You are a professional who uses AI as a powerful source of information — and then applies your knowledge, your context, and your judgment to make a real decision. That distinction matters enormously.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Your Professional Manifesto for AI-Assisted Work</h2>
+  <p>Here is what it actually means to be a manufacturing professional working alongside AI tools. This isn't a list of rules — it's a description of the role you're growing into.</p>
+
+  <div class="manifesto">
+    <div class="mf-label">🧠 The Manufacturing Professional's Role in AI-Assisted Work</div>
+    <div class="mf-items">
+      <div class="mf-item">
+        <div class="mf-icon">📊</div>
+        <div class="mf-body">
+          <div class="mf-title">You are the AI's most important input</div>
+          <div class="mf-text">AI systems learn from data. The quality of your data entry, your scan discipline, your accurate completion records — these directly determine how good the AI's recommendations are. Workers who take data quality seriously are building a better AI for everyone on their floor.</div>
+        </div>
+      </div>
+      <div class="mf-item">
+        <div class="mf-icon">🔍</div>
+        <div class="mf-body">
+          <div class="mf-title">You provide the context the AI can't see</div>
+          <div class="mf-text">The AI doesn't know that Machine #4 has been making a slightly different sound this week. It doesn't know the new hire on the afternoon shift is still building confidence on the welding station. It doesn't know the customer for this order has zero tolerance for delays after the last one. You know these things. That knowledge is essential to evaluating any AI recommendation.</div>
+        </div>
+      </div>
+      <div class="mf-item">
+        <div class="mf-icon">⚖️</div>
+        <div class="mf-body">
+          <div class="mf-title">You make the decision — and you own it</div>
+          <div class="mf-text">When you act on an AI recommendation, you are making a choice. "The AI told me to" is not a professional defense — not for a quality problem, not for a safety incident, not for a missed delivery. The decision to trust, verify, escalate, or override belongs to you. So does the outcome.</div>
+        </div>
+      </div>
+      <div class="mf-item">
+        <div class="mf-icon">🛡️</div>
+        <div class="mf-body">
+          <div class="mf-title">Your judgment is not optional — it's required</div>
+          <div class="mf-text">Some people worry that AI is replacing professional judgment. The opposite is true: AI-assisted manufacturing requires more judgment from workers, not less — because the speed and scale of AI recommendations means human oversight must be thoughtful and reliable, not cursory. Good judgment under AI-assisted conditions is a professional skill that employers are actively hiring for.</div>
+        </div>
+      </div>
+      <div class="mf-item">
+        <div class="mf-icon">🤝</div>
+        <div class="mf-body">
+          <div class="mf-title">You and AI are partners, not competitors</div>
+          <div class="mf-text">AI handles the data-intensive, pattern-detection work that would exhaust a human doing it manually. You handle the contextual, relational, safety-critical, and judgment-intensive work that AI cannot reach. Neither does the job alone. The combination of both — with each doing what it's actually good at — is what makes a modern manufacturing operation run effectively.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Does vs. What You Do</h2>
+  <p>The clearest way to understand your role is to see exactly where AI contribution ends and human responsibility begins. These two columns describe the same day of work — from the AI's side and from yours.</p>
+
+  <div class="role-split">
+    <div class="rs-card ai">
+      <div class="rs-title">🤖 What AI Contributes</div>
+      <div class="rs-item">Analyzes last night's production data and identifies Station 3 as running 22% above planned cycle time</div>
+      <div class="rs-item">Generates three schedule recovery options based on current work orders and machine availability</div>
+      <div class="rs-item">Flags that stainless steel sheet inventory will hit the reorder point in approximately 6 hours</div>
+      <div class="rs-item">Detects that a robot arm's vibration signature has increased 8% over the past 3 days</div>
+      <div class="rs-item">Matches today's three open jobs to available certified workers on the current shift</div>
+      <div class="rs-item">Calculates that delaying Job WO-4412 by 2 hours will allow WO-4401 to ship on time without overtime</div>
+    </div>
+    <div class="rs-card human">
+      <div class="rs-title">🧠 What You Contribute</div>
+      <div class="rs-item">Knows why Station 3 is slow this week — the afternoon crew is running a new fixture for the first time and needs more setup time</div>
+      <div class="rs-item">Evaluates which recovery option is actually feasible — Option 2 requires a machine that the maintenance team flagged as "monitor closely" yesterday</div>
+      <div class="rs-item">Calls the supplier about the steel sheet — and learns the next shipment is delayed 2 days, changing the urgency calculation</div>
+      <div class="rs-item">Knows that the robot arm's bearings were replaced 3 months ago — and the 8% vibration increase is consistent with normal wear-in, not a failure signal</div>
+      <div class="rs-item">Knows Jordan completed their welding certification 3 weeks ago and shouldn't be assigned the most complex weld on today's roster</div>
+      <div class="rs-item">Knows the customer for WO-4401 is already upset about a previous delay — and that a 2-hour ship-time difference is worth the overtime cost to protect the relationship</div>
+    </div>
+  </div>
+
+  <p>Neither column alone is sufficient. The AI without human context produces technically correct recommendations that miss critical real-world factors. The human without AI support is working from incomplete data, slower pattern detection, and limited scope. The professional value you bring is the combination: using AI's analytical power while applying the knowledge, context, and judgment that the AI cannot access.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>A Morning With AI — What Professional Partnership Looks Like</h2>
+  <p>Here's what a shift start looks like for a production planner working effectively alongside AI tools — showing the continuous interplay between AI contribution and human decision-making.</p>
+
+  <div class="day-flow">
+    <div class="df-label">Tuesday 6:45 AM — Production Planning at Ridgeline</div>
+    <div class="df-title">AI Informs. You Decide. Every Step.</div>
+    <div class="df-events">
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot ai"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">6:45 AM</div>
+          <div class="df-action">AI generates overnight summary and schedule</div>
+          <div class="df-detail">The dashboard shows two shift performance alerts, one material flag (M6 bolts at 68% of reorder point), and a generated schedule for today's 8 work orders. Three workers assigned, certifications confirmed, machine availability checked.</div>
+          <div class="df-tag ai">AI</div>
+        </div>
+      </div>
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot human"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">6:50 AM</div>
+          <div class="df-action">You review the schedule before approving</div>
+          <div class="df-detail">The AI assigned WO-4418 to Jordan — a complex new-fixture job. You know Jordan is still building confidence on complex setups. You reassign WO-4418 to Alex and give Jordan WO-4415, a standard repeat job. You approve the rest of the schedule as-is.</div>
+          <div class="df-tag human">Human Judgment</div>
+        </div>
+      </div>
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot ai"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">8:22 AM</div>
+          <div class="df-action">AI flags vibration anomaly on CNC Mill #3</div>
+          <div class="df-detail">The system flags elevated spindle vibration — 14% above normal baseline — and generates two recovery options: move Mill #3's afternoon jobs to Mill #4, or wait and monitor.</div>
+          <div class="df-tag ai">AI</div>
+        </div>
+      </div>
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot human"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">8:35 AM</div>
+          <div class="df-action">You walk to Mill #3 and listen</div>
+          <div class="df-detail">The machine sounds slightly different. You call the maintenance tech. They assess: a bearing showing early wear. Not urgent this hour — but shouldn't run all day. You choose Option 1: move the afternoon jobs to Mill #4, schedule the bearing swap during the 12:30 lunch break. Updated schedule pushed to the floor.</div>
+          <div class="df-tag human">Human Judgment</div>
+        </div>
+      </div>
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot both"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">10:15 AM</div>
+          <div class="df-action">AI flags M6 bolt reorder. You call the supplier.</div>
+          <div class="df-detail">The AI is right that a reorder is needed. But the supplier tells you the bolt grade you normally order is backordered 3 weeks — there's a substitute grade available in 2 days. You approve the substitute after confirming the engineering spec allows it. The AI couldn't have made that call.</div>
+          <div class="df-tag both">AI + Human Together</div>
+        </div>
+      </div>
+      <div class="df-event">
+        <div class="df-spine"><div class="df-dot human"></div><div class="df-line"></div></div>
+        <div class="df-card">
+          <div class="df-time">2:00 PM</div>
+          <div class="df-action">You update the shift handoff notes with context the AI can't capture</div>
+          <div class="df-detail">Jordan did well on WO-4415 — ready to take on a slightly more complex job tomorrow. Mill #3 is repaired and running clean. The substitute bolts will arrive Wednesday; flag for receiving to confirm grade match before releasing to the floor. The AI will generate tomorrow's schedule tonight — but it will need this context to be added manually.</div>
+          <div class="df-tag human">Human Knowledge</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Why This Is Empowering, Not Intimidating</h2>
+  <p>Some people hear "you make the call" and feel anxious — what if the AI is wrong and I catch it? What if I'm wrong and the AI was right? What if I don't know enough to evaluate the recommendation?</p>
+  <p>Here's the reframe: this is not a new pressure — it's a clarification of a responsibility that professional workers have always had. Every supervisor, planner, and technician who has ever reviewed a production schedule, approved a purchasing decision, or authorized a process change was already making judgment calls. AI doesn't create this responsibility. It just makes the judgments more data-informed — and in doing so, makes experienced humans even more effective.</p>
+
+  <div class="empower-cards">
+    <div class="ec">
+      <div class="ec-icon">💡</div>
+      <div class="ec-body">
+        <div class="ec-title">You have information the AI literally cannot access</div>
+        <div class="ec-text">The context you carry in your head — the relationships, the floor knowledge, the recent history, the pattern you noticed this morning — is real professional value that no AI system can replicate. When you apply that context to evaluate an AI recommendation, you're doing something genuinely irreplaceable.</div>
+      </div>
+    </div>
+    <div class="ec">
+      <div class="ec-icon">📈</div>
+      <div class="ec-body">
+        <div class="ec-title">The AI makes your judgment more powerful, not obsolete</div>
+        <div class="ec-text">A supervisor who had to manually calculate every schedule adjustment, manually track every inventory level, and manually analyze every cycle time dataset has limited capacity for judgment work. A supervisor with AI handling those calculations has more time and more information to apply their judgment where it matters most.</div>
+      </div>
+    </div>
+    <div class="ec">
+      <div class="ec-icon">🎯</div>
+      <div class="ec-body">
+        <div class="ec-title">Knowing when to trust, verify, and push back is a skill employers want</div>
+        <div class="ec-text">Manufacturers aren't looking for workers who blindly follow AI output or workers who refuse to engage with it. They're looking for workers who understand what AI is good at, what it misses, and how to integrate it with professional judgment. That's the skill this module is building — and it's visible in job postings right now.</div>
+      </div>
+    </div>
+    <div class="ec">
+      <div class="ec-icon">🛡️</div>
+      <div class="ec-body">
+        <div class="ec-title">Professional accountability is a career asset</div>
+        <div class="ec-text">Workers who understand that they own their decisions — and who apply genuine judgment rather than passive AI compliance — are the workers that supervisors trust with more responsibility, more complex decisions, and more advancement opportunities. Professional accountability isn't a burden. It's what makes you someone worth promoting.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A production planner follows an AI scheduling recommendation without review and a quality problem emerges because the AI assigned a worker to a job requiring a certification the worker actually completed but whose data entry was incorrect in the system. When the customer complains, the planner says "the AI assigned that worker — I just followed the schedule." What is wrong with this response?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Nothing — if the AI's data was wrong, the AI is responsible for the outcome</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">The HR team is responsible — they should have ensured certification data was correctly entered</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">The planner made a professional decision to approve the schedule without reviewing the assignments. "The AI assigned" is not a professional defense — the planner's role includes reviewing AI-generated assignments before releasing them to the floor. The planner who reviews and approves the schedule owns the schedule. That ownership doesn't transfer to the software.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The response is acceptable — the AI generated the schedule, so the planner had reasonable grounds to trust it without individual review of each assignment</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The planner's job includes reviewing AI-generated recommendations, not just releasing them. "Following the AI" without a review step is not a professional defense — it's an abdication of the judgment role that the planner was hired to perform. Data entry errors in the certification system are a systemic vulnerability that a reviewing professional should catch: "Does Jordan actually have this certification? Let me verify." The planner who approves the schedule owns it. AI generates — humans review, apply context, and decide. That's the non-negotiable professional responsibility of working in an AI-assisted environment.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ "The AI assigned" is not a professional defense in manufacturing — not for quality problems, safety incidents, or customer relationship failures. When a planner reviews and releases a schedule, they are approving it as their professional judgment. A data error in the certification system is exactly the kind of discrepancy that a reviewing professional should catch — which is why the review step exists. AI generates recommendations. The human approves them and owns the outcome. That responsibility doesn't transfer to the software, regardless of how good the AI's track record is.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI and professional judgment are complementary, not competing. AI handles data-intensive analysis; you provide context, relationship knowledge, safety awareness, and decision authority. Neither is sufficient alone.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Your professional role in AI-assisted work: provide quality data inputs, contribute the context AI can't see, make the actual decision, own the outcome. "The AI said so" is never a complete professional defense.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The shift from manual to AI-assisted work expands what you can do — it gives you more and better information to apply your judgment to. The judgment work itself becomes more important, not less.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Workers who understand when to trust, verify, and push back on AI recommendations are the workers employers are actively hiring for. Professional judgment in AI-assisted environments is a skill — and this module is building it.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

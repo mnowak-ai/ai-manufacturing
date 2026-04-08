@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation: The AI Says Do It — But Should You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* main sim */
+.sim-shell{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.sim-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;}
+.sim-title{font-family:"Fraunces",serif;font-size:22px;color:var(--purple-dark);font-weight:700;}
+.sim-badge{display:flex;gap:8px;align-items:center;}
+.sim-badge-item{font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;background:var(--white);border:1px solid var(--purple-mid);color:var(--purple);}
+.sim-domain{font-size:12px;color:var(--gray-muted);margin-bottom:16px;}
+.sim-progress-bar{height:6px;background:var(--purple-mid);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.sim-progress-fill{height:100%;background:var(--purple);border-radius:3px;transition:width .4s ease;}
+
+/* scenario card */
+.sc-wrap{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.sc-domain-bar{padding:8px 18px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;}
+.sc-ai-block{background:linear-gradient(135deg,#0f172a,#1e1547);padding:16px 20px;}
+.sc-ai-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--purple-mid);margin-bottom:6px;}
+.sc-ai-rec{font-size:14px;color:rgba(255,255,255,.9);line-height:1.75;font-weight:500;}
+.sc-context-block{padding:16px 20px;}
+.sc-context-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-muted);margin-bottom:6px;}
+.sc-context-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+
+/* decision buttons */
+.decision-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.dec-btn{flex:1;min-width:140px;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;border:2px solid;text-align:center;transition:all .2s;line-height:1.4;}
+.dec-btn.trust{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.dec-btn.verify{background:var(--orange-pale);border-color:var(--orange);color:var(--orange);}
+.dec-btn.escalate{background:var(--blue-pale);border-color:var(--blue-mid);color:var(--blue);}
+.dec-btn.override{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.dec-btn:hover:not([disabled]){filter:brightness(.95);transform:translateY(-1px);}
+.dec-btn:disabled{opacity:.6;cursor:default;transform:none;}
+.dec-btn.chosen{filter:brightness(.85);}
+
+/* consequence */
+.consequence{padding:14px 18px;border-radius:12px;font-size:13px;line-height:1.8;display:none;margin-bottom:8px;}
+.consequence.show{display:block;}
+.consequence.best{background:var(--green-pale);border:1.5px solid var(--green);}
+.consequence.ok{background:var(--orange-pale);border:1.5px solid var(--orange);}
+.consequence.bad{background:var(--red-pale);border:1.5px solid var(--red);}
+.consequence-title{font-weight:700;font-size:14px;margin-bottom:6px;}
+.consequence.best .consequence-title{color:var(--green);}
+.consequence.ok .consequence-title{color:var(--orange);}
+.consequence.bad .consequence-title{color:var(--red);}
+
+/* next / score */
+.next-btn{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:11px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;display:none;}
+.next-btn.show{display:inline-block;}
+.score-card{background:var(--white);border:2px solid var(--purple-mid);border-radius:18px;padding:24px;display:none;margin-top:14px;}
+.score-card.show{display:block;}
+.score-num{font-family:"Fraunces",serif;font-size:48px;font-weight:900;color:var(--purple-dark);}
+.score-sub{font-size:14px;color:var(--gray-muted);margin-top:4px;}
+.score-text{font-size:14px;line-height:1.8;color:var(--gray-text);margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Capstone Simulation</div>
+  <h1>Simulation: The AI Says Do It — But Should You?</h1>
+  <p class="hero-sub">Five AI recommendations across four lesson topics: scheduling, materials, process optimization, and professional judgment. For each one, decide whether to Trust and Act, Verify Before Acting, Escalate, or Override. Every choice leads to a real consequence.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+<div class="section fade-in">
+  <h2>Your Role</h2>
+  <p>You are a production supervisor at Ridgeline Manufacturing. It is Tuesday morning. Your AI dashboard has surfaced five recommendations across different domains. You have a shift to run. Work through each recommendation and make the call — then see what happens as a result of your decision.</p>
+
+  <div class="sim-shell">
+    <div class="sim-header">
+      <div class="sim-title">AI Recommendation Review</div>
+      <div class="sim-badge">
+        <div class="sim-badge-item" id="sim-prog-badge">1 of 5</div>
+        <div class="sim-badge-item" id="sim-score-badge">Score: 0</div>
+      </div>
+    </div>
+    <div class="sim-domain" id="sim-domain"></div>
+    <div class="sim-progress-bar"><div class="sim-progress-fill" id="sim-pfill" style="width:20%"></div></div>
+
+    <div class="sc-wrap" id="sc-wrap">
+      <div class="sc-domain-bar" id="sc-domain-bar"></div>
+      <div class="sc-ai-block">
+        <div class="sc-ai-label">🤖 AI Recommendation</div>
+        <div class="sc-ai-rec" id="sc-ai-rec"></div>
+      </div>
+      <div class="sc-context-block">
+        <div class="sc-context-label">Context You Have</div>
+        <div class="sc-context-text" id="sc-context-text"></div>
+      </div>
+    </div>
+
+    <div class="decision-grid">
+      <button class="dec-btn trust"    id="db-trust"    onclick="decide('trust')">✅ Trust and Act</button>
+      <button class="dec-btn verify"   id="db-verify"   onclick="decide('verify')">🔍 Verify Before Acting</button>
+      <button class="dec-btn escalate" id="db-escalate" onclick="decide('escalate')">📣 Escalate</button>
+      <button class="dec-btn override" id="db-override" onclick="decide('override')">🚫 Override</button>
+    </div>
+
+    <div class="consequence best"    id="con-best"></div>
+    <div class="consequence ok"      id="con-ok"></div>
+    <div class="consequence bad"     id="con-bad"></div>
+    <button class="next-btn" id="next-btn" onclick="nextSim()">Next Recommendation →</button>
+    <div class="score-card" id="score-card">
+      <div class="score-num" id="final-num"></div>
+      <div class="score-sub">out of 5 best decisions</div>
+      <div class="score-text" id="final-text"></div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var scenarios=[
+  {
+    domain:'📅 Scheduling',
+    domainColor:'#EFF6FF',
+    domainText:'color:var(--blue);background:var(--blue-pale);',
+    ai:'Reschedule WO-4401 from 8:00 AM to 11:30 AM start. Machine #4 has a scheduled preventive maintenance window from 7:00–9:00 AM today. Moving WO-4401 back 3.5 hours avoids a conflict and protects the maintenance window.',
+    context:'You check the maintenance log — the PM on Machine #4 was completed yesterday afternoon when the maintenance team had an unexpected opening in their schedule. The machine is already available and in good condition. WO-4401 has a noon pickup scheduled by a customer who drives 90 minutes to collect their parts personally.',
+    best:'trust',bestTitle:'Trust and Act — but with an edit',bestText:'The AI made a logical recommendation based on the maintenance schedule data — which showed the PM as pending. But the PM was completed yesterday and the system hasn\'t been updated yet. This is a Question 2 situation: something changed (PM completed early) that the AI doesn\'t know. The right action: override the schedule change. Start WO-4401 at 8:00 AM as originally planned. Update the maintenance record so the AI has accurate data going forward. The customer makes a 90-minute drive — don\'t make them wait for a maintenance window that already closed.',
+    ok:'verify',okTitle:'Verify — reasonable, but time matters',okText:'Checking the maintenance log before deciding is exactly the right instinct — you caught a data discrepancy. But if verification takes 20 minutes, you\'ve already eaten into WO-4401\'s buffer before noon pickup. The best response here is to verify quickly (30-second check) and then override based on what you find. Verification that leads to the right action is correct — just move efficiently.',
+    bad:'trust',badTitle:'Acting on the delay without checking = missed customer pickup',badText:'If you reschedule WO-4401 to 11:30 AM without checking the maintenance log, the job won\'t be ready for the noon pickup. The customer arrives after a 90-minute drive to find their parts aren\'t ready. A quick floor check or maintenance log review would have shown the PM was complete. This is a Question 2 failure: something changed that the AI didn\'t know about, and you didn\'t catch it.',
+    badOpts:['escalate','override'],best_opt:'verify_then_override'
+  },
+  {
+    domain:'📦 Materials',
+    domainColor:'#F0FFF4',
+    domainText:'color:var(--green);background:var(--green-pale);',
+    ai:'Stainless steel sheet (4mm, 316L grade) is at critical shortage level — 8 sq ft remaining, projected stockout in 2.5 hours at current usage. Emergency sourcing is recommended: contact QuickMetal for same-day delivery. Estimated premium: 2.8x standard price.',
+    context:'You check with the floor — WO-4312 and WO-4318 both use 4mm 316L sheet. WO-4312 is your biggest job today (200 sq ft needed) and due Thursday. WO-4318 needs 12 sq ft and is due today at 4 PM. Your standard supplier can deliver 200 sq ft tomorrow morning. QuickMetal can deliver 20 sq ft same-day for the 2.8x premium. You have no other jobs requiring 316L sheet this week.',
+    context2:'The right move: order 20 sq ft from QuickMetal (covers WO-4318 today at 2.8x), order the full 200 sq ft from standard supplier for tomorrow (covers WO-4312 at standard price). Emergency sourcing only what\'s actually urgent.',
+    best:'verify',bestTitle:'Verify Before Acting — then execute a targeted response',bestText:'This is a partial Trust and Act situation: the shortage is real, the urgency is real. But the AI\'s recommendation (emergency source, premium price) doesn\'t distinguish between which job actually needs material today and which can wait for tomorrow\'s standard delivery. A 30-second analysis: WO-4318 needs 12 sq ft today. Emergency order exactly that. WO-4312 needs 200 sq ft by Thursday — standard delivery tomorrow is fine at standard price. Verification prevents spending 2.8x premium on 200 sq ft you don\'t actually need today.',
+    ok:'trust',okTitle:'Trusting and acting — expensive but not wrong',okText:'Acting on the emergency order immediately does solve the problem — production won\'t stop. But if you order the full 200 sq ft at 2.8x ($560 vs $200), you\'ve spent $360 in unnecessary premium on material that your standard supplier could have delivered tomorrow at normal price. The AI correctly identified the emergency; it didn\'t do the triage analysis of what\'s actually needed today vs. what can wait. Verify before committing the full emergency order.',
+    bad:'escalate',badTitle:'Escalating without acting risks WO-4318 missing its deadline',badText:'Escalating a material shortage to your supervisor without taking any action may mean 30–60 minutes pass before a decision is made — and WO-4318 hits a material stoppage in 2.5 hours. Routine material emergency decisions are within a supervisor\'s operational authority. Make the targeted emergency order, then inform your supervisor of the situation and the action you took.',
+    badOpts:['override','escalate'],best_opt:'verify'
+  },
+  {
+    domain:'⚙️ Process',
+    domainColor:'#F3EAFF',
+    domainText:'color:var(--purple-dark);background:var(--purple-pale);',
+    ai:'Skip the 5-minute quality hold between production runs at Station 5 for today\'s afternoon run of WO-4502. The hold has produced zero findings in the past 8 weeks. Eliminating it would allow the afternoon shift to complete 4 additional units — recovering from this morning\'s delay.',
+    context:'The quality hold at Station 5 is a 5-minute visual check of three critical dimensions after every 50-unit run. WO-4502 is a medical device component — titanium brackets for surgical implants. The quality hold is specified in the production control plan, which was written to FDA regulatory requirements for Class II medical devices. You cannot find documentation showing this hold was reviewed or approved for removal.',
+    best:'override',bestTitle:'Override immediately and do not skip the hold',bestText:'This is the clearest override situation in this simulation. Question 1 (safety): this is a medical device component under FDA regulation. Question 2 (recent context): the AI doesn\'t know the regulatory context of this hold. The argument "zero findings in 8 weeks" is exactly wrong for a safety-critical inspection — a check that catches nothing for 8 weeks may be the reason nothing has gone wrong for 8 weeks. Medical device quality holds specified in FDA-required control plans cannot be removed based on AI throughput optimization without formal engineering change control. Override, continue the hold, and flag this recommendation to quality engineering as a system calibration issue — the AI should not be allowed to recommend removing regulated quality controls.',
+    ok:'escalate',okTitle:'Escalating is also correct — but override first',okText:'Escalating to a supervisor or quality engineer is the right move — they should know the AI recommended removing a regulated quality hold. But the escalation shouldn\'t delay the decision. While you escalate, the hold continues. Override first (the hold stays), then escalate to make sure quality engineering is aware that the AI generated this recommendation so it can be prevented in the future.',
+    bad:'trust',badTitle:'Skipping this hold could result in a regulatory violation and patient harm',badText:'A 5-minute time saving is not worth the risk associated with skipping a regulatory-required quality hold on a medical device component. If defective titanium surgical brackets reach patients, the harm is irreversible. If the skip is discovered in an FDA audit, the consequences include production shutdown, warning letters, and potential criminal liability. "The AI recommended it" is not an FDA defense. This is the clearest possible case for override — safety, regulatory compliance, and "zero findings = the check is working" all point to the same answer.',
+    badOpts:['trust','verify'],best_opt:'override'
+  },
+  {
+    domain:'👥 People',
+    domainColor:'#FFFBEB',
+    domainText:'color:var(--orange);background:var(--orange-pale);',
+    ai:'Afternoon shift workforce rebalancing suggestion: Move one operator from Station 8 (currently 44% utilized) to Station 3 (currently 91% utilized with a growing queue). Expected throughput improvement: 14%.',
+    context:'The operator at Station 8 this afternoon is Riley T. Riley recently returned from 6 weeks of FMLA medical leave. Station 3 is the highest-intensity position on the floor — fast-paced, physically demanding, with high decision complexity. In your morning check-in with Riley, they mentioned they\'re still managing fatigue. Riley\'s FMLA was for a stress-related condition. Station 8 at 44% utilization is actually a deliberate gradual re-integration plan you and HR agreed to for the first two weeks of Riley\'s return.',
+    best:'override',bestTitle:'Override — the AI doesn\'t know the re-integration plan',bestText:'Question 2 (recent context): the AI has no knowledge of Riley\'s FMLA history, the agreed re-integration plan, or the conversation you had with Riley this morning. It sees "44% utilization" and correctly identifies an optimization opportunity — but the 44% utilization is intentional, not slack. Moving Riley to Station 3 — the highest-intensity position, while Riley is managing fatigue during medical re-integration — could harm Riley and expose the company to significant liability. Override the recommendation. Maintain the agreed re-integration plan. If Station 3 needs support, find another solution.',
+    ok:'escalate',okTitle:'Escalating is correct if you\'re uncertain about your authority',okText:'If you\'re unsure whether the re-integration plan is documented in a way that gives you full authority to make this call, escalating to your supervisor or HR is appropriate. But the core decision — don\'t move Riley — is clear from the context you have. Override and escalate simultaneously: "I\'m overriding this recommendation because of Riley\'s re-integration plan; wanted to flag it."',
+    bad:'trust',badTitle:'Moving Riley to Station 3 violates the agreed re-integration plan',badText:'Acting on this recommendation without checking Riley\'s situation would be a serious error. The AI sees utilization data. It doesn\'t see medical context, re-integration agreements, or the conversation you had with Riley this morning. If Riley is moved to Station 3 and experiences a health setback as a result, the company faces both a human harm and a significant legal liability. This is exactly the type of situation where "the AI recommended it" is the worst possible defense.',
+    badOpts:['trust','verify'],best_opt:'override'
+  },
+  {
+    domain:'📊 Judgment',
+    domainColor:'#F3EAFF',
+    domainText:'color:var(--purple-dark);background:var(--purple-pale);',
+    ai:'Priority resequencing for the afternoon shift: Move WO-4421 (due Friday) ahead of WO-4418 (due Wednesday). AI analysis: WO-4421 has a 4-hour cycle time vs. WO-4418\'s 2-hour cycle time. Running WO-4421 first maximizes machine utilization before the end of the day shift and leaves WO-4418 as a quick completion for the afternoon shift start.',
+    context:'Both jobs are for the same customer — Precision Aerospace. You received an email this morning (not yet in any system) from the Precision Aerospace account manager: they have moved their WO-4421 delivery date up from Friday to Wednesday due to a schedule change on their end. WO-4421 is now also due Wednesday. The AI made a sound scheduling decision based on its data — but its data doesn\'t include this morning\'s email.',
+    best:'override',bestTitle:'Override — the customer moved the deadline',bestText:'Question 2: something critical changed this morning that the AI doesn\'t know. WO-4421\'s deadline moved from Friday to Wednesday — making both jobs equally urgent. The AI\'s sequencing was logical given Friday data; it\'s wrong given Wednesday data. The correct action: keep WO-4418 first (smaller job, same Wednesday deadline, gets done sooner), run WO-4421 second and plan for potential overtime if needed to meet the moved deadline. Then update the work order system with the new deadline so the AI has accurate data. This is also a reminder to enter time-sensitive customer communication into the system promptly.',
+    ok:'verify',okTitle:'Verifying is reasonable — but you already have the answer',okText:'If you want to call the customer to confirm the deadline change before adjusting the schedule, that\'s professionally sound. But the email is from this morning and you\'ve already read it — the information is available. The better response is to act on the known information (override the sequence), confirm the new deadline in the customer call if you need to make one for other reasons, and update the system.',
+    bad:'trust',badTitle:'Following the AI\'s sequence risks WO-4421 missing its moved deadline',badText:'Acting on the AI\'s schedule without checking the morning\'s communications means WO-4421 runs second, is less prioritized, and may not complete in time for the Wednesday delivery the customer just requested. A Friday-deadline mindset on a job that became Wednesday is a guaranteed deadline miss. This is a Question 2 failure — the AI had the right answer for Friday; you have information that changes the problem. Use it.',
+    badOpts:['trust','escalate'],best_opt:'override'
+  }
+];
+var idx=0,score=0,answered=false;
+function renderSim(){
+  var s=scenarios[idx];
+  document.getElementById('sim-prog-badge').textContent=(idx+1)+' of '+scenarios.length;
+  document.getElementById('sim-domain').textContent='Domain: '+s.domain;
+  var dbar=document.getElementById('sc-domain-bar');
+  dbar.textContent=s.domain;
+  dbar.style.cssText=s.domainText;
+  document.getElementById('sc-ai-rec').textContent=s.ai;
+  document.getElementById('sc-context-text').textContent=s.context;
+  document.getElementById('sim-pfill').style.width=(((idx+1)/scenarios.length)*100)+'%';
+  ['best','ok','bad'].forEach(function(c){
+    document.getElementById('con-'+c).className='consequence '+c;
+  });
+  document.getElementById('next-btn').className='next-btn';
+  document.getElementById('score-card').className='score-card';
+  ['trust','verify','escalate','override'].forEach(function(d){
+    var btn=document.getElementById('db-'+d);
+    btn.disabled=false;btn.className='dec-btn '+d;
+  });
+  answered=false;
+}
+function decide(choice){
+  if(answered)return;answered=true;
+  var s=scenarios[idx];
+  ['trust','verify','escalate','override'].forEach(function(d){
+    document.getElementById('db-'+d).disabled=true;
+  });
+  document.getElementById('db-'+choice).classList.add('chosen');
+  var isBest=(choice===s.best_opt||(s.best===choice));
+  var isOk=(choice===s.ok||(s.okTitle&&!isBest&&choice!==s.best&&s.badOpts&&s.badOpts.indexOf(choice)===-1));
+  var isBad=s.badOpts&&s.badOpts.indexOf(choice)>=0||(!isBest&&!isOk);
+  if(isBest){
+    var el=document.getElementById('con-best');
+    el.innerHTML='<div class="consequence-title">✅ '+s.bestTitle+'</div>'+s.bestText;
+    el.classList.add('show');score++;
+  }else if(isOk){
+    var el=document.getElementById('con-ok');
+    el.innerHTML='<div class="consequence-title">🔶 '+s.okTitle+'</div>'+s.okText;
+    el.classList.add('show');
+  }else{
+    var el=document.getElementById('con-bad');
+    el.innerHTML='<div class="consequence-title">❌ '+s.badTitle+'</div>'+s.badText;
+    el.classList.add('show');
+  }
+  document.getElementById('sim-score-badge').textContent='Score: '+score;
+  if(idx<scenarios.length-1)document.getElementById('next-btn').classList.add('show');
+  else showFinal();
+}
+function nextSim(){idx++;renderSC2();}
+function renderSC2(){renderSim();}
+function showFinal(){
+  var sc=document.getElementById('score-card');sc.classList.add('show');
+  document.getElementById('final-num').textContent=score+' / '+scenarios.length;
+  var texts=['Review each scenario carefully — focus on which framework question was most critical in each case (safety? recent context? floor observation?). The five-question framework exists to help you catch the situations where AI needs human correction.','Good judgment across most scenarios. Review any you missed and identify which of the five framework questions was the key signal you should have acted on.','Strong performance across all five domains. You correctly identified when to trust, when to verify, when to override for safety, and when recent context overrides AI recommendations. This is exactly the judgment profile that AI-assisted manufacturing requires.'];
+  document.getElementById('final-text').textContent=texts[Math.min(score>=4?2:score>=3?1:0,2)];
+}
+renderSim();
+</script>
+</body>
+</html>
