@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter to Yourself: Reflecting on How You've Grown Through This Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* EXAMPLE LETTER */
+.example-letter{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:28px;margin:24px 0;}
+.el-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
+.el-paper{background:var(--white);border:1.5px solid #E5E7EB;border-radius:14px;padding:28px 30px;font-family:"DM Sans",sans-serif;}
+.el-date{font-size:13px;color:var(--gray-muted);margin-bottom:16px;}
+.el-salutation{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.el-body{font-size:15px;line-height:1.9;color:var(--gray-text);}
+.el-body p{font-size:15px;}
+.el-sign{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);margin-top:18px;}
+
+/* WRITING TOOL */
+.writing-tool{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.wt-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.wt-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.wt-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.wt-prompts{display:flex;flex-direction:column;gap:12px;}
+.wt-prompt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.wt-prompt-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:5px;}
+.wt-prompt-q{font-family:"Fraunces",serif;font-size:15px;color:var(--purple-dark);font-weight:700;margin-bottom:8px;}
+.wt-prompt-hint{font-size:12px;color:var(--gray-muted);line-height:1.65;margin-bottom:8px;font-style:italic;}
+.wt-textarea{width:100%;border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px 12px;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);resize:vertical;min-height:70px;line-height:1.65;transition:border-color .2s;}
+.wt-textarea:focus{outline:none;border-color:var(--purple);}
+.wt-compose-btn{margin-top:16px;background:var(--purple);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.wt-output{display:none;margin-top:16px;}
+.wt-output.show{display:block;}
+.wt-letter{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:24px 26px;}
+.wt-letter-date{font-size:13px;color:var(--gray-muted);margin-bottom:12px;}
+.wt-letter-body{font-size:14px;line-height:2;color:var(--gray-text);}
+.wt-copy-btn{margin-top:12px;background:var(--white);color:var(--purple);border:1.5px solid var(--purple-mid);border-radius:8px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;}
+
+/* PORTFOLIO BOX */
+.portfolio-box{background:linear-gradient(135deg,var(--purple-dark),#5b21b6);border-radius:20px;padding:28px 32px;margin:28px 0;}
+.pb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#c084fc;margin-bottom:8px;}
+.pb-title{font-family:"Fraunces",serif;font-size:20px;color:#fff;font-weight:700;margin-bottom:12px;}
+.pb-body{font-size:15px;line-height:1.8;color:rgba(255,255,255,.85);}
+
+/* FINAL MESSAGE */
+.final-box{background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:24px;padding:36px;margin:28px 0;text-align:center;}
+.fb-icon{font-size:48px;margin-bottom:16px;}
+.fb-title{font-family:"Fraunces",serif;font-size:26px;color:var(--purple-dark);font-weight:900;margin-bottom:14px;}
+.fb-body{font-size:16px;line-height:1.8;color:var(--gray-text);max-width:560px;margin:0 auto;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.4 &middot; Capstone &amp; Workforce Readiness</div>
+  <h1>A Letter to Yourself: Reflecting on How You've Grown Through This Course</h1>
+  <p class="hero-sub">The last thing you'll do in this certification is also one of the most useful. Write a short letter to the version of yourself who started this course — what you didn't know then, what you know now, and what you're going to do with it.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why This Activity Matters</h2>
+  <p>Reflection is how learning becomes permanent. You can go through a certification and retain the concepts, or you can go through it and integrate the concepts — make them genuinely part of how you think about your work and your career. This activity is about the difference between those two outcomes.</p>
+  <p>Writing a letter to yourself from before you started this course does something specific: it forces you to articulate, in your own words, what has actually changed. Not what the certification covers, but what <em>you</em> know now that you didn't then. What you can say now that you couldn't before. What you're going to do that you wouldn't have without this.</p>
+  <p>That articulation is also useful in practical terms. <mark>Portions of this letter can become portfolio evidence, personal statements for applications, or talking points in interviews and advisor conversations.</mark> It's not just reflection — it's documentation of growth.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Read This Example First</h2>
+  <p>Here's what a well-written reflection looks like. Notice that it's specific — not "I learned about AI" but what specifically changed and why it matters.</p>
+
+  <div class="example-letter">
+    <div class="el-label">Completed Example — Read Before Writing Your Own</div>
+    <div class="el-paper">
+      <div class="el-date">Today's date</div>
+      <div class="el-salutation">To me, from before this certification:</div>
+      <div class="el-body">
+        <p>You're about to start a certification about AI in manufacturing and you're not sure it's going to be relevant to you. You work in maintenance. You know your equipment. You're thinking: AI is for engineers and programmers, not for someone who works on the floor.</p>
+        <p>Here's what I know now that you didn't then: AI is already on your floor. The predictive maintenance dashboard your facility installed six months ago? That's AI. The quality inspection camera that flags parts for review? AI. The scheduling software that generates the production plan your supervisor approves every morning? Also AI. You've been working alongside these systems without a vocabulary for what they are or how they work.</p>
+        <p>What changed most for me was learning the human role. I used to think AI either worked or it didn't — that if the system flagged something, I'd deal with it, and if it didn't, there was nothing to deal with. Now I understand that AI alerts are starting points, not final answers. They need physical investigation. They produce false positives. My job is to verify, not just respond. That's a fundamentally different way of thinking about the work.</p>
+        <p>I also learned something I wasn't expecting: that communication is the skill that makes everything else visible. I can be the most thorough maintenance tech in the facility, but if my shift handoff notes are vague and my maintenance requests don't give the next person enough information to act on, none of that thoroughness reaches the people making decisions about my career. That one insight alone was worth this whole course.</p>
+        <p>What I'm going to do with this: I'm updating my résumé this week. I'm going to use the certification in my next performance review conversation to show that I've been investing in my own development. And I'm going to start keeping the skills log I learned about, because I want a record of what I'm learning that I can point to in a year.</p>
+        <p>The version of you who's about to start this course is more ready than you think. Go do it.</p>
+      </div>
+      <div class="el-sign">— Me, now</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Now Write Your Own</h2>
+  <p>Work through the six prompts below — they're designed to guide your thinking without writing the letter for you. Then click "Compose My Letter" to see your responses assembled into letter format. You can copy it from there.</p>
+
+  <div class="writing-tool">
+    <div class="wt-label">Guided Reflection Tool</div>
+    <div class="wt-title">Your Letter — Six Prompts</div>
+    <div class="wt-sub">Answer honestly. There are no wrong answers — this is your reflection, in your own voice. Longer answers produce a richer letter.</div>
+    <div class="wt-prompts">
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 1 of 6</div>
+        <div class="wt-prompt-q">What did you think AI in manufacturing meant before you started this course?</div>
+        <div class="wt-prompt-hint">Think about: What was your mental image? Did you think it was relevant to you? Was there anything you were worried about?</div>
+        <textarea class="wt-textarea" id="p1" placeholder="Before this certification, when I heard 'AI in manufacturing' I thought..."></textarea>
+      </div>
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 2 of 6</div>
+        <div class="wt-prompt-q">What is the single most important thing you understand now that you didn't then?</div>
+        <div class="wt-prompt-hint">Think about: A concept that changed how you see your work. A skill you now have a name for. Something that surprised you.</div>
+        <textarea class="wt-textarea" id="p2" placeholder="The most important thing I understand now that I didn't before is..."></textarea>
+      </div>
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 3 of 6</div>
+        <div class="wt-prompt-q">What was hardest — and how did you get through it?</div>
+        <div class="wt-prompt-hint">Think about: A concept that took time to click. A moment of doubt. What you did when something didn't make sense at first.</div>
+        <textarea class="wt-textarea" id="p3" placeholder="The hardest part of this certification for me was..."></textarea>
+      </div>
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 4 of 6</div>
+        <div class="wt-prompt-q">How has your thinking about your career changed?</div>
+        <div class="wt-prompt-hint">Think about: What you see differently about your current role. What opportunities you're now aware of. What you want to build next.</div>
+        <textarea class="wt-textarea" id="p4" placeholder="This course changed how I see my career because..."></textarea>
+      </div>
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 5 of 6</div>
+        <div class="wt-prompt-q">What are you going to do differently — specifically — because of this certification?</div>
+        <div class="wt-prompt-hint">Think about: Concrete actions. Updating your résumé. Starting a skills log. A conversation you're going to have. Something you're going to learn next.</div>
+        <textarea class="wt-textarea" id="p5" placeholder="Because of this certification, I'm going to..."></textarea>
+      </div>
+      <div class="wt-prompt">
+        <div class="wt-prompt-num">Prompt 6 of 6</div>
+        <div class="wt-prompt-q">What would you say to the version of you who was about to start this course?</div>
+        <div class="wt-prompt-hint">Think about: Encouragement. Advice. What you wish you'd known. What to pay attention to.</div>
+        <textarea class="wt-textarea" id="p6" placeholder="To the version of me who was about to start this course: ..."></textarea>
+      </div>
+    </div>
+    <button class="wt-compose-btn" onclick="composeLetter()">Compose My Letter →</button>
+    <div class="wt-output" id="wt-output">
+      <div class="wt-label" style="margin-top:20px;">Your Letter</div>
+      <div class="wt-letter">
+        <div class="wt-letter-date" id="wt-date"></div>
+        <div class="wt-letter-body" id="wt-body"></div>
+      </div>
+      <button class="wt-copy-btn" onclick="copyLetter()">Copy My Letter</button>
+      <div style="margin-top:12px;font-size:12px;color:var(--gray-muted);line-height:1.7;">Save this letter. It's portfolio evidence of your growth, a document your academic advisor or TRIO program coordinator can use to assess learning outcomes, and something worth reading again in a year.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="portfolio-box">
+    <div class="pb-eyebrow">For TRIO Students &amp; CTE Programs</div>
+    <div class="pb-title">This Letter Is Portfolio Evidence</div>
+    <div class="pb-body">If you're enrolled in a TRIO program, a CTE pathway, or any academic program that requires documentation of learning outcomes — this letter counts. It demonstrates: completed coursework in an emerging technology area, ability to reflect critically on learning and growth, applied understanding of career development in a technical field, and self-directed engagement with workforce readiness content. Share it with your advisor, counselor, or program coordinator as evidence of what this certification produced.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="final-box">
+    <div class="fb-icon">🎓</div>
+    <div class="fb-title">You Did Something Real</div>
+    <div class="fb-body">This certification covered how AI works in manufacturing, how to apply judgment when AI systems generate outputs, how to communicate professionally in AI-assisted environments, and how to keep growing in a field that keeps changing. That knowledge is real, it's specific, and it belongs to you. The capstone simulation is next — and you're ready for it. Go show what you know.</div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+function composeLetter(){
+  var p=[];for(var i=1;i<=6;i++){p.push(document.getElementById('p'+i).value.trim());}
+  var filled=p.filter(function(x){return x.length>0;}).length;
+  if(filled<3){alert('Please answer at least three prompts before composing your letter.');return;}
+  var now=new Date();var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dateStr=months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+  document.getElementById('wt-date').textContent=dateStr;
+  var paragraphs=[];
+  paragraphs.push('<strong>To me, from before this certification:</strong>');
+  if(p[0])paragraphs.push(p[0]);
+  if(p[1])paragraphs.push(p[1]);
+  if(p[2])paragraphs.push(p[2]);
+  if(p[3])paragraphs.push(p[3]);
+  if(p[4])paragraphs.push(p[4]);
+  if(p[5])paragraphs.push(p[5]);
+  paragraphs.push('<em>— Me, now</em>');
+  document.getElementById('wt-body').innerHTML=paragraphs.map(function(par){return '<p style="margin-bottom:14px;">'+par+'</p>';}).join('');
+  document.getElementById('wt-output').classList.add('show');
+  document.getElementById('wt-output').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function copyLetter(){
+  var date=document.getElementById('wt-date').textContent;
+  var body=document.getElementById('wt-body').innerText;
+  var text=date+'\n\n'+body;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=event.target;btn.textContent='✓ Copied!';setTimeout(function(){btn.textContent='Copy My Letter';},2000);
+  }).catch(function(){});
+}
+</script>
+</body>
+</html>

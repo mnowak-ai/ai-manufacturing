@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your AI Readiness Self-Assessment: What Do You Know, What Are You Still Building?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* ASSESSMENT */
+.assessment-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ab-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ab-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ab-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ab-progress{height:6px;background:var(--purple-mid);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.ab-progress-fill{height:100%;background:var(--purple);border-radius:3px;transition:width .4s ease;}
+.ab-domain{margin-bottom:20px;}
+.ab-domain-title{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.ab-domain-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ab-items{display:flex;flex-direction:column;gap:8px;}
+.ab-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 14px;}
+.ab-item-text{font-size:14px;color:var(--gray-text);line-height:1.65;margin-bottom:8px;}
+.ab-rating{display:flex;gap:6px;}
+.ab-btn{flex:1;padding:7px 4px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;transition:all .2s;font-family:"DM Sans",sans-serif;text-align:center;}
+.ab-btn.solid{background:#D1D5DB;color:#6B7280;border-color:#D1D5DB;}
+.ab-btn.growing{background:#FEF3C7;color:#92400E;border-color:#FCD34D;}
+.ab-btn.confident{background:var(--green-pale);color:var(--green);border-color:var(--green);}
+.ab-btn.selected{filter:brightness(.9);box-shadow:inset 0 0 0 2px rgba(0,0,0,.15);}
+.ab-score-display{display:none;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:22px;margin-top:16px;}
+.ab-score-display.show{display:block;}
+.asd-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.asd-domain-score{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.ads-name{font-size:13px;font-weight:600;color:var(--purple-dark);flex:1;}
+.ads-bar-bg{height:8px;background:var(--purple-mid);border-radius:100px;width:120px;overflow:hidden;}
+.ads-bar-fill{height:8px;border-radius:100px;}
+.ads-label{font-size:11px;font-weight:700;width:60px;flex-shrink:0;}
+.plan-output{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.8;border:1.5px solid;}
+.plan-output.strong{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.plan-output.growing{background:var(--orange-pale);border-color:#FCD34D;color:#92400E;}
+.plan-output.building{background:var(--purple-pale);border-color:var(--purple-mid);color:var(--purple-dark);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.4 &middot; Capstone &amp; Workforce Readiness</div>
+  <h1>Your AI Readiness Self-Assessment: What Do You Know, What Are You Still Building?</h1>
+  <p class="hero-sub">Honest self-assessment is one of the most underrated professional skills. This assessment helps you see clearly where you're solid, where you're growing, and what to prioritize next — and gives you a personal learning plan you can take away.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>Not everything in this certification will have landed at the same depth. Some concepts clicked immediately. Others are still coming into focus. Both of those are normal — and both are useful to know about yourself.</p>
+  <p>This assessment isn't a test with right and wrong answers. It's a structured self-reflection tool. Your honest ratings produce a personal learning plan — areas where you're ready to apply what you know right now, and areas worth revisiting or building further.</p>
+  <p><mark>Honest self-assessment is itself a professional skill</mark>. Workers who can accurately describe what they know and what they're still learning are more trusted than those who overclaim. This assessment helps you practice that honesty with yourself first.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Rate Yourself Across Five Domains</h2>
+  <p>For each competency, choose: <strong>Solid</strong> (I could explain this to someone and apply it on the job), <strong>Growing</strong> (I understand it but wouldn't feel fully confident using it yet), or <strong>Still Building</strong> (I need to revisit this — it hasn't clicked completely). Complete all items, then click "Generate My Plan."</p>
+
+  <div class="assessment-box">
+    <div class="ab-label">AI Readiness Self-Assessment</div>
+    <div class="ab-title">25 Core Competencies from This Certification</div>
+    <div class="ab-sub">Be honest — this is just for you. Your plan is generated from your real ratings, not your aspirational ones.</div>
+    <div class="ab-progress"><div class="ab-progress-fill" id="ab-fill" style="width:0%"></div></div>
+    <div id="ab-domains"></div>
+    <button style="background:var(--purple);color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px;" onclick="generatePlan()">Generate My Learning Plan →</button>
+    <div class="ab-score-display" id="ab-results"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A student completing this self-assessment rates several competencies as "Still Building" rather than "Solid." What does this most accurately indicate?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">She didn't study hard enough and needs to repeat the entire certification</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">She has specific areas where her understanding needs deepening — and now she knows exactly what to prioritize next, which is more useful than vague "I should review everything"</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">She should hide these gaps from employers and only mention her "Solid" areas</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Her certification is incomplete</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Honest self-assessment that identifies specific gaps is enormously more useful than either pretending everything is solid or vaguely knowing "I should review the material." Knowing specifically that she's Still Building on AI quality inspection flag review means she can go back to those specific articles, practice that specific skill, and have a clear answer when an interviewer asks her about her experience in that area. Specific gaps are fixable. Vague uncertainty is not.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Identifying gaps through honest self-assessment is a professional strength, not a failure. The certification is complete — self-assessment is part of it, not a verdict on completion. Hiding gaps from employers is counterproductive (they'll surface in the job). The value of rating things as "Still Building" is exactly what Answer B says: you now know specifically what to prioritize, which is far more actionable than vague awareness that "some things didn't fully click."</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What This Assessment Established</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Your AI readiness across five domains: AI Fundamentals, Diagnostics & Maintenance, Safety & Quality, Planning & Communication, and Career & Growth.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A specific learning plan based on your honest ratings — not a generic "review everything," but the specific areas worth your attention next.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Honest self-assessment is itself a professional skill. Workers who know what they know — and what they're still building — are more trusted than those who overclaim.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Save your results or screenshot the plan. This is documentation of your growth and your priorities — useful for portfolio evidence, TRIO program documentation, and conversations with advisors.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var domains=[
+  {title:"AI Fundamentals",items:[
+    "I can explain what AI does in manufacturing — not in vague terms, but specifically: it analyzes sensor data, flags patterns, generates recommendations.",
+    "I understand the difference between AI-generated outputs and verified human decisions — and why that distinction matters.",
+    "I can describe what a false positive is in AI systems and give an example of how it occurs in maintenance or quality contexts.",
+    "I know the main risk of over-trusting AI outputs — and what can go wrong when the human review step is skipped.",
+    "I can explain AI literacy to a coworker or in a job interview in two to three sentences."
+  ]},
+  {title:"Diagnostics & Predictive Maintenance",items:[
+    "I understand how predictive maintenance AI generates alerts from sensor data — what it's measuring and what patterns trigger a flag.",
+    "I know how to physically investigate an AI maintenance alert before deciding whether it's real or a false positive.",
+    "I can describe the difference between a P1/urgent alert and a routine monitoring flag — and what the right response to each is.",
+    "I understand what sensor drift is and why it can cause AI systems to generate false alerts.",
+    "I can document a maintenance investigation clearly — including what the AI flagged, what I physically found, what I did, and what follow-up is needed."
+  ]},
+  {title:"Safety Monitoring & Quality Control",items:[
+    "I understand how AI safety monitoring systems detect hazards — and what physical conditions they can and cannot reliably detect.",
+    "I know the human accountability role in AI-assisted safety decisions — that AI alerts are inputs to human judgment, not final decisions.",
+    "I can review an AI quality inspection flag and describe the physical check I would perform to confirm or dismiss it.",
+    "I understand why quality documentation in regulated industries (medical, aerospace, food) requires human sign-off even when AI screening is used.",
+    "I can describe one real limitation of AI vision inspection systems — a condition under which they are more likely to produce false positives."
+  ]},
+  {title:"Planning, Communication & AI-Assisted Tools",items:[
+    "I understand how AI production scheduling works and what human review is needed to validate, modify, and approve AI-generated plans.",
+    "I can write a professional shift handoff note, maintenance request, and safety alert — and I know what each one must include.",
+    "I know how to use AI tools to draft work communications and what the human review step requires before sending.",
+    "I understand the pre-send checklist and can apply it to verify an AI-drafted message for accuracy, tone, and audience.",
+    "I can explain the difference between using AI as a drafting tool and delegating responsibility to AI — and why the distinction matters professionally."
+  ]},
+  {title:"Career Readiness & Lifelong Learning",items:[
+    "I can describe my AI literacy in two to three specific sentences suitable for a job interview.",
+    "I have at least two résumé bullet points drafted that accurately describe my AI-related skills from this certification.",
+    "I understand the historical pattern of manufacturing technology shifts and why AI literacy matters for long-term career relevance.",
+    "I have identified at least one specific skill or knowledge area I want to build next — with a concrete plan for how I'll do it.",
+    "I understand what lifelong learning looks like as a daily habit — not a dramatic commitment, but consistent small-dose learning over time."
+  ]}
+];
+var ratings={},totalItems=0;
+domains.forEach(function(d){totalItems+=d.items.length;});
+var domsEl=document.getElementById('ab-domains');
+domains.forEach(function(d,di){
+  var sec=document.createElement('div');sec.className='ab-domain';
+  var itemsHtml=d.items.map(function(item,ii){
+    var key=di+'_'+ii;
+    return '<div class="ab-item"><div class="ab-item-text">'+item+'</div>'
+      +'<div class="ab-rating">'
+      +'<button class="ab-btn solid" id="btn'+key+'_0" onclick="rate(\''+key+'\',0)">🟦 Solid</button>'
+      +'<button class="ab-btn growing" id="btn'+key+'_1" onclick="rate(\''+key+'\',1)">🟡 Growing</button>'
+      +'<button class="ab-btn confident" id="btn'+key+'_2" onclick="rate(\''+key+'\',2)">🟩 Still Building</button>'
+      +'</div></div>';
+  }).join('');
+  sec.innerHTML='<div class="ab-domain-title"><div class="ab-domain-num">'+(di+1)+'</div>'+d.title+'</div><div class="ab-items">'+itemsHtml+'</div>';
+  domsEl.appendChild(sec);
+});
+function rate(key,val){
+  ratings[key]=val;
+  var di=key.split('_')[0];
+  for(var v=0;v<3;v++){var b=document.getElementById('btn'+key+'_'+v);if(b){b.classList.toggle('selected',v===val);}}
+  var pct=Object.keys(ratings).length/totalItems*100;
+  document.getElementById('ab-fill').style.width=pct+'%';
+}
+function generatePlan(){
+  if(Object.keys(ratings).length<totalItems){alert('Please rate all '+totalItems+' competencies before generating your plan.');return;}
+  var domScores=domains.map(function(d,di){
+    var total=0,count=d.items.length;
+    d.items.forEach(function(item,ii){var r=ratings[di+'_'+ii]||0;total+=r===0?2:(r===1?1:0);});
+    var pct=total/(count*2);
+    return {name:d.title,pct:pct,count:count,solid:d.items.filter(function(x,ii){return ratings[di+'_'+ii]===0;}).length,growing:d.items.filter(function(x,ii){return ratings[di+'_'+ii]===1;}).length,building:d.items.filter(function(x,ii){return ratings[di+'_'+ii]===2;}).length};
+  });
+  var overallPct=domScores.reduce(function(a,b){return a+b.pct;},0)/domScores.length;
+  var weakest=domScores.slice().sort(function(a,b){return a.pct-b.pct;})[0];
+  var strongest=domScores.slice().sort(function(a,b){return b.pct-a.pct;})[0];
+  var totalBuilding=Object.values(ratings).filter(function(v){return v===2;}).length;
+  var res=document.getElementById('ab-results');
+  var scoreHtml=domScores.map(function(d){
+    var color=d.pct>=.7?'var(--green)':d.pct>=.4?'var(--orange)':'var(--red)';
+    var label=d.pct>=.7?'Strong':d.pct>=.4?'Growing':'Focus area';
+    return '<div class="asd-domain-score"><div class="ads-name">'+d.name+'</div><div class="ads-bar-bg"><div class="ads-bar-fill" style="width:'+Math.round(d.pct*100)+'%;background:'+color+';"></div></div><div class="ads-label" style="color:'+color+';">'+label+'</div></div>';
+  }).join('');
+  var planClass=overallPct>=.7?'strong':overallPct>=.4?'growing':'building';
+  var planText=overallPct>=.7
+    ?'You\'re in strong shape across most domains. Your next step is to apply what you know — in conversations with supervisors, in job applications, and in the capstone simulation. Focus your continued development on <strong>'+weakest.name+'</strong>, which is your lowest-scoring domain. '+totalBuilding+' competencies are Still Building — revisit those specific articles.'
+    :'You\'ve built a solid foundation with clear areas for growth. Your priority domain is <strong>'+weakest.name+'</strong> ('+Math.round(weakest.pct*100)+'% solid). Your '+totalBuilding+' Still Building items are your specific next learning targets — go back to those articles and spend focused time on those concepts before the capstone simulation.';
+  res.className='ab-score-display show';
+  res.innerHTML='<div class="asd-title">Your AI Readiness Profile</div>'+scoreHtml
+    +'<div class="plan-output '+planClass+'"><strong>Your Learning Plan:</strong> '+planText+'</div>'
+    +'<div style="margin-top:12px;font-size:12px;color:var(--gray-muted);line-height:1.7;">📄 Screenshot or save this result for your portfolio, TRIO documentation, or advisor conversation. It shows your current competency level and your specific next priorities.</div>';
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

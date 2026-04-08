@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Comes After This Cert? Career Pathways in AI-Assisted Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* PATHWAY LADDER */
+.pathway-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 0;}
+.pt-tab{padding:9px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.pt-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.pt-panel{display:none;margin-top:20px;}
+.pt-panel.active{display:block;}
+.ladder{display:flex;flex-direction:column;gap:0;}
+.rung{display:flex;gap:0;align-items:stretch;}
+.rung-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.rung-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+.rung-line{width:2px;flex:1;min-height:14px;}
+.rung:last-child .rung-line{background:transparent!important;}
+.rung-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;margin-bottom:10px;margin-left:10px;}
+.rc-level{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.rc-role{font-family:"Fraunces",serif;font-size:16px;font-weight:700;margin-bottom:4px;}
+.rc-salary{font-size:12px;font-weight:600;margin-bottom:8px;}
+.rc-desc{font-size:13px;line-height:1.75;color:var(--gray-text);margin-bottom:8px;}
+.rc-ai{background:var(--purple-pale);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+.rc-ai::before{content:"AI role: ";font-weight:700;}
+.rc-creds{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;}
+.rc-cred{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--gray-soft);color:var(--gray-muted);border:1px solid var(--purple-mid);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.4 &middot; Capstone &amp; Workforce Readiness</div>
+  <h1>What Comes After This Cert? Career Pathways in AI-Assisted Manufacturing</h1>
+  <p class="hero-sub">This certification is step one. Here's the full arc — from entry-level to supervision and specialization — so you can see where you're headed and what to build next for each stage.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>Understanding the full career arc in manufacturing isn't just motivating — it's practical. Knowing what roles exist, what skills they require, and what credentials help you qualify for them lets you make better decisions about what to learn next, what certifications to stack, and what opportunities to look for in your current role.</p>
+  <p>Select your target career track below and see the full ladder — from where this certification puts you to where the track leads.</p>
+
+  <div class="pathway-tabs" id="pt-tabs">
+    <div class="pt-tab active" onclick="setPT(0)">🔧 Maintenance</div>
+    <div class="pt-tab" onclick="setPT(1)">🔍 Quality</div>
+    <div class="pt-tab" onclick="setPT(2)">🏭 Production</div>
+    <div class="pt-tab" onclick="setPT(3)">🤖 Automation</div>
+    <div class="pt-tab" onclick="setPT(4)">📋 Planning</div>
+  </div>
+  <div id="pt-panels"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Skills That Compound Across Every Track</h2>
+  <p>Whatever path you take, three skills show up as differentiators at every level:</p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin:16px 0;">
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:20px;">🧠</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">AI Output Judgment</div><div style="font-size:13px;line-height:1.75;color:var(--gray-text);">The ability to evaluate what an AI system is telling you — verify it, contextualize it, and communicate it clearly — is valuable at every level of every track. This certification built it. Keep building it.</div></div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:20px;">📝</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Professional Communication</div><div style="font-size:13px;line-height:1.75;color:var(--gray-text);">Every leadership and specialist role in manufacturing depends on clear, accurate written and verbal communication. This is the skill that makes every other skill visible to the people who make promotion decisions.</div></div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:20px;">📈</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Demonstrated Adaptability</div><div style="font-size:13px;line-height:1.75;color:var(--gray-text);">A track record of engaging with new technology rather than resisting it — built through consistent small-dose learning — is what supervisors cite most often when explaining why someone was promoted over a more technically skilled peer.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">At which career level do AI literacy skills have the most impact on salary and advancement speed?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Only at senior or specialist levels — entry-level roles don't differentiate on AI skills yet</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Only at entry level — after a few years, everyone has the same AI skills anyway</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">At the transition points between levels — entry to mid, and mid to lead/specialist — where AI literacy is a documented differentiator among similarly qualified candidates</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">It doesn't matter — employers care about technical trade skills more than AI literacy at all levels</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. AI literacy has its highest impact at transition points — when two similarly qualified candidates are competing for the same next-level role. At those moments, documented AI literacy (a certification, demonstrable skills, specific language in the interview) is a differentiating factor that breaks ties in a worker's favor. Entry-level roles are increasingly noting AI awareness as preferred. And the workers who bring AI literacy into mid-level roles early become the candidates for specialist and lead roles faster than peers who built those skills later.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Answer C is correct. AI literacy matters at every level, but its competitive impact is highest at transition points — when candidates are similarly qualified on traditional skills and AI literacy is the differentiator. Entry-level job postings increasingly mention it as preferred. Mid-level advancement is where having documented AI skills most clearly separates workers. And specialist roles increasingly require it as a baseline. Building AI literacy now means arriving at each transition point already qualified.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Each manufacturing career track — maintenance, quality, production, automation, planning — has a clear ladder from entry to lead/specialist, with specific skills and credentials at each level.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">This certification positions you at the entry to mid-level transition in your track — with AI literacy documented and the specific skills needed to make that case in a job interview or promotion conversation.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Three skills compound across every track and every level: AI output judgment, professional communication, and demonstrated adaptability. These are worth building continuously regardless of which path you take.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The next credentials worth stacking depend on your track — but all of them build on the AI literacy foundation this certification established.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var pathways=[
+  {name:"Maintenance",rungs:[
+    {level:"Entry Level",dot:"#c084fc",line:"#E8D5FF",role:"Maintenance Assistant / Technician I",salary:"$38,000–$50,000",desc:"Performs routine PM tasks, responds to work orders, assists senior technicians. Learns facility-specific equipment and systems.",ai:"Monitors basic alert queues; observes how senior techs investigate AI maintenance flags; learns to document findings in CMMS.",creds:["OSHA 10","MSSC CPT","AI in Mfg. Cert ✓"]},
+    {level:"Mid Level",dot:"#7B2FBE",line:"#E8D5FF",role:"Maintenance Technician II / Senior Technician",salary:"$50,000–$68,000",desc:"Independently investigates and resolves equipment faults. Leads PM tasks. Begins training newer technicians. Owns specific equipment areas.",ai:"Independently reviews and investigates predictive maintenance AI alerts. Identifies false positive patterns. Communicates findings to maintenance supervisor.",creds:["OSHA 30","IBM Maximo","Rockwell PLC basics","SMRP CMRT"]},
+    {level:"Lead Level",dot:"#4A1580",line:"#E8D5FF",role:"Maintenance Lead / Reliability Technician",salary:"$65,000–$82,000",desc:"Leads a team of technicians. Owns facility reliability metrics. Coordinates with operations and engineering on equipment performance.",ai:"Analyzes AI reliability data across equipment fleet. Presents maintenance trends and recommendations to plant management. Evaluates new AI maintenance tools.",creds:["SMRP CMRP","Vibration analysis cert","Reliability engineering basics"]},
+    {level:"Specialist / Supervisor",dot:"#1e1547",line:"transparent",role:"Maintenance Supervisor / Reliability Engineer",salary:"$78,000–$105,000",desc:"Full team leadership or engineering specialization in reliability and asset management. Partners with plant management on capital decisions.",ai:"Leads AI system evaluation and deployment. Defines alert thresholds and escalation protocols. Trains facility on AI-human workflow.",creds:["SMRP CMRP","Reliability engineering degree or certificate","PMP (optional)"]}
+  ]},
+  {name:"Quality",rungs:[
+    {level:"Entry Level",dot:"#c084fc",line:"#E8D5FF",role:"Quality Inspector / Technician I",salary:"$36,000–$48,000",desc:"Performs incoming, in-process, and final inspection. Documents defects. Follows quality procedures and work instructions.",ai:"Reviews AI vision system flags; performs physical part verification to confirm or dismiss AI-identified defects; documents disposition.",creds:["OSHA 10","MSSC CPT","AI in Mfg. Cert ✓"]},
+    {level:"Mid Level",dot:"#7B2FBE",line:"#E8D5FF",role:"Quality Analyst / Technician II",salary:"$48,000–$65,000",desc:"Performs root cause analysis on defect trends. Runs SPC charts. Leads first-article inspection on new products. Trains new inspectors.",ai:"Analyzes AI quality data trends to identify systemic issues. Uses quality management software to generate trend reports. Communicates findings to quality manager.",creds:["ASQ CQI","SPC certification","QMS software proficiency"]},
+    {level:"Lead Level",dot:"#4A1580",line:"#E8D5FF",role:"Quality Lead / Quality Engineer I",salary:"$62,000–$85,000",desc:"Leads quality team. Manages corrective action processes. Supports customer quality audits. Owns process documentation for quality systems.",ai:"Configures AI quality system parameters. Validates AI inspection accuracy against physical sampling. Presents AI quality data to customers and leadership.",creds:["ASQ CQE","ISO 9001 internal auditor","Six Sigma Green Belt"]},
+    {level:"Specialist / Supervisor",dot:"#1e1547",line:"transparent",role:"Quality Engineer / Quality Manager",salary:"$80,000–$115,000",desc:"Full quality system ownership. Leads certification audits (ISO, IATF, FDA). Partners with design and manufacturing on quality by design.",ai:"Leads AI quality tool selection and validation. Defines quality system requirements for AI-integrated production. Manages regulatory compliance for AI-assisted inspection.",creds:["ASQ CQE or CQM","ISO lead auditor","Six Sigma Black Belt (optional)"]}
+  ]},
+  {name:"Production",rungs:[
+    {level:"Entry Level",dot:"#c084fc",line:"#E8D5FF",role:"Production Operator / Assembly Technician",salary:"$34,000–$46,000",desc:"Operates machines, performs assembly tasks, monitors output, reports problems. Follows standard work instructions.",ai:"Monitors AI production dashboards; reports anomalies; uses AI-assisted tools to draft shift handoff notes reviewed by supervisor.",creds:["OSHA 10","MSSC CPT","AI in Mfg. Cert ✓"]},
+    {level:"Mid Level",dot:"#7B2FBE",line:"#E8D5FF",role:"Production Technician / Senior Operator",salary:"$44,000–$58,000",desc:"Runs complex processes independently. Performs setup and changeovers. Trains new operators. Supports continuous improvement projects.",ai:"Reviews AI production scheduling recommendations; flags discrepancies between AI plan and floor reality; communicates schedule changes to team.",creds:["MSSC CPT+","Six Sigma Yellow or Green Belt","ERP system proficiency"]},
+    {level:"Lead Level",dot:"#4A1580",line:"#E8D5FF",role:"Production Lead / Team Leader",salary:"#56,000–$74,000",desc:"Leads a production team. Manages daily output targets. Resolves production issues. Coordinates with maintenance and quality.",ai:"Monitors AI performance dashboards across team; communicates AI insights to production manager; supports AI tool rollouts on the floor.",creds:["OSHA 30","Six Sigma Green Belt","Team leadership training"]},
+    {level:"Specialist / Supervisor",dot:"#1e1547",line:"transparent",role:"Production Supervisor / Operations Manager",salary:"$70,000–$100,000",desc:"Full production shift or area ownership. P&L awareness. Partners with engineering, maintenance, quality, and logistics.",ai:"Leads AI-assisted production planning review. Approves and modifies AI-generated schedules. Presents production AI data to plant management.",creds:["Six Sigma Black Belt (optional)","Operations management degree or certificate","PMP (optional)"]}
+  ]},
+  {name:"Automation",rungs:[
+    {level:"Entry Level",dot:"#c084fc",line:"#E8D5FF",role:"Automation Assistant / Production Support",salary:"$38,000–$52,000",desc:"Supports automation technicians on installations and maintenance. Monitors automated systems. Responds to basic faults under supervision.",ai:"Observes how AI monitoring flags automation system faults; assists with documentation of AI-identified alerts and resolutions.",creds:["OSHA 10","UR Academy Core Track","AI in Mfg. Cert ✓"]},
+    {level:"Mid Level",dot:"#7B2FBE",line:"#E8D5FF",role:"Automation Technician",salary:"$54,000–$74,000",desc:"Programs and maintains robots, cobots, and automated systems. Troubleshoots automation faults independently. Supports new system installation.",ai:"Works with AI monitoring platforms for automated equipment; investigates AI-generated fault alerts; programs cobot paths with AI-assisted optimization tools.",creds:["UR Academy Advanced","FANUC certification","PLC programming (Rockwell, Siemens)","OSHA 30"]},
+    {level:"Lead Level",dot:"#4A1580",line:"#E8D5FF",role:"Automation Lead / Systems Integrator",salary:"$72,000–$95,000",desc:"Leads automation projects from specification through commissioning. Evaluates new automation technologies. Trains automation team.",ai:"Evaluates AI automation tools and recommends facility adoption. Leads AI-human workflow design for new automated lines.",creds:["Certified Automation Professional (ISA)","Six Sigma Green Belt","Project management basics"]},
+    {level:"Specialist / Supervisor",dot:"#1e1547",line:"transparent",role:"Automation Engineer / Controls Engineer",salary:"$88,000–$130,000",desc:"Full automation system design and integration. Drives Industry 4.0 adoption. Partners with operations and IT on digital factory initiatives.",ai:"Leads AI system architecture decisions for automation. Defines data requirements for AI predictive and prescriptive tools. Manages AI safety validation.",creds:["CAP or similar engineering credential","Automation/controls engineering degree or certificate"]}
+  ]},
+  {name:"Planning",rungs:[
+    {level:"Entry Level",dot:"#c084fc",line:"#E8D5FF",role:"Production Planner Assistant / Scheduler",salary:"$38,000–$50,000",desc:"Supports production planning with data entry, schedule distribution, material tracking. Learns ERP and planning systems.",ai:"Assists with reviewing AI-generated production schedules; flags discrepancies between AI plan and actual capacity or material availability.",creds:["OSHA 10","ERP system basics (SAP, Oracle)","AI in Mfg. Cert ✓"]},
+    {level:"Mid Level",dot:"#7B2FBE",line:"#E8D5FF",role:"Production Planner / Materials Coordinator",salary:"$50,000–$67,000",desc:"Independently manages production schedules and material flows. Coordinates across departments. Responds to schedule disruptions.",ai:"Reviews and modifies AI scheduling recommendations; uses AI demand forecasting data to adjust plans; communicates AI-assisted schedule changes professionally.",creds:["APICS CPIM","SAP or Oracle proficiency","Six Sigma Green Belt (optional)"]},
+    {level:"Lead Level",dot:"#4A1580",line:"#E8D5FF",role:"Senior Planner / Supply Chain Analyst",salary:"$65,000–$85,000",desc:"Leads planning team. Owns master production schedule. Supports S&OP process. Analyzes planning performance metrics.",ai:"Manages AI planning system configuration and review. Presents AI demand and capacity data to operations leadership. Evaluates new AI planning tools.",creds:["APICS CSCP","Supply chain analytics","Advanced ERP system certification"]},
+    {level:"Specialist / Supervisor",dot:"#1e1547",line:"transparent",role:"Planning Manager / Supply Chain Manager",salary:"$80,000–$115,000",desc:"Full supply chain visibility. Partners with commercial and operations leadership on capacity strategy. Leads S&OP and IBP.",ai:"Oversees AI-integrated planning systems. Sets performance benchmarks for AI scheduling accuracy. Leads AI planning tool selection and vendor management.",creds:["APICS CSCP","MBA or supply chain degree (optional)","PMP (optional)"]}
+  ]}
+];
+var ptPanelsEl=document.getElementById('pt-panels');
+pathways.forEach(function(pw,i){
+  var panel=document.createElement('div');panel.className='pt-panel'+(i===0?' active':'');
+  var lHtml='<div class="ladder">';
+  pw.rungs.forEach(function(r,ri){
+    var isLast=ri===pw.rungs.length-1;
+    var credHtml=r.creds.map(function(c){return '<span class="rc-cred">'+c+'</span>';}).join('');
+    lHtml+='<div class="rung">'
+      +'<div class="rung-left"><div class="rung-dot" style="background:'+r.dot+';border:3px solid #fff;"></div><div class="rung-line" style="background:'+(isLast?'transparent':r.line)+';"></div></div>'
+      +'<div class="rung-card"><div class="rc-level" style="color:'+r.dot+';">'+r.level+'</div>'
+      +'<div class="rc-role" style="color:'+r.dot+';">'+r.role+'</div>'
+      +'<div class="rc-salary" style="color:'+r.dot+';">'+r.salary+' / year</div>'
+      +'<div class="rc-desc">'+r.desc+'</div>'
+      +'<div class="rc-ai">'+r.ai+'</div>'
+      +'<div class="rc-creds">'+credHtml+'</div></div></div>';
+  });
+  lHtml+='</div>';
+  panel.innerHTML=lHtml;
+  ptPanelsEl.appendChild(panel);
+});
+function setPT(i){
+  document.querySelectorAll('.pt-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});
+  document.querySelectorAll('.pt-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

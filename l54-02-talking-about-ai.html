@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Talk About AI on Your Résumé and in Job Interviews</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* RESUME SECTION */
+.resume-demo{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rd-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rd-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.rd-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.rd-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.rd-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.rd-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.rd-panel{display:none;}
+.rd-panel.active{display:block;}
+.resume-block{background:#fff;border:1.5px solid #E5E7EB;border-radius:12px;padding:20px 22px;font-family:"DM Sans",sans-serif;}
+.rb-section-header{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#374151;border-bottom:2px solid #E5E7EB;padding-bottom:6px;margin-bottom:14px;}
+.rb-entry{margin-bottom:14px;}
+.rb-entry:last-child{margin-bottom:0;}
+.rb-role{font-size:14px;font-weight:700;color:#111827;}
+.rb-company{font-size:13px;color:#6B7280;margin-bottom:6px;}
+.rb-bullets{list-style:none;padding:0;}
+.rb-bullets li{font-size:13px;line-height:1.75;color:#374151;padding-left:14px;position:relative;margin-bottom:3px;}
+.rb-bullets li::before{content:"•";position:absolute;left:0;color:#7B2FBE;font-weight:700;}
+.rb-bullets li mark{background:#E9D5FF;color:#4A1580;padding:1px 4px;border-radius:3px;}
+.weak-vs-strong{display:flex;flex-direction:column;gap:10px;margin:12px 0;}
+.wvs-item{border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.75;border:1.5px solid;}
+.wvs-item.weak{background:#F9FAFB;color:#6B7280;border-color:#E5E7EB;}
+.wvs-item.strong{background:var(--green-pale);color:var(--green);border-color:var(--green);}
+.wvs-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.wvs-item.weak .wvs-label{color:#9CA3AF;}
+.wvs-item.strong .wvs-label{color:var(--green);}
+.copy-btn{background:var(--purple);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;margin-top:8px;}
+
+/* INTERVIEW SIM */
+.interview-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.is-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.is-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.is-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.is-qs{display:flex;flex-direction:column;gap:14px;}
+.is-q{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;}
+.is-q-text{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:12px;}
+.is-answer-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px;}
+.is-answer{background:var(--green-pale);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--green);line-height:1.85;border:1px solid var(--green);}
+.is-why{background:var(--purple-pale);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+.is-why::before{content:"Why this works: ";font-weight:700;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.4 &middot; Capstone &amp; Workforce Readiness</div>
+  <h1>How to Talk About AI on Your Résumé and in Job Interviews</h1>
+  <p class="hero-sub">This is the most career-accelerating article in the certification. How you describe what you know is almost as important as what you know. This article gives you the exact language — for your résumé, for the interview room, and for conversations with your current supervisor.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Language Matters as Much as Knowledge</h2>
+  <p>Two workers can have exactly the same skills and get very different outcomes from a hiring process — because one of them can articulate what they know and the other can't. Knowledge that you can't describe clearly is invisible to the people making decisions about you.</p>
+  <p>This is especially true for AI skills in manufacturing, because most candidates in the job market right now either say nothing about AI (underusing what they know) or overclaim AI experience they don't have (which falls apart immediately in an interview). <mark>The sweet spot — specific, accurate, appropriately humble — is where this certification puts you.</mark></p>
+
+  <div class="pull-quote">
+    <p>When someone can tell me specifically what they know about AI in manufacturing — not 'I'm comfortable with technology' but the actual functions, the actual judgment calls, the actual limits — that's immediately impressive. That kind of specificity is rare.</p>
+    <p style="font-style:normal;font-size:14px;color:rgba(74,21,128,.7);margin-top:10px;">— Manufacturing HR Director</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Your Résumé — Three Sections to Update</h2>
+  <p>Select each section below to see what strong AI-related résumé content looks like — with examples for different experience levels and roles.</p>
+
+  <div class="resume-demo">
+    <div class="rd-label">Résumé Content Guide</div>
+    <div class="rd-title">Three Places AI Skills Appear on a Résumé</div>
+    <div class="rd-sub">Select a section to see what strong content looks like, with weak vs. strong comparisons and copyable bullet points.</div>
+    <div class="rd-tabs">
+      <div class="rd-tab active" onclick="setRD(0)">Skills Section</div>
+      <div class="rd-tab" onclick="setRD(1)">Experience Section</div>
+      <div class="rd-tab" onclick="setRD(2)">Certifications Section</div>
+    </div>
+    <div id="rd-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Interview Questions — With Strong Answers</h2>
+  <p>These are the five questions most likely to come up in a manufacturing interview when AI experience is listed on your résumé. Read each strong answer multiple times. Then close the article and say each one out loud from memory. That's how you make them yours.</p>
+
+  <div class="interview-sim">
+    <div class="is-label">Interview Preparation</div>
+    <div class="is-title">Five Questions — Five Strong Answers</div>
+    <div class="is-sub">Read each answer, understand why it works, then practice saying it out loud without looking.</div>
+    <div class="is-qs" id="is-qs"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Which of the following résumé bullets best represents AI skills from this certification?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">A: "Experienced with AI and technology"</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">B: "Completed AI certification covering manufacturing applications"</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">C: "Completed Advanced AI in Manufacturing Certification covering predictive maintenance, AI quality inspection, and safety monitoring; trained in reviewing AI-generated alerts and applying human judgment to verify findings before action"</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">D: "Proficient in all AI tools used in manufacturing environments"</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Answer C is correct. It names the specific certification (verifiable), specifies the application areas (not vague), and describes the actual skill (reviewing AI-generated alerts and applying human judgment). This is specific, accurate, and appropriately scoped — it doesn't overclaim. A hiring manager reading Answer C knows exactly what the candidate knows and can ask follow-up questions that the candidate can genuinely answer. Answers A and D are vague or overclaiming. Answer B is too brief to differentiate.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Answer C is the strongest. It names the certification, specifies the areas (predictive maintenance, quality inspection, safety monitoring), and describes the actual skill being claimed (reviewing AI alerts and applying human judgment). Answer A is too vague to mean anything. Answer B is technically accurate but too brief to differentiate you from other candidates. Answer D overclaims — "proficient in all AI tools" is the kind of statement that falls apart immediately in an interview. Specific, accurate, and appropriately scoped is the target.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI skills belong in three places on a résumé: the skills section (with specific tool and system knowledge), the experience section (as action-verb bullet points tied to outcomes), and the certifications section (with the full certification name).</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The strongest résumé bullets are specific, accurate, and appropriately scoped — they don't overclaim ("expert in all AI tools") and they don't underclaim ("familiar with technology"). They name what you specifically know how to do.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The five most common AI interview questions in manufacturing — and the answers that demonstrate genuine, specific knowledge rather than general enthusiasm.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Practice matters. Reading the answers is not the same as being able to say them fluently in an interview. Close this article and practice each answer out loud until it feels like your own language, not a script.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var rdPanels=[
+  {label:"Skills Section",content:`<p style="font-size:14px;color:var(--gray-muted);margin-bottom:14px;line-height:1.7;">The skills section is where you list specific competencies. AI skills belong here as specific, named capabilities — not vague descriptors. Here's the difference:</p>
+<div class="weak-vs-strong">
+<div class="wvs-item weak"><div class="wvs-label">❌ Weak — too vague</div>AI knowledge · Technology proficiency · Comfortable with new systems</div>
+<div class="wvs-item strong"><div class="wvs-label">✅ Strong — specific and verifiable</div>Predictive maintenance AI alert review · AI quality inspection systems · Manufacturing AI literacy (Advanced AI in Manufacturing Certification) · AI-assisted professional communication · Safety monitoring system interpretation</div>
+</div>
+<button class="copy-btn" onclick="copyText('Predictive maintenance AI alert review · AI quality inspection systems · Manufacturing AI literacy (Advanced AI in Manufacturing Certification) · AI-assisted professional communication · Safety monitoring system interpretation','btn-skills')">Copy Strong Skills List</button>`},
+  {label:"Experience Section",content:`<p style="font-size:14px;color:var(--gray-muted);margin-bottom:14px;line-height:1.7;">In your experience section, AI skills appear as action-verb bullet points tied to real tasks or outcomes. Here's what strong bullets look like for three different roles:</p>
+<div class="resume-block">
+<div class="rb-section-header">Experience — AI-Related Bullet Examples by Role</div>
+<div class="rb-entry">
+<div class="rb-role">Maintenance Technician</div>
+<ul class="rb-bullets">
+<li>Reviewed and triaged AI-generated predictive maintenance alerts; investigated physical findings and documented recommendations for <mark>15+ monthly work orders</mark></li>
+<li>Completed Advanced AI in Manufacturing Certification; applied training to distinguish <mark>real equipment faults from AI false positives</mark> in daily maintenance operations</li>
+<li>Used AI-assisted documentation to write shift handoff notes and maintenance status updates reviewed by supervisors for accuracy before submission</li>
+</ul>
+</div>
+<div class="rb-entry">
+<div class="rb-role">Quality Inspector</div>
+<ul class="rb-bullets">
+<li>Reviewed AI vision system quality flags; conducted physical part inspection to confirm or dismiss alerts with <mark>&lt;2% incorrect disposition rate</mark></li>
+<li>Completed Advanced AI in Manufacturing Certification with focus on AI quality inspection systems and human verification protocols</li>
+<li>Documented quality findings in compliance with facility QMS, maintaining regulatory traceability for all AI-flagged inspections</li>
+</ul>
+</div>
+<div class="rb-entry">
+<div class="rb-role">Production Operator (entry-level)</div>
+<ul class="rb-bullets">
+<li>Monitored AI-assisted production dashboards; identified and reported anomalies to supervisor with <mark>accurate status updates</mark></li>
+<li>Completed Advanced AI in Manufacturing Certification; trained in interpreting AI production alerts and communicating findings clearly</li>
+<li>Drafted professional shift handoff documentation using AI-assisted drafting with supervisor review protocol</li>
+</ul>
+</div>
+</div>`},
+  {label:"Certifications Section",content:`<p style="font-size:14px;color:var(--gray-muted);margin-bottom:14px;line-height:1.7;">List the certification with its full name, the issuing organization, and the completion year. This section is simple — accuracy and specificity matter more than length.</p>
+<div class="resume-block">
+<div class="rb-section-header">Certifications</div>
+<div class="rb-entry">
+<div class="rb-role">Advanced AI in Manufacturing Certification</div>
+<div class="rb-company">AI Essentials · [Year Completed]</div>
+<ul class="rb-bullets">
+<li>Covered AI applications across five manufacturing functions: diagnostics &amp; maintenance, safety monitoring, quality control, production planning, and workforce readiness</li>
+<li>Trained in reviewing AI-generated alerts, applying human judgment to verify findings, and communicating AI-assisted decisions professionally</li>
+</ul>
+</div>
+</div>
+<div style="margin-top:14px;background:var(--orange-pale);border-radius:10px;padding:12px 14px;font-size:13px;color:#92400E;line-height:1.75;">
+<strong>Pro tip:</strong> List certifications in reverse chronological order (most recent first). If you hold other manufacturing certifications (OSHA 10, MSSC CPT, NIMS credentials), list them below this one. A strong certifications section with multiple credentials signals someone who takes professional development seriously.
+</div>`}
+];
+var rdPanelsEl=document.getElementById('rd-panels');
+rdPanels.forEach(function(p,i){
+  var el=document.createElement('div');el.className='rd-panel'+(i===0?' active':'');
+  el.innerHTML=p.content;
+  rdPanelsEl.appendChild(el);
+});
+function setRD(i){
+  document.querySelectorAll('.rd-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});
+  document.querySelectorAll('.rd-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});
+}
+function copyText(text,btnId){
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=event.target;btn.textContent='✓ Copied!';
+    setTimeout(function(){btn.textContent='Copy Strong Skills List';},2000);
+  }).catch(function(){});
+}
+
+var interviewQs=[
+  {q:"Tell me about your experience with AI in manufacturing.",answer:"I completed the Advanced AI in Manufacturing Certification, which covered five application areas: predictive maintenance, safety monitoring, quality inspection, production planning, and workforce development. The core skill throughout the certification is this: AI generates outputs — alerts, flags, recommendations — and the human's role is to review those outputs, investigate them physically, apply judgment, and verify before acting. I understand what AI is good at, where it makes mistakes, and what I'm responsible for verifying.",why:"Names the certification, lists the actual application areas, and describes the real skill (the human role in AI-assisted operations). Doesn't overclaim system access or platform expertise they may not have."},
+  {q:"How comfortable are you working with AI tools you've never seen before?",answer:"I'm comfortable — and I expect to be working with systems I haven't seen before. What matters more than knowing a specific platform is understanding what AI tools are doing in manufacturing and what I need to verify. A predictive maintenance platform I've never logged into is still running on the same principles I've studied. My approach when encountering a new system is to find the documentation first, identify who knows it best in the facility, and focus on the 2–3 functions I'll need most in the first week before expanding from there.",why:"Doesn't claim false familiarity. Instead demonstrates a mature, process-oriented approach to new systems that's more convincing than claiming comfort with tools they may not have used."},
+  {q:"What do you understand about AI limitations in manufacturing?",answer:"AI systems in manufacturing are very good at pattern recognition across large data sets — spotting vibration trends, flagging surface defects, monitoring for safety hazards. But they have real limitations. They produce false positives — alerts where no real problem exists — at rates that vary by system and conditions. They can miss things that fall outside their training data. They don't have the physical context that a worker on the floor has. And they can't make accountability decisions. The human role is to investigate AI outputs, apply judgment that the AI doesn't have, and take responsibility for the final decision.",why:"This is the answer that most differentiates a genuinely trained candidate from one who Googled 'AI in manufacturing.' Understanding AI limitations is actually more impressive to sophisticated hiring managers than knowing AI capabilities."},
+  {q:"How would you handle a situation where the AI alert says one thing and your physical inspection suggests something different?",answer:"I'd trust the physical inspection — with documentation. AI alerts are generated from sensor data, and sensors can drift, fail, or be triggered by conditions they weren't trained to distinguish from real problems. If I physically inspect an alert and find no evidence of the fault the AI flagged, I document what I observed, note the discrepancy, and flag it for my supervisor. I don't just dismiss the alert on my own — I follow the escalation protocol. But I also don't blindly act on an alert that contradicts physical evidence. The human judgment step is exactly why human review is required.",why:"Demonstrates understanding of both the value of AI outputs and the primacy of physical verification. Shows appropriate escalation behavior. This is exactly the mature, reliable judgment that hiring managers want."},
+  {q:"Why does AI literacy matter to you in your manufacturing career?",answer:"Manufacturing is changing fast — predictive maintenance, AI quality systems, AI-assisted scheduling are in facilities right now, and the tools will keep evolving. Workers who understand how these systems work and what they require from the people around them are the ones who stay relevant and get promoted. I didn't complete this certification because I was required to. I completed it because I saw where the industry is headed and I wanted to be ahead of the curve rather than catching up to it.",why:"Specific, personal, forward-looking. Shows initiative (completed it proactively) and genuine understanding of career stakes. Much more compelling than 'AI is the future and I want to be part of it.'"}
+];
+var isEl=document.getElementById('is-qs');
+interviewQs.forEach(function(q){
+  var d=document.createElement('div');d.className='is-q';
+  d.innerHTML='<div class="is-q-text">'+q.q+'</div>'
+    +'<div class="is-answer-label">✅ Strong Answer</div>'
+    +'<div class="is-answer">'+q.answer+'</div>'
+    +'<div class="is-why">'+q.why+'</div>';
+  isEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
