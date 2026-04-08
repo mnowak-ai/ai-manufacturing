@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycle Time, Takt Time, and Throughput: The Three Numbers Every Manufacturing Worker Should Know</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* definition cards */
+.def-cards{display:flex;flex-direction:column;gap:22px;margin:28px 0;}
+.def-card{border-radius:22px;overflow:hidden;border:2px solid;}
+.def-card.ct{border-color:var(--blue);}
+.def-card.tt{border-color:var(--green);}
+.def-card.tp{border-color:var(--purple);}
+.def-head{padding:20px 26px;display:flex;align-items:flex-start;gap:16px;}
+.def-card.ct .def-head{background:var(--blue-pale);}
+.def-card.tt .def-head{background:var(--green-pale);}
+.def-card.tp .def-head{background:var(--purple-pale);}
+.def-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.def-card.ct .def-icon{background:#DBEAFE;}
+.def-card.tt .def-icon{background:#D1FAE5;}
+.def-card.tp .def-icon{background:var(--purple-mid);}
+.def-heading{flex:1;}
+.def-name{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:3px;}
+.def-card.ct .def-name{color:var(--blue);}
+.def-card.tt .def-name{color:var(--green);}
+.def-card.tp .def-name{color:var(--purple-dark);}
+.def-one-line{font-size:14px;font-weight:600;}
+.def-card.ct .def-one-line{color:#2563EB;}
+.def-card.tt .def-one-line{color:#166534;}
+.def-card.tp .def-one-line{color:var(--purple);}
+.def-body{padding:0 26px 22px;background:var(--white);}
+.def-body p{font-size:14px;line-height:1.85;margin-bottom:10px;}
+.def-formula{margin:12px 0;padding:14px 18px;border-radius:12px;}
+.def-card.ct .def-formula{background:var(--blue-pale);border:1px solid var(--blue-mid);}
+.def-card.tt .def-formula{background:var(--green-pale);border:1px solid #6EE7B7;}
+.def-card.tp .def-formula{background:var(--purple-pale);border:1px solid var(--purple-mid);}
+.def-formula-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.def-card.ct .def-formula-label{color:var(--blue);}
+.def-card.tt .def-formula-label{color:var(--green);}
+.def-card.tp .def-formula-label{color:var(--purple);}
+.def-formula-text{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:var(--purple-dark);}
+.def-formula-worked{font-size:13px;margin-top:4px;color:var(--gray-text);}
+.def-example{background:var(--gray-soft);border-radius:10px;padding:10px 14px;font-size:12px;line-height:1.75;color:var(--gray-muted);margin-top:10px;border-left:3px solid;}
+.def-card.ct .def-example{border-color:var(--blue);}
+.def-card.tt .def-example{border-color:var(--green);}
+.def-card.tp .def-example{border-color:var(--purple);}
+
+/* takt comparison */
+.takt-compare{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:22px;padding:28px;margin:28px 0;}
+.tc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.tc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:16px;}
+.tc-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;}
+.tc-table th{background:var(--purple-dark);color:#fff;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;text-align:left;}
+.tc-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--purple-mid);line-height:1.6;vertical-align:top;}
+.tc-table tr:last-child td{border-bottom:none;}
+.tc-table tr:nth-child(even) td{background:rgba(243,234,255,.35);}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px;}
+.status-badge.good{background:var(--green-pale);color:var(--green);border:1px solid #6EE7B7;}
+.status-badge.warn{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.status-badge.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* interactive calculator */
+.calc-wrap{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cw-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cw-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cw-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cw-inputs{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.cw-field{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;}
+.cw-field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:6px;}
+.cw-field-row{display:flex;align-items:center;gap:10px;}
+.cw-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;border-radius:3px;background:var(--purple-mid);outline:none;}
+.cw-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--purple);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.cw-val{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);min-width:90px;text-align:right;}
+.cw-results{display:flex;gap:12px;flex-wrap:wrap;}
+.cw-result{flex:1;min-width:130px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px;text-align:center;}
+.cw-result-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--purple);margin-bottom:5px;}
+.cw-result-num{font-family:"Fraunces",serif;font-size:24px;font-weight:900;color:var(--purple-dark);}
+.cw-result-unit{font-size:11px;color:var(--gray-muted);margin-top:2px;}
+.cw-status{margin-top:14px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;line-height:1.6;}
+.cw-status.green{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.cw-status.orange{background:var(--orange-pale);border:1px solid var(--orange);color:var(--orange);}
+.cw-status.red{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* AI connection */
+.ai-connection{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px;margin:28px 0;color:#fff;}
+.ai-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:10px;}
+.ai-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:16px;}
+.ai-rows{display:flex;flex-direction:column;gap:10px;}
+.ai-row{background:rgba(255,255,255,.07);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;}
+.ai-row-icon{font-size:18px;flex-shrink:0;}
+.ai-row-body{}
+.ai-row-title{font-weight:700;font-size:13px;color:#fff;margin-bottom:2px;}
+.ai-row-text{font-size:12px;line-height:1.7;color:rgba(255,255,255,.75);}
+
+/* quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.3 &middot; Process Optimization</div>
+  <h1>Cycle Time, Takt Time, and Throughput: The Three Numbers Every Manufacturing Worker Should Know</h1>
+  <p class="hero-sub">Three terms appear constantly in process optimization conversations. This article explains all three with simple math, real factory examples, and an interactive calculator so you can see how they connect — and why AI optimization is fundamentally about improving all three together.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why These Three Numbers Matter</h2>
+  <p>Walk onto any production floor, sit in any process improvement meeting, or review any AI optimization report, and you'll encounter cycle time, takt time, and throughput within the first ten minutes. These three numbers describe the fundamental performance of any manufacturing process — how long it takes, how long it should take, and how much gets done.</p>
+  <p>Understanding these numbers means you can immediately read a process performance dashboard, evaluate whether a production line is healthy or struggling, and understand what an AI optimization recommendation is actually trying to improve. They're the vocabulary of manufacturing performance — and they're simple enough to calculate in your head.</p>
+  <div class="pull-quote"><p>Cycle time answers "how long does it take?" Takt time answers "how long should it take, based on demand?" Throughput answers "how much are we actually getting done?" Together, they tell the complete story of a production line's performance.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Three Numbers — Defined and Demonstrated</h2>
+
+  <div class="def-cards">
+
+    <div class="def-card ct">
+      <div class="def-head">
+        <div class="def-icon">⏱️</div>
+        <div class="def-heading">
+          <div class="def-name">Cycle Time</div>
+          <div class="def-one-line">How long it actually takes to complete one unit at a station or through the full line</div>
+        </div>
+      </div>
+      <div class="def-body">
+        <p><strong>Cycle time</strong> is the elapsed time from when a process starts working on one unit to when that unit passes to the next step. It's measured in seconds, minutes, or hours depending on the product. Critically, cycle time is the <em>actual</em> time — not the planned or theoretical time. It includes any setup time, any rework, any waiting within the step, and any variability from one unit to the next.</p>
+        <p>For a full production line, the <strong>line cycle time</strong> is the slowest station's cycle time — because that's the bottleneck controlling throughput. You can measure individual station cycle times and total line cycle time (often called the <strong>lead time</strong> — the time from when an order starts until the finished product comes out).</p>
+        <div class="def-formula">
+          <div class="def-formula-label">The Key Measurement</div>
+          <div class="def-formula-text">Cycle Time = Time Operation Ends − Time Operation Starts</div>
+          <div class="def-formula-worked">Example: Welding starts at 9:04 AM, completes at 9:22 AM → Cycle time = 18 minutes</div>
+        </div>
+        <div class="def-example"><strong>What Good vs. Bad Looks Like:</strong> A station with a planned cycle time of 10 minutes running at an actual average of 10.2 minutes is performing well (+2%). The same station running at 14.5 minutes (+45%) has a serious problem — and is likely the bottleneck. AI process monitoring tracks actual vs. planned cycle time for every station, every shift, continuously.</div>
+      </div>
+    </div>
+
+    <div class="def-card tt">
+      <div class="def-head">
+        <div class="def-icon">🎯</div>
+        <div class="def-heading">
+          <div class="def-name">Takt Time</div>
+          <div class="def-one-line">How fast you need to produce — set by customer demand, not by the machine</div>
+        </div>
+      </div>
+      <div class="def-body">
+        <p><strong>Takt time</strong> (from the German word for "beat" or "pulse") is the pace of production required to meet customer demand. It's not a measurement of how fast you currently produce — it's a target set entirely by the market. If customers want 240 units during an 8-hour shift, you need to produce one unit every 2 minutes. That's your takt time: 2 minutes.</p>
+        <p>Takt time is a planning tool. It tells production managers and process engineers what the cycle time at every station needs to be, at most, to keep up with customer demand. If any station's cycle time exceeds the takt time, the line can't meet demand — you'll always be behind. If the line's cycle time is significantly below takt time, you're producing faster than demand requires — which may mean opportunity to slow down, reduce costs, or take on more orders.</p>
+        <div class="def-formula">
+          <div class="def-formula-label">The Takt Time Formula</div>
+          <div class="def-formula-text">Takt Time = Available Production Time ÷ Customer Demand</div>
+          <div class="def-formula-worked">Example: 480 minutes available per shift ÷ 120 units ordered = <strong>4 minutes takt time</strong>. Every station must complete its operation in 4 minutes or less to keep up.</div>
+        </div>
+        <div class="def-example"><strong>"Takt" comes from German music:</strong> The word originally referred to the conductor's baton — the beat that keeps the orchestra in sync. In manufacturing, takt time is the beat the production line has to keep pace with. Every station, every process, every worker operates to that beat. Go slower and you fall behind the customer. Go significantly faster and you're potentially overproducing.</div>
+      </div>
+    </div>
+
+    <div class="def-card tp">
+      <div class="def-head">
+        <div class="def-icon">📈</div>
+        <div class="def-heading">
+          <div class="def-name">Throughput</div>
+          <div class="def-one-line">How many finished units the line actually produces per hour or shift</div>
+        </div>
+      </div>
+      <div class="def-body">
+        <p><strong>Throughput</strong> is the count of finished, conforming units that emerge from the end of the production line per unit of time — per hour, per shift, per day. It's the bottom-line output measure: how much good product actually got made?</p>
+        <p>Throughput differs from production starts (how many units began the process) because some units may be scrapped or require rework before they pass quality inspection. A line that starts 500 parts but produces 60 defects has a throughput of 440 good parts — not 500.</p>
+        <p>Throughput is ultimately controlled by the bottleneck. No matter how fast every other station runs, the line can only produce finished units as fast as the slowest step allows.</p>
+        <div class="def-formula">
+          <div class="def-formula-label">The Key Calculation</div>
+          <div class="def-formula-text">Throughput = 60 minutes ÷ Bottleneck Cycle Time (in minutes)</div>
+          <div class="def-formula-worked">Example: Bottleneck cycle time = 8 minutes → Throughput = 60 ÷ 8 = <strong>7.5 units/hour</strong>. Reduce the bottleneck to 6 minutes → Throughput = 10 units/hour — a 33% gain with no other changes.</div>
+        </div>
+        <div class="def-example"><strong>First-Pass Yield:</strong> Many manufacturing operations also track "first-pass yield" alongside throughput — the percentage of units that complete the full process without any rework or rejection. A line producing 100 units/hour with 95% first-pass yield delivers 95 good units/hour. AI process optimization targets both throughput rate and first-pass yield simultaneously.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How the Three Numbers Relate to Each Other</h2>
+  <p>These three numbers work as a system. Understanding how they relate makes it possible to quickly read any production situation and know what action is needed.</p>
+
+  <div class="takt-compare">
+    <div class="tc-label">Reading the Situation</div>
+    <div class="tc-title">What Cycle Time vs. Takt Time Tells You</div>
+    <table class="tc-table">
+      <thead>
+        <tr><th>Cycle Time vs. Takt Time</th><th>Status</th><th>What It Means</th><th>What to Do</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cycle Time &lt; Takt Time</strong><br><em>e.g., 6 min cycle, 8 min takt</em></td>
+          <td><span class="status-badge good">✓ Healthy</span></td>
+          <td>The line is producing faster than demand requires. There's a buffer — some flexibility before a delivery deadline is missed.</td>
+          <td>Maintain quality, look for waste reduction opportunities. If the gap is very large, consider whether overcapacity is hiding an opportunity to reduce costs or take additional orders.</td>
+        </tr>
+        <tr>
+          <td><strong>Cycle Time = Takt Time</strong><br><em>e.g., 8 min cycle, 8 min takt</em></td>
+          <td><span class="status-badge warn">⚡ Tight</span></td>
+          <td>The line is producing exactly as fast as demand requires — no buffer. Any disruption (machine slowdown, material delay, defect rework) causes a miss.</td>
+          <td>Build in safety buffer wherever possible. Prioritize reliability over additional speed improvements. Monitor closely for any trend toward the line slowing down.</td>
+        </tr>
+        <tr>
+          <td><strong>Cycle Time &gt; Takt Time</strong><br><em>e.g., 11 min cycle, 8 min takt</em></td>
+          <td><span class="status-badge bad">⚠ Crisis</span></td>
+          <td>The line cannot produce fast enough to meet customer demand. The gap will accumulate — every hour the line falls further behind the order backlog. Overtime, expediting, or missed deadlines are likely.</td>
+          <td>Immediately identify and address the bottleneck driving the cycle time above takt. This is a process improvement emergency — not a scenario to address "next quarter."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Interactive Calculator: Try It With Real Numbers</h2>
+  <p>Use the sliders to set a production scenario. The calculator shows cycle time, takt time, and throughput — and tells you immediately whether the line can meet customer demand.</p>
+
+  <div class="calc-wrap">
+    <div class="cw-label">Interactive Calculator</div>
+    <div class="cw-title">Calculate Your Production Performance</div>
+    <div class="cw-sub">Adjust the sliders to set your scenario. The calculator updates instantly — showing whether your line can meet customer demand.</div>
+    <div class="cw-inputs">
+      <div class="cw-field">
+        <div class="cw-field-label">Bottleneck Cycle Time (minutes per unit)</div>
+        <div class="cw-field-row">
+          <input type="range" class="cw-slider" id="sl-ct" min="1" max="30" value="9" oninput="calcTTT()">
+          <div class="cw-val" id="val-ct">9 min</div>
+        </div>
+      </div>
+      <div class="cw-field">
+        <div class="cw-field-label">Customer Demand (units needed per 8-hr shift)</div>
+        <div class="cw-field-row">
+          <input type="range" class="cw-slider" id="sl-demand" min="10" max="150" value="60" oninput="calcTTT()">
+          <div class="cw-val" id="val-demand">60 units</div>
+        </div>
+      </div>
+      <div class="cw-field">
+        <div class="cw-field-label">Available Production Time (minutes per shift)</div>
+        <div class="cw-field-row">
+          <input type="range" class="cw-slider" id="sl-avail" min="360" max="510" value="450" oninput="calcTTT()">
+          <div class="cw-val" id="val-avail">450 min</div>
+        </div>
+      </div>
+    </div>
+    <div class="cw-results">
+      <div class="cw-result">
+        <div class="cw-result-label">Takt Time</div>
+        <div class="cw-result-num" id="res-tt">7.5</div>
+        <div class="cw-result-unit">minutes per unit (target)</div>
+      </div>
+      <div class="cw-result">
+        <div class="cw-result-label">Throughput (capacity)</div>
+        <div class="cw-result-num" id="res-tp">50</div>
+        <div class="cw-result-unit">units per shift (at current cycle)</div>
+      </div>
+      <div class="cw-result">
+        <div class="cw-result-label">Demand Gap</div>
+        <div class="cw-result-num" id="res-gap">−10</div>
+        <div class="cw-result-unit">units vs. requirement</div>
+      </div>
+    </div>
+    <div class="cw-status" id="cw-status"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Uses These Three Numbers</h2>
+
+  <div class="ai-connection">
+    <div class="ai-label">🤖 AI Process Optimization</div>
+    <div class="ai-title">What AI Does With Cycle Time, Takt Time, and Throughput</div>
+    <div class="ai-rows">
+      <div class="ai-row">
+        <div class="ai-row-icon">📊</div>
+        <div class="ai-row-body">
+          <div class="ai-row-title">Continuous cycle time monitoring for every station</div>
+          <div class="ai-row-text">AI tracks actual cycle times for every operation, every shift, calculating drift from planned times automatically. A station that slips from 8 to 10 minutes over three weeks triggers an alert — before it becomes the bottleneck and pulls throughput below the takt time target.</div>
+        </div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">🎯</div>
+        <div class="ai-row-body">
+          <div class="ai-row-title">Takt time recalculation when demand changes</div>
+          <div class="ai-row-text">When a new customer order is added, an order is cancelled, or demand forecast changes, AI immediately recalculates takt time and identifies which stations — if any — now exceed the new target. The process improvement priority list updates automatically without waiting for a scheduled planning meeting.</div>
+        </div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">📈</div>
+        <div class="ai-row-body">
+          <div class="ai-row-title">Throughput prediction and gap analysis</div>
+          <div class="ai-row-text">AI projects end-of-shift throughput based on current production rate and remaining time — flagging when a shortfall against the order quantity is developing early enough for supervisors to act. "At current pace, you'll complete 83 units by end of shift — 17 short of the 100-unit order" is a real-time alert, not an end-of-shift surprise.</div>
+        </div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">⚡</div>
+        <div class="ai-row-body">
+          <div class="ai-row-title">Improvement impact quantification</div>
+          <div class="ai-row-text">When an AI system identifies a potential bottleneck improvement, it quantifies the throughput gain in terms these three numbers make clear: "Reducing Station 3's cycle time from 22 to 14 minutes would increase throughput from 2.7 to 4.3 units/hour — crossing the takt time threshold and meeting demand without overtime." Decision-makers can immediately evaluate whether the improvement justifies its cost.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">A production line has a bottleneck cycle time of 12 minutes. Customer demand requires 35 units during a 7-hour (420-minute) shift. What is the takt time, what is the current throughput capacity, and is the line meeting demand?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Takt time = 12 min. Throughput = 35 units/shift. The line is meeting demand exactly.</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Takt time = 35 min. Throughput = 12 units/hour. The line is way ahead of demand.</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Takt time = 420 ÷ 35 = 12 minutes per unit. Throughput capacity = 420 ÷ 12 = 35 units per shift. The line is running exactly at takt — it can just meet demand with no buffer. Any disruption will cause a shortfall, so this is a "tight" situation that needs monitoring closely.</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Takt time = 420 ÷ 35 = 12 minutes. Throughput = 5 units/hour. The line is 30 units short of demand.</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Takt time = 420 min ÷ 35 units = 12 min/unit. The bottleneck cycle time is also 12 minutes — exactly equal to takt. Throughput capacity = 420 ÷ 12 = 35 units/shift — exactly meeting demand. This looks like good news, but "exactly at takt" is actually a fragile situation: there's zero buffer. If the bottleneck slips to even 12.5 minutes due to a minor disruption, the shift ends 2 units short. If a machine hiccups for 20 minutes, the shortfall is impossible to recover. A production manager in this situation should be actively looking for opportunities to reduce the bottleneck cycle time slightly — building a small buffer — rather than treating the exact match as success.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Let's work through the math: Takt time = Available time ÷ Demand = 420 min ÷ 35 units = 12 minutes per unit. This means the line needs to produce one unit every 12 minutes to meet customer demand. The bottleneck cycle time is also 12 minutes — which means throughput capacity is exactly 420 ÷ 12 = 35 units per shift. The line is running right at takt — it can just meet demand. But this is a fragile position with zero buffer. Any disruption (even a few minutes of unexpected downtime) causes a shortfall that can't be recovered within the shift.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Cycle time is how long it actually takes to complete one unit at a station or through the full line — measured in real time, not from the plan. The bottleneck station's cycle time sets the line's rate.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Takt time is the pace of production required to meet customer demand — calculated as Available Production Time ÷ Customer Demand. It's a target, not a measurement. Every station's cycle time must be below takt for the line to meet demand.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Throughput is how many finished, conforming units emerge per hour or shift. It's controlled by the bottleneck: Throughput = Available Time ÷ Bottleneck Cycle Time. Fixing the bottleneck is the only way to increase throughput.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">When cycle time exceeds takt time, the line can't meet demand — a process improvement emergency. When cycle time equals takt time, the line can just meet demand but has no buffer. When cycle time is below takt time, there's a healthy margin. AI tracks all three continuously and alerts when the relationship changes.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+function calcTTT(){
+  var ct=parseInt(document.getElementById('sl-ct').value);
+  var demand=parseInt(document.getElementById('sl-demand').value);
+  var avail=parseInt(document.getElementById('sl-avail').value);
+  document.getElementById('val-ct').textContent=ct+' min';
+  document.getElementById('val-demand').textContent=demand+' units';
+  document.getElementById('val-avail').textContent=avail+' min';
+  var takt=Math.round((avail/demand)*10)/10;
+  var cap=Math.floor(avail/ct);
+  var gap=cap-demand;
+  document.getElementById('res-tt').textContent=takt;
+  document.getElementById('res-tp').textContent=cap;
+  document.getElementById('res-gap').textContent=(gap>=0?'+':'')+gap;
+  var statusEl=document.getElementById('cw-status');
+  if(ct<takt){
+    statusEl.className='cw-status green';
+    statusEl.textContent='✅ Healthy — Line can produce '+cap+' units/shift, exceeding the '+demand+'-unit demand by '+gap+' units. Cycle time ('+ct+' min) is below takt ('+takt+' min). There\'s a buffer.';
+  }else if(ct===takt){
+    statusEl.className='cw-status orange';
+    statusEl.textContent='⚡ Tight — Cycle time exactly matches takt time ('+ct+' min each). Line can just meet demand with zero buffer. Any disruption causes a shortfall. Prioritize reliability.';
+  }else{
+    statusEl.className='cw-status red';
+    statusEl.textContent='⚠ Crisis — Cycle time ('+ct+' min) exceeds takt time ('+takt+' min). Line can only produce '+cap+' units/shift — '+Math.abs(gap)+' units short of the '+demand+'-unit demand. Immediate bottleneck action required.';
+  }
+}
+calcTTT();
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
