@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Examples of Continuous Learning in Manufacturing — And What Each One Takes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* EXAMPLE CARD */
+.example-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:24px;overflow:hidden;margin:28px 0;}
+.ec-hero{padding:24px 28px;background:linear-gradient(135deg,var(--purple-dark),#5b21b6);}
+.ec-num{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c084fc;margin-bottom:6px;}
+.ec-title{font-family:"Fraunces",serif;font-size:22px;color:#fff;font-weight:700;margin-bottom:4px;line-height:1.2;}
+.ec-subtitle{font-size:14px;color:rgba(255,255,255,.7);}
+.ec-body{padding:24px 28px;}
+.ec-section{margin-bottom:20px;}
+.ec-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.ec-section-body{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.ec-timeline{display:flex;flex-direction:column;gap:0;}
+.ec-event{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--purple-mid);}
+.ec-event:last-child{border-bottom:none;}
+.ec-week{font-size:11px;font-weight:700;color:var(--purple);width:52px;flex-shrink:0;padding-top:2px;}
+.ec-event-body{}
+.ec-event-title{font-weight:600;font-size:13px;color:var(--purple-dark);margin-bottom:2px;}
+.ec-event-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ec-struggle{background:var(--orange-pale);border-radius:8px;padding:8px 12px;margin-top:5px;font-size:12px;color:#92400E;line-height:1.6;}
+.ec-what-it-took{background:var(--purple-pale);border:1px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin-top:10px;}
+.ewit-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.ewit-items{display:flex;flex-direction:column;gap:6px;}
+.ewit-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--purple-dark);}
+.ewit-item::before{content:"→";color:var(--purple);font-weight:700;flex-shrink:0;}
+
+/* PATTERN BOX */
+.pattern-box{background:var(--green-pale);border:1.5px solid var(--green);border-radius:20px;padding:24px 26px;margin:28px 0;}
+.pb-title{font-family:"Fraunces",serif;font-size:18px;color:var(--green);font-weight:700;margin-bottom:12px;}
+.pb-items{display:flex;flex-direction:column;gap:8px;}
+.pb-item{display:flex;gap:10px;font-size:14px;line-height:1.75;color:#166534;}
+.pb-item::before{content:"✓";font-weight:700;flex-shrink:0;}
+
+/* YOUR TURN */
+.your-turn{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:24px 0;}
+.yt-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.yt-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.yt-field{margin-bottom:12px;}
+.yt-field-label{font-size:13px;font-weight:600;color:var(--purple-dark);margin-bottom:5px;}
+.yt-input{width:100%;border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px 12px;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);resize:vertical;min-height:60px;line-height:1.6;transition:border-color .2s;}
+.yt-input:focus{outline:none;border-color:var(--purple);}
+.yt-note{font-size:12px;color:var(--gray-muted);line-height:1.6;margin-top:10px;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>Three Examples of Continuous Learning in Manufacturing — And What Each One Takes</h1>
+  <p class="hero-sub">The lesson slide shows three examples of continuous learning: a new AI tool, updating safety processes, improving workflow skills. This article gives each one a full walkthrough — what triggered the need, how the learning happened week by week, what it felt like, and what changed as a result.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>Seeing an abstract concept — "continuous learning" — turn into a real story is one of the most useful things education can do. Each example below shows a realistic worker in a realistic manufacturing situation who needed to learn something they didn't know. The story doesn't skip the hard parts: the confusion, the mistakes, the moment something finally clicked. Because that's what continuous learning actually looks like.</p>
+</div>
+
+<div class="section fade-in" id="example1">
+  <div class="example-card">
+    <div class="ec-hero">
+      <div class="ec-num">Example 01</div>
+      <div class="ec-title">Learning a New AI Tool</div>
+      <div class="ec-subtitle">Priya — Maintenance Technician — Food Processing Facility — 3 years experience</div>
+    </div>
+    <div class="ec-body">
+      <div class="ec-section">
+        <div class="ec-section-label">What Triggered It</div>
+        <div class="ec-section-body">Priya's facility upgraded from a basic maintenance scheduling calendar to a full predictive maintenance platform — IBM Maximo with AI-assisted work order prioritization. The new system pulled in sensor data from 40+ pieces of production equipment and generated daily alert queues. Priya had never used anything like it. The facility provided a 90-minute group training session on the platform — and then it was live the next day.</div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">Week-by-Week Learning Timeline</div>
+        <div class="ec-timeline">
+          <div class="ec-event"><div class="ec-week">Week 1</div><div class="ec-event-body"><div class="ec-event-title">Overwhelmed and making mistakes</div><div class="ec-event-desc">Priya could navigate the dashboard but didn't understand the priority scoring. She completed high-priority work orders but occasionally dismissed medium-priority alerts she should have investigated. She made two mistakes that a coworker caught — embarrassing but not catastrophic.</div><div class="ec-struggle">Hardest part: Feeling like she was the only one struggling while others seemed to navigate it fine (she later learned most of her coworkers were equally confused but equally quiet about it).</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 2</div><div class="ec-event-body"><div class="ec-event-title">Identified what she didn't understand — specifically</div><div class="ec-event-desc">Instead of feeling generally lost, Priya started writing down the specific things she didn't understand: what the priority scoring algorithm considered, why some vibration alerts were auto-dismissed while others weren't, how to read the trend charts. She had five specific questions.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 3</div><div class="ec-event-body"><div class="ec-event-title">Asked the right person and watched a tutorial</div><div class="ec-event-desc">Priya found out that a maintenance coordinator at a sister facility had been using the same platform for two years. She called her and spent 45 minutes getting her five questions answered. She also found an IBM Maximo YouTube tutorial series and watched two episodes on her lunch breaks.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 4</div><div class="ec-event-body"><div class="ec-event-title">Started building a mental model</div><div class="ec-event-desc">The combination of the expert conversation and the tutorials started connecting. She understood how the priority scoring weighted equipment criticality, recent sensor trends, and maintenance history. She began correlating the alerts with physical machine observations more reliably.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Month 2</div><div class="ec-event-body"><div class="ec-event-title">Became the team's informal resource</div><div class="ec-event-desc">Two months after rollout, coworkers were coming to Priya with questions about the platform. Not because she was an expert — because she was ahead of most of them. Her supervisor noticed and mentioned it in her quarterly review.</div></div></div>
+        </div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">What the Learning Actually Took</div>
+        <div class="ec-what-it-took">
+          <div class="ewit-label">Specific behaviors that made it happen</div>
+          <div class="ewit-items">
+            <div class="ewit-item">Tolerating the discomfort of the first two weeks instead of giving up or pretending</div>
+            <div class="ewit-item">Writing down specific questions instead of feeling generally confused</div>
+            <div class="ewit-item">Seeking out the right expert (not just the nearest coworker)</div>
+            <div class="ewit-item">Watching tutorials on lunch breaks — about 90 minutes total over 3 weeks</div>
+            <div class="ewit-item">Correlating platform outputs with physical observations — using the job itself as practice</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="example-card">
+    <div class="ec-hero">
+      <div class="ec-num">Example 02</div>
+      <div class="ec-title">Updating Safety Processes</div>
+      <div class="ec-subtitle">James — Production Supervisor — Automotive Components Facility — 8 years experience</div>
+    </div>
+    <div class="ec-body">
+      <div class="ec-section">
+        <div class="ec-section-label">What Triggered It</div>
+        <div class="ec-section-body">James's facility installed a new AI-powered safety monitoring system — cameras and sensors that detected PPE compliance violations, people entering restricted zones, and unusual equipment proximity. The system was integrated with his facility's safety reporting platform. OSHA's guidelines on AI safety monitoring in manufacturing had also been updated. James needed to learn both the new technology and the updated regulatory requirements — and quickly, because he was responsible for training his team on the new protocols.</div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">Week-by-Week Learning Timeline</div>
+        <div class="ec-timeline">
+          <div class="ec-event"><div class="ec-week">Week 1</div><div class="ec-event-body"><div class="ec-event-title">Read the regulatory update first</div><div class="ec-event-desc">Before learning the technology, James spent an evening reading the OSHA guideline update — not all of it, but the sections relevant to AI safety monitoring and employer responsibilities. He identified three specific areas where his facility's current documentation would need updating.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 1–2</div><div class="ec-event-body"><div class="ec-event-title">Worked with the vendor to understand system behavior</div><div class="ec-event-desc">The AI safety system vendor provided onsite training. James asked specifically about false positive rates, how the system handled challenging lighting conditions, and what the protocol was when the system and a human observer disagreed on whether a violation occurred. He documented the answers.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 3</div><div class="ec-event-body"><div class="ec-event-title">Tested his own understanding by running a trial</div><div class="ec-event-desc">Before training his team, James spent two hours deliberately testing the system on his shift — walking through scenarios to see how it responded. He found two situations where the system generated false positives. He documented them and flagged them to the vendor.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Week 4</div><div class="ec-event-body"><div class="ec-event-title">Trained his team — starting with the limits, not just the features</div><div class="ec-event-desc">James's team training explicitly covered what the AI system couldn't catch as well as what it could. He shared the false positive scenarios he'd found. His team left with an accurate mental model of the system — not an inflated one.</div><div class="ec-struggle">What made it harder: James had to learn something well enough to teach it, under time pressure, in a domain (AI-assisted safety monitoring) that was genuinely new to him. That required being willing to say "I'm figuring this out too" during the learning phase.</div></div></div>
+        </div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">What the Learning Actually Took</div>
+        <div class="ec-what-it-took">
+          <div class="ewit-label">Specific behaviors that made it happen</div>
+          <div class="ewit-items">
+            <div class="ewit-item">Reading the regulatory update proactively rather than waiting for someone to tell him what changed</div>
+            <div class="ewit-item">Asking vendor experts specific, hard questions about failure modes — not just "how does it work" but "when does it fail?"</div>
+            <div class="ewit-item">Testing his understanding before claiming it by running trial scenarios</div>
+            <div class="ewit-item">Teaching what he learned — which required him to understand it well enough to explain it accurately and honestly</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="example-card">
+    <div class="ec-hero">
+      <div class="ec-num">Example 03</div>
+      <div class="ec-title">Improving Workflow Skills</div>
+      <div class="ec-subtitle">Aaliyah — Quality Inspector → Quality Analyst — Medical Device Facility — 2 years experience</div>
+    </div>
+    <div class="ec-body">
+      <div class="ec-section">
+        <div class="ec-section-label">What Triggered It</div>
+        <div class="ec-section-body">Aaliyah's quality manager mentioned in a team meeting that the facility was moving toward data-driven quality reviews — using trend analysis from their quality management software to identify systemic issues rather than just reviewing individual defects. Aaliyah could use the quality dashboard for basic inspection review, but she had never pulled trend reports or done any kind of comparative analysis. She realized that if data-driven quality was the direction, she needed to develop this skill to stay relevant — and possibly to qualify for the Quality Analyst role she had been eyeing.</div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">Month-by-Month Learning Timeline</div>
+        <div class="ec-timeline">
+          <div class="ec-event"><div class="ec-week">Month 1</div><div class="ec-event-body"><div class="ec-event-title">Identified the specific skill gap — and broke it into parts</div><div class="ec-event-desc">Aaliyah listed what she didn't know: how to pull multi-week trend reports from the QMS, how to read SPC control charts (she'd seen them but didn't fully understand the rules), and how to turn data into a written recommendation. Three separate learning goals.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Month 1–2</div><div class="ec-event-body"><div class="ec-event-title">Learned the QMS reporting features</div><div class="ec-event-desc">Aaliyah found that the quality management software had tutorial videos in its help center she'd never opened. She watched three of them during lunch breaks over two weeks. She then practiced by pulling reports on old data — comparing her outputs to reports she'd seen the quality engineer produce.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Month 2</div><div class="ec-event-body"><div class="ec-event-title">Studied SPC through an online course</div><div class="ec-event-desc">Aaliyah found a free ASQ SPC fundamentals course. She completed it in three weeks — about 30 minutes, three times a week, usually in the evening. She used AI (Claude) to quiz herself on the concepts she found confusing.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Month 3</div><div class="ec-event-body"><div class="ec-event-title">Created her first real analysis — unsolicited</div><div class="ec-event-desc">Without being asked, Aaliyah pulled the last 6 weeks of defect data for her line, identified a pattern (edge defects clustering on one specific station, increasing over 3 weeks), and wrote a one-page summary with a recommendation. She gave it to her quality manager.</div><div class="ec-struggle">The risk: she wasn't sure if this was her place to do. She did it anyway — and the quality manager used her analysis to initiate a tooling inspection that caught a worn insert before it caused a full batch failure.</div></div></div>
+          <div class="ec-event"><div class="ec-week">Month 4</div><div class="ec-event-body"><div class="ec-event-title">Moved into a Quality Analyst role</div><div class="ec-event-desc">The combination of the unsolicited analysis, her new data skills, and her existing inspection expertise gave the quality manager enough evidence that Aaliyah was ready for more responsibility. She was offered the analyst role four months after she started learning the skills it required.</div></div></div>
+        </div>
+      </div>
+      <div class="ec-section">
+        <div class="ec-section-label">What the Learning Actually Took</div>
+        <div class="ec-what-it-took">
+          <div class="ewit-label">Specific behaviors that made it happen</div>
+          <div class="ewit-items">
+            <div class="ewit-item">Noticing the signal in the team meeting — the quality manager's comment about data-driven reviews — and connecting it to her own career</div>
+            <div class="ewit-item">Breaking a vague goal ("learn data analysis") into three specific, learnable sub-skills</div>
+            <div class="ewit-item">Using the help resources that were already built into the software she used every day</div>
+            <div class="ewit-item">Completing a structured course in 30-minute sessions over evenings — not a heroic block of study time</div>
+            <div class="ewit-item">Using AI to quiz herself on concepts — turning passive reading into active recall</div>
+            <div class="ewit-item">Taking the risk of producing unsolicited work that demonstrated the new skills</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Pattern Across All Three</h2>
+  <div class="pattern-box">
+    <div class="pb-title">What Every Successful Learning Journey Had in Common</div>
+    <div class="pb-items">
+      <div class="pb-item">A specific trigger — a new tool, a regulatory change, a strategic signal — that made the learning clearly relevant to their job</div>
+      <div class="pb-item">A willingness to feel confused at the beginning instead of retreating from the discomfort</div>
+      <div class="pb-item">Breaking the learning into specific, manageable pieces rather than treating it as one overwhelming goal</div>
+      <div class="pb-item">Using multiple learning resources — tutorials, experts, hands-on practice, structured courses — not just one</div>
+      <div class="pb-item">Practicing the skill in real work situations — not just studying it in theory</div>
+      <div class="pb-item">Making the learning visible — either by teaching it to others, producing unsolicited work, or communicating it directly to a supervisor</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Your Turn: Start Your Own Learning Story</h2>
+  <p>You don't need a perfect learning plan. You need a starting point. Answer these three questions to identify what you're learning next and how you'll start:</p>
+
+  <div class="your-turn">
+    <div class="yt-label">Your Learning Kickoff</div>
+    <div class="yt-title">Three Questions to Get Started</div>
+    <div class="yt-field">
+      <div class="yt-field-label">What specific skill or knowledge do you want to build next — and why does it matter for your career?</div>
+      <textarea class="yt-input" placeholder="Be specific: not 'learn more about AI' but 'learn how to read predictive maintenance dashboards so I can be more useful during alert investigations...'"></textarea>
+    </div>
+    <div class="yt-field">
+      <div class="yt-field-label">What's the first concrete action you'll take — and when?</div>
+      <textarea class="yt-input" placeholder="e.g., 'Watch the first two modules of the UR Academy cobot training this week during lunch. Takes about 30 minutes total...'"></textarea>
+    </div>
+    <div class="yt-field">
+      <div class="yt-field-label">How will you know when you've learned it? What will you be able to do?</div>
+      <textarea class="yt-input" placeholder="e.g., 'I'll be able to look at the predictive maintenance dashboard and tell my supervisor which alerts I think are real vs. likely false positives, with reasoning...'"></textarea>
+    </div>
+    <div class="yt-note">These answers are just for you. But writing them down makes the intention more concrete — and the research shows that people who write down specific learning intentions are significantly more likely to follow through.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">In Aaliyah's story, what was the most career-accelerating thing she did during her learning journey?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Completing an online SPC course</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Learning how to pull trend reports from the quality management software</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Producing an unsolicited defect analysis using her new skills — making her learning visible to her manager in a way that created direct value</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Asking her manager to assign her to the Quality Analyst role</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The online course and the QMS reporting skills were the foundation — but the thing that actually moved her career was producing unsolicited work that demonstrated those skills in a way that created real value for her team. Her manager didn't promote her because she told him she'd taken a course. He promoted her because he saw her use what she learned to identify a real problem before it became a batch failure. Visible, valuable application of new skills is what turns learning into career advancement.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The course and the QMS skills were necessary foundations — but the career accelerator was the unsolicited defect analysis. She used her new skills to produce work that created real value (identifying a tooling issue before a batch failure) and made her learning visible to her manager without asking him to notice her. That combination — demonstrated competence applied to a real problem — is what led directly to the Quality Analyst role. Asking for the role without demonstrating the skills would have been much less effective.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Learning a new AI tool (Priya), updating safety processes (James), and improving workflow skills (Aaliyah) all followed the same structure: specific trigger → initial confusion → deliberate learning using multiple resources → practice in real situations → making learning visible.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">All three stories include the hard parts: the embarrassing mistakes in week one, the risk of doing unsolicited work, the discomfort of learning under time pressure. Continuous learning isn't comfortable — it's worth it.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Breaking learning into specific sub-skills (not one overwhelming goal), using multiple resources (tutorials, experts, hands-on practice), and making the learning visible to supervisors are the behaviors that separated successful learning from stalled attempts.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The most career-accelerating move is not completing the course — it's applying what you learned to a real problem in a way your supervisor can see. Certificates open doors; demonstrated competence gets you through them.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

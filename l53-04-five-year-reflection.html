@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Could AI Change Your Job in 5 Years? A Structured Reflection Activity</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* ROLE PICKER */
+.role-picker{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:24px 0;}
+.rp-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rp-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.rp-select{width:100%;border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 14px;font-size:15px;font-family:"DM Sans",sans-serif;color:var(--gray-text);background:var(--white);cursor:pointer;}
+.rp-select:focus{outline:none;border-color:var(--purple);}
+
+/* SIMULATION FRAMEWORK */
+.sim-frame{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sf-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sf-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sf-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sf-progress{height:6px;background:var(--purple-mid);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.sf-progress-fill{height:100%;background:var(--purple);border-radius:3px;transition:width .5s ease;}
+.sf-step{display:none;}
+.sf-step.active{display:block;}
+.sf-step-num{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.sf-step-q{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:12px;line-height:1.3;}
+.sf-step-context{font-size:14px;color:var(--gray-muted);line-height:1.7;margin-bottom:14px;padding:10px 12px;background:var(--white);border-radius:8px;border-left:3px solid var(--purple-mid);}
+.sf-textarea{width:100%;border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 14px;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--gray-text);resize:vertical;min-height:80px;line-height:1.65;transition:border-color .2s;}
+.sf-textarea:focus{outline:none;border-color:var(--purple);}
+.sf-checkboxes{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.sf-cb{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border-radius:8px;transition:background .2s;}
+.sf-cb:hover{background:var(--purple-pale);}
+.sf-cb input{margin-top:2px;flex-shrink:0;accent-color:var(--purple);}
+.sf-cb-text{font-size:14px;line-height:1.6;color:var(--gray-text);}
+.sf-nav{display:flex;gap:10px;margin-top:16px;}
+.sf-btn{padding:10px 22px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;border:none;transition:all .2s;}
+.sf-btn.primary{background:var(--purple);color:#fff;}
+.sf-btn.primary:hover{background:var(--purple-dark);}
+.sf-btn.secondary{background:var(--white);color:var(--purple);border:1.5px solid var(--purple-mid);}
+
+/* RESULTS */
+.results-box{display:none;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin-top:14px;}
+.results-box.show{display:block;}
+.rb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:16px;}
+.rb-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--purple-mid);}
+.rb-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.rb-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.rb-section-body{font-size:14px;line-height:1.8;color:var(--gray-text);}
+
+/* EXAMPLE WALKTHROUGH */
+.example-walk{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ew-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ew-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.ew-role{background:var(--purple-pale);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--purple-dark);font-weight:600;}
+.ew-sections{display:flex;flex-direction:column;gap:12px;}
+.ew-section{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.ew-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.ew-section-body{font-size:13px;line-height:1.8;color:var(--gray-text);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation &middot; Reflection Activity</div>
+  <h1>How Could AI Change Your Job in 5 Years? A Structured Reflection Activity</h1>
+  <p class="hero-sub">This is the expanded version of the reflection activity from the lesson video. Work through six guided prompts about your specific career path, then see a complete example of what a finished reflection looks like.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>The lesson slide says: "How could AI change your job in 5 years? Think about: Tasks, Skills, Opportunities." That's the right question — but three bullet points isn't enough scaffolding to actually do the thinking well.</p>
+  <p>This article is the full version. Six structured prompts that walk you through the reflection properly. By the end, you'll have a personal picture of where AI is headed in your career path and what you might want to do about it. <mark>This isn't a prediction exercise — it's a planning exercise.</mark></p>
+</div>
+
+<div class="section fade-in">
+  <h2>First: See a Complete Example</h2>
+  <p>Before doing your own reflection, read through a completed one. This will show you the kind of thinking the activity is designed to produce.</p>
+
+  <div class="example-walk">
+    <div class="ew-label">Completed Example</div>
+    <div class="ew-title">Destiny — Quality Inspector, 2 Years Experience</div>
+    <div class="ew-role">Target role: Quality Control Analyst. 5-year career goal: Quality Engineer.</div>
+    <div class="ew-sections">
+      <div class="ew-section"><div class="ew-section-label">Step 1: My current core tasks</div><div class="ew-section-body">Physical inspection of parts using calipers and micrometers. Reviewing AI vision system flags — deciding which are real defects vs. false positives. Completing inspection records and documentation. First-article inspection on new product runs. Reporting quality metrics to supervisor.</div></div>
+      <div class="ew-section"><div class="ew-section-label">Step 2: Which tasks could AI be doing more of in 5 years?</div><div class="ew-section-body">AI vision systems will almost certainly handle more of the initial screening — cameras are getting better and faster at catching surface defects. Routine documentation might be partially automated. AI will probably get better at identifying defect patterns across production runs faster than I can manually.</div></div>
+      <div class="ew-section"><div class="ew-section-label">Step 3: Which tasks will stay human?</div><div class="ew-section-body">Final judgment on whether a flagged part is actually defective — the AI is still wrong enough that a human has to verify. Root cause investigation — figuring out WHY a defect pattern is happening requires floor knowledge AI doesn't have. Customer-facing communication about quality issues. Any quality decision with regulatory or legal implications. Training new inspectors.</div></div>
+      <div class="ew-section"><div class="ew-section-label">Step 4: Which skills will be more valuable?</div><div class="ew-section-body">Understanding how AI quality systems make decisions and where they fail — so I can evaluate their outputs intelligently. Data analysis skills — reading defect trend data and communicating what it means. Root cause analysis — the more AI handles routine screening, the more valuable the skill of finding WHY problems happen becomes.</div></div>
+      <div class="ew-section"><div class="ew-section-label">Step 5: What opportunities could open up?</div><div class="ew-section-body">If AI handles more routine inspection, quality inspectors who develop data analysis and engineering skills will have a clear path to quality analyst and quality engineer roles. There may be new positions specifically around AI quality system management — configuring, validating, and improving the AI systems themselves.</div></div>
+      <div class="ew-section"><div class="ew-section-label">Step 6: What do I want to learn next?</div><div class="ew-section-body">SPC (Statistical Process Control) — I use control charts but don't fully understand the math behind them. I want to fix that this quarter. The ASQ Quality Inspector certification — studying for it will fill in the gaps in my formal quality knowledge. Python basics or Excel data analysis — not to become a data scientist, but to be able to pull and visualize quality data myself without asking someone else every time.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Now Do Your Own Reflection</h2>
+  <p>Select your target career, then work through all six steps. Your answers are just for you — there are no wrong responses. The goal is to do the thinking, not to produce a perfect answer.</p>
+
+  <div class="role-picker">
+    <div class="rp-label">Start Here</div>
+    <div class="rp-title">What career are you reflecting on?</div>
+    <select class="rp-select" id="role-select" onchange="setRole()">
+      <option value="">Select your target career...</option>
+      <option value="maint">Maintenance Technician / Industrial Maintenance</option>
+      <option value="quality">Quality Inspector / Quality Control</option>
+      <option value="prod">Production Operator / Assembly Technician</option>
+      <option value="plan">Production Coordinator / Planner</option>
+      <option value="auto">Automation Technician / Robotics</option>
+      <option value="weld">Welder</option>
+      <option value="cnc">Machinist / CNC Operator</option>
+      <option value="hvac">HVAC Technician</option>
+      <option value="elec">Electrician</option>
+      <option value="other">Other / My own career path</option>
+    </select>
+  </div>
+
+  <div class="sim-frame" id="sim-frame" style="display:none;">
+    <div class="sf-label">Six-Step Reflection Framework</div>
+    <div class="sf-title" id="sf-title">Your Career Reflection</div>
+    <div class="sf-sub">Work through each step. Take your time — this reflection is most useful when your answers are specific to your actual situation.</div>
+    <div class="sf-progress"><div class="sf-progress-fill" id="sf-pfill" style="width:16%"></div></div>
+    <div id="sf-steps"></div>
+    <div class="sf-nav" id="sf-nav"></div>
+    <div class="results-box" id="results-box">
+      <div class="rb-title">Your 5-Year Reflection Summary</div>
+      <div id="rb-content"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">The purpose of this "5-Year AI Reflection" activity is to:</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Predict exactly which jobs will be eliminated by AI so workers can avoid those careers</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Help workers think through how AI might change their specific role, identify which skills will become more valuable, and decide what to learn next — turning a vague awareness into a concrete personal plan</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Prove that AI will take over most manufacturing jobs within 5 years</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Help workers decide whether to leave manufacturing for a different industry</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The reflection isn't about predictions or fear — it's about turning vague awareness ("AI is changing things") into specific, personal, actionable thinking ("here's what I want to learn next, and here's why"). A worker who completes this reflection walks away with something concrete: a clearer picture of where their skills are headed and what they want to build next. That's planning, not predicting.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The reflection is a planning tool, not a prediction tool. It's not about which jobs will disappear or whether to leave manufacturing — it's about helping workers think specifically about their own career path: which of their tasks might change, which skills will become more valuable, and what they want to learn next. Turning vague awareness into a specific personal plan is the whole point.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Activity</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The 5-year reflection framework has six steps: current tasks → tasks AI will likely do more → tasks that stay human → skills that will become more valuable → opportunities that could open up → what to learn next.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The activity is about planning, not predicting. Nobody knows exactly what manufacturing will look like in 5 years. But workers who think through their career path deliberately are better positioned than those who wait to see what happens.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The most valuable output of this reflection is Step 6: what to learn next. A specific, concrete learning goal that connects directly to where your career is headed is more useful than general awareness that "AI is changing things."</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">This reflection is worth revisiting. Do it now, then come back to it in 6–12 months. See what changed in your thinking and whether you followed through on what you said you wanted to learn.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var roleContexts={
+  maint:{title:"Maintenance Technician",context1:"Think about what you do during a typical shift: responding to alerts, inspecting equipment, replacing components, completing work orders, troubleshooting faults.",context2:"AI systems that are likely expanding in maintenance: predictive maintenance platforms, vibration analysis, thermal imaging AI, automated work order generation.",aiTasks:["Generating and prioritizing work orders based on sensor data","Flagging equipment for inspection based on vibration or temperature patterns","Predicting failure windows based on historical maintenance data","Scheduling maintenance during optimal production windows"],humanTasks:["Physical inspection and repair — the hands-on work","Judgment calls when an alert doesn't match physical reality","Safety-critical decisions","Training and mentoring newer technicians","Understanding machine context AI can't access"],skills:["Predictive maintenance platform navigation","Alert triage and investigation","Data-backed communication with supervisors","Understanding sensor data and what it means physically"]},
+  quality:{title:"Quality Inspector",context1:"Think about what you do during a typical shift: physical inspection, reviewing AI vision system flags, completing inspection records, first-article inspection, reporting quality metrics.",context2:"AI systems expanding in quality: vision inspection systems, automated measurement, SPC analytics, defect prediction based on process parameters.",aiTasks:["Initial visual inspection for surface defects (vision systems)","Flagging parts outside dimensional ranges (automated CMMs)","Identifying defect patterns across production runs","Generating inspection reports from collected data"],humanTasks:["Final judgment on flagged parts — pass or fail","Root cause investigation — why is this pattern happening?","Customer-facing communication about quality issues","Regulatory and legal quality documentation","Training new inspectors"],skills:["AI vision system interpretation","Data analysis and trend reading","Root cause analysis","SPC chart interpretation","Written quality reporting"]},
+  prod:{title:"Production Operator",context1:"Think about your typical shift: feeding materials, monitoring machine output, spotting defects, communicating problems, meeting production targets.",context2:"AI systems expanding in production: vision quality checks at line speed, AI scheduling, production performance dashboards, predictive equipment monitoring.",aiTasks:["Visual quality screening at line speed","Generating production schedule adjustments based on performance data","Monitoring equipment parameters and flagging anomalies","Inventory consumption tracking"],humanTasks:["Machine setup, changeovers, and adjustments","Responding to machine faults and unexpected situations","First-article inspection on new product runs","Judgment calls when output looks unusual","Physical tasks at the station"],skills:["Reading and acting on AI performance dashboards","Communicating AI-generated issues to maintenance and supervision","Understanding what 'normal' machine behavior looks like","Documentation and reporting skills"]},
+  plan:{title:"Production Coordinator / Planner",context1:"Think about your work: building schedules, managing priorities, coordinating between teams, tracking material availability, responding to changes.",context2:"AI systems expanding in planning: AI-generated production schedules, demand forecasting, inventory optimization, constraint analysis.",aiTasks:["Generating optimized production schedules based on capacity and demand","Flagging material shortages before they impact production","Recommending schedule adjustments when disruptions occur","Analyzing historical performance for planning improvements"],humanTasks:["Applying floor context that AI can't access","Coordinating across teams — maintenance, quality, materials, production","Communicating changes clearly to all affected parties","Judgment calls on priorities when constraints conflict","Customer and supplier communication"],skills:["AI scheduling platform review and modification","ERP system fluency","Data interpretation and presentation","Professional communication across teams"]},
+  auto:{title:"Automation Technician",context1:"Think about your work: programming robots, maintaining automated systems, troubleshooting automation faults, supporting new equipment installation.",context2:"AI systems expanding in automation: AI-driven robot path optimization, predictive maintenance for automation equipment, vision system calibration, collaborative robot safety monitoring.",aiTasks:["Recommending robot path optimizations based on cycle time data","Flagging automation equipment for maintenance before failures","Monitoring cobot safety zones and alerting to boundary violations","Generating reports on automation system performance"],humanTasks:["All physical programming, maintenance, and repair of automation equipment","Judgment calls when automated systems behave unexpectedly","Training production workers to work safely alongside automation","Evaluating whether an AI-suggested path optimization is actually safe","Diagnosing complex multi-system faults"],skills:["AI-assisted robot programming tools","Integration of AI monitoring with physical automation systems","Safety analysis for AI-enhanced automation","Cross-discipline troubleshooting (mechanical, electrical, software)"]},
+  weld:{title:"Welder",context1:"Think about your work: setup and preparation, executing welds, inspecting your own work, working from blueprints and weld symbols, maintaining your equipment.",context2:"AI systems expanding in welding: AI weld quality monitoring (Lincoln CheckPoint), automated visual inspection, cobot welding assistance, AI process optimization.",aiTasks:["Monitoring weld parameters in real time and flagging deviations","Visual inspection of completed welds for surface defects","Handling repetitive weld joints in production environments (cobots)","Recommending parameter adjustments for weld quality optimization"],humanTasks:["All complex, positional, and out-of-position welding","Physical inspection — trained eyes catch what cameras miss","Setup, fixturing, and joint preparation","Programming cobot weld paths for production runs","Final responsibility for weld quality and code compliance"],skills:["AI weld monitoring platform interpretation","Cobot path programming basics","Understanding AI inspection system limits","Weld procedure qualification documentation"]},
+  cnc:{title:"Machinist / CNC Operator",context1:"Think about your work: machine setup, program verification, running parts, quality inspection, adjusting parameters, maintaining tooling.",context2:"AI systems expanding in machining: AI toolpath optimization, tool wear prediction, in-process quality monitoring, AI-assisted first-article inspection.",aiTasks:["Suggesting optimized toolpaths for new programs","Flagging tool wear before failures occur","Monitoring dimensional drift and suggesting offset adjustments","Analyzing cycle time and suggesting efficiency improvements"],humanTasks:["All physical machine setup, tooling, and fixturing","Verifying AI-generated toolpaths before running","Applying machining intuition to complex or unusual materials","Surface finish evaluation that instruments miss","Blueprint reading and GD&T interpretation"],skills:["AI toolpath verification and modification","In-process quality monitoring interpretation","Tool wear data interpretation","CAM software with AI-assisted features"]},
+  hvac:{title:"HVAC Technician",context1:"Think about your work: installing and servicing HVAC equipment, troubleshooting system faults, reading controls and building automation systems, preventive maintenance.",context2:"AI systems expanding in HVAC: fault detection and diagnostics (FDD) platforms, AI energy optimization, remote monitoring and diagnostics, predictive equipment alerts.",aiTasks:["Continuously monitoring building systems for performance anomalies","Detecting complex faults like simultaneous heating and cooling","Optimizing setpoints for energy efficiency based on occupancy patterns","Predicting equipment failures from performance trend data"],humanTasks:["All physical installation, replacement, and repair","Refrigerant handling and EPA compliance — always human","Complex troubleshooting when AI flags something but cause is unclear","Control system programming and commissioning","Customer communication about system recommendations"],skills:["Building automation AI platform navigation","FDD alert interpretation and investigation","Remote monitoring and diagnostic tool use","Energy optimization data communication to building owners"]},
+  elec:{title:"Electrician",context1:"Think about your work: installing and troubleshooting electrical systems, reading drawings, code compliance, working safely with energized and de-energized systems.",context2:"AI systems expanding in electrical: power quality monitoring AI, arc flash predictive monitoring, load analysis and modeling, smart panel diagnostics.",aiTasks:["Continuously monitoring power quality metrics and flagging anomalies","Predicting arc flash risk from breaker performance data","Analyzing load patterns to identify circuits approaching capacity","Generating load analysis reports for panel scheduling decisions"],humanTasks:["All physical installation, wiring, and termination work","Safety decisions about energized equipment — always human","NEC code compliance judgment in complex real-world applications","Equipment condition assessment combining data with physical observation","Customer and contractor communication"],skills:["Power quality monitoring platform interpretation","Predictive arc flash and safety monitoring tools","Load analysis software","AI-generated data communication to building owners and managers"]},
+  other:{title:"My Career Path",context1:"Think about the core tasks in the career you're targeting — what you do day to day, what tools you use, what decisions you make.",context2:"Think about which AI tools are being deployed in your field: predictive systems, quality monitoring, scheduling tools, documentation platforms.",aiTasks:["Think about the repetitive, data-intensive tasks in your field — these are the ones AI is most likely to assist with first","Monitoring and alert generation — AI is increasingly handling continuous watching so humans can focus on investigation and response","Documentation and report generation — AI is reducing manual data entry and formatting across many industries","Pattern recognition in large data sets — AI identifies trends humans would miss or take much longer to find"],humanTasks:["Judgment calls in ambiguous situations — always human","Physical work requiring hands and physical presence — always human","Communication with other people — humans do this better","Accountability for decisions — always human","Context that the AI can't access about the specific situation"],skills:["Whatever makes the human role more valuable as AI handles more of the data and routine tasks","Interpreting and communicating AI outputs to others","Understanding AI system limits so you know when to trust and when to question","Technical depth in your trade or specialty — this becomes more valuable, not less, as AI handles surface tasks"]}
+};
+var currentRole='',currentStep=0,stepAnswers={};
+var steps=[
+  {label:"Step 1 of 6",q:"What are your current core tasks?",context:"List the main things you do in your target role. Be specific — not just 'fix machines' but 'inspect bearings, lubricate components, reset sensor faults, write work orders.' Include both the physical and the communication/documentation tasks.",type:"textarea",placeholder:"List your core tasks here — as specific as you can be..."},
+  {label:"Step 2 of 6",q:"Which of these tasks could AI be doing more of in 5 years?",context:"Based on what you know about AI tools in your field, which of your current tasks might AI handle more of — or handle first — in 5 years? You don't need to be certain. This is about possibilities, not predictions.",type:"both",checkboxKey:"aiTasks",placeholder:"Add any other tasks you think AI might take on..."},
+  {label:"Step 3 of 6",q:"Which tasks will definitely stay in human hands — and why?",context:"Not everything can be automated. What parts of your role require physical presence, judgment in ambiguous situations, human communication, or accountability that AI can't provide?",type:"both",checkboxKey:"humanTasks",placeholder:"Add any other tasks you think will stay human..."},
+  {label:"Step 4 of 6",q:"Which skills will become MORE valuable as AI does more of the routine work?",context:"When AI handles the monitoring, screening, and data collection, what does the human worker need to be especially good at? What skills become the differentiator?",type:"both",checkboxKey:"skills",placeholder:"Add any other skills you think will become more important..."},
+  {label:"Step 5 of 6",q:"What opportunities could open up for you because of AI?",context:"AI often creates new roles and expands existing ones. What doors might open for workers in your field who develop AI literacy? Think about advancement, new specializations, or cross-functional opportunities.",type:"textarea",placeholder:"Think about promotions, new roles, specializations, or ways AI literacy could differentiate you..."},
+  {label:"Step 6 of 6",q:"What do you want to learn next — and when will you start?",context:"This is the most important step. Based on everything you just reflected on, what specific knowledge or skill do you want to build? Be concrete: not 'learn more about AI' but 'complete the UR Academy cobot programming course by end of next month.'",type:"textarea",placeholder:"Be specific: what will you learn, how will you learn it, and when will you start?"}
+];
+
+function setRole(){
+  var sel=document.getElementById('role-select');
+  currentRole=sel.value;
+  if(!currentRole)return;
+  var frame=document.getElementById('sim-frame');
+  frame.style.display='block';
+  document.getElementById('sf-title').textContent='Your Reflection: '+roleContexts[currentRole].title;
+  currentStep=0;stepAnswers={};
+  buildStep();
+}
+function buildStep(){
+  var s=steps[currentStep];
+  var ctx=roleContexts[currentRole];
+  var stepsEl=document.getElementById('sf-steps');
+  stepsEl.innerHTML='';
+  var el=document.createElement('div');el.className='sf-step active';
+  var html='<div class="sf-step-num">'+s.label+'</div><div class="sf-step-q">'+s.q+'</div><div class="sf-step-context">'+s.context+'</div>';
+  // add context hint for this role
+  var hint=currentStep===0?ctx.context1:(currentStep===1?ctx.context2:'');
+  if(hint)html+='<div style="background:var(--purple-pale);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--purple-dark);margin-bottom:10px;line-height:1.7;">💡 For '+ctx.title+': '+hint+'</div>';
+  if(s.type==='both'||s.type==='checkboxes'){
+    html+='<div class="sf-checkboxes" id="sf-cbs">';
+    var items=ctx[s.checkboxKey]||[];
+    items.forEach(function(item,i){
+      var checked=stepAnswers['cb_'+currentStep+'_'+i]||false;
+      html+='<label class="sf-cb"><input type="checkbox" id="cb'+i+'" '+(checked?'checked':'')+' onchange="saveCB('+i+')"><span class="sf-cb-text">'+item+'</span></label>';
+    });
+    html+='</div>';
+  }
+  if(s.type==='both'||s.type==='textarea'){
+    html+='<textarea class="sf-textarea" id="sf-ta" placeholder="'+s.placeholder+'" oninput="saveTA()">'+( stepAnswers['ta_'+currentStep]||'')+'</textarea>';
+  }
+  el.innerHTML=html;
+  stepsEl.appendChild(el);
+  var nav=document.getElementById('sf-nav');nav.innerHTML='';
+  if(currentStep>0){var back=document.createElement('button');back.className='sf-btn secondary';back.textContent='← Back';back.onclick=function(){currentStep--;buildStep();};nav.appendChild(back);}
+  if(currentStep<steps.length-1){var next=document.createElement('button');next.className='sf-btn primary';next.textContent='Next →';next.onclick=function(){currentStep++;buildStep();};nav.appendChild(next);}
+  else{var finish=document.createElement('button');finish.className='sf-btn primary';finish.textContent='Complete My Reflection';finish.onclick=showResults;nav.appendChild(finish);}
+  document.getElementById('sf-pfill').style.width=((currentStep+1)/steps.length*100)+'%';
+  document.getElementById('results-box').classList.remove('show');
+}
+function saveCB(i){stepAnswers['cb_'+currentStep+'_'+i]=document.getElementById('cb'+i).checked;}
+function saveTA(){stepAnswers['ta_'+currentStep]=(document.getElementById('sf-ta')||{}).value||'';}
+function showResults(){
+  saveTA();
+  var rb=document.getElementById('rb-content');
+  rb.innerHTML='';
+  steps.forEach(function(s,i){
+    var section=document.createElement('div');section.className='rb-section';
+    var body='';
+    if(s.type==='both'||s.type==='checkboxes'){
+      var items=(roleContexts[currentRole][s.checkboxKey]||[]).filter(function(item,j){return stepAnswers['cb_'+i+'_'+j];});
+      if(items.length)body+='<em>Selected:</em> '+items.join('; ')+'<br>';
+    }
+    if(s.type==='both'||s.type==='textarea'){
+      var ta=stepAnswers['ta_'+i]||'';
+      if(ta)body+=ta;
+    }
+    section.innerHTML='<div class="rb-section-label">'+s.label+': '+s.q+'</div><div class="rb-section-body">'+(body||'<em style="color:var(--gray-muted);">Not completed</em>')+'</div>';
+    rb.appendChild(section);
+  });
+  document.getElementById('results-box').classList.add('show');
+  document.getElementById('results-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free and Low-Cost Ways to Keep Learning After This Certification</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* RESOURCE CATEGORIES */
+.resource-cats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 0;}
+.rc-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.rc-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.rc-panel{display:none;margin-top:20px;}
+.rc-panel.active{display:block;}
+
+/* RESOURCE CARDS */
+.resource-list{display:flex;flex-direction:column;gap:12px;}
+.resource-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;overflow:hidden;}
+.rc-header{padding:14px 18px;display:flex;gap:14px;align-items:flex-start;}
+.rc-icon{font-size:22px;flex-shrink:0;}
+.rc-info{}
+.rc-name{font-family:"Fraunces",serif;font-size:15px;color:var(--purple-dark);font-weight:700;margin-bottom:2px;}
+.rc-meta{font-size:11px;color:var(--gray-muted);font-weight:600;}
+.rc-cost{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;margin-left:6px;}
+.rc-cost.free{background:var(--green-pale);color:var(--green);}
+.rc-cost.low{background:var(--orange-pale);color:var(--orange);}
+.rc-cost.paid{background:var(--purple-pale);color:var(--purple);}
+.rc-body{padding:0 18px 14px;border-top:1px solid var(--purple-mid);}
+.rc-desc{font-size:13px;line-height:1.8;color:var(--gray-text);margin-top:10px;margin-bottom:8px;}
+.rc-best-for{background:var(--purple-pale);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--purple-dark);line-height:1.6;}
+.rc-best-for::before{content:"Best for: ";font-weight:700;}
+
+/* MY PLAN */
+.my-plan{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.mp-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.mp-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.mp-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.mp-table{width:100%;border-collapse:collapse;}
+.mp-table th{background:var(--purple-dark);color:#fff;font-size:12px;font-weight:700;padding:10px 12px;text-align:left;}
+.mp-table th:first-child{border-radius:10px 0 0 0;}
+.mp-table th:last-child{border-radius:0 10px 0 0;}
+.mp-table td{padding:10px 12px;border-bottom:1px solid var(--purple-mid);vertical-align:top;}
+.mp-table tr:last-child td{border-bottom:none;}
+.mp-table tr:nth-child(even) td{background:#F9FAFB;}
+.mp-input{width:100%;border:1px solid var(--purple-mid);border-radius:7px;padding:6px 8px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--gray-text);background:var(--white);}
+.mp-input:focus{outline:none;border-color:var(--purple);}
+.mp-save-btn{margin-top:14px;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.mp-saved{display:none;margin-top:8px;font-size:13px;color:var(--green);font-weight:600;}
+.mp-saved.show{display:block;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>Free and Low-Cost Ways to Keep Learning After This Certification</h1>
+  <p class="hero-sub">This certification is step one. Here's your practical guide to what's next — organized by type, cost, and career path. Most of the best options are free or under $200.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>Finishing a certification is an accomplishment — and a starting point. The manufacturing industry changes fast enough that what you know today will need to be updated and expanded over the next few years. The good news: the best continuing education resources for manufacturing workers are mostly free or inexpensive, and many are accessible from a phone during a lunch break.</p>
+  <p>This guide is organized by resource type. Browse the categories, find what fits your situation and career direction, and build a simple plan at the bottom.</p>
+
+  <div class="resource-cats" id="rc-tabs">
+    <div class="rc-tab active" onclick="setRC(0)">📺 Free Videos & Courses</div>
+    <div class="rc-tab" onclick="setRC(1)">🎓 Certifications Worth Stacking</div>
+    <div class="rc-tab" onclick="setRC(2)">🏭 Employer & Vendor Training</div>
+    <div class="rc-tab" onclick="setRC(3)">🏫 Community College & Apprenticeships</div>
+    <div class="rc-tab" onclick="setRC(4)">📰 Trade Publications & Associations</div>
+  </div>
+  <div id="rc-panels"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Build Your Personal Learning Plan</h2>
+  <p>Don't leave this article without a plan. Pick one resource from each timeframe — something you'll do this week, something for the next 90 days, and something for the next year. Specific beats general every time.</p>
+
+  <div class="my-plan">
+    <div class="mp-label">My Learning Plan</div>
+    <div class="mp-title">Three Commitments Across Three Timeframes</div>
+    <div class="mp-sub">Fill in one specific resource for each timeframe. The more specific the better — not "watch a video" but "watch Module 1 of the UR Academy cobot training on my lunch break this Thursday."</div>
+    <table class="mp-table">
+      <tr><th>Timeframe</th><th>What I'll do</th><th>Where / How</th><th>Why it matters for my career</th></tr>
+      <tr><td style="font-weight:600;font-size:13px;color:var(--purple-dark);white-space:nowrap;">This week</td><td><input class="mp-input" placeholder="e.g., Watch Module 1 of UR Academy cobot training"></td><td><input class="mp-input" placeholder="e.g., academy.universal-robots.com, on my phone"></td><td><input class="mp-input" placeholder="e.g., Facility getting cobots next quarter"></td></tr>
+      <tr><td style="font-weight:600;font-size:13px;color:var(--purple-dark);white-space:nowrap;">Next 90 days</td><td><input class="mp-input" placeholder="e.g., Complete OSHA 10 certification"></td><td><input class="mp-input" placeholder="e.g., OSHA-authorized online provider, ~$40"></td><td><input class="mp-input" placeholder="e.g., Required for supervisor-track roles"></td></tr>
+      <tr><td style="font-weight:600;font-size:13px;color:var(--purple-dark);white-space:nowrap;">Next year</td><td><input class="mp-input" placeholder="e.g., Complete ASQ CQI certification"></td><td><input class="mp-input" placeholder="e.g., ASQ.org, self-study + exam"></td><td><input class="mp-input" placeholder="e.g., Opens quality analyst path"></td></tr>
+    </table>
+    <button class="mp-save-btn" onclick="savePlan()">Save My Plan</button>
+    <div class="mp-saved" id="mp-saved">✓ Saved. Come back to this and check your progress.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A CTE student finishing this certification wants to learn cobot programming to prepare for automation roles in her area. Which is the BEST first step based on cost, accessibility, and employer recognition?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Enroll in a $3,000 online automation bootcamp</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Complete the Universal Robots UR Academy Core Track — it's free, self-paced, directly employer-recognized, and accessible from a phone or computer with no prerequisites</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Wait until an employer pays for training</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Search for cobot programming courses on any platform and pick the most popular one</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The UR Academy is free, accessible with no prerequisites, self-paced (so it fits around any schedule), directly recognized by employers (Universal Robots cobots are the most widely deployed in manufacturing), and produces a credential that shows up in automation job postings. It's the highest-value free resource available for anyone targeting automation roles. Spending $3,000 on a bootcamp before exploring what's available for free first is backwards — especially when the free option is employer-recognized.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The Universal Robots UR Academy is free, directly employer-recognized, and accessible from any device with no prerequisites. It's the single highest-value free resource for anyone targeting automation roles — because UR cobots are the most widely deployed collaborative robots in manufacturing, and employers specifically mention UR certification in job postings. Spending $3,000 on a bootcamp before exhausting what's available for free is not a smart sequence. Start free, then invest money where free options don't exist.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Most of the best continuing education resources for manufacturing workers are free or under $200 — including the UR Academy (free cobot programming), OSHA 10 (~$40), MSSC CPT (often free through CTE programs), and YouTube channels with high-quality trade content.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The most strategic approach is to sequence free resources first, then low-cost certifications with employer recognition, then higher-cost investments only when they open specific doors that free options can't.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Employer and vendor training — IBM Maximo, FANUC, Rockwell, Siemens — is often available free or at low cost and directly maps to the specific systems used in manufacturing facilities. This is often the most directly applicable learning available.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Trade publications (Modern Machine Shop, Quality Progress, Maintenance Technology) and professional associations (SMRP, ASQ, MSSC) keep you current with industry trends and connect you to communities of practice that accelerate learning.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var resources=[
+  {cat:"📺 Free Videos & Courses",items:[
+    {icon:"🤖",name:"Universal Robots UR Academy",meta:"academy.universal-robots.com",cost:"free",desc:"The single best free resource for anyone interested in cobot programming and collaborative robotics. Self-paced, no prerequisites, accessible from any device. Covers programming, safety, installation, and troubleshooting for UR cobots — the most widely deployed collaborative robot brand in manufacturing. Produces a credential employers directly recognize.",bestFor:"Anyone targeting automation, maintenance, or production roles where cobots are used"},
+    {icon:"📺",name:"YouTube — Manufacturing & Trades Channels",meta:"Free · Phone-accessible",cost:"free",desc:"High-quality manufacturing education is available free on YouTube. Recommended channels: Practical Machinist (CNC, machining), The Engineering Mindset (electrical, HVAC), TITANS of CNC (machining education), Welding Tips and Tricks (welding technique), RealPars (PLC programming, industrial automation). Quality varies — stick to channels with large subscriber counts and comments from working practitioners.",bestFor:"Visual learners who want hands-on demonstrations; workers who want to learn during commute or lunch breaks"},
+    {icon:"🎓",name:"Coursera — Free Audit Option",meta:"coursera.org · Free to audit",cost:"free",desc:"Coursera partners with universities and companies to offer online courses. Most courses can be audited for free — meaning you watch the content and do the exercises, but don't receive the certificate. For certificate-level learning, financial aid is available. Relevant courses include Google's Data Analytics certificate, IBM's Data Science fundamentals, and manufacturing operations management.",bestFor:"Workers who want structured, university-level content on data, technology, and operations"},
+    {icon:"💼",name:"LinkedIn Learning — Free via Public Library",meta:"linkedin.com/learning · Free with library card",cost:"free",desc:"LinkedIn Learning has thousands of professional development courses, including manufacturing operations, Six Sigma, ERP systems, and technology adoption. Many public library systems offer free access to LinkedIn Learning with a library card. Check your local library's digital resource page. Completions appear on your LinkedIn profile — visible to recruiters.",bestFor:"Workers who have a LinkedIn profile and want learning to show up in their professional presence"},
+    {icon:"🏭",name:"MSSC Online Learning Center",meta:"msscusa.org · Free–low cost",cost:"free",desc:"The Manufacturing Skill Standards Council (MSSC) offers online preparation materials and practice assessments for their Certified Production Technician (CPT) certification. The MSSC CPT is one of the most widely recognized entry and mid-level manufacturing credentials in the US.",bestFor:"Workers preparing for or interested in the MSSC CPT certification"}
+  ]},
+  {cat:"🎓 Certifications Worth Stacking",items:[
+    {icon:"🏭",name:"MSSC Certified Production Technician (CPT)",meta:"msscusa.org · Free–$200 (often covered by CTE programs)",cost:"free",desc:"The most recognized entry-level manufacturing certification in the US. Covers safety, quality, manufacturing processes, and maintenance. Many CTE programs are MSSC testing sites — the exam may already be covered by your program. If not, it's typically under $200 and widely recognized by manufacturing employers across industries.",bestFor:"Entry to mid-level manufacturing workers; the foundation credential for a manufacturing career"},
+    {icon:"🛡️",name:"OSHA 10-Hour General Industry",meta:"OSHA-authorized providers online · ~$30–60",cost:"low",desc:"Workplace safety certification expected by most manufacturing employers. Takes about 10 hours, can be completed self-paced online. The OSHA 10 appears in job postings as a 'preferred' or 'required' qualification for production, maintenance, and quality roles. The OSHA 30 is the step up for leadership-track workers.",bestFor:"All manufacturing workers — this is essentially universal in manufacturing hiring"},
+    {icon:"🔍",name:"ASQ Certified Quality Inspector (CQI)",meta:"asq.org · ~$200–400",cost:"paid",desc:"The standard quality credential for inspection-level roles. Covers measurement, SPC, quality auditing, and quality management systems. Widely recognized in regulated industries (medical devices, aerospace, automotive, food processing). Best pursued after gaining inspection floor experience.",bestFor:"Workers targeting quality inspector, quality technician, or quality analyst roles"},
+    {icon:"⚙️",name:"NIMS Machining Level I Credentials",meta:"nims-skills.org · ~$20–70 per credential",cost:"low",desc:"Performance-based machining credentials from the National Institute for Metalworking Skills. Skills-assessed rather than written-exam only. Recognized by job shops, automotive suppliers, and aerospace manufacturers. Many CTE machining programs are NIMS assessment sites.",bestFor:"Machinists and CNC operators seeking documented, performance-verified skill credentials"},
+    {icon:"🤖",name:"FANUC Authorized Education Center Certifications",meta:"Through partner schools · Free–$200",cost:"free",desc:"FANUC is the most widely used industrial robot brand in North America. Their educational certifications — available through FANUC-authorized community colleges and technical schools — are recognized by automotive and aerospace manufacturers. Some programs are available online.",bestFor:"Workers targeting automation technician or robot programming roles, especially in automotive"}
+  ]},
+  {cat:"🏭 Employer & Vendor Training",items:[
+    {icon:"🔧",name:"IBM Maximo Learning",meta:"ibm.com/training · Free–low cost",cost:"free",desc:"IBM offers free and paid training resources for the Maximo maintenance management platform — one of the most widely used CMMS systems in industrial manufacturing. If your facility uses Maximo, completing this training makes you demonstrably more capable with a system your employer has already invested in.",bestFor:"Maintenance technicians and coordinators whose facilities use IBM Maximo"},
+    {icon:"⚡",name:"Rockwell Automation Training",meta:"rockwellautomation.com/training · Free–paid",cost:"free",desc:"Rockwell's FactoryTalk, Allen-Bradley PLCs, and automation hardware are used in a large percentage of US manufacturing facilities. They offer free foundational content and paid certification programs. PLC basics through Rockwell is one of the most valuable skill-stackers for automation and maintenance roles.",bestFor:"Workers targeting automation, maintenance, or controls-adjacent roles"},
+    {icon:"🖥️",name:"SAP Learning Hub — Free Tier",meta:"learning.sap.com · Free tier available",cost:"free",desc:"SAP is one of the most widely deployed ERP systems in manufacturing. SAP Learning Hub offers free access to foundational SAP content. ERP system fluency — including SAP navigation — is specifically mentioned in production planning and operations analyst job postings.",bestFor:"Workers targeting production planning, materials management, or operations analyst roles"},
+    {icon:"🏭",name:"Ask Your Employer What They Offer",meta:"Internal — varies by facility",cost:"free",desc:"Many manufacturers have training agreements with equipment vendors, subscriptions to e-learning platforms, or tuition assistance programs that workers don't know about. Ask your HR department or supervisor what learning resources are available to employees — the answer is often more than workers expect.",bestFor:"All workers — this is often the most overlooked free learning resource available"}
+  ]},
+  {cat:"🏫 Community College & Apprenticeships",items:[
+    {icon:"🏫",name:"Community College CTE Programs",meta:"Varies by location · Low cost with financial aid available",cost:"low",desc:"Community colleges offer continuing education in manufacturing trades, industrial technology, automation, quality management, and more. Many programs are offered in the evenings or online to accommodate working schedules. Pell grants and workforce training funds often cover or significantly reduce the cost. Community college credentials are recognized by local employers and build on CTE preparation.",bestFor:"Workers who want structured, credential-bearing education in a specific technical area beyond what's available online"},
+    {icon:"🔨",name:"Registered Apprenticeships",meta:"apprenticeship.gov · Earn while you learn",cost:"free",desc:"Registered apprenticeships are employer-sponsored training programs where you earn a paycheck while learning a skilled trade — typically electrician, HVAC, machinist, or automation technician. Apprenticeships combine on-the-job training with classroom instruction and result in a nationally recognized credential. The US Department of Labor maintains a searchable database of registered apprenticeships.",bestFor:"Workers who want to earn a living while building trade-level credentials in a skilled field"},
+    {icon:"💻",name:"Workforce Development Programs",meta:"State-funded · Often free",cost:"free",desc:"Most states have workforce development programs specifically designed to train or retrain manufacturing workers — funded through Perkins Act, WIOA, and state workforce funds. These programs often cover the cost of certifications like OSHA 10, MSSC CPT, and trade-specific credentials. Contact your state's workforce development board or local American Job Center to find what's available in your area.",bestFor:"Workers who need financial support for continuing education and certification costs"}
+  ]},
+  {cat:"📰 Trade Publications & Associations",items:[
+    {icon:"📰",name:"Modern Machine Shop",meta:"mmsonline.com · Free",cost:"free",desc:"One of the most widely read machining and metalworking publications. Covers CNC programming advances, tooling technology, quality systems, and automation. Free digital access. Short articles (5–10 minutes) work well during breaks.",bestFor:"Machinists, CNC operators, and anyone in precision manufacturing"},
+    {icon:"🔍",name:"Quality Progress (ASQ)",meta:"asq.org/quality-progress · Free with ASQ membership",cost:"free",desc:"The American Society for Quality's flagship publication. Covers quality methods, case studies, industry trends, and professional development for quality practitioners. ASQ student membership is available at reduced cost and includes digital access.",bestFor:"Quality inspectors, analysts, and anyone building toward quality engineering"},
+    {icon:"🔧",name:"Maintenance Technology Magazine",meta:"maintenance.org · Free",cost:"free",desc:"Covers predictive maintenance, reliability engineering, and industrial maintenance trends. Case studies on AI-assisted maintenance, vibration analysis, and CMMS implementation. Free digital access.",bestFor:"Maintenance technicians and reliability engineers"},
+    {icon:"🤝",name:"SMRP — Society for Maintenance & Reliability Professionals",meta:"smrp.org · Membership varies",cost:"low",desc:"Professional association for maintenance and reliability professionals. Offers networking, certification (CMRP), local chapter events, and a searchable knowledge base. Student and early-career membership rates are lower than standard rates.",bestFor:"Maintenance professionals who want to connect with peers and access structured professional development"}
+  ]}
+];
+
+var rcPanels=document.getElementById('rc-panels');
+resources.forEach(function(cat,i){
+  var panel=document.createElement('div');panel.className='rc-panel'+(i===0?' active':'');
+  var html='<div class="resource-list">';
+  cat.items.forEach(function(item){
+    html+='<div class="resource-card"><div class="rc-header"><div class="rc-icon">'+item.icon+'</div><div class="rc-info"><div class="rc-name">'+item.name+'</div><div class="rc-meta">'+item.meta+'<span class="rc-cost '+item.cost+'">'+(item.cost==='free'?'✓ Free':item.cost==='low'?'Low cost ($20–200)':'Paid')+'</span></div></div></div><div class="rc-body"><div class="rc-desc">'+item.desc+'</div><div class="rc-best-for">'+item.bestFor+'</div></div></div>';
+  });
+  html+='</div>';
+  panel.innerHTML=html;
+  rcPanels.appendChild(panel);
+});
+function setRC(i){
+  document.querySelectorAll('.rc-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});
+  document.querySelectorAll('.rc-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});
+}
+
+function savePlan(){
+  document.getElementById('mp-saved').classList.add('show');
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

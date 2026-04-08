@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Lifelong Learning? And What Does It Actually Look Like on a Tuesday at a Factory?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* A TUESDAY SIM */
+.tuesday-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ts-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ts-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ts-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ts-day{display:flex;flex-direction:column;gap:8px;}
+.ts-event{display:flex;gap:14px;align-items:flex-start;}
+.ts-time{font-size:11px;font-weight:700;color:var(--purple);width:54px;flex-shrink:0;padding-top:3px;}
+.ts-body{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 14px;}
+.ts-event-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.ts-event-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ts-learning-tag{display:inline-flex;align-items:center;gap:4px;background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:5px;}
+.ts-regular-tag{display:inline-flex;align-items:center;gap:4px;background:var(--gray-soft);color:var(--gray-muted);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:5px;border:1px solid var(--purple-mid);}
+
+/* MYTH VS REALITY */
+.mvr-grid{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.mvr-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;overflow:hidden;}
+.mvr-myth{padding:12px 16px;background:#F9FAFB;font-size:14px;font-weight:600;color:#6B7280;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.mvr-myth::before{content:"Myth: ";color:#9CA3AF;}
+.mvr-toggle{font-size:16px;color:var(--purple-mid);transition:transform .25s;}
+.mvr-toggle.open{transform:rotate(45deg);}
+.mvr-reality{display:none;padding:12px 16px;background:var(--green-pale);font-size:13px;line-height:1.8;color:var(--green);border-top:1px solid #D1FAE5;}
+.mvr-reality.show{display:block;}
+.mvr-reality::before{content:"Reality: ";font-weight:700;}
+
+/* LEARNING MENU */
+.learning-menu{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.lm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.lm-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.lm-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.lm-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.lm-cat{padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.lm-cat.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.lm-panel{display:none;}
+.lm-panel.active{display:block;}
+.lm-items{display:flex;flex-direction:column;gap:10px;}
+.lm-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.lm-item-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:6px;}
+.lm-item-icon{font-size:20px;flex-shrink:0;}
+.lm-item-title{font-weight:600;font-size:14px;color:var(--purple-dark);}
+.lm-item-time{font-size:11px;font-weight:700;color:var(--orange);background:var(--orange-pale);padding:2px 8px;border-radius:100px;margin-left:auto;flex-shrink:0;}
+.lm-item-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.lm-item-why{margin-top:7px;background:var(--purple-pale);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--purple-dark);line-height:1.6;}
+
+/* SELF CHECK */
+.selfcheck{background:var(--orange-pale);border:1.5px solid #FCD34D;border-radius:20px;padding:24px;margin:24px 0;}
+.sc-title{font-family:"Fraunces",serif;font-size:18px;color:#92400E;font-weight:700;margin-bottom:12px;}
+.sc-items{display:flex;flex-direction:column;gap:8px;}
+.sc-item{display:flex;gap:10px;align-items:flex-start;cursor:pointer;}
+.sc-box{width:20px;height:20px;border:2px solid #D97706;border-radius:5px;flex-shrink:0;background:var(--white);display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.sc-box.checked{background:#D97706;border-color:#D97706;}
+.sc-box.checked::after{content:"✓";color:#fff;font-size:11px;font-weight:700;}
+.sc-text{font-size:14px;line-height:1.7;color:#92400E;}
+.sc-result{margin-top:12px;padding:10px 14px;background:var(--white);border-radius:10px;font-size:13px;font-weight:600;color:#92400E;display:none;}
+.sc-result.show{display:block;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>What Is Lifelong Learning? And What Does It Actually Look Like on a Tuesday at a Factory?</h1>
+  <p class="hero-sub">"Lifelong learning" gets used so often it's almost lost its meaning. This article gives it back. Concrete. Specific. Manufacturing context. What it actually looks like when you're tired, the floor is busy, and you have 20 minutes.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Let's Start By Clearing Up What It's NOT</h2>
+  <p>When people hear "lifelong learning," they sometimes picture:</p>
+  <p>Going back to school full-time. Spending hours every night studying after an exhausting shift. Pursuing a master's degree. Reading dense academic papers about manufacturing technology. Taking expensive courses that require weeks off work.</p>
+  <p>That's not what lifelong learning means for manufacturing workers. <mark>Lifelong learning in manufacturing is the habit of staying curious and intentionally picking up new knowledge and skills — in small doses, consistently, over time</mark>. It's not a dramatic lifestyle change. It's a pattern of small choices.</p>
+  <p>The manufacturing worker who watches a 15-minute YouTube video about how predictive maintenance works during their lunch break is practicing lifelong learning. The technician who asks a more experienced coworker to show them how to navigate a new maintenance platform is practicing lifelong learning. The quality inspector who reads the vendor documentation for the new vision system before it arrives is practicing lifelong learning.</p>
+  <p>None of those things require going back to school. They require being curious and choosing to act on it.</p>
+
+  <div class="pull-quote">
+    <p>Lifelong learning isn't a commitment to be enrolled forever. It's a commitment to never deliberately stop growing. That's a much smaller ask — and a much more useful one.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What It Actually Looks Like on a Tuesday</h2>
+  <p>Here's a realistic day for Marcus — a maintenance technician who practices lifelong learning. Notice that his learning doesn't stop his work. It happens alongside it, in the gaps, in small moments that add up.</p>
+
+  <div class="tuesday-sim">
+    <div class="ts-label">A Day in the Life of a Lifelong Learner</div>
+    <div class="ts-title">Marcus — Maintenance Technician, Day Shift</div>
+    <div class="ts-sub">Notice how learning weaves into a normal workday — not as a separate activity, but as a habit of mind.</div>
+    <div class="ts-day" id="ts-day"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Myths That Stop People From Starting</h2>
+  <p>Most manufacturing workers who aren't growing their skills have convinced themselves of at least one of these things. Click each myth to see why it's not true.</p>
+
+  <div class="mvr-grid" id="mvr-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Lifelong Learner's Menu — By Time Available</h2>
+  <p>One of the real barriers to learning at work is time. Here's the honest answer: most workplace learning doesn't require a lot of time. It requires <em>some</em> time used consistently. Below are learning activities sorted by how much time they take — from 5 minutes to an hour.</p>
+
+  <div class="learning-menu">
+    <div class="lm-label">Learning Activity Menu</div>
+    <div class="lm-title">How Much Time Do You Have?</div>
+    <div class="lm-sub">Select your available time and see what learning activities are realistic right now.</div>
+    <div class="lm-cats">
+      <div class="lm-cat active" onclick="setLM(0)">⚡ 5–10 min</div>
+      <div class="lm-cat" onclick="setLM(1)">☕ 15–30 min</div>
+      <div class="lm-cat" onclick="setLM(2)">📚 45–60 min</div>
+    </div>
+    <div id="lm-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Your Honest Check: Where Are You Right Now?</h2>
+  <p>Lifelong learning isn't about doing everything. It's about doing something — consistently. This check is just for you.</p>
+
+  <div class="selfcheck">
+    <div class="sc-title">In the last month, how many of these happened?</div>
+    <div class="sc-items" id="sc-items"></div>
+    <div class="sc-result" id="sc-result"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Which of the following best describes "lifelong learning" for a manufacturing worker?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Going back to college for a degree every few years to stay current</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Consistently picking up new knowledge and skills in small doses over time — through coworker conversations, short training videos, online courses, reading documentation, and asking good questions</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Completing mandatory employer training when it's assigned</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Saving up vacation time to attend manufacturing conferences once a year</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Lifelong learning is a habit of consistent, small-dose learning — not a dramatic lifestyle commitment. Watching a 15-minute tutorial during lunch, asking a coworker how to navigate a new platform, reading the documentation for a new AI tool before it arrives — these are all lifelong learning. The key is consistency over time, not intensity in any single moment. Mandatory employer training counts too, but lifelong learners don't wait to be assigned learning — they seek it out.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Lifelong learning is much more accessible than a degree program or annual conferences. It's the consistent habit of picking up new knowledge and skills in small ways over time — coworker conversations, 15-minute training videos, online course modules during a lunch break, reading documentation, asking good questions when something unfamiliar arrives. The degree approach isn't wrong, but it's not what "lifelong learning" primarily means for manufacturing workers building their careers day to day.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Lifelong learning is not going back to school full-time or studying for hours every night. It's the consistent habit of picking up new knowledge and skills in small doses — in the gaps, during transitions, in spare moments throughout a workday.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">On a real manufacturing shift, lifelong learning looks like: asking a coworker to explain how a new machine works, watching a short training video during lunch, reading the documentation for an incoming AI tool, asking good questions when an alert doesn't make sense, completing a free online module in the evening.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The biggest barriers — "I don't have time," "I learn differently," "I'm too experienced," "I'll do it later" — are habits of thought that can be recognized and changed. None of them are permanent obstacles.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Lifelong learning isn't about doing everything. It's about doing something — consistently. Five minutes of intentional learning every day compounds into significant expertise over months and years.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var events=[
+  {time:"6:00 AM",title:"Start of shift — check the predictive maintenance dashboard",desc:"Reviews the overnight AI alerts before the shift briefing. Notices a vibration trend on Motor 4 that's been slowly increasing over two weeks. He doesn't know exactly what's causing it yet — makes a mental note to look it up.",learning:"Pays attention to patterns even when they don't require immediate action",tag:"learning"},
+  {time:"7:30 AM",title:"Investigates Motor 4 alert — looks up the bearing type online",desc:"After completing the priority work orders, he searches for 'cylindrical roller bearing vibration pattern gradual increase' on his phone. Reads two short articles. Now understands that this pattern often indicates lubrication depletion before structural wear begins. Adds oil to the bearing — alert clears by end of shift.",learning:"Used 8 minutes of phone lookup to learn something that made his maintenance decision better",tag:"learning"},
+  {time:"10:00 AM",title:"Routine maintenance on packaging line",desc:"Standard PM work — nothing unusual. This is the bulk of the shift.",tag:"regular"},
+  {time:"12:00 PM",title:"Lunch break — watches 18 minutes of a FANUC robot training video",desc:"His facility is getting three new robotic welding arms next month. He started the free FANUC training track last week. Today he watches the module on fault code interpretation. He doesn't understand all of it yet — writes down two questions to ask his supervisor later.",learning:"18 minutes of intentional learning about a system he'll need to work with next month",tag:"learning"},
+  {time:"1:30 PM",title:"New coworker asks Marcus about the predictive maintenance platform",desc:"She's been there three weeks and finds the dashboard confusing. Marcus spends 12 minutes walking her through how to read the alert queue and what the priority levels mean. As he explains it, he realizes he doesn't fully understand one of the sub-menus himself — makes a note to check the platform's help documentation.",learning:"Teaching someone else is itself a form of learning — and it surfaced a gap he can now fill",tag:"learning"},
+  {time:"3:00 PM",title:"Writes the shift handoff note",desc:"Standard task. Takes 7 minutes. Includes the Motor 4 finding, the alert status, and a note that the FANUC training is starting to make sense.",tag:"regular"},
+  {time:"3:30 PM",title:"End of shift — sends his two questions from lunch to his supervisor via email",desc:"Asks specifically about the FANUC fault code he didn't understand. His supervisor answers within an hour. Marcus files the answer in a notes app he keeps on his phone for manufacturing concepts.",learning:"Learning moment converted into a documented answer he can reference again",tag:"learning"}
+];
+var tsEl=document.getElementById('ts-day');
+events.forEach(function(e){
+  var d=document.createElement('div');d.className='ts-event';
+  d.innerHTML='<div class="ts-time">'+e.time+'</div>'
+    +'<div class="ts-body"><div class="ts-event-title">'+e.title+'</div><div class="ts-event-desc">'+e.desc+'</div>'
+    +(e.learning?'<span class="ts-learning-tag">📚 Learning moment: '+e.learning+'</span>':'')
+    +(e.tag==='regular'?'<span class="ts-regular-tag">Regular work task</span>':'')
+    +'</div>';
+  tsEl.appendChild(d);
+});
+
+var myths=[
+  {myth:"I don't have time to learn anything new — my shifts are too busy",reality:"On a typical 8–12 hour shift, there are pockets of time: a 30-minute lunch break, transit time between stations, time while a machine cycles, the last 15 minutes before shift end. You don't need an uninterrupted hour. 10 intentional minutes, three times a week, adds up to about 520 minutes of learning per year. That's almost 9 hours of focused skill development."},
+  {myth:"I'm not a 'book learner' — classroom stuff doesn't work for me",reality:"Most manufacturing learning isn't classroom-based. Watching a coworker demonstrate something, troubleshooting a problem you've never seen before, watching a YouTube tutorial of a machine you'll be working on, asking questions in real-time — these are all legitimate learning styles. Many of the best manufacturing technicians never thrived in classrooms and are excellent learners in the physical, hands-on environment of a factory."},
+  {myth:"I've been doing this for 15 years — I already know what I need to know",reality:"Fifteen years of manufacturing experience is genuinely valuable. But every facility has tools and systems that didn't exist 15 years ago. The question isn't whether your experience is valuable — it is. The question is whether you're adding to it or coasting on it. The most respected senior workers are the ones who combine their deep experience with ongoing learning. The ones who stopped learning 15 years ago are often the ones being passed over for supervisory roles."},
+  {myth:"I'll get to it when things slow down",reality:"Things rarely slow down in manufacturing — and even when they do, the moment passes. 'When things slow down' is not a calendar date; it's a habit of deferral that repeats indefinitely. The workers who keep learning don't wait for ideal conditions. They build learning into normal conditions — 10 minutes here, a question there, a short video during lunch."},
+  {myth:"If it was important, my employer would train me on it",reality:"Employers provide mandatory training for things they're legally required to cover. They rarely provide proactive training on everything that would make you better at your job. The workers who wait to be assigned training receive the minimum. The workers who seek it out receive much more — and are seen as more motivated and promotion-ready than their peers."}
+];
+var mvrEl=document.getElementById('mvr-grid');
+myths.forEach(function(m,i){
+  var d=document.createElement('div');d.className='mvr-item';
+  d.innerHTML='<div class="mvr-myth" onclick="toggleMVR('+i+')"><span>'+m.myth+'</span><span class="mvr-toggle" id="mvrt'+i+'">+</span></div>'
+    +'<div class="mvr-reality" id="mvrr'+i+'">'+m.reality+'</div>';
+  mvrEl.appendChild(d);
+});
+function toggleMVR(i){
+  var r=document.getElementById('mvrr'+i),t=document.getElementById('mvrt'+i);
+  var open=r.classList.contains('show');
+  r.classList.toggle('show',!open);
+  t.textContent=open?'+':'×';t.style.transform=open?'':'rotate(45deg)';
+}
+
+var lmData=[
+  {cat:"⚡ 5–10 min",items:[
+    {icon:"💬",title:"Ask a coworker to explain one thing",time:"5 min",desc:"Pick one thing you've seen on the floor but don't fully understand — a machine function, an alert type, a process step. Ask someone who knows. That conversation is learning.",why:"This is the most underused learning method in manufacturing. The expertise around you is enormous."},
+    {icon:"📖",title:"Read one section of an equipment manual",time:"5–8 min",desc:"Most facilities have equipment manuals sitting in a binder or on a shared drive that almost nobody reads. One section — error codes, safety limits, operating parameters — adds real technical knowledge.",why:"The workers who read the manuals are the ones who understand the equipment more deeply than those who don't."},
+    {icon:"🔍",title:"Look up an unfamiliar term or concept you encountered today",time:"5 min",desc:"Something came up during your shift that you didn't fully understand — a term in the maintenance dashboard, an error code, a process variable. Spend 5 minutes finding out what it means.",why:"Converting confusion into understanding, in the moment, is one of the most efficient forms of learning."},
+    {icon:"📝",title:"Write down one thing you learned today",time:"2–5 min",desc:"At the end of your shift, write one sentence about something you learned — in a notes app, a small notebook, anywhere. Over weeks and months, this becomes a personal knowledge log.",why:"The act of writing it down makes learning stick. It also shows you that you ARE learning constantly."}
+  ]},
+  {cat:"☕ 15–30 min",items:[
+    {icon:"📺",title:"Watch one training or tutorial video",time:"15–20 min",desc:"YouTube alone has thousands of high-quality manufacturing training videos — predictive maintenance, CNC operation, quality control, cobot safety, ERP navigation. One video per week adds up to 50+ learning sessions per year.",why:"Free, flexible, accessible on a phone. This is the most scalable learning available to manufacturing workers."},
+    {icon:"🎓",title:"Complete one module of a free online course",time:"20–30 min",desc:"Universal Robots UR Academy, Rockwell Learning+, MSSC online prep, Coursera free courses — many are self-paced and free. One module per week is 4 per month, 48 per year.",why:"Structured courses build knowledge systematically rather than randomly — good for topics you need to understand deeply."},
+    {icon:"📄",title:"Read the release notes or update summary for a tool you use",time:"15–20 min",desc:"When your facility's maintenance or quality software gets an update, someone publishes release notes about what changed. Reading them keeps you current and often reveals features you didn't know existed.",why:"Workers who know the tools better than their peers become the go-to resource — which builds visibility and reputation."},
+    {icon:"🤝",title:"Shadow a more experienced coworker for part of a task",time:"20–30 min",desc:"Ask a more experienced coworker if you can watch them handle a type of problem or task you haven't fully mastered yet. 20 minutes of watching an expert often teaches more than hours of reading.",why:"Apprenticeship-style learning is how skilled trades have always transferred expertise — it still works."}
+  ]},
+  {cat:"📚 45–60 min",items:[
+    {icon:"📘",title:"Complete a full online course session",time:"45–60 min",desc:"Dedicate a focused session to a structured course — this certification, a vendor training program, or a community college module. One full session per week adds up to 52 hours of structured learning per year.",why:"Longer focused sessions allow for deeper understanding of complex topics that short clips can't cover."},
+    {icon:"🏫",title:"Attend a facility training session",time:"60 min",desc:"When your employer offers optional training — on a new system, a safety update, a process change — attend it. Workers who show up to optional training are noticed by supervisors as engaged and motivated.",why:"Optional training is a low-competition signal of initiative. Most of your peers will skip it."},
+    {icon:"📊",title:"Analyze a performance trend in your area and write up your findings",time:"45–60 min",desc:"Pull the production or maintenance data from your area for the past month. Look for patterns — what's improving, what's declining, what correlates with what. Write a brief summary of what you found.",why:"This builds data analysis skills AND produces a concrete deliverable you can share with your supervisor as evidence of your thinking."},
+    {icon:"📚",title:"Read a trade publication article or industry report",time:"30–60 min",desc:"Manufacturing Today, Modern Machine Shop, Quality Progress, Maintenance Technology — short articles about what's happening in your industry keep your knowledge current and give you things to bring up in work conversations.",why:"Workers who understand industry trends bring more to their role than those who only understand their immediate job."}
+  ]}
+];
+var lmPanels=document.getElementById('lm-panels');
+lmData.forEach(function(cat,i){
+  var panel=document.createElement('div');panel.className='lm-panel'+(i===0?' active':'');
+  var html='<div class="lm-items">';
+  cat.items.forEach(function(item){
+    html+='<div class="lm-item"><div class="lm-item-head"><div class="lm-item-icon">'+item.icon+'</div><div class="lm-item-title">'+item.title+'</div><div class="lm-item-time">'+item.time+'</div></div>'
+      +'<div class="lm-item-desc">'+item.desc+'</div>'
+      +'<div class="lm-item-why">💡 '+item.why+'</div></div>';
+  });
+  html+='</div>';
+  panel.innerHTML=html;
+  lmPanels.appendChild(panel);
+});
+function setLM(i){
+  document.querySelectorAll('.lm-cat').forEach(function(c,j){c.classList.toggle('active',j===i);});
+  document.querySelectorAll('.lm-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});
+}
+
+var scChecks=[
+  "I asked a coworker to explain something I didn't fully understand",
+  "I looked up an unfamiliar term or concept from work",
+  "I watched a video or read an article related to my industry or trade",
+  "I attended a training session (even if it wasn't required)",
+  "I read documentation for a tool or machine I use",
+  "I shared something I learned with a coworker or supervisor"
+];
+var scEl=document.getElementById('sc-items'),scChecked=0,scDone=[];
+scChecks.forEach(function(c,i){
+  scDone.push(false);
+  var d=document.createElement('div');d.className='sc-item';
+  d.innerHTML='<div class="sc-box" id="scb'+i+'" onclick="toggleSC('+i+')"></div><div class="sc-text">'+c+'</div>';
+  scEl.appendChild(d);
+});
+function toggleSC(i){
+  scDone[i]=!scDone[i];
+  document.getElementById('scb'+i).classList.toggle('checked',scDone[i]);
+  scChecked=scDone.filter(Boolean).length;
+  var r=document.getElementById('sc-result');r.classList.add('show');
+  if(scChecked===0)r.textContent='Nothing checked — that\'s honest. This is your starting point. Pick one item from the menu above and do it this week.';
+  else if(scChecked<=2)r.textContent=scChecked+' of 6. You\'re doing some learning already — even if you didn\'t call it that. Add one more habit this week.';
+  else if(scChecked<=4)r.textContent=scChecked+' of 6. Solid. You already practice more lifelong learning than you probably realize. Keep building.';
+  else r.textContent=scChecked+' of 6. You\'re already a consistent learner. The goal now is to make these habits more intentional and connected to where you want to go.';
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

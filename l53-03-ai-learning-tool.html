@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How AI Can Be Your Personal Learning Tool — Not Just a Work Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* USE CASE EXPLORER */
+.use-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ue-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ue-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ue-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ue-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.ue-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.ue-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.ue-panel{display:none;}
+.ue-panel.active{display:block;}
+.ue-conversation{display:flex;flex-direction:column;gap:10px;}
+.ue-msg{max-width:88%;border-radius:16px;padding:13px 16px;font-size:14px;line-height:1.8;}
+.ue-msg.human{background:var(--purple);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.ue-msg.ai{background:var(--white);border:1.5px solid var(--purple-mid);color:var(--gray-text);align-self:flex-start;border-bottom-left-radius:4px;}
+.ue-msg-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.ue-msg.human .ue-msg-label{color:rgba(255,255,255,.65);}
+.ue-msg.ai .ue-msg-label{color:var(--purple);}
+.ue-insight{background:var(--green-pale);border:1px solid var(--green);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px;color:var(--green);line-height:1.75;}
+
+/* PROMPT LIBRARY */
+.prompt-lib{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.pl-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pl-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.pl-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.pl-items{display:flex;flex-direction:column;gap:10px;}
+.pl-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.pl-category{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.pl-prompt{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:6px;font-family:"Fraunces",serif;}
+.pl-when{font-size:12px;color:var(--gray-muted);line-height:1.6;margin-bottom:8px;}
+.pl-copy{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);border-radius:7px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;}
+
+/* LIMITS BOX */
+.limits-box{background:var(--orange-pale);border:1.5px solid #FCD34D;border-radius:16px;padding:20px 22px;margin:20px 0;}
+.lb-title{font-family:"Fraunces",serif;font-size:16px;color:#92400E;font-weight:700;margin-bottom:10px;}
+.lb-items{display:flex;flex-direction:column;gap:8px;}
+.lb-item{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.7;color:#92400E;}
+.lb-icon{flex-shrink:0;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>How AI Can Be Your Personal Learning Tool — Not Just a Work Tool</h1>
+  <p class="hero-sub">You've been learning how AI shows up in manufacturing operations. But AI is also one of the most powerful personal learning tools ever built — and most people haven't discovered that yet. This article shows you how to use it as a tutor, quiz master, practice partner, and on-the-job reference.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Tutor That's Available 24/7 and Never Gets Impatient</h2>
+  <p>Think about what it would mean to have a tutor available any time you had a question — during lunch break, at the end of a shift, or at 10 PM when something clicked and you wanted to understand it better. A tutor who never got frustrated when you asked the same question three different ways, who could explain the same concept using a car engine analogy if that worked better for you, who would give you a short quiz to test whether you actually understood something.</p>
+  <p>That tutor exists. It's the same AI tools you've been studying as manufacturing technologies — ChatGPT, Claude, Gemini — used differently. Not as productivity software. As a learning partner.</p>
+  <p><mark>Most people use AI to do tasks faster. The workers who use it to learn faster get a compounding advantage that the task-doers miss.</mark></p>
+
+  <div class="pull-quote">
+    <p>The best thing about AI as a learning tool isn't that it knows everything. It's that it's always available, always patient, and always willing to explain the same thing a different way until it clicks.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Five Ways to Use AI as a Learning Tool — With Real Examples</h2>
+  <p>Select any use case below to see a real conversation showing exactly how this works in a manufacturing learning context.</p>
+
+  <div class="use-explorer">
+    <div class="ue-label">AI Learning Use Case Explorer</div>
+    <div class="ue-title">See Real Conversations</div>
+    <div class="ue-sub">These are the types of prompts and responses that help manufacturing workers learn faster. Select any tab to see the full example.</div>
+    <div class="ue-tabs" id="ue-tabs"></div>
+    <div id="ue-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>A Library of Learning Prompts You Can Use Right Now</h2>
+  <p>Copy any of these prompts directly into ChatGPT, Claude, or any AI tool. They're designed specifically for manufacturing workers learning on the job.</p>
+
+  <div class="prompt-lib">
+    <div class="pl-label">Learning Prompt Library</div>
+    <div class="pl-title">Ready-to-Use Prompts for Manufacturing Learning</div>
+    <div class="pl-sub">Click "Copy" on any prompt to copy it. Then paste it into your AI tool and customize the details in brackets.</div>
+    <div class="pl-items" id="pl-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Important: What AI Can't Do as a Learning Tool</h2>
+  <p>AI is powerful for certain types of learning — and has real limits for others. Knowing the difference makes you a smarter learner.</p>
+
+  <div class="limits-box">
+    <div class="lb-title">⚠️ Where AI Learning Has Limits</div>
+    <div class="lb-items">
+      <div class="lb-item"><div class="lb-icon">⚠️</div><div>AI can explain how a CNC machine works conceptually — but it can't teach you the physical feel of setting up a fixture or the sound a cutting insert makes when it's wearing out. Physical skills require physical practice. Use AI for the conceptual layer; use hands-on time for the physical layer.</div></div>
+      <div class="lb-item"><div class="lb-icon">⚠️</div><div>AI can get technical facts wrong — especially for specific equipment models or recent software updates. Always verify critical technical information against the actual equipment manual or manufacturer's documentation before acting on it.</div></div>
+      <div class="lb-item"><div class="lb-icon">⚠️</div><div>AI cannot teach your specific facility's procedures, culture, or unwritten rules. Learning those requires time in the facility, observation, and conversations with experienced coworkers. AI is general; your facility is specific.</div></div>
+      <div class="lb-item"><div class="lb-icon">⚠️</div><div>AI cannot replace mentorship from someone who has done the job for years. The judgment, intuition, and contextual knowledge an experienced coworker carries is not in any AI system. Seek both.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A quality inspector wants to understand why the AI vision system at her facility generates more false positives on certain part geometries. Which is the BEST way to use AI as a learning tool for this question?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Ask the AI to fix the vision system's settings remotely</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Ask the AI to explain how machine vision systems process different geometries and what factors typically cause false positives — then use that understanding to investigate her specific system</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Ask the AI for the exact settings her facility's vision system should use</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">AI can't help with this question because it requires knowing her specific machine</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. AI is excellent at explaining how a technology category works — including what factors affect machine vision accuracy on different geometries (contrast, surface finish, lighting angle, feature depth). With that conceptual understanding, she can then investigate her specific system intelligently: asking better questions, checking the right settings, and communicating more clearly with the vendor or engineer. AI gives her the conceptual framework; she applies it to her specific situation.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ AI can't remotely access or fix her vision system, and it doesn't know her facility's specific settings. But it CAN explain how machine vision systems work conceptually — what factors typically cause false positives on certain geometries, how lighting and contrast affect detection accuracy, what parameters are usually adjustable. That conceptual understanding is exactly what she needs to investigate her specific system intelligently. Use AI for the "why it works this way" layer; use the actual system and documentation for the specific implementation.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI tools like ChatGPT and Claude can function as a personal learning tutor — available 24/7, patient, and able to explain things multiple ways until they click. This is a use case most workers haven't discovered.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Specific ways to use AI for manufacturing learning: explain unfamiliar equipment concepts, quiz yourself on technical knowledge, practice professional communication, look up unfamiliar terms mid-shift, and create study guides from documentation.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI has important limits as a learning tool: it can't teach physical skills, it can get technical specifics wrong, it doesn't know your specific facility's procedures, and it can't replace mentorship from experienced coworkers. Use it for the conceptual layer; verify critical facts from authoritative sources.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The workers who use AI to learn faster — not just to work faster — get a compounding advantage. Every concept understood more deeply becomes the foundation for understanding the next concept.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var useCases=[
+  {name:"🔧 Explain Equipment",convos:[
+    {role:"human",text:"I'm a maintenance technician and my facility just got a new pneumatic actuator system. I've worked with hydraulic systems for years but pneumatics is new to me. Can you explain how pneumatic actuators work and what the main differences are from hydraulic systems I already know?"},
+    {role:"ai",text:"Great context — knowing hydraulic systems well actually makes this easier to understand. Here's the core difference:\n\nHydraulic systems use liquid (usually oil) under pressure to create force. Pneumatic systems use compressed air. Both create linear or rotary motion, but the medium behaves differently.\n\n<strong>Key differences from what you already know:</strong>\n\nForce: Hydraulic systems generate much higher force for the same cylinder size because liquids are nearly incompressible. Air compresses — so pneumatic actuators are typically used for lighter force applications, faster cycling, and places where cleanliness matters (food, medical, electronics).\n\nSpeed: Pneumatic actuators cycle much faster than hydraulic — air flows quickly.\n\nLeaks: A hydraulic leak is messy and can be a serious safety or environmental issue. A pneumatic leak is just air — still wasteful and it affects pressure, but less catastrophic.\n\nComponents: In your pneumatic system, you'll see air compressors (instead of hydraulic pumps), air preparation units (filter, regulator, lubricator — called FRL units), solenoid valves (like your hydraulic directional control valves), and cylinders. The logic is the same; the medium is different.\n\nWant me to walk through how to troubleshoot a pneumatic actuator that's cycling too slowly or not reaching full extension?"},
+    {insight:"Notice how this AI response used the tech's existing hydraulic knowledge as a bridge. That's something you can specifically ask for: 'I already know X — explain Y in relation to that.'"}
+  ]},
+  {name:"📝 Quiz Yourself",convos:[
+    {role:"human",text:"I'm studying for a quality inspection certification. Can you quiz me on Statistical Process Control? Give me 5 questions — one at a time — and tell me if my answer is correct or not, and explain what I got wrong."},
+    {role:"ai",text:"Great approach — testing yourself is one of the most effective ways to learn. Here's question 1:\n\n<strong>Question 1:</strong> An X-bar control chart has a centerline at 45.2 and control limits at UCL = 47.8 and LCL = 42.6. A sample comes back with a mean of 48.1. What would you do?\n\n(Answer in your own words — I'll tell you if you're on track and fill in anything important you missed.)"},
+    {role:"human",text:"The point is above the upper control limit so the process is out of control. I would stop and investigate what changed."},
+    {role:"ai",text:"✅ Correct — and well stated. A point above the UCL is a signal that the process has likely shifted, and stopping to investigate before continuing production is the right response.\n\nTwo things worth adding:\n1. You would also flag any product made since the last in-control point for review — it may be affected by whatever caused the shift.\n2. The investigation follows the '5 Whys' or similar root cause approach — not just fixing the symptom.\n\n<strong>Question 2:</strong> What does a 'run of 8 consecutive points all on the same side of the centerline' indicate on a control chart — even if all the points are within the control limits?"},
+    {insight:"Asking AI to quiz you one question at a time, with feedback on each answer, is one of the most effective self-study methods available. You can do this for any technical topic — safety protocols, equipment operation, quality standards, even professional vocabulary."}
+  ]},
+  {name:"✍️ Practice Writing",convos:[
+    {role:"human",text:"I want to practice writing professional maintenance updates. Can you give me a scenario and then review what I write? Make the scenario realistic — something that actually happens in a manufacturing facility."},
+    {role:"ai",text:"Here's your scenario:\n\nYou're a maintenance technician. At 2:30 PM, the AI predictive maintenance dashboard flagged Conveyor 6 for elevated temperature on the drive motor — 14°C above baseline for the past 90 minutes. You physically inspected the motor: it felt warm but not dangerously hot, the cooling fan was running, and there was no unusual smell or sound. You checked the drive belt tension — it was slightly slack. You adjusted the belt tension back to spec. You'll monitor for the next hour to confirm the temperature returns to baseline.\n\nWrite the status update you would send to your supervisor."},
+    {role:"human",text:"Conveyor 6 motor temp alert — investigated at 2:30 PM. Found the drive belt was slightly loose which was probably causing the motor to work harder. Adjusted belt tension to spec. Monitoring for the next hour. Temperature was warm but not dangerous, no other problems found."},
+    {role:"ai",text:"Good content — you captured the key facts. Here's specific feedback to make it more professional:\n\n<strong>What worked:</strong> You identified the root cause (belt tension), the action taken, and the monitoring plan. That's the right structure.\n\n<strong>What to improve:</strong>\n\n1. <em>Be specific about the temperature:</em> '14°C above baseline' is more useful than 'warm but not dangerous' — give the supervisor a number.\n2. <em>Confirm what you checked before concluding it was just the belt:</em> A brief mention that you checked for other causes (burning smell, unusual sounds, fan operation) shows thoroughness.\n3. <em>Name the specific temperature you'll use as a 'back to normal' threshold</em> for your monitoring.\n\n<strong>Revised version:</strong> 'Conveyor 6 drive motor — AI flagged at 2:30 PM for temperature 14°C above baseline. Inspection: motor warm, no burning smell, fan operating normally, no unusual sounds. Found drive belt tension slightly low — adjusted to spec at 2:45 PM. Will monitor temperature readout for the next hour; will alert you if it doesn't return to within 5°C of baseline by 3:45 PM.'"},
+    {insight:"Using AI as a writing coach for professional communication is one of the highest-value learning activities a manufacturing worker can do. Ask it to give scenarios, review your drafts, and explain specifically what to improve — not just 'make it better.'"}
+  ]},
+  {name:"📖 Look Up Terms",convos:[
+    {role:"human",text:"I'm on break and just heard my supervisor talking about 'OEE' and 'cycle time efficiency.' I've heard OEE before but I don't fully understand it. Can you explain both terms in plain language like I'm a production operator who's been on the floor for 2 years but never studied these formally?"},
+    {role:"ai",text:"Perfect timing for a quick explanation. Here's both, in plain language:\n\n<strong>OEE — Overall Equipment Effectiveness</strong>\n\nOEE is a single number that tells you how well a machine is actually performing compared to how well it COULD perform under ideal conditions. It combines three things:\n\n• <em>Availability:</em> Was the machine running when it was supposed to be? (Accounts for breakdowns and unplanned stops)\n• <em>Performance:</em> When it was running, was it running at the right speed? (Accounts for slow cycles and small stops)\n• <em>Quality:</em> Of the parts it made, how many were actually good? (Accounts for defects and rework)\n\nOEE = Availability × Performance × Quality. If a machine is available 90% of the time, runs at 95% of its target speed, and produces 98% good parts: OEE = 0.90 × 0.95 × 0.98 = 83.7%\n\nWorld-class OEE is considered 85%+. Below 65% usually means something significant needs attention.\n\n<strong>Cycle Time Efficiency</strong>\n\nCycle time is how long it takes to make one part. The target cycle time is what it should take under normal conditions. Cycle time efficiency compares actual to target: if the target is 45 seconds and the machine is taking 52 seconds, cycle time efficiency is 45/52 = 87%.\n\nWhen your supervisor talks about these together, they're asking: is the line running how it should? The numbers show where the gaps are.\n\nWant me to walk through how to read an OEE dashboard?"},
+    {insight:"This 'explain it like I'm a [role] with [X years] experience' framing gets you explanations calibrated to what you already know. Always include your background context — the answer you get will be much more useful."}
+  ]},
+  {name:"📋 Study from Docs",convos:[
+    {role:"human",text:"I'm going to paste the error code section from my facility's CNC machine manual. Can you help me create a study guide from it — organized by error category, with a plain-language explanation of what each error means and what typically causes it? [User pastes 400 words of technical manual text about error codes]"},
+    {role:"ai",text:"Here's the study guide from the error code section you provided, organized by category:\n\n<strong>Communication Errors (E-2xx codes)</strong>\n• E-201: Communication timeout — the CNC controller stopped receiving data from the machine's internal network. Usually caused by a loose cable connection or a software hang. First step: check all cable connections at the controller cabinet.\n• E-215: Parameter mismatch — the program loaded doesn't match the machine's current parameter configuration. Usually happens after a software update or when loading a program from a different machine. Verify program version.\n\n<strong>Axis Errors (E-3xx codes)</strong>\n• E-301: X-axis position error — the machine moved to a position that doesn't match where the controller expected it to be. Often caused by a slipping servo coupling or a mechanical obstruction. Don't override this without checking physically.\n• E-318: Y-axis following error — the Y-axis drive can't keep pace with the commanded movement. Common causes: worn bearings, lubrication issue, or a drive setting that's too aggressive for the actual load...\n\n(Study guide continues for all codes in the pasted section)\n\n<strong>Quick self-test:</strong> What would be your first physical check for an E-201 error? What distinguishes an E-301 from an E-318?"},
+    {insight:"Pasting documentation into an AI and asking it to create a study guide, quiz questions, or plain-language summaries is one of the most time-efficient ways to learn from technical materials that would otherwise take hours to absorb."}
+  ]}
+];
+var ueTabs=document.getElementById('ue-tabs'),uePanels=document.getElementById('ue-panels'),ueActive=0;
+useCases.forEach(function(uc,i){
+  var tab=document.createElement('div');tab.className='ue-tab'+(i===0?' active':'');tab.textContent=uc.name;
+  tab.onclick=function(){ueActive=i;document.querySelectorAll('.ue-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.ue-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  ueTabs.appendChild(tab);
+  var panel=document.createElement('div');panel.className='ue-panel'+(i===0?' active':'');
+  var convDiv=document.createElement('div');convDiv.className='ue-conversation';
+  uc.convos.forEach(function(msg){
+    if(msg.insight)return;
+    var m=document.createElement('div');m.className='ue-msg '+msg.role;
+    m.innerHTML='<div class="ue-msg-label">'+(msg.role==='human'?'You':'AI')+'</div>'+msg.text.replace(/\n/g,'<br>');
+    convDiv.appendChild(m);
+  });
+  panel.innerHTML='';
+  panel.appendChild(convDiv);
+  var lastInsight=null;
+  uc.convos.forEach(function(msg){if(msg.insight)lastInsight=msg.insight;});
+  if(lastInsight){var ins=document.createElement('div');ins.className='ue-insight';ins.textContent='💡 '+lastInsight;panel.appendChild(ins);}
+  uePanels.appendChild(panel);
+});
+
+var prompts=[
+  {cat:"Equipment & Concepts",prompt:"Explain [topic/equipment name] in plain language for someone with [X years] of [trade] experience. Use an analogy to something I already know if that helps.",when:"Use when: you encounter a new piece of equipment, a concept you haven't studied formally, or a term from a supervisor conversation you didn't fully understand."},
+  {cat:"Quizzing",prompt:"Quiz me on [topic]. Give me one question at a time. After I answer, tell me if I'm correct, explain what I got right, and fill in anything important I missed. Then give me the next question.",when:"Use when: you're preparing for a certification exam, reviewing safety protocols, or want to test whether you actually retained what you studied."},
+  {cat:"Writing Practice",prompt:"Give me a realistic manufacturing scenario involving [type of communication — shift handoff / maintenance request / safety report / supervisor update]. I'll write the message, and you review it and tell me specifically what to improve.",when:"Use when: you want to get better at professional writing before you have to do it in a high-stakes situation."},
+  {cat:"Term Lookup",prompt:"I'm a [your role] at a [type of facility]. I just heard [term/phrase] and I don't fully understand it. Explain it in plain language and tell me how it affects my work.",when:"Use when: you hear a term in a meeting, on a dashboard, or in a coworker conversation that you don't fully understand and want to look up quickly."},
+  {cat:"Documentation to Study Guide",prompt:"I'm going to paste a section of technical documentation. Please create a study guide from it: organize by category, explain each item in plain language, and create 3 quiz questions at the end so I can test myself.",when:"Use when: you have equipment manuals, error code lists, safety procedures, or certification materials you need to learn but find dense and hard to absorb."},
+  {cat:"Interview Prep",prompt:"I'm preparing for a [job title] interview in manufacturing. Ask me practice interview questions one at a time — specifically about AI tools in manufacturing, how I'd handle specific situations on the floor, and how I'd explain my experience. Tell me how to improve each answer.",when:"Use when: you're preparing for a job interview and want to practice articulating your manufacturing knowledge and AI literacy."}
+];
+var plEl=document.getElementById('pl-items');
+prompts.forEach(function(p,i){
+  var d=document.createElement('div');d.className='pl-item';
+  d.innerHTML='<div class="pl-category">'+p.cat+'</div><div class="pl-prompt">'+p.prompt+'</div><div class="pl-when">'+p.when+'</div>'
+    +'<button class="pl-copy" onclick="copyPL('+i+')">Copy Prompt</button>';
+  plEl.appendChild(d);
+});
+function copyPL(i){
+  navigator.clipboard.writeText(prompts[i].prompt).then(function(){
+    var btns=document.querySelectorAll('.pl-copy');
+    btns[i].textContent='✓ Copied!';setTimeout(function(){btns[i].textContent='Copy Prompt';},2000);
+  }).catch(function(){});
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

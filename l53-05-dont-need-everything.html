@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Don't Need to Know Everything — You Need to Know How to Learn: A Mindset Guide for New Workers</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* MINDSET SHIFT */
+.mindset-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.mindset-grid{grid-template-columns:1fr;}}
+.mg-card{border-radius:16px;padding:20px;}
+.mg-card.fixed{background:#F3F4F6;border:1.5px solid #D1D5DB;}
+.mg-card.growth{background:var(--green-pale);border:1.5px solid var(--green);}
+.mg-header{font-family:"Fraunces",serif;font-size:15px;font-weight:700;margin-bottom:12px;}
+.mg-card.fixed .mg-header{color:#374151;}
+.mg-card.growth .mg-header{color:var(--green);}
+.mg-items{display:flex;flex-direction:column;gap:8px;}
+.mg-item{font-size:13px;line-height:1.7;padding:8px 10px;border-radius:8px;}
+.mg-card.fixed .mg-item{background:#FAFAFA;color:#6B7280;}
+.mg-card.growth .mg-item{background:rgba(255,255,255,.6);color:#166534;}
+
+/* HOW TO ASK */
+.ask-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.as-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.as-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.as-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.as-scenarios{display:flex;flex-direction:column;gap:14px;}
+.as-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;}
+.as-situation{font-size:14px;font-style:italic;color:var(--gray-muted);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--purple-mid);}
+.as-versions{display:flex;flex-direction:column;gap:8px;}
+.as-version{border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.7;}
+.as-version.bad{background:#F9FAFB;color:#6B7280;border:1px solid #E5E7EB;}
+.as-version.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.as-version-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.as-version.bad .as-version-label{color:#9CA3AF;}
+.as-version.good .as-version-label{color:var(--green);}
+.as-why{background:var(--purple-pale);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+
+/* FIND ANSWERS */
+.find-grid{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.fg-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
+.fg-icon{font-size:22px;flex-shrink:0;}
+.fg-body{}
+.fg-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.fg-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.fg-when{margin-top:6px;background:var(--purple-pale);border-radius:7px;padding:5px 10px;font-size:12px;color:var(--purple-dark);line-height:1.6;}
+
+/* REASSURANCE */
+.reassure-box{background:linear-gradient(135deg,var(--purple-dark),#5b21b6);border-radius:20px;padding:28px 32px;margin:28px 0;}
+.rb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#c084fc;margin-bottom:8px;}
+.rb-title{font-family:"Fraunces",serif;font-size:22px;color:#fff;font-weight:700;margin-bottom:12px;line-height:1.25;}
+.rb-body{font-size:15px;line-height:1.8;color:rgba(255,255,255,.85);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>You Don't Need to Know Everything — You Need to Know How to Learn</h1>
+  <p class="hero-sub">A mindset guide for new manufacturing workers who feel intimidated by technology. This article explains what a growth mindset actually looks like on the factory floor — and gives you specific tools for asking good questions, admitting what you don't know, and finding answers without looking incompetent.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Fear That Holds People Back</h2>
+  <p>Here's a scenario that plays out constantly in manufacturing training programs: A new worker encounters something unfamiliar — a new software system, an AI alert they've never seen, a machine they haven't been trained on. They feel a flash of anxiety. And instead of asking for help, they either fake understanding, avoid the situation, or make a guess and hope for the best.</p>
+  <p>The fear isn't of the technology. The fear is of looking incompetent. Of being judged for not knowing. Of asking a question that makes someone think you're not ready for the job.</p>
+  <p>This fear is understandable. It's also one of the biggest obstacles to growth in any workplace — and it's especially common in manufacturing, where confidence and competence are highly valued.</p>
+  <p>Here's the truth that experienced manufacturing professionals know: <mark>the workers who ask the most questions when they're new are usually the ones who learn the fastest and advance the furthest</mark>. Asking good questions isn't a sign of incompetence — it's a sign of the kind of professional seriousness that supervisors want to see.</p>
+
+  <div class="pull-quote">
+    <p>Nobody on my team ever got in trouble for asking a good question. They get in trouble for guessing wrong and not telling anyone. I'd rather hear 'I don't know how to do this yet — can you show me?' than deal with the aftermath of someone who pretended they knew.</p>
+    <p style="font-style:normal;font-size:14px;color:rgba(74,21,128,.7);margin-top:10px;">— Production Supervisor, 14 years, automotive components</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Fixed Mindset vs. Growth Mindset — In Manufacturing Terms</h2>
+  <p>A "fixed mindset" means believing your abilities are set — that you either have a skill or you don't, and there's not much you can do about it. A "growth mindset" means believing abilities can be developed through effort, learning, and persistence.</p>
+  <p>In manufacturing, these two mindsets show up in specific, observable ways every day:</p>
+
+  <div class="mindset-grid">
+    <div class="mg-card fixed">
+      <div class="mg-header">⬛ Fixed Mindset Responses</div>
+      <div class="mg-items">
+        <div class="mg-item">"I'm not a tech person — I never have been."</div>
+        <div class="mg-item">"I've been doing this for 15 years and it worked fine before."</div>
+        <div class="mg-item">"I'll just figure it out on my own rather than ask."</div>
+        <div class="mg-item">"If I ask a question, they'll think I'm not ready."</div>
+        <div class="mg-item">"This new system is too complicated — I'll let someone else handle it."</div>
+        <div class="mg-item">"I made a mistake — I'm probably not cut out for this."</div>
+      </div>
+    </div>
+    <div class="mg-card growth">
+      <div class="mg-header">✅ Growth Mindset Responses</div>
+      <div class="mg-items">
+        <div class="mg-item">"I haven't learned this yet — let me figure out how to."</div>
+        <div class="mg-item">"15 years of experience is a foundation. What can I add to it?"</div>
+        <div class="mg-item">"Asking now saves me from a bigger mistake later."</div>
+        <div class="mg-item">"A good question shows I'm paying attention."</div>
+        <div class="mg-item">"I don't understand this yet — who can show me?"</div>
+        <div class="mg-item">"I made a mistake — what can I learn from it so it doesn't happen again?"</div>
+      </div>
+    </div>
+  </div>
+
+  <p>The growth mindset isn't about being endlessly positive or pretending difficulties don't exist. It's about the belief that where you are right now is not where you have to stay — and that specific effort in specific directions moves you forward.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Ask Good Questions — Without Looking Incompetent</h2>
+  <p>There's a difference between a good question and a lazy question. Good questions show that you've thought about the problem and want to understand it more deeply. Lazy questions ask someone else to do your thinking for you. The difference matters — and experienced workers can tell immediately which type they're getting.</p>
+  <p>Below are common manufacturing situations where new workers need to ask questions. For each one, see what a lazy question looks like versus a professional question — and why the difference matters.</p>
+
+  <div class="ask-sim">
+    <div class="as-label">Question Quality Guide</div>
+    <div class="as-title">Lazy Questions vs. Professional Questions</div>
+    <div class="as-sub">See exactly how to reframe a question to demonstrate thought rather than helplessness — and get better information in return.</div>
+    <div class="as-scenarios" id="as-scenarios"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Admit You Don't Know Something — Professionally</h2>
+  <p>There's an art to saying "I don't know" in a way that maintains credibility. The worst thing you can do is pretend to know when you don't — especially in manufacturing, where acting on incomplete knowledge can damage equipment, create quality problems, or create safety risks.</p>
+  <p>Here are the three elements of admitting uncertainty professionally:</p>
+
+  <div style="display:flex;flex-direction:column;gap:10px;margin:20px 0;">
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;">1. State clearly what you don't know</div>
+      <div style="font-size:13px;line-height:1.75;color:var(--gray-text);">Don't bury it in vague language. "I haven't been trained on that system yet" is clearer than "I'm not totally sure about that." Clarity builds more trust than hedging.</div>
+      <div style="margin-top:8px;background:var(--green-pale);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--green);">✓ Say: "I haven't worked with the predictive maintenance platform before — I don't know how to read the alert queue yet."</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;">2. Show what you do know or have tried</div>
+      <div style="font-size:13px;line-height:1.75;color:var(--gray-text);">If you've attempted something, say so. If you have partial understanding, share it. This shows you're engaged and thinking, not just throwing the problem at someone else.</div>
+      <div style="margin-top:8px;background:var(--green-pale);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--green);">✓ Say: "I found the alert in the system but I don't know what priority level 3 means vs. priority level 1 — can you show me how to interpret those?"</div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;">3. Ask for what you need to get unblocked</div>
+      <div style="font-size:13px;line-height:1.75;color:var(--gray-text);">Be specific about what help you're asking for. "Can you show me?" is better than "I don't know what to do." "Can you point me to the documentation?" is better than waiting for someone to figure out what you need.</div>
+      <div style="margin-top:8px;background:var(--green-pale);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--green);">✓ Say: "Can you walk me through the first time, and I'll take notes so I can do it myself next time?"</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Find Answers Without Asking Someone Every Time</h2>
+  <p>Asking coworkers is one resource — but it shouldn't be the only one. Relying exclusively on asking creates two problems: you interrupt coworkers who are busy, and you don't build the independent research skill that makes you genuinely self-sufficient. Here's a toolkit of how to find answers when you're on the job:</p>
+
+  <div class="find-grid" id="find-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <div class="reassure-box">
+    <div class="rb-eyebrow">A Direct Message to You</div>
+    <div class="rb-title">Not knowing something is the beginning of learning — not evidence that you're not ready</div>
+    <div class="rb-body">If you've been feeling intimidated by AI tools in manufacturing, or worried that you're not technical enough to work alongside these systems, here's what you need to hear: every worker who confidently operates AI-assisted manufacturing tools today had a first day being confused by them. Every expert was a beginner. The difference between where you are now and where you want to be isn't a gap in talent — it's a gap in experience. And experience is built exactly the way this certification is helping you build it: one concept at a time, with practice, with questions, with willingness to not know yet.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A new production operator encounters an AI dashboard alert she doesn't understand. Which response best demonstrates a growth mindset?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Ignore the alert and continue working — if it were critical, someone would have told her about it</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Try to address the alert herself, guessing at what it means based on the wording</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Ask a coworker or supervisor: "I'm seeing an alert I haven't encountered before — can you walk me through what this one means and what the right response is?"</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Decide that AI dashboards are too complicated for her and focus only on the tasks she already knows</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Asking a specific question — "I'm seeing an alert I haven't encountered before, can you walk me through it" — demonstrates exactly what a growth mindset looks like in practice. She's not ignoring the alert (dangerous), not guessing (risky), not deciding it's beyond her (fixed mindset). She's acknowledging what she doesn't know, showing she's paying attention, and asking specifically for what she needs to learn. That's the behavior of someone who advances.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Ignoring the alert is a safety and quality risk. Guessing at an alert's meaning without training is risky. Deciding AI dashboards are "too complicated" is a fixed mindset response. The growth mindset response is to ask — specifically and clearly. "I'm seeing an alert I haven't seen before — can you walk me through what this means?" shows she's paying attention, takes the alert seriously, and is committed to building the knowledge to handle it correctly next time.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The fear of looking incompetent stops many new workers from asking questions — but experienced supervisors consistently say that good questions are a sign of seriousness, not weakness. Workers who ask get smarter; workers who fake understanding get stuck.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A growth mindset in manufacturing means believing your current skill level is where you are, not who you are — and that specific effort moves you forward. Fixed mindset responses ("I'm not a tech person") are stories, not facts.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Good questions show thought: they include what you already tried, what you already understand, and a specific ask. Lazy questions dump the problem on someone else. The difference is visible immediately and affects how people think of you.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Admitting you don't know something professionally means stating it clearly, showing what you do know, and asking specifically for what you need to get unblocked. That's more credible than hedging or pretending.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var scenarios=[
+  {situation:"You're shown a new predictive maintenance platform during training. You missed part of the explanation and don't understand how to navigate the alert queue.",bad:{label:"Lazy question",text:"\"Can you just show me what to do again?\"",why:"This puts all the work on the other person and gives them no information about what specifically you missed. It also makes it hard for them to calibrate the explanation."},good:{label:"Professional question",text:"\"I understood how the dashboard flags alerts, but I'm not sure how to tell which ones are high priority versus low priority — is that based on the color coding, the number in the priority column, or something else?\"",why:"This shows you understood part of the training (the flagging), identifies the specific gap (priority levels), and proposes possible answers — making it easy for your coworker to give you exactly what you need."}},
+  {situation:"A machine you're operating shows an error code you've never seen before. You don't know what it means.",bad:{label:"Lazy question",text:"\"Hey, what does this error mean?\" (with no other context)"},good:{label:"Professional question",text:"\"Machine 4 is showing Error E-47. I looked it up in the manual on my phone and found a few possibilities — it seems to be related to the servo drive, but I'm not sure which specific component. I haven't seen this one before — what's your experience with E-47 and where should I start looking?\"",why:"You did the work you could do (manual lookup), shared what you found, and asked for the specific expertise your coworker has (their experience with this specific error). That's a partnership, not a handoff."}},
+  {situation:"Your supervisor asks you to run the quality inspection on a new product type. You've done inspections before, but you haven't been trained on this specific product's specifications.",bad:{label:"Lazy question",text:"\"What am I supposed to check?\""},good:{label:"Professional question",text:"\"I have the inspection sheet for Product #A-1122, but I notice it references a surface finish specification I haven't seen before — Rz 3.2. I know Ra measurements but not Rz. Can you confirm whether our current surface tester measures Rz, or should I be using a different method for that spec?\"",why:"You read the documentation, found the specific gap, and asked a precise, technical question. That's exactly what an engaged, professional worker looks like — even when they don't have all the answers."}}
+];
+var asEl=document.getElementById('as-scenarios');
+scenarios.forEach(function(s){
+  var d=document.createElement('div');d.className='as-scenario';
+  d.innerHTML='<div class="as-situation">Situation: '+s.situation+'</div><div class="as-versions">'
+    +'<div class="as-version bad"><div class="as-version-label">❌ '+s.bad.label+'</div>'+s.bad.text+'</div>'
+    +'<div class="as-version good"><div class="as-version-label">✅ '+s.good.label+'</div>'+s.good.text
+    +(s.good.why?'<div class="as-why">Why it works: '+s.good.why+'</div>':'')+'</div></div>';
+  asEl.appendChild(d);
+});
+
+var findMethods=[
+  {icon:"📖",title:"The equipment manual or documentation",desc:"Almost every machine, software system, and AI tool has documentation. For machines: the manual is usually in a binder near the machine or in a shared drive. For software: look for a 'Help' menu or search the platform name + 'documentation' online. Most maintenance management systems have searchable help built in.",when:"Use when: you encounter an error code, an unfamiliar feature, or a specification you haven't seen before."},
+  {icon:"🔍",title:"The facility's shared drive or knowledge base",desc:"Many facilities maintain shared drives with training documents, SOPs (Standard Operating Procedures), work instructions, and troubleshooting guides. If your facility has a shared drive, learn where these documents live. They're the accumulated knowledge of people who worked there before you.",when:"Use when: you need to know the specific procedure your facility uses for a task you haven't done before."},
+  {icon:"💬",title:"AI tools — as a conceptual explainer",desc:"As covered earlier in this lesson, AI tools like ChatGPT can explain how technologies and concepts work in plain language. Ask it to explain an error code category, a technical concept, or how a type of manufacturing process works. It won't know your specific machine, but it can give you the conceptual framework.",when:"Use when: you encounter a concept you don't understand and want a plain-language explanation before asking someone at the facility."},
+  {icon:"📺",title:"YouTube and online training",desc:"YouTube has high-quality technical content on nearly every manufacturing trade and technology. Searching 'how to read a predictive maintenance dashboard' or 'FANUC error code E-401 troubleshooting' often produces immediately useful results. For structured learning, platforms like Coursera, LinkedIn Learning, and vendor training sites have more comprehensive content.",when:"Use when: you need a visual explanation or want to see how a process or piece of equipment actually works before you encounter it in person."},
+  {icon:"👥",title:"The right person — not just the nearest person",desc:"When you do ask a coworker, make sure you're asking the right person. The most experienced person on the team with the specific piece of equipment is more useful than the newest person who happens to be nearby. It's worth taking a moment to identify who to ask rather than just asking whoever is closest.",when:"Use when: you've tried the documentation and online resources and still need hands-on guidance, or when you need someone who knows your specific facility's procedures."}
+];
+var fgEl=document.getElementById('find-grid');
+findMethods.forEach(function(m){
+  var d=document.createElement('div');d.className='fg-item';
+  d.innerHTML='<div class="fg-icon">'+m.icon+'</div><div class="fg-body"><div class="fg-title">'+m.title+'</div><div class="fg-desc">'+m.desc+'</div><div class="fg-when">📍 Use when: '+m.when+'</div></div>';
+  fgEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

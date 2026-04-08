@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why the Workers Who Keep Learning Are the Ones Who Keep Working</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* HISTORY TIMELINE */
+.history-tl{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.htl-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.htl-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.htl-items{display:flex;flex-direction:column;gap:0;}
+.htl-item{display:flex;gap:0;align-items:stretch;cursor:pointer;}
+.htl-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0;}
+.htl-dot{width:16px;height:16px;border-radius:50%;background:var(--purple);flex-shrink:0;border:3px solid var(--white);}
+.htl-line{width:2px;background:var(--purple-mid);flex:1;min-height:12px;}
+.htl-item:last-child .htl-line{background:transparent;}
+.htl-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;margin-bottom:10px;margin-left:10px;transition:border-color .2s;}
+.htl-card:hover{border-color:var(--purple);}
+.htl-era{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
+.htl-tech{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.htl-what{font-size:13px;line-height:1.75;color:var(--gray-text);margin-bottom:8px;}
+.htl-splits{display:none;gap:10px;}
+.htl-splits.open{display:grid;grid-template-columns:1fr 1fr;}
+@media(max-width:540px){.htl-splits.open{grid-template-columns:1fr;}}
+.htl-split{border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.7;}
+.htl-split.thrived{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.htl-split.struggled{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+.htl-split-label{font-weight:700;margin-bottom:3px;}
+.htl-toggle{font-size:12px;color:var(--purple);font-weight:600;margin-top:4px;}
+
+/* STAT CALLOUTS */
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:24px 0;}
+@media(max-width:560px){.stat-row{grid-template-columns:1fr;}}
+.stat-card{background:var(--purple-dark);border-radius:16px;padding:20px;text-align:center;}
+.stat-num{font-family:"Fraunces",serif;font-size:34px;font-weight:900;color:#c084fc;line-height:1;}
+.stat-label{font-size:12px;color:rgba(255,255,255,.72);margin-top:6px;line-height:1.5;}
+
+/* AI MOMENT */
+.ai-moment{background:linear-gradient(135deg,#0f172a,#1e1547);border-radius:20px;padding:28px;margin:28px 0;}
+.aim-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#c084fc;margin-bottom:8px;}
+.aim-title{font-family:"Fraunces",serif;font-size:22px;color:#fff;font-weight:700;margin-bottom:12px;line-height:1.25;}
+.aim-body{font-size:15px;line-height:1.8;color:rgba(255,255,255,.82);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>Why the Workers Who Keep Learning Are the Ones Who Keep Working</h1>
+  <p class="hero-sub">This isn't a prediction about the future. It's a pattern that has repeated itself through every major technology shift in manufacturing history. The evidence is clear — and it applies directly to what's happening with AI right now.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Pattern That Has Repeated Itself Every Decade</h2>
+  <p>Manufacturing has gone through several major technology shifts in the past 60 years. Each time, the same thing happened: the technology changed what skills were valuable. Workers who learned the new skills became more employable and earned more. Workers who didn't found their options narrowing — sometimes slowly, sometimes quickly.</p>
+  <p>This isn't a story about machines replacing workers. In every shift, the total number of manufacturing jobs stayed substantial. But the <mark>types of workers who filled those jobs changed</mark>. The ones who kept learning kept working. The ones who stopped learning eventually found themselves in a shrinking category.</p>
+  <p>Understanding this history isn't just interesting — it's the clearest possible argument for why the learning you're doing right now matters.</p>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-num">12.8M</div><div class="stat-label">Americans employed in manufacturing today — more than at any point in the 1990s recession</div></div>
+    <div class="stat-card"><div class="stat-num">$84k</div><div class="stat-label">Average annual salary for a manufacturing production supervisor with AI literacy skills</div></div>
+    <div class="stat-card"><div class="stat-num">2.1M</div><div class="stat-label">Projected unfilled manufacturing jobs by 2030 — mostly requiring updated tech skills</div></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Five Technology Shifts — What Happened to the Workers</h2>
+  <p>Click any era to see who thrived and who struggled — and why the difference came down almost entirely to learning.</p>
+
+  <div class="history-tl">
+    <div class="htl-label">Manufacturing Technology History</div>
+    <div class="htl-title">Every Shift Created Winners and Losers — Separated by One Thing</div>
+    <div class="htl-items" id="htl-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Pattern Is Always the Same</h2>
+  <p>Look across every one of those shifts and the same structure appears every time:</p>
+  <p><strong>New technology arrives.</strong> It does some things faster or more efficiently than humans did before. It requires new skills to operate, maintain, and work alongside. Most existing workers are unfamiliar with it.</p>
+  <p><strong>Two groups form.</strong> Workers who engage with the new technology — asking questions, getting training, practicing, building the new skills. And workers who resist — believing their current skills are sufficient, that the technology is a fad, or that they're too experienced to need to learn something new.</p>
+  <p><strong>The gap widens.</strong> Over months and years, the workers who engaged become the ones facilities rely on for the technology that now runs their operations. They get promoted into roles that require that expertise. They earn more. The workers who resisted find that their specific skills are gradually less central to how the facility runs.</p>
+
+  <div class="pull-quote">
+    <p>Nobody was fired for not learning CNC programming in 1982. But by 1995, the machinists who hadn't were working in a much smaller world than the ones who had. The door didn't close — it just got narrower every year.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>AI Is the Current Shift — And It's Faster Than the Others</h2>
+
+  <div class="ai-moment">
+    <div class="aim-eyebrow">Where We Are Right Now</div>
+    <div class="aim-title">AI is the technology that's shifting manufacturing — and the window to get ahead of it is open right now</div>
+    <div class="aim-body">Previous technology shifts — CNC machines, ERP software, industrial robots — took 10–15 years to fully spread through the manufacturing workforce. By the time most workers noticed the shift was serious, the early adopters were already 5 years ahead. AI is moving faster. Facilities that deployed one AI tool in 2020 often have 8–10 by 2024. The window to be an early learner is shorter than it used to be — which makes this moment more valuable. Workers who build AI literacy now, while it's still relatively new in most facilities, are in the position the early CNC programmers were in 1982. The question is whether to take that position or wait.</div>
+  </div>
+
+  <p>There's one important difference between AI and previous shifts: unlike CNC programming or ERP software, AI literacy doesn't require learning to code or operating complex technical systems. What it requires is understanding how AI tools work, what they're good at, where they make mistakes, and how to work alongside them effectively. <mark>That's exactly what this certification is building.</mark></p>
+</div>
+
+<div class="section fade-in">
+  <h2>Why Some Workers Stop Learning — And What It Actually Costs</h2>
+  <p>Workers who stop learning rarely make one dramatic decision to give up. It happens gradually, through a series of smaller choices that each seem reasonable at the time:</p>
+  <p>They skip the optional training because the shift is busy. They let someone else handle the new software. They decide the AI tool seems unreliable and stick with their old approach. They tell themselves they'll learn it "when things slow down." They repeat that for two years.</p>
+  <p>None of those individual choices is catastrophic. But cumulatively, they add up to a worker who is two years behind on skills that their employer increasingly values — and who is being quietly passed over for opportunities that require those skills.</p>
+  <p>The workers who keep learning make the opposite set of small choices. They do the 20-minute training. They ask the coworker who figured out the new system to show them. They spend their lunch break watching a tutorial. They accept that learning something new will feel uncomfortable for a few days — and decide that's worth it.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">In the 1980s, when CNC machines began replacing manual machining operations, which workers ended up in the strongest career positions 15 years later?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Workers who resisted CNC, believing their manual skills were too valuable to be replaced</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Workers who learned CNC programming and operation — they became highly sought-after because they combined manual machining knowledge with the new technical skill</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Workers who left machining entirely and moved to other industries</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The question is irrelevant — manufacturing employment collapsed because of automation</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The machinists who learned CNC programming ended up in the best positions — because they had something uniquely valuable: the physical understanding of machining that came from manual experience, combined with the ability to program and operate the new CNC systems. Workers who only had manual skills found themselves in a shrinking category of shops. Workers who only knew CNC but had no physical machining background lacked the intuition to know when something was wrong. The combination was the advantage.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The workers who adapted thrived. The machinists who learned CNC programming had a significant advantage over both those who resisted (whose pure manual skills became less central to production) and those who were entirely new to machining (who lacked the physical intuition that made CNC work valuable). Manufacturing employment didn't collapse — it shifted. The workers positioned best were the ones who carried existing expertise into the new technology.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Every major technology shift in manufacturing — CNC machines, ERP software, industrial robots, digital quality systems — followed the same pattern: workers who learned the new technology advanced; workers who didn't found fewer opportunities over time.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The gap between learners and non-learners rarely appears overnight. It builds through small choices, made repeatedly, over months and years — until the difference in career trajectory becomes impossible to ignore.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI is the current shift — and it's moving faster than previous ones. Workers building AI literacy now are in the same position as early CNC programmers in 1982: ahead of the wave, with a skill that facilities will increasingly depend on.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The good news: AI literacy doesn't require coding or complex technical expertise. It requires understanding how AI tools work, where they fail, and how to apply judgment when working alongside them — exactly what this certification builds.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var eras=[
+  {era:"1960s–1980s",tech:"Numerical Control → CNC Machines",what:"Computer Numerical Control (CNC) machines replaced manual machining operations, allowing computers to control cutting tools with precision that human hands couldn't match consistently. Programming a CNC machine required reading technical drawings AND understanding the computer control logic.",thrived:"Machinists who learned CNC programming became some of the most valued workers in precision manufacturing. Their combination of physical machining intuition and new technical skill was rare and highly paid. Many became lead machinists, shop foremen, and eventually owners of small precision shops.",struggled:"Machinists who refused to learn CNC found themselves limited to shops that still ran manual equipment — a category that shrank steadily over 20 years. By the late 1990s, pure manual machinists who hadn't adapted had very limited options in modern production environments."},
+  {era:"1980s–2000s",tech:"Paper Systems → ERP Software",what:"Enterprise Resource Planning (ERP) software replaced paper-based tracking of work orders, inventory, schedules, and production records. Workers who had used paper logs and physical files now needed to enter data digitally, read reports from software dashboards, and work within shared information systems.",thrived:"Workers who learned to navigate ERP systems became the people their supervisors relied on for accurate information. Production coordinators, maintenance planners, and quality managers who were ERP-fluent were promoted into roles that existed partly because the software created new information management needs. Many became ERP system administrators or super-users.",struggled:"Workers who avoided the computer systems became bottlenecks — their paper-based records didn't connect to the digital systems everyone else was using. Some were shifted to tasks that didn't require the systems, which gradually became lower-value roles. Others left the industry entirely."},
+  {era:"1990s–2010s",tech:"Manual Assembly → Industrial Robotics",what:"Industrial robots took over repetitive, physically demanding, dangerous, and high-precision assembly tasks across automotive, electronics, and aerospace manufacturing. Human workers shifted from doing these tasks directly to programming robot paths, maintaining robot systems, and performing the complex tasks robots couldn't handle.",thrived:"Workers who learned robot programming, PLC controls, and automation maintenance became some of the highest-paid technicians in manufacturing. The combination of mechanical knowledge and automation skills was rare and in constant demand. Facilities with large robot installations needed people who could keep them running.",struggled:"Workers who only knew how to do the tasks robots replaced found their direct roles eliminated or dramatically reduced in scale. Workers who learned to maintain and program robots often came from exactly this group — those who successfully reframed their mechanical knowledge toward the new technology."},
+  {era:"2005–2020",tech:"Manual Inspection → Digital Quality Systems",what:"Digital quality management systems, coordinate measuring machines with software outputs, and later machine vision inspection systems replaced manual measurement and visual inspection as the primary quality control methods. Quality data moved from paper inspection reports to digital dashboards showing real-time defect rates and trend patterns.",thrived:"Quality workers who learned to operate CMMs, interpret SPC control charts, and use quality management software became quality analysts and engineers rather than inspectors. Their understanding of both the physical product AND the data systems made them uniquely valuable for root cause analysis and quality engineering.",struggled:"Workers who relied solely on manual inspection skills found their primary function automated. Some remained for final verification roles. Those who didn't adapt to digital quality systems found quality departments gradually requiring skills they hadn't built."},
+  {era:"2018–Now",tech:"Data-Generating Equipment → AI-Assisted Operations",what:"AI systems now analyze sensor data from machines, quality systems, and production tracking to generate predictions, recommendations, and alerts — covering predictive maintenance, quality monitoring, production planning, and resource management. The new skill is working alongside these systems: reviewing their outputs, applying judgment, and communicating data-driven insights.",thrived:"Workers building AI literacy right now — who learn to review AI alert dashboards, investigate AI-generated quality flags, and communicate data-backed recommendations to supervisors — are positioning themselves ahead of the majority of the current manufacturing workforce. This is the early-adopter window.",struggled:"Workers who avoid AI tools entirely and maintain only their pre-AI skill set will find the same pattern repeating: not an overnight change, but a gradual narrowing of the most valuable and best-paid roles available to them."}
+];
+var htlEl=document.getElementById('htl-items'),openIdx=null;
+eras.forEach(function(e,i){
+  var d=document.createElement('div');d.className='htl-item';
+  d.innerHTML='<div class="htl-left"><div class="htl-dot"></div><div class="htl-line"></div></div>'
+    +'<div class="htl-card" onclick="toggleEra('+i+')">'
+    +'<div class="htl-era">'+e.era+'</div>'
+    +'<div class="htl-tech">'+e.tech+'</div>'
+    +'<div class="htl-what">'+e.what+'</div>'
+    +'<div class="htl-splits" id="htls'+i+'">'
+    +'<div class="htl-split thrived"><div class="htl-split-label">✅ Workers who thrived</div>'+e.thrived+'</div>'
+    +'<div class="htl-split struggled"><div class="htl-split-label">⚠️ Workers who struggled</div>'+e.struggled+'</div>'
+    +'</div>'
+    +'<div class="htl-toggle" id="htlt'+i+'">▼ See who thrived and who struggled</div>'
+    +'</div>';
+  htlEl.appendChild(d);
+});
+function toggleEra(i){
+  var s=document.getElementById('htls'+i),t=document.getElementById('htlt'+i);
+  var open=s.classList.contains('open');
+  if(openIdx!==null&&openIdx!==i){document.getElementById('htls'+openIdx).classList.remove('open');document.getElementById('htlt'+openIdx).textContent='▼ See who thrived and who struggled';}
+  s.classList.toggle('open',!open);
+  t.textContent=open?'▼ See who thrived and who struggled':'▲ Hide';
+  openIdx=open?null:i;
+}
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

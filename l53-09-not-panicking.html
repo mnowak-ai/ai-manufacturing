@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When Technology Changes at Your Job: A Practical Guide to Not Panicking</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* STAGES */
+.stages{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.stage{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;}
+.stage-header{padding:16px 20px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;}
+.stage-icon{font-size:24px;flex-shrink:0;}
+.stage-info{}
+.stage-name{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:2px;}
+.stage-label{font-size:12px;color:var(--gray-muted);}
+.stage-toggle{margin-left:auto;font-size:14px;color:var(--purple);font-weight:600;flex-shrink:0;padding-top:2px;}
+.stage-body{display:none;padding:0 20px 16px;border-top:1px solid var(--purple-mid);}
+.stage-body.open{display:block;}
+.stage-normal{background:var(--green-pale);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:13px;color:var(--green);line-height:1.7;}
+.stage-normal::before{content:"✓ This is normal: ";font-weight:700;}
+.stage-what-to-do{margin-top:10px;}
+.stage-wtd-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.stage-action{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.7;color:var(--gray-text);margin-bottom:6px;}
+.stage-action::before{content:"→";color:var(--purple);font-weight:700;flex-shrink:0;}
+
+/* STEP BY STEP */
+.playbook{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.pb-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.pb-steps{display:flex;flex-direction:column;gap:0;}
+.pb-step{display:flex;gap:0;align-items:stretch;}
+.pb-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.pb-dot{width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);flex-shrink:0;}
+.pb-line{width:2px;background:var(--purple-mid);flex:1;min-height:14px;}
+.pb-step:last-child .pb-line{background:transparent;}
+.pb-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin-bottom:10px;margin-left:10px;}
+.pb-when{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
+.pb-step-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.pb-step-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.pb-tip{background:var(--purple-pale);border-radius:7px;padding:6px 10px;margin-top:6px;font-size:12px;color:var(--purple-dark);line-height:1.6;}
+
+/* MINDSET CHECK */
+.mindset-check{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.mc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.mc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.mc-items{display:flex;flex-direction:column;gap:10px;}
+.mc-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.mc-thought{font-size:14px;font-weight:600;color:var(--gray-text);margin-bottom:8px;font-style:italic;}
+.mc-thought::before{content:"Thought: \"";color:var(--gray-muted);}
+.mc-thought::after{content:"\"";color:var(--gray-muted);}
+.mc-reframe{background:var(--green-pale);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--green);line-height:1.7;}
+.mc-reframe::before{content:"Better frame: ";font-weight:700;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>When Technology Changes at Your Job: A Practical Guide to Not Panicking</h1>
+  <p class="hero-sub">The anxiety is real. The learning curve is real. And both of them are temporary. This article names what you'll feel at each stage of a technology transition — and gives you a step-by-step approach to getting through it without making it worse.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Let's Start With Honesty: Technology Transitions Are Uncomfortable</h2>
+  <p>When a new system, machine, or software rolls out at a manufacturing facility, there's a real emotional experience that nobody talks about in official training sessions:</p>
+  <p>The feeling of being competent one day and lost the next. The embarrassment of being slower than coworkers who seem to be picking it up faster. The quiet fear that maybe you're not adaptable enough — that this time, it might not click. The temptation to avoid the new thing as long as possible.</p>
+  <p>These feelings are not signs that something is wrong with you. <mark>They are the completely normal experience of being at the beginning of a learning curve</mark>. Every person who confidently operates the system you're struggling with right now had this same experience when they first encountered it. The difference between them and workers who never fully adapted is not talent — it's what they chose to do during those uncomfortable early weeks.</p>
+
+  <div class="pull-quote">
+    <p>The first two weeks of any new system feel like you've forgotten how to do your job. That feeling is not information about your ability. It's information about where you are in the learning process. Keep going.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Five Stages of a Technology Transition</h2>
+  <p>Understanding what's coming before it arrives makes it easier to get through. Here's what a typical technology transition actually looks like — and what to do at each stage. Click any stage to see the full picture.</p>
+
+  <div class="stages" id="stages"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Practical Playbook: What to Do When Change Arrives</h2>
+  <p>Here's a step-by-step approach you can run through every time a major technology change arrives at your facility — whether it's a new software system, a new machine, or a new AI-assisted process.</p>
+
+  <div class="playbook">
+    <div class="pb-label">Technology Transition Playbook</div>
+    <div class="pb-title">Eight Steps From Announcement to Competence</div>
+    <div class="pb-steps" id="pb-steps"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Thoughts That Trap You — And How to Reframe Them</h2>
+  <p>During a technology transition, certain thoughts can make the experience significantly harder than it needs to be. None of them are true — but they feel true. Here's how to recognize them and reframe them:</p>
+
+  <div class="mindset-check">
+    <div class="mc-label">Mindset Reframes</div>
+    <div class="mc-title">From Stuck Thought to Useful Thought</div>
+    <div class="mc-items" id="mc-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Three weeks into a new digital quality management system rollout, a quality inspector still finds the system slower and more confusing than the paper process she used before. She's starting to wonder if she's going to figure it out. What does this most likely indicate?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">She is not adaptable enough for modern manufacturing environments</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">The new system is probably not a good fit for the facility and should be reconsidered</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">She is in the middle of the normal learning curve — three weeks into a significant system change is exactly when it's hardest, right before it starts to get easier</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">She needs to ask her employer for more official training before continuing</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Three weeks into a significant system change is almost always the hardest point — past the initial novelty and not yet at genuine fluency. The learning curve in most software and system transitions peaks around weeks 2–4 and then drops as patterns start to click. What she's feeling is not evidence of permanent inability — it's evidence of being exactly where the learning curve said she'd be. The right move is to keep going, seek out specific resources for the parts that aren't clicking, and wait for the moment (typically 4–8 weeks in) when it starts to feel normal.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Three weeks into a system transition is typically the hardest point — not a signal that adaptation isn't going to happen. The learning curve in most software transitions peaks around weeks 2–4 before fluency begins to develop. Her experience is completely normal. It's not an indication that she lacks adaptability, that the system is wrong for the facility, or that she needs more formal training specifically. The right move is to identify the specific parts that aren't clicking, find targeted resources for those, and understand that the "clicking" moment usually comes around weeks 4–8.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Technology transitions reliably produce uncomfortable feelings: feeling lost, being slower than coworkers, doubting yourself. These are normal experiences of the learning curve — not indicators of permanent inability.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The five stages of a technology transition — Announcement Anxiety, First Contact Confusion, The Grind, The Click, and Fluency — have predictable timelines. Knowing where you are on the curve makes it easier to stay in the process.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The eight-step playbook (preparation → questions → small wins → specific gaps → resources → teaching → patience → documenting) gives you a concrete approach for every technology change you'll face.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The thoughts that make transitions hardest — "I'll never get this," "everyone else is fine," "maybe I'm not cut out for this" — are predictable cognitive patterns, not facts. Recognizing them and reframing them is itself a learnable skill.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var stages=[
+  {icon:"😰",name:"Announcement Anxiety",label:"Before it goes live — 1 to 4 weeks out",normal:"Feeling nervous about something you haven't used yet. Wondering if you'll be able to handle it. Hearing rumors from coworkers about how complicated it is. This is anticipatory anxiety, and it's almost always worse than the reality.",actions:["Try to get your hands on the new system before the formal training if possible — ask if there's a demo or sandbox environment","Find out who in the facility has already been trained and ask them what to expect","Focus on what will stay the same, not just what will change"]},
+  {icon:"😵",name:"First Contact Confusion",label:"Day 1 to Week 2 — the hardest days",normal:"Feeling overwhelmed, slower than usual, like you've temporarily forgotten how to do your job. Making small mistakes. Not understanding why things work the way they do yet. This is genuinely the hardest part of the transition — but it's also the shortest phase for workers who engage rather than withdraw.",actions:["Don't try to learn everything at once — focus on the 2–3 functions you'll need most in the first week","Write down specific questions as they come up rather than letting confusion accumulate","Do small, low-stakes tasks in the new system first to build confidence before tackling complex ones","Be honest with your supervisor about where you are — they need accurate information, not optimism"]},
+  {icon:"😤",name:"The Grind",label:"Week 2 to Week 6 — uncomfortable competence",normal:"Being able to use the system, but slowly. Having to think about steps that should eventually be automatic. Getting frustrated when the old way would have been faster. Having good days and setback days. This phase feels like it's never going to end — and then suddenly it does.",actions:["Identify the specific function or workflow that's causing the most friction and focus extra attention there","Find a coworker who's a bit ahead of you on the learning curve and ask them to show you how they do that specific thing","Practice the same task multiple times — repetition is what moves things from conscious effort to automatic","Remind yourself how long it took to become fluent in the old system — you weren't born knowing it either"]},
+  {icon:"💡",name:"The Click",label:"Usually Week 4 to Week 8 — the turning point",normal:"A moment — sometimes sudden, sometimes gradual — when the system stops feeling foreign and starts feeling usable. When you complete a task without having to think about each step. When the logic of the system starts to make sense. This moment always comes for workers who persist through the Grind — and it's profoundly satisfying.",actions:["When the click happens, teach someone else the thing that just clicked — it cements your understanding","Expand from what you've mastered to the next area that's still fuzzy","Start noticing the system's patterns — how it organizes information, how it handles exceptions"]},
+  {icon:"✅",name:"Fluency",label:"Week 6 to Month 3 — normal new normal",normal:"The new system feeling as normal as the old one did. Being faster than you were in week one. Remembering that the old way wasn't actually better — just familiar. Being the person newer users come to with questions.",actions:["Document what you learned and how you learned it — this creates a resource for the next time something new arrives","Share your knowledge proactively with teammates who are still in the earlier stages","Identify what's next to learn — you've got the foundation now"]}
+];
+var stEl=document.getElementById('stages'),stOpen={};
+stages.forEach(function(s,i){
+  var d=document.createElement('div');d.className='stage';
+  var actHtml=s.actions.map(function(a){return '<div class="stage-action">'+a+'</div>';}).join('');
+  d.innerHTML='<div class="stage-header" onclick="toggleStage('+i+')">'
+    +'<div class="stage-icon">'+s.icon+'</div>'
+    +'<div class="stage-info"><div class="stage-name">Stage '+(i+1)+': '+s.name+'</div><div class="stage-label">'+s.label+'</div></div>'
+    +'<div class="stage-toggle" id="stt'+i+'">▼ See full stage</div>'
+    +'</div>'
+    +'<div class="stage-body" id="stb'+i+'">'
+    +'<div class="stage-normal">'+s.normal+'</div>'
+    +'<div class="stage-what-to-do"><div class="stage-wtd-label">What to do during this stage</div>'+actHtml+'</div>'
+    +'</div>';
+  stEl.appendChild(d);
+});
+function toggleStage(i){
+  var b=document.getElementById('stb'+i),t=document.getElementById('stt'+i);
+  var open=b.classList.contains('open');
+  if(stOpen.current!==undefined&&stOpen.current!==i){document.getElementById('stb'+stOpen.current).classList.remove('open');document.getElementById('stt'+stOpen.current).textContent='▼ See full stage';}
+  b.classList.toggle('open',!open);t.textContent=open?'▼ See full stage':'▲ Hide';
+  stOpen.current=open?undefined:i;
+}
+
+var pbSteps=[
+  {when:"When you hear the announcement",title:"Learn what's changing — specifically",desc:"Before your anxiety fills the gaps with worst-case scenarios, find out exactly what's changing. What system? What does it do? What will your daily workflow look like with it? Get specifics. Unknowns are scarier than knowns.",tip:"Ask your supervisor: 'What functions of my job will change first, and what will stay the same?'"},
+  {when:"Before the training",title:"Find out who already knows it",desc:"Is anyone in the facility or a sister facility already using the system? Get their name and ask if you can call them before your training. 20 minutes with someone who's been through it is more useful than most formal training.",tip:"'Who's been using this the longest, and would they be willing to talk to me for 15 minutes before we go live?'"},
+  {when:"During the training",title:"Ask the most important question first",desc:"In any training, ask: 'What are the most common mistakes people make in the first two weeks?' This single question gets you more useful practical knowledge than any other. It prepares you for what's actually hard, not just what the vendor wants to show you.",tip:"Also ask: 'When something goes wrong, what's the first thing I should check?'"},
+  {when:"Week 1",title:"Aim for small wins, not full competence",desc:"Don't try to master the whole system in week one. Identify the 2–3 functions you'll need most frequently and get those right. Everything else comes after. Partial competence used confidently beats comprehensive knowledge used nervously.",tip:"Write down every specific question that comes up. Don't try to remember them — write them down."},
+  {when:"Week 2",title:"Name what's specifically not clicking",desc:"Vague confusion is harder to solve than specific confusion. Instead of 'I don't get this system,' get to 'I don't understand how the alert priority levels are assigned' or 'I can't figure out how to pull a report for a specific date range.' Specific problems have specific solutions.",tip:"Take your written list of questions to someone who knows the system. Specific questions get specific answers."},
+  {when:"Week 2–4",title:"Find one resource that helps each specific gap",desc:"For each specific thing that's not clicking: look for a tutorial video, a help article, or a coworker who knows that specific thing. Match the resource to the gap. Don't try to watch the entire tutorial series — find the part that addresses your specific blocker.",tip:"Search '[system name] + [specific task]' on YouTube. Someone has made a tutorial for almost everything."},
+  {when:"Week 4–6",title:"Teach someone else one thing you've learned",desc:"When you successfully learn a function or workflow, teach it to a coworker who's still struggling with it. This is not about showing off — it's one of the most effective ways to cement your own understanding. And it makes you visible to your supervisor as someone who helps the team.",tip:"'I finally figured out how to pull the trend reports — do you want me to show you?'"},
+  {when:"Ongoing",title:"Document what you learn as you learn it",desc:"Keep a simple notes file (phone notes app works fine) of things you've figured out. Error codes and what they mean. Workflows that weren't in the training. Tricks that save time. This becomes your personal system guide — and it demonstrates ongoing learning to anyone who asks.",tip:"This file also becomes content for your portfolio and talking points in your next performance review or job interview."}
+];
+var pbEl=document.getElementById('pb-steps');
+pbSteps.forEach(function(s){
+  var d=document.createElement('div');d.className='pb-step';
+  d.innerHTML='<div class="pb-left"><div class="pb-dot"></div><div class="pb-line"></div></div>'
+    +'<div class="pb-card"><div class="pb-when">'+s.when+'</div><div class="pb-step-title">'+s.title+'</div>'
+    +'<div class="pb-step-desc">'+s.desc+'</div>'
+    +'<div class="pb-tip">💡 '+s.tip+'</div></div>';
+  pbEl.appendChild(d);
+});
+
+var reframes=[
+  {thought:"I'll never get this",reframe:"I don't have it yet. Most people who use this confidently took 6–8 weeks to get there. I'm in week 2. This is exactly where I'm supposed to be on the timeline."},
+  {thought:"Everyone else is figuring this out faster than me",reframe:"I'm not in everyone else's head. I can see their behavior but not their confusion. Most of my coworkers are more confused than they look — they're just quiet about it for the same reason I am."},
+  {thought:"The old way was better",reframe:"The old way was familiar. Familiar feels better when you're in the middle of a learning curve. Check back in 3 months and I'll have a more accurate comparison."},
+  {thought:"Maybe I'm not a technology person",reframe:"I've learned every piece of technology I currently use. None of it was familiar the first time. 'Not a technology person' is a label I put on myself — it's not a fact about my ability to learn."},
+  {thought:"I should already know this by now",reframe:"Says who? The timeline I'm judging myself against isn't based on anything real. Learning a complex system in 2 weeks is not a reasonable standard. 6–10 weeks to comfortable fluency is typical. I'm on schedule."},
+  {thought:"I'm embarrassing myself by not knowing this",reframe:"Not knowing a system I've never used before is not embarrassing — it's the starting point. What would actually be embarrassing is pretending to know it and making mistakes that affect my team. Honest uncertainty is professional."}
+];
+var mcEl=document.getElementById('mc-items');
+reframes.forEach(function(r){
+  var d=document.createElement('div');d.className='mc-item';
+  d.innerHTML='<div class="mc-thought">'+r.thought+'</div><div class="mc-reframe">'+r.reframe+'</div>';
+  mcEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

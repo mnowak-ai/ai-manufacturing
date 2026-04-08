@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How the Best Manufacturing Workers Stay Ahead: Habits of Continuous Learners</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* HABIT CARDS */
+.habit-list{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.habit-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.habit-card:hover{border-color:var(--purple);box-shadow:0 4px 14px rgba(123,47,190,.09);}
+.hc-header{padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.hc-num{font-family:"Fraunces",serif;font-size:28px;font-weight:900;color:var(--purple-mid);line-height:1;flex-shrink:0;width:36px;}
+.hc-info{}
+.hc-name{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:3px;}
+.hc-tagline{font-size:13px;color:var(--gray-muted);}
+.hc-toggle{margin-left:auto;font-size:16px;color:var(--purple-mid);flex-shrink:0;padding-top:4px;transition:transform .25s;}
+.hc-toggle.open{transform:rotate(45deg);}
+.hc-body{display:none;padding:0 20px 18px;border-top:1px solid var(--purple-mid);}
+.hc-body.open{display:block;}
+.hc-section{margin-top:12px;}
+.hc-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.hc-text{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.hc-how{background:var(--green-pale);border-radius:9px;padding:9px 12px;margin-top:8px;font-size:13px;color:var(--green);line-height:1.7;}
+.hc-how::before{content:"How to start: ";font-weight:700;}
+.hc-barrier{background:var(--orange-pale);border-radius:9px;padding:9px 12px;margin-top:7px;font-size:13px;color:#92400E;line-height:1.7;}
+.hc-barrier::before{content:"Common barrier: ";font-weight:700;}
+
+/* WEEKLY ROUTINE */
+.weekly-routine{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.wr-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.wr-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.wr-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.wr-days{display:flex;flex-direction:column;gap:8px;}
+.wr-day{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;display:flex;gap:14px;align-items:flex-start;}
+.wr-day-name{font-size:12px;font-weight:700;color:var(--purple);width:50px;flex-shrink:0;padding-top:2px;}
+.wr-day-activity{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.wr-day-time{font-size:11px;font-weight:600;color:var(--orange);background:var(--orange-pale);padding:2px 7px;border-radius:100px;flex-shrink:0;margin-left:auto;align-self:flex-start;}
+
+/* SKILLS LOG */
+.skills-log-demo{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:24px 0;}
+.sld-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sld-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:14px;}
+.sld-table{width:100%;border-collapse:collapse;font-size:13px;}
+.sld-table th{background:var(--purple-dark);color:#fff;font-size:11px;font-weight:700;padding:9px 12px;text-align:left;}
+.sld-table th:first-child{border-radius:8px 0 0 0;}
+.sld-table th:last-child{border-radius:0 8px 0 0;}
+.sld-table td{padding:9px 12px;border-bottom:1px solid var(--purple-mid);line-height:1.6;}
+.sld-table tr:last-child td{border-bottom:none;}
+.sld-table tr:nth-child(even) td{background:#F9FAFB;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>How the Best Manufacturing Workers Stay Ahead: Habits of Continuous Learners</h1>
+  <p class="hero-sub">Lifelong learning isn't an attitude — it's a set of specific behaviors practiced consistently. This article turns the vague ideal into a concrete daily routine: the habits, the tools, and the relationships that keep the best manufacturing workers growing year after year.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>What Separates Good Workers From Great Ones — Over Time</h2>
+  <p>On Day 1, the difference between a good manufacturing worker and a great one is often hard to see. They might have similar skills, similar backgrounds, similar performance in their first months.</p>
+  <p>But over two to five years, a gap opens. The great worker is consistently ahead of where their peers are — they know more, they're more trusted, they're promoted first, they earn more. What happened?</p>
+  <p>It's almost never one dramatic decision. It's the accumulated effect of small daily habits. <mark>Ten minutes of intentional learning per day compounds into roughly 60 hours per year</mark>. That's nearly 8 full work days of focused skill development — every year — just from a 10-minute daily habit that their peers don't have.</p>
+  <p>This article is about those habits. Not inspiration. Specifics.</p>
+
+  <div class="pull-quote">
+    <p>The workers I respect most aren't the ones who are naturally talented. They're the ones who never stopped being curious. Every year, they know more than they did the year before. That's not luck — that's a practice.</p>
+    <p style="font-style:normal;font-size:14px;color:rgba(74,21,128,.7);margin-top:10px;">— Senior Manufacturing Engineer, 22 years</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Ten Habits — Click Any to Expand</h2>
+  <p>These are the habits that show up most consistently in the careers of manufacturing workers who advance steadily over time. None of them are heroic. All of them are repeatable.</p>
+
+  <div class="habit-list" id="habit-list"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What a Weekly Learning Routine Looks Like</h2>
+  <p>Abstract habits become real when they're attached to specific times. Here's an example weekly learning routine for a maintenance technician — built from habits that fit around a full-time manufacturing schedule. It totals about 75 minutes per week across five days.</p>
+
+  <div class="weekly-routine">
+    <div class="wr-label">Example Weekly Routine</div>
+    <div class="wr-title">Marcus — Maintenance Technician — Day Shift</div>
+    <div class="wr-sub">This is realistic, not aspirational. Each activity is specific, time-bounded, and connected to a real career goal.</div>
+    <div class="wr-days" id="wr-days"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Skills Log: Your Most Underused Tool</h2>
+  <p>A skills log is a simple running record of what you're learning, what you've figured out, and what you've accomplished. It takes two minutes to update. Over a year, it becomes one of the most useful documents in your career — for performance reviews, job interviews, promotion conversations, and your own sense of direction.</p>
+  <p>Here's what a skills log looks like in practice:</p>
+
+  <div class="skills-log-demo">
+    <div class="sld-label">Example Skills Log — Marcus (excerpt, 6 weeks)</div>
+    <div class="sld-title">A simple notes file updated 2 minutes per day</div>
+    <table class="sld-table">
+      <tr><th>Date</th><th>What I Learned / Figured Out</th><th>Source</th><th>How I Used It</th></tr>
+      <tr><td>Week 1, Tue</td><td>IBM Maximo alert priority levels — P1=immediate, P2=same shift, P3=scheduled</td><td>Platform help center</td><td>Stopped dismissing P2 alerts by mistake</td></tr>
+      <tr><td>Week 2, Mon</td><td>Bearing wear vibration signature — gradual amplitude increase at 1x and 2x RPM</td><td>YouTube: Vibration Analysis Basics</td><td>Correctly identified bearing issue on Motor 4</td></tr>
+      <tr><td>Week 3, Wed</td><td>FANUC alarm 445 — servo drive overload. Check for mechanical binding first</td><td>FANUC manual + call to sister facility</td><td>Cleared the alarm and resolved underlying binding</td></tr>
+      <tr><td>Week 4, Fri</td><td>How to pull trend report in Maximo for a specific asset over 30 days</td><td>Coworker demo (J. Reyes)</td><td>Showed supervisor the 6-week vibration trend on Conveyor 7</td></tr>
+      <tr><td>Week 5, Thu</td><td>UR Academy Module 2 complete — cobot programming: waypoints and motion types</td><td>UR Academy (free online)</td><td>Will apply when facility cobots arrive next month</td></tr>
+      <tr><td>Week 6, Tue</td><td>Completed OSHA 10 certification</td><td>Online OSHA-authorized provider</td><td>Added to résumé; mentioned to supervisor</td></tr>
+    </table>
+  </div>
+
+  <p>This kind of log takes almost no time to keep — and in six months, it tells a clear story about a worker who is actively building expertise. That story is invaluable in a performance review, a promotion conversation, or a job interview.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A maintenance technician keeps a simple skills log where she records one thing she learned each workday — taking about 2 minutes. After 6 months, which of the following is the MOST significant benefit of this habit?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">She has a record she can share with coworkers to prove she knows more than they do</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">She has a concrete, specific record of 130+ learning moments that she can reference in performance reviews and job interviews, use to identify her own knowledge patterns, and revisit when facing similar situations</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">The log makes her learning official and qualifies as a certification</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">The benefit is mainly motivational — it doesn't have much practical career value</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. After 6 months of daily two-minute entries, she has a documented record of roughly 130 specific learning moments — what she learned, how she learned it, how she applied it. This is extraordinarily useful in a performance review ("here's what I've developed this year"), in a job interview ("here's specific evidence of the skills I described"), in a promotion conversation ("here's why I'm ready for more responsibility"), and in her own work (a searchable reference for solutions she's already found). The log also reveals patterns in what she's learning and what gaps remain — making her next learning choices more intentional.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The skills log's most significant practical benefit is the documented record it creates — specific, verifiable evidence of ongoing learning that becomes invaluable in performance reviews, promotion conversations, and job interviews. "I've been actively building skills" is much less compelling than "here's a record of 130 specific things I've learned over the past six months, how I learned them, and how I applied them." The log doesn't grant certifications and isn't about showing off to coworkers — it's a career evidence file.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Continuous learning isn't an attitude — it's a set of specific, repeatable daily behaviors. Ten minutes per day of intentional learning compiles to about 60 hours per year, every year.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The ten habits of continuous learners include: keeping a skills log, reading one trade article weekly, identifying one "know-more-than-me" coworker to learn from, completing one structured module monthly, teaching what you learn, and always asking two types of questions (what does this do, and what does it fail to do).</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A weekly learning routine doesn't require heroic amounts of time — 75 minutes per week spread across five days creates consistent growth while fitting around a full manufacturing schedule.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A skills log is the most underused career tool available to manufacturing workers — a two-minute daily habit that becomes invaluable documentation of growth for performance reviews, promotion conversations, and job interviews.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var habits=[
+  {num:"01",name:"Keep a skills log",tagline:"Two minutes per day. Irreplaceable over time.",what:"A skills log is a running record — in a phone notes app, a small notebook, anywhere — of things you've learned, figured out, or understood more deeply. Date. What. Source. How you used it. That's the whole format. Over months and years, it becomes a concrete record of your professional development that no other document can replace.",how:"Start today. Open your phone notes app and create a file called 'Skills Log.' Write down one thing you've learned this week. Commit to adding one entry per workday for 30 days.",barrier:"'I forget to do it.' Set a phone alarm for 10 minutes before your shift ends. That's your daily log time."},
+  {num:"02",name:"Read one trade article or publication weekly",tagline:"15 minutes. Industry-level awareness.",what:"Workers who read about their industry know what's coming before it arrives. They understand the context behind decisions their employer makes. They have things to bring up in conversations with supervisors. One article per week — from Modern Machine Shop, Quality Progress, Maintenance Technology, Manufacturing Today — is enough to stay meaningfully current.",how:"Subscribe to one free publication email newsletter. Every Sunday, open it and read one article that's relevant to your trade. 15 minutes.",barrier:"'I don't know which publications are worth reading.' Start with the ones listed in the resource guide article."},
+  {num:"03",name:"Identify one 'know-more-than-me' person per quarter",tagline:"One targeted relationship. Decades of knowledge.",what:"In every facility, there are workers who have accumulated deep expertise in specific areas — a maintenance tech who knows the older equipment better than anyone, a quality inspector who understands SPC at a level others don't, an electrician who's forgotten more about panel work than most people will ever learn. These people are your most underused learning resource.",how:"Every quarter, identify one person who knows something specific that you want to know better. Ask them one targeted question. Most experienced workers are genuinely pleased to share expertise with people who ask thoughtfully.",barrier:"'I don't want to bother them.' Frame it as a compliment — 'You clearly know this better than anyone — could I ask you one specific question?'"},
+  {num:"04",name:"Complete one structured learning module per month",tagline:"30 minutes. Compounding across a career.",what:"Unstructured learning from conversations and observation is valuable. But structured learning — a course module, a certification unit, a vendor training session — builds knowledge systematically rather than randomly. One 30-minute module per month adds up to 12 structured learning sessions per year. Over 5 years, that's 60 modules across a career.",how:"Pick one course or certification track that's relevant to your career path. Commit to one module per month. Calendar it like an appointment.",barrier:"'I don't have time for a full course.' One module per month is not a full course — it's 30 minutes. Start with a free resource like UR Academy or a LinkedIn Learning module."},
+  {num:"05",name:"Watch one industry video per week",tagline:"15 minutes. Visual learning that sticks.",what:"YouTube has genuinely high-quality manufacturing education — welding technique, machining, PLC programming, predictive maintenance, cobot operation. The best channels are made by practitioners, not academics. Fifteen minutes of watching a skilled worker demonstrate something real is often more useful than an hour of reading about it.",how:"Search YouTube for your trade + the specific topic you want to learn. Subscribe to one channel that consistently produces good content. Watch one video per week during lunch.",barrier:"'It's hard to find the good content.' Filter by view count and subscriber base. Channels with 50k+ subscribers in a specific trade niche are usually reliable."},
+  {num:"06",name:"Teach something you just learned",tagline:"The fastest way to make learning permanent.",what:"Every time you learn something new and then explain it to someone else, your understanding of it deepens. Teaching forces you to understand something well enough to communicate it clearly. It also makes your learning visible — the coworker you taught will remember who taught them, and so will anyone who saw it happen.",how:"After learning something useful in the next week, look for an opportunity to share it. It doesn't need to be formal — 'I just figured out how to pull trend reports in Maximo — do you want me to show you?' works perfectly.",barrier:"'I don't know enough to teach.' You know more than someone who doesn't know what you just learned. Start there."},
+  {num:"07",name:"Ask two types of questions about every new tool",tagline:"Understanding depth. Faster.",what:"When you encounter a new tool or system, most training covers what it does. Almost no training covers what it fails to do. Asking both types of questions builds a more complete and accurate mental model — which is what makes you genuinely useful when the tool behaves unexpectedly.",how:"For any new tool: 'What does this do well?' AND 'When does this give wrong results or fail to detect something?' The second question is the one that makes you dangerous (in a good way).",barrier:"'I feel weird asking negative questions.' Frame it as professional thoroughness: 'I want to understand where I should verify manually rather than just trust the system.'"},
+  {num:"08",name:"Stay curious about the 'why,' not just the 'how'",tagline:"Understanding beats memorization.",what:"Two workers can learn the same procedure. One memorizes the steps. One understands why the procedure is structured the way it is. Three months later, when something unexpected happens that the procedure doesn't cover, the second worker can adapt. The first one is stuck. Always ask why, not just how.",how:"For any procedure, process, or system: once you understand how to do it, ask: 'Why does it work this way?' Sometimes the answer is 'because of physics.' Sometimes it's 'because of a regulation.' Sometimes it's 'because someone made a mistake once.' All of those are useful.",barrier:"'I don't always have someone to ask.' This is a great use case for AI as a learning tool — ask why."},
+  {num:"09",name:"Attend every optional training session",tagline:"Lowest-competition signal of initiative.",what:"When your facility offers optional training — on a new system, a safety update, a process change — the majority of workers skip it. This is one of the lowest-effort, highest-visibility signals of professional engagement available. The workers who show up to optional training are noticed by supervisors as the ones who take their development seriously.",how:"Simple: go. Every time. Even when you think you already know the material — you'll almost always learn something, and the act of showing up is itself a signal.",barrier:"'Optional means I don't have to.' Optional means most people won't. That's the opportunity."},
+  {num:"10",name:"Review your skills log quarterly and plan what's next",tagline:"Turning accumulation into direction.",what:"A skills log is most useful not just as a record but as a planning tool. Every three months, read through what you've been learning. Identify: What are you getting better at? What gaps are becoming clearer? What skill would most improve your performance or your career position right now? Let those answers shape the next quarter's learning focus.",how:"Set a quarterly calendar reminder. Read through the last three months of log entries. Write a one-sentence answer to: 'What's the most important thing I should learn next quarter?' That answer becomes the focus.",barrier:"'I never have time for reflection.' Schedule it like any other task. 30 minutes per quarter."}
+];
+var hlEl=document.getElementById('habit-list'),hlOpen={};
+habits.forEach(function(h,i){
+  var d=document.createElement('div');d.className='habit-card';
+  d.innerHTML='<div class="hc-header" onclick="toggleHabit('+i+')">'
+    +'<div class="hc-num">'+h.num+'</div>'
+    +'<div class="hc-info"><div class="hc-name">'+h.name+'</div><div class="hc-tagline">'+h.tagline+'</div></div>'
+    +'<div class="hc-toggle" id="hct'+i+'">+</div>'
+    +'</div>'
+    +'<div class="hc-body" id="hcb'+i+'">'
+    +'<div class="hc-section"><div class="hc-section-label">What it is and why it matters</div><div class="hc-text">'+h.what+'</div></div>'
+    +'<div class="hc-how">'+h.how+'</div>'
+    +'<div class="hc-barrier">'+h.barrier+'</div>'
+    +'</div>';
+  hlEl.appendChild(d);
+});
+function toggleHabit(i){
+  var b=document.getElementById('hcb'+i),t=document.getElementById('hct'+i);
+  var open=b.classList.contains('open');
+  if(hlOpen.current!==undefined&&hlOpen.current!==i){document.getElementById('hcb'+hlOpen.current).classList.remove('open');document.getElementById('hct'+hlOpen.current).classList.remove('open');document.getElementById('hct'+hlOpen.current).textContent='+';}
+  b.classList.toggle('open',!open);t.classList.toggle('open',!open);t.textContent=open?'+':'×';
+  hlOpen.current=open?undefined:i;
+}
+
+var routine=[
+  {day:"Mon",activity:"Read one trade article during lunch break — this week: predictive maintenance trends from Maintenance Technology",time:"15 min"},
+  {day:"Tue",activity:"Skills log entry at end of shift. Today: figured out how the Maximo priority scoring weights equipment criticality.",time:"2 min"},
+  {day:"Wed",activity:"UR Academy: one module on cobot programming. Facility getting cobots next month — getting ahead of it.",time:"20 min"},
+  {day:"Thu",activity:"Asked coworker J. Reyes how she reads the vibration trend charts. She showed me something I'd been misreading for weeks.",time:"10 min"},
+  {day:"Fri",activity:"Skills log review of the week. Noted three things I still don't fully understand — will look these up next week.",time:"5 min"},
+  {day:"Weekend",activity:"Optional: 20 min YouTube video on bearing vibration signatures. Not required — genuinely interesting.",time:"20 min (optional)"}
+];
+var wrEl=document.getElementById('wr-days');
+routine.forEach(function(r){
+  var d=document.createElement('div');d.className='wr-day';
+  d.innerHTML='<div class="wr-day-name">'+r.day+'</div><div class="wr-day-activity">'+r.activity+'</div><div class="wr-day-time">'+r.time+'</div>';
+  wrEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adapting Is a Strength: What Employers Say About Workers Who Embrace Change</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* EMPLOYER VOICES */
+.ev-grid{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ev-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;}
+.ev-quote{font-family:"Fraunces",serif;font-size:16px;font-style:italic;color:var(--purple-dark);line-height:1.65;margin-bottom:8px;}
+.ev-quote::before{content:"\201C";color:var(--purple-mid);}
+.ev-quote::after{content:"\201D";color:var(--purple-mid);}
+.ev-role{font-size:12px;color:var(--gray-muted);font-weight:600;}
+.ev-tag{display:inline-block;background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px;}
+
+/* WHAT THEY LISTEN FOR */
+.interview-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.is-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.is-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.is-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.is-items{display:flex;flex-direction:column;gap:12px;}
+.is-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;cursor:pointer;transition:border-color .2s;}
+.is-item:hover{border-color:var(--purple);}
+.is-signal{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.is-what-they-hear{font-size:13px;color:var(--gray-muted);font-style:italic;margin-bottom:8px;}
+.is-toggle{font-size:12px;color:var(--purple);font-weight:600;}
+.is-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--purple-mid);}
+.is-detail.open{display:block;}
+.is-good{background:var(--green-pale);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--green);line-height:1.7;margin-bottom:7px;}
+.is-bad{background:var(--red-pale);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--red);line-height:1.7;}
+.is-good::before{content:"✅ Strong answer: ";font-weight:700;}
+.is-bad::before{content:"❌ Weak answer: ";font-weight:700;}
+
+/* RESUME BUILDER */
+.resume-builder{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rb-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rb-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.rb-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.rb-sections{display:flex;flex-direction:column;gap:14px;}
+.rb-section{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:16px 18px;}
+.rb-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.rb-phrases{display:flex;flex-direction:column;gap:6px;}
+.rb-phrase{background:var(--green-pale);border:1px solid var(--green);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--green);line-height:1.6;cursor:pointer;transition:all .2s;position:relative;}
+.rb-phrase::after{content:"Copy";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--green);opacity:.6;}
+.rb-phrase:hover{filter:brightness(.97);}
+.rb-phrase.copied{background:var(--purple-pale);border-color:var(--purple);color:var(--purple);}
+.rb-phrase.copied::after{content:"✓ Copied";}
+
+/* STORY FRAMEWORK */
+.story-framework{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.sf-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.sf-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.sf-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.sf-steps{display:flex;flex-direction:column;gap:10px;}
+.sf-step{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:14px;}
+.sf-step-num{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.sf-step-body{}
+.sf-step-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.sf-step-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.sf-step-example{margin-top:7px;background:var(--purple-pale);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+.sf-example-full{background:var(--white);border:1.5px solid var(--green);border-radius:12px;padding:16px 18px;margin-top:14px;}
+.sef-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.sef-text{font-size:14px;line-height:1.85;color:var(--gray-text);font-style:italic;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.3 &middot; Lifelong Learning &amp; Tech Adaptation</div>
+  <h1>Adapting Is a Strength: What Employers Say About Workers Who Embrace Change</h1>
+  <p class="hero-sub">The lesson says adaptable workers grow faster, earn trust, and advance careers. This article proves it — with real employer perspectives, what interviewers specifically listen for, and how to build and communicate an adaptability story that opens doors.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Adaptability Is Now a Core Hiring Criterion</h2>
+  <p>Manufacturing employers have always valued reliability, technical skill, and safety awareness. Those things haven't gone away. But in the past decade, something has been added to the top of the list in hiring conversations: <mark>adaptability</mark>.</p>
+  <p>The reason is straightforward. Facilities that were running one technology stack five years ago are now running something significantly different. Facilities that are stable today will look different again in five years. Employers who hire workers based only on their current skill set know they're hiring people who will need to adapt repeatedly during their tenure. They want to know — before they hire you — whether you're the kind of person who adapts or the kind who digs in.</p>
+  <p>This isn't about being endlessly flexible or having no opinions. It's about having a proven track record of encountering something new and choosing to engage rather than resist. That track record is what interviewers are probing for when they ask "tell me about a time you had to learn something new."</p>
+
+  <div class="pull-quote">
+    <p>I can teach someone a specific system in three weeks. I can't teach someone to stop resisting new things after 10 years of doing it. Adaptability is the hire — everything else is training.</p>
+    <p style="font-style:normal;font-size:14px;color:rgba(74,21,128,.7);margin-top:10px;">— Plant Manager, 18 years — Consumer goods manufacturing</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Employers Actually Say — In Their Own Words</h2>
+  <p>These are representative perspectives from manufacturing hiring managers and supervisors on what adaptability looks like in candidates they hire — and in workers they promote:</p>
+
+  <div class="ev-grid" id="ev-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Interviewers Are Listening For</h2>
+  <p>When an interviewer asks about adaptability, they're listening for specific signals — and they're also listening for specific red flags. Click any question below to see what a strong answer sounds like versus a weak one, and why the difference matters.</p>
+
+  <div class="interview-sim">
+    <div class="is-label">Interview Preparation</div>
+    <div class="is-title">What They're Really Asking — And How to Answer</div>
+    <div class="is-sub">Click any interview signal to see a strong answer vs. a weak answer — and what the interviewer is evaluating in each case.</div>
+    <div class="is-items" id="is-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Résumé Language That Signals Adaptability</h2>
+  <p>Adaptability shows up on a résumé not as a listed skill ("Skill: Adaptable") but through the language you use to describe your experience. Here are phrases organized by situation — click any one to copy it for your résumé. Then fill in the specific details of your own situation.</p>
+
+  <div class="resume-builder">
+    <div class="rb-label">Résumé Language Builder</div>
+    <div class="rb-title">Copy-Ready Adaptability Language</div>
+    <div class="rb-sub">Click any phrase to copy it. Replace the bracketed parts with your specific experience.</div>
+    <div class="rb-sections" id="rb-sections"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Tell a Story About Adapting to Change</h2>
+  <p>The most powerful thing you can do in an interview — or in a promotion conversation — is tell a specific, concrete story about a time you had to learn something new and what you did about it. Here's a four-step framework for building that story, with a complete example.</p>
+
+  <div class="story-framework">
+    <div class="sf-label">The Adaptability Story Framework</div>
+    <div class="sf-title">Four Parts Every Strong Adaptability Story Needs</div>
+    <div class="sf-sub">Follow this structure and your story will be specific, credible, and memorable.</div>
+    <div class="sf-steps" id="sf-steps"></div>
+    <div class="sf-example-full">
+      <div class="sef-label">✅ Complete Example — Read This Out Loud to Practice</div>
+      <div class="sef-text">"When my facility upgraded our maintenance system from a paper-based log to IBM Maximo, I'd never used anything like it. The first week was genuinely hard — I was slower than my coworkers and I made a few mistakes entering work orders incorrectly. Instead of hoping it would get easier on its own, I spent my lunch breaks watching Maximo tutorial videos on YouTube — probably three hours total over two weeks. I also asked a maintenance coordinator at our sister facility who'd been using it for two years if I could call her with questions. By the end of the first month, I was comfortable with all the core functions, and my supervisor started asking me to show newer team members the alert queue workflow. What I took from that experience is that the discomfort at the beginning is just the learning curve — and the learning curve always ends."</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">An interviewer asks: "Tell me about a time you had to learn a new system or technology at work." Which response best demonstrates adaptability?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">A: "I'm a fast learner and I pick up new things pretty quickly. I'm comfortable with most technology."</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">B: "When our facility switched to a digital maintenance platform, I hadn't used anything like it before. I struggled at first and made some mistakes with the work order entry. I spent my lunch breaks watching tutorials for two weeks, asked a more experienced user at another facility to walk me through the alert queue, and by month two I was the one people came to with questions."</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">C: "I haven't had to learn many new systems — my role has been pretty stable. But I'd definitely be willing to learn whatever you use here."</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">D: "I think adaptability is really important in today's manufacturing environment, and I believe I have that quality."</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Answer B is the strongest by a wide margin. It has all four parts of the adaptability story: the situation (new digital platform), the challenge (struggled, made mistakes), the specific action (tutorials, expert conversation), and the outcome (became the team resource). Critically, it includes the hard part — "I struggled at first and made some mistakes" — which makes it credible. Interviewers have heard too many "I'm a fast learner" claims to trust them without evidence. A specific story with a specific challenge and specific actions is what builds credibility.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Answer B is the strongest. A general claim like "I'm a fast learner" (A) gives the interviewer nothing to evaluate. "I haven't had to learn many new systems" (C) actually signals the opposite of adaptability. "I believe I have that quality" (D) is a self-assessment without evidence. Only B gives the interviewer a specific, verifiable story with a real challenge, specific actions taken, and a concrete outcome. That's what interviewers are asking for when they say "tell me about a time."</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Adaptability has moved to the top of hiring criteria in manufacturing because facilities change constantly — and employers need workers who will engage with each change rather than resist it.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Interviewers listen for specific behaviors: the willingness to struggle and keep going, the initiative to seek out resources independently, and the outcome that shows the learning actually happened.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Résumé language signals adaptability through specific verbs and outcomes — not the word "adaptable" itself. Phrases like "learned [X] independently" and "completed [training] in advance of rollout" show rather than tell.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The four-part adaptability story (Situation → Challenge → Action → Outcome) gives interviewers the specific evidence they're looking for. Including the hard part — that it was genuinely difficult — makes the story credible rather than polished-sounding.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var voices=[
+  {quote:"I can screen for adaptability in about 15 minutes of conversation. The workers who have it don't say 'I'm adaptable' — they tell me stories about specific times they figured something out that was hard. The ones who don't have it say 'I'm a quick learner' and then can't give me a single example.",role:"Hiring Manager, Automotive Tier 1 Supplier",tag:"What they listen for"},
+  {quote:"The workers I've promoted fastest aren't always the most technically skilled on their first day. They're the ones who are demonstrably better six months in than they were when they started. That upward trajectory tells me more about their ceiling than their starting point.",role:"Production Manager, Food Processing",tag:"What drives promotion"},
+  {quote:"When we do technology rollouts, I watch who asks the first question in the training — genuinely curious, wanting to understand how it works. Those people are already showing me something. And I watch who goes quiet and hopes it will go away. Those are very different workers.",role:"Plant Manager, Medical Device Manufacturing",tag:"What makes them visible"},
+  {quote:"Adaptability shows up in small things before it shows up in big things. The new worker who reads the equipment manual without being told. The technician who watches a tutorial on their lunch break before the new system goes live. These aren't dramatic gestures — they're signals of someone who takes their own development seriously.",role:"Maintenance Supervisor, Aerospace Components",tag:"The small signals"}
+];
+var evEl=document.getElementById('ev-grid');
+voices.forEach(function(v){
+  var d=document.createElement('div');d.className='ev-card';
+  d.innerHTML='<div class="ev-quote">'+v.quote+'</div><div class="ev-role">— '+v.role+'</div><span class="ev-tag">'+v.tag+'</span>';
+  evEl.appendChild(d);
+});
+
+var signals=[
+  {signal:"\"Tell me about a time you had to learn something new at work.\"",whatTheyHear:"The interviewer is listening for: a specific situation (not vague), evidence that it was actually hard (not just new), and specific actions the candidate took independently (not just what their employer did for them).",good:"When my facility switched from paper maintenance logs to a digital CMMS, I had no experience with that type of software. The first two weeks were rough — I made entry errors and was slower than my coworkers. I spent my lunch breaks watching vendor tutorial videos, probably three hours total, and asked a more experienced user at our sister facility if I could call her with questions. By the end of month one, my supervisor started directing newer team members to me when they had questions about the alert queue.",bad:"I'm pretty good at learning new things. Whenever something new comes up at work, I usually figure it out pretty quickly. Technology has always come naturally to me, so new systems aren't usually a problem."},
+  {signal:"\"How do you handle it when your company introduces a new process or tool you haven't used before?\"",whatTheyHear:"Listening for: a concrete approach (not a vague intention), evidence of self-directed learning, and whether the candidate sees change as a problem to solve or a threat to endure.",good:"My approach is to try to understand the new thing before I need to use it under pressure. When I know a change is coming, I look for any training material or documentation in advance, find out who in the facility knows it best, and plan to spend time in the first few days on small, low-stakes tasks so I can make my mistakes before they matter. I also write down specific questions as I go — which helps me ask useful questions rather than 'I don't understand any of this.'",bad:"I usually wait for the official training and then just dive in and figure it out as I go. I find that hands-on is the best way for me personally. I'm comfortable with change."},
+  {signal:"\"Describe a situation where you had to figure something out on your own, without much support or direction.\"",whatTheyHear:"Listening for: genuine independence (not just working alone), resourcefulness, and what the candidate defines as 'figuring it out' — do they seek out resources proactively or wait to be unblocked?",good:"When I encountered an error code on our CNC machine that nobody on my shift had seen before, I looked it up in the equipment manual on my phone, found a few possible causes, and systematically ruled them out based on what was actually happening with the machine. One of the manual's explanations didn't fit our situation, so I called the manufacturer's technical support line — which I found in the front of the manual. They diagnosed it in 10 minutes. The whole process took about 45 minutes from the error to the fix.",bad:"I'm pretty self-sufficient. If something comes up that I don't know, I usually try to work through it myself before asking anyone. I don't like to bother people unnecessarily."},
+  {signal:"\"What would you say is your approach to keeping your skills current in a field that changes quickly?\"",whatTheyHear:"Listening for: actual behaviors (not intentions), whether the candidate takes ownership of their development or waits for their employer to provide it, and whether they have a specific track record.",good:"I try to treat learning as a regular part of my week, not a special event. I watch YouTube videos about my trade — specifically welding metallurgy and cobot programming lately — usually during lunch breaks. I completed the Universal Robots UR Academy certification on my own time because my facility was bringing in cobots. And I completed this AI in Manufacturing certification because I saw where the industry was headed and wanted to be ahead of it rather than behind it.",bad:"My employer has been pretty good about providing training when we need it. I take whatever courses they assign. I think staying current is important but it's hard to find time outside of work."}
+];
+var isEl=document.getElementById('is-items'),isOpen={};
+signals.forEach(function(s,i){
+  var d=document.createElement('div');d.className='is-item';
+  d.innerHTML='<div class="is-signal">'+s.signal+'</div>'
+    +'<div class="is-what-they-hear">What the interviewer is evaluating: '+s.whatTheyHear+'</div>'
+    +'<div class="is-toggle" id="ist'+i+'" onclick="toggleIS('+i+')">▼ See strong vs. weak answer</div>'
+    +'<div class="is-detail" id="isd'+i+'">'
+    +'<div class="is-good">'+s.good+'</div>'
+    +'<div class="is-bad">'+s.bad+'</div>'
+    +'</div>';
+  isEl.appendChild(d);
+});
+function toggleIS(i){
+  var d=document.getElementById('isd'+i),t=document.getElementById('ist'+i);
+  var open=d.classList.contains('open');
+  d.classList.toggle('open',!open);
+  t.textContent=open?'▼ See strong vs. weak answer':'▲ Hide';
+}
+
+var rbSections=[
+  {label:"When you learned a new system or tool",phrases:["Completed [system name] training independently in advance of facility rollout","Self-directed learning on [platform]: watched tutorials and sought peer mentorship to achieve competency within [timeframe]","Learned [technology] without formal training through manufacturer documentation and online resources","Volunteered for early adoption of [system]; became team resource for new user questions within [timeframe]"]},
+  {label:"When you adapted to a process change",phrases:["Adapted to transition from [old process] to [new process]; maintained full productivity within [timeframe]","Supported facility-wide implementation of [change] by learning new workflow and helping train [N] coworkers","Updated personal procedures following [policy/regulatory change]; documented updated workflow for team reference","Led peer training for team of [N] during [system/process] rollout"]},
+  {label:"When you proactively built new skills",phrases:["Completed [certification name] independently to prepare for AI tool integration in facility","Pursued [training program] outside of work hours to develop skills in [area]","Maintained current knowledge of [trade/technology] through ongoing self-directed study and industry resources","Identified skill gap in [area] and addressed through [specific training]; applied directly to [outcome]"]}
+];
+var rbEl=document.getElementById('rb-sections'),copyDone={};
+rbSections.forEach(function(sec,si){
+  var d=document.createElement('div');d.className='rb-section';
+  var phHtml=sec.phrases.map(function(p,pi){
+    var key=si+'_'+pi;
+    return '<div class="rb-phrase" onclick="copyPhrase(this,\''+key+'\',\''+p.replace(/'/g,"\\'")+'\')" id="rbp'+key+'">'+p+'</div>';
+  }).join('');
+  d.innerHTML='<div class="rb-section-label">'+sec.label+'</div><div class="rb-phrases">'+phHtml+'</div>';
+  rbEl.appendChild(d);
+});
+function copyPhrase(el,key,text){
+  if(copyDone[key])return;
+  navigator.clipboard.writeText(text).then(function(){
+    el.classList.add('copied');copyDone[key]=true;
+    setTimeout(function(){el.classList.remove('copied');delete copyDone[key];},2000);
+  }).catch(function(){el.classList.add('copied');setTimeout(function(){el.classList.remove('copied');},2000);});
+}
+
+var sfSteps=[
+  {num:1,title:"The Situation",desc:"Set the scene briefly. What was the job, the facility, the context? What new thing arrived? Keep this short — one or two sentences maximum.",example:"\"When my facility switched from paper maintenance logs to IBM Maximo...\""},
+  {num:2,title:"The Challenge",desc:"Name what was specifically hard — and be honest about it. This is what makes the story credible. 'I struggled at first' is more convincing than 'it was an adjustment.'",example:"\"...I had no experience with that type of software. The first two weeks were rough — I made entry errors and was slower than my coworkers.\""},
+  {num:3,title:"The Specific Action",desc:"What did you do? Be concrete: name the resource, the person, the time spent. General statements like 'I worked hard' don't give the interviewer anything to evaluate.",example:"\"I spent my lunch breaks watching vendor tutorial videos — about three hours total over two weeks. I also found a more experienced user at our sister facility and called her with specific questions.\""},
+  {num:4,title:"The Outcome",desc:"What changed as a result of your action? Be specific about the outcome — not just 'it worked out' but what actually happened.",example:"\"By the end of month one, my supervisor started directing newer team members to me when they had questions about the alert queue.\""}
+];
+var sfEl=document.getElementById('sf-steps');
+sfSteps.forEach(function(s){
+  var d=document.createElement('div');d.className='sf-step';
+  d.innerHTML='<div class="sf-step-num">'+s.num+'</div><div class="sf-step-body"><div class="sf-step-title">'+s.title+'</div><div class="sf-step-desc">'+s.desc+'</div><div class="sf-step-example">📝 Example: '+s.example+'</div></div>';
+  sfEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
