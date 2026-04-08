@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is a Production Schedule and Why Does It Break?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Schedule visual */
+.schedule-grid{background:var(--white);border:2px solid var(--purple-mid);border-radius:20px;overflow:hidden;margin:24px 0;box-shadow:0 2px 16px rgba(123,47,190,.08);}
+.sg-header{background:var(--purple-dark);padding:14px 20px;display:flex;gap:12px;align-items:center;}
+.sg-header-title{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:var(--white);}
+.sg-header-badge{font-size:11px;font-weight:600;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);padding:4px 10px;border-radius:100px;}
+.sg-cols{display:grid;grid-template-columns:120px repeat(5,1fr);border-bottom:1.5px solid var(--purple-mid);}
+.sg-col-head{padding:10px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);text-align:center;border-right:1px solid var(--purple-mid);}
+.sg-col-head:first-child{text-align:left;padding-left:14px;}
+.sg-row{display:grid;grid-template-columns:120px repeat(5,1fr);border-bottom:1px solid var(--purple-mid);}
+.sg-row:last-child{border-bottom:none;}
+.sg-machine{padding:10px 14px;font-size:12px;font-weight:700;color:var(--purple-dark);background:var(--gray-soft);border-right:1px solid var(--purple-mid);display:flex;align-items:center;}
+.sg-cell{padding:6px;text-align:center;border-right:1px solid var(--purple-mid);}
+.sg-cell:last-child{border-right:none;}
+.sg-job{border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;line-height:1.3;}
+.sg-job.a{background:#E8D5FF;color:var(--purple-dark);}
+.sg-job.b{background:#BFDBFE;color:var(--blue);}
+.sg-job.c{background:#F0FFF4;color:var(--green);}
+.sg-job.d{background:#FFFBEB;color:var(--orange);}
+.sg-job.empty{background:transparent;color:var(--gray-muted);font-weight:400;font-size:11px;}
+.sg-caption{padding:10px 16px;font-size:12px;color:var(--gray-muted);font-style:italic;background:var(--gray-soft);}
+
+/* Info boxes */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.info-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px;}
+.info-icon{font-size:24px;margin-bottom:8px;}
+.info-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.info-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+@media(max-width:520px){.info-grid{grid-template-columns:1fr;}}
+
+/* Chaos simulator */
+.chaos-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:22px;line-height:1.6;}
+.cs-scenario-display{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 24px;margin-bottom:16px;}
+.cs-scenario-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:8px;}
+.cs-scenario-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;color:var(--purple-dark);margin-bottom:8px;}
+.cs-scenario-text{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.cs-impact{margin-top:14px;display:none;}
+.cs-impact.show{display:block;}
+.cs-impact-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:8px;}
+.cs-ripples{display:flex;flex-direction:column;gap:8px;}
+.cs-ripple{display:flex;align-items:flex-start;gap:10px;background:var(--orange-pale);border:1px solid var(--orange);border-radius:10px;padding:10px 14px;}
+.cs-ripple-num{width:20px;height:20px;border-radius:50%;background:var(--orange);color:var(--white);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cs-ripple-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.cs-response{margin-top:12px;background:var(--blue-pale);border:1px solid var(--blue-mid);border-radius:10px;padding:12px 16px;display:none;}
+.cs-response.show{display:block;}
+.cs-response-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:6px;}
+.cs-response-text{font-size:13px;line-height:1.65;color:var(--gray-text);}
+.cs-nav{display:flex;gap:10px;flex-wrap:wrap;}
+.cs-btn{background:var(--purple);color:var(--white);border:none;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;transition:opacity .2s;}
+.cs-btn:hover{opacity:.85;}
+.cs-btn.secondary{background:var(--white);color:var(--purple);border:1.5px solid var(--purple);}
+.cs-progress{font-size:12px;color:var(--gray-muted);margin-bottom:12px;}
+
+/* What goes into a schedule */
+.input-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.ic-row{display:flex;gap:12px;align-items:flex-start;background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 20px;}
+.ic-num{width:32px;height:32px;border-radius:50%;background:var(--purple);color:var(--white);font-family:"Fraunces",serif;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ic-content{}
+.ic-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:4px;}
+.ic-desc{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.ic-example{margin-top:6px;font-size:12px;font-style:italic;color:var(--gray-muted);}
+
+/* Compare boxes */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.compare-box{border-radius:16px;padding:20px;}
+.compare-box.human{background:var(--purple-pale);border:1.5px solid var(--purple-mid);}
+.compare-box.ai{background:var(--blue-pale);border:1.5px solid var(--blue-mid);}
+.compare-title{font-weight:700;font-size:14px;margin-bottom:10px;}
+.compare-box.human .compare-title{color:var(--purple-dark);}
+.compare-box.ai .compare-title{color:var(--blue);}
+.compare-item{font-size:13px;line-height:1.7;color:var(--gray-text);padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.compare-item:last-child{border-bottom:none;padding-bottom:0;}
+.compare-item::before{content:"→ ";font-weight:700;}
+.compare-box.human .compare-item::before{color:var(--purple);}
+.compare-box.ai .compare-item::before{color:var(--blue);}
+@media(max-width:520px){.compare{grid-template-columns:1fr;}}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 4 · Positioning Article</div>
+  <h1>What Is a Production Schedule and Why Does It Break?</h1>
+  <p class="hero-sub">A production schedule looks simple on paper: tasks, times, machines, workers. But keeping it intact through a real workday? That's where the challenge lives — and why AI planning tools exist.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>The Promise of a Production Schedule</h2>
+    <p>Imagine it's Sunday evening. A production planner at a steel parts factory sits down and builds next week's schedule. They look at everything they know: 14 active work orders, 3 production lines, 27 workers across two shifts, 6 machines with different capabilities, and delivery deadlines from 9 different customers.</p>
+    <p>After a few hours of work — or a few seconds with an AI tool — they have a plan. Every machine is assigned. Every team has their tasks. Every job has a time slot. The schedule shows exactly how 14 jobs will move through the facility and be completed by Friday.</p>
+    <p>Then Monday morning arrives.</p>
+    <div class="pull-quote"><p>A production schedule is a best guess about the future — built with real information, careful thought, and good intentions. The factory doesn't always agree with it.</p></div>
+    <p>This article is about understanding that gap — between the schedule that was planned and the reality that unfolds. Once you understand why schedules break down, you'll understand exactly what AI planning tools are trying to fix.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What a Production Schedule Actually Is</h2>
+    <p>A <mark>production schedule</mark> is a plan that answers five questions for every job in the facility:</p>
+    <div class="input-cards">
+      <div class="ic-row">
+        <div class="ic-num">1</div>
+        <div class="ic-content">
+          <div class="ic-title">What?</div>
+          <div class="ic-desc">What product or part is being made? What work order does this job come from? What are the specifications that have to be met?</div>
+          <div class="ic-example">Example: "500 units of Stainless Steel Bracket BR-44, must meet tolerance ±0.1mm"</div>
+        </div>
+      </div>
+      <div class="ic-row">
+        <div class="ic-num">2</div>
+        <div class="ic-content">
+          <div class="ic-title">How much?</div>
+          <div class="ic-desc">What quantity needs to be produced? Based on the quantity and the estimated time per unit, how many hours will this job take?</div>
+          <div class="ic-example">Example: "500 units × 2 minutes each = ~17 hours of machine time"</div>
+        </div>
+      </div>
+      <div class="ic-row">
+        <div class="ic-num">3</div>
+        <div class="ic-content">
+          <div class="ic-title">When?</div>
+          <div class="ic-desc">What's the deadline? Given the available machine time and the hours this job requires, which shift or day should it start and end?</div>
+          <div class="ic-example">Example: "Must ship by Thursday. Start Monday morning, finish Tuesday evening."</div>
+        </div>
+      </div>
+      <div class="ic-row">
+        <div class="ic-num">4</div>
+        <div class="ic-content">
+          <div class="ic-title">With what?</div>
+          <div class="ic-desc">What machines are needed? What materials need to be ready? Are those materials in inventory, or does someone need to order them?</div>
+          <div class="ic-example">Example: "Needs Press 2 and Welding Bay 1. Steel sheet already in stock. Bolts need to be pulled from warehouse."</div>
+        </div>
+      </div>
+      <div class="ic-row">
+        <div class="ic-num">5</div>
+        <div class="ic-content">
+          <div class="ic-title">By whom?</div>
+          <div class="ic-desc">Which team or workers will do this job? Do they have the right skills for this specific product? Are they available on that shift?</div>
+          <div class="ic-example">Example: "Day shift Team B — Marcus is qualified for the weld step. Anya will run the press."</div>
+        </div>
+      </div>
+    </div>
+    <p>When you multiply those five questions by 14 different jobs — each with different requirements, different machines, different workers, and different deadlines — you start to see why building a production schedule is genuinely hard. And why keeping it intact through the week is even harder.</p>
+
+    <p>Here's a simplified example of what a week's production schedule might look like for just a few machines:</p>
+
+    <div class="schedule-grid">
+      <div class="sg-header">
+        <div class="sg-header-title">Weekly Production Schedule — Facility B</div>
+        <div class="sg-header-badge">Monday – Friday</div>
+      </div>
+      <div class="sg-cols">
+        <div class="sg-col-head">Machine</div>
+        <div class="sg-col-head">Mon</div>
+        <div class="sg-col-head">Tue</div>
+        <div class="sg-col-head">Wed</div>
+        <div class="sg-col-head">Thu</div>
+        <div class="sg-col-head">Fri</div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-machine">Press Station 2</div>
+        <div class="sg-cell"><div class="sg-job a">WO-1187<br>BR-44<br>Shift 1+2</div></div>
+        <div class="sg-cell"><div class="sg-job a">WO-1187<br>BR-44<br>Finish</div></div>
+        <div class="sg-cell"><div class="sg-job b">WO-1201<br>Housing<br>All Day</div></div>
+        <div class="sg-cell"><div class="sg-job b">WO-1201<br>Housing<br>AM</div></div>
+        <div class="sg-cell"><div class="sg-job c">WO-1215<br>Frame<br>All Day</div></div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-machine">Welding Bay 1</div>
+        <div class="sg-cell"><div class="sg-job empty">—</div></div>
+        <div class="sg-cell"><div class="sg-job a">WO-1187<br>Weld Step</div></div>
+        <div class="sg-cell"><div class="sg-job a">WO-1187<br>Finish</div></div>
+        <div class="sg-cell"><div class="sg-job d">WO-1195<br>Rush Order</div></div>
+        <div class="sg-cell"><div class="sg-job d">WO-1195<br>Complete</div></div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-machine">Coating Line C</div>
+        <div class="sg-cell"><div class="sg-job c">WO-1180<br>Carry Over</div></div>
+        <div class="sg-cell"><div class="sg-job c">WO-1180<br>Finish</div></div>
+        <div class="sg-cell"><div class="sg-job empty">Maint.<br>Window</div></div>
+        <div class="sg-cell"><div class="sg-job a">WO-1187<br>Coating</div></div>
+        <div class="sg-cell"><div class="sg-job b">WO-1201<br>Coating</div></div>
+      </div>
+      <div class="sg-row">
+        <div class="sg-machine">Assembly Bay</div>
+        <div class="sg-cell"><div class="sg-job b">WO-1201<br>Sub-assy</div></div>
+        <div class="sg-cell"><div class="sg-job b">WO-1201<br>Sub-assy</div></div>
+        <div class="sg-cell"><div class="sg-job d">WO-1195<br>Prep</div></div>
+        <div class="sg-cell"><div class="sg-job c">WO-1215<br>Frame Assy</div></div>
+        <div class="sg-cell"><div class="sg-job c">WO-1215<br>Final</div></div>
+      </div>
+      <div class="sg-caption">A real production schedule has many more machines, jobs, and workers than shown here — and every cell represents hours of planning decisions about sequences, dependencies, and deadlines.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Goes Into Building This Schedule?</h2>
+    <p>A production schedule doesn't come from nowhere. A planner has to gather and combine a lot of different information before they can put anything on paper — or into an AI system.</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">📋</div>
+        <div class="info-title">Customer Orders & Due Dates</div>
+        <div class="info-desc">Every job starts with a customer order. The planner needs to know what was ordered, how many, and when it absolutely must ship. Some deadlines are hard (contract penalty if late). Some are soft (best effort).</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">⚙️</div>
+        <div class="info-title">Machine Availability</div>
+        <div class="info-desc">Which machines are working? Which are scheduled for maintenance? Can Machine A do what Machine B does, or are they specialized? A schedule that assigns a job to a machine that's offline is immediately broken.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">👥</div>
+        <div class="info-title">Worker Availability & Skills</div>
+        <div class="info-desc">Who is working which shift? Who is trained and certified for specific tasks (like welding or operating a CNC machine)? Are any workers on vacation, training, or light duty due to injury?</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📦</div>
+        <div class="info-title">Material Availability</div>
+        <div class="info-desc">Are the raw materials and components for each job actually in stock? If a job needs steel that hasn't arrived yet, that job can't start on schedule — no matter how good the plan looks on paper.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🔗</div>
+        <div class="info-title">Job Dependencies</div>
+        <div class="info-desc">Some jobs can't start until another job finishes. You can't coat a part before it's been welded. You can't assemble before all sub-components are ready. These dependencies create a strict ordering that can't be violated.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">⏱️</div>
+        <div class="info-title">Historical Time Estimates</div>
+        <div class="info-desc">How long does this job actually take, based on past experience? Simple jobs have tight estimates. New or complex jobs have more uncertainty. Bad time estimates create ripple effects across the whole schedule.</div>
+      </div>
+    </div>
+    <p>Gathering all of this information, keeping it updated, and turning it into a coherent schedule that uses everyone's time efficiently — without conflicts — is genuinely complex. This is why experienced production planners are so valuable, and why AI scheduling tools are being adopted so rapidly: they can hold all of these variables in mind simultaneously and generate optimized options in seconds rather than hours.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Why Schedules Break: The Disruption Simulator</h2>
+    <p>Here's the hard truth: even a perfect production schedule rarely survives contact with a real workweek. Things happen. Let's look at the most common disruptions — and trace exactly how each one sends ripples through the whole plan.</p>
+    <p>Click each disruption below to see what actually happens when it hits a factory floor.</p>
+
+    <div class="chaos-sim">
+      <div class="cs-label">Interactive Simulation</div>
+      <div class="cs-title">It's Monday Morning — Something Just Went Wrong</div>
+      <div class="cs-sub">Select a disruption to see how it breaks the schedule and what the team has to do to respond.</div>
+      <div class="cs-progress" id="cs-progress">Disruption 0 of 5 explored</div>
+      <div class="cs-nav" style="margin-bottom:16px;flex-wrap:wrap;">
+        <button class="cs-btn secondary" onclick="showDisruption(0,this)" id="dis-btn-0">🔧 Machine Breakdown</button>
+        <button class="cs-btn secondary" onclick="showDisruption(1,this)" id="dis-btn-1">🤒 Key Worker Calls Out</button>
+        <button class="cs-btn secondary" onclick="showDisruption(2,this)" id="dis-btn-2">📦 Material Shortage</button>
+        <button class="cs-btn secondary" onclick="showDisruption(3,this)" id="dis-btn-3">🚨 Quality Issue Found</button>
+        <button class="cs-btn secondary" onclick="showDisruption(4,this)" id="dis-btn-4">📞 Rush Order Added</button>
+      </div>
+      <div class="cs-scenario-display" id="cs-display" style="display:none;">
+        <div class="cs-scenario-label">DISRUPTION ALERT</div>
+        <div class="cs-scenario-title" id="cs-title"></div>
+        <div class="cs-scenario-text" id="cs-text"></div>
+        <div class="cs-impact" id="cs-impact">
+          <div class="cs-impact-label">🌊 RIPPLE EFFECTS — What This Breaks</div>
+          <div class="cs-ripples" id="cs-ripples"></div>
+        </div>
+        <div class="cs-response" id="cs-response">
+          <div class="cs-response-label">✅ HOW THE TEAM RESPONDS</div>
+          <div class="cs-response-text" id="cs-response-text"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;" id="cs-action-btns">
+          <button class="cs-btn" onclick="showImpact()" id="cs-impact-btn">Show Ripple Effects</button>
+          <button class="cs-btn secondary" onclick="showResponse()" id="cs-response-btn" style="display:none;">How Do They Respond?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Human vs. AI Challenge</h2>
+    <p>For decades, production planners built and managed schedules by hand — using whiteboards, spreadsheets, and experience. They were good at it. But the human brain has limits that become very real when you're managing a complex, multi-machine facility with dozens of active jobs.</p>
+
+    <div class="compare">
+      <div class="compare-box human">
+        <div class="compare-title">🧠 What a Human Planner Does Well</div>
+        <div class="compare-item">Understands context — knows which machine "runs hot" on Fridays</div>
+        <div class="compare-item">Reads team dynamics — knows who works well together</div>
+        <div class="compare-item">Handles relationships — communicates with customers about delays</div>
+        <div class="compare-item">Applies judgment — knows when a "technically optimal" plan won't work in practice</div>
+        <div class="compare-item">Responds to surprises with creativity and experience</div>
+      </div>
+      <div class="compare-box ai">
+        <div class="compare-title">🤖 What AI Scheduling Does Well</div>
+        <div class="compare-item">Processes dozens of variables simultaneously without getting overwhelmed</div>
+        <div class="compare-item">Generates optimized sequences in seconds instead of hours</div>
+        <div class="compare-item">Catches scheduling conflicts a human might miss under pressure</div>
+        <div class="compare-item">Re-plans in real time when a disruption occurs</div>
+        <div class="compare-item">Tracks historical job times accurately across thousands of runs</div>
+      </div>
+    </div>
+
+    <p>The most powerful approach combines both: AI generates the schedule and the re-plan when things break down. Humans review it, apply their judgment and experience, adjust as needed, and approve. Neither one alone is as effective as the two working together.</p>
+    <p>This is the core idea of Module 4 — and it starts by understanding why the problem is hard enough that AI assistance genuinely matters.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-box">
+      <div class="quiz-label">Quick Check</div>
+      <div class="quiz-q">Press Station 2 breaks down on Tuesday morning, right in the middle of a job. The repair will take 6 hours. The AI scheduling system immediately generates three re-plan options. Who should decide which option to use — and why?</div>
+      <div class="quiz-opts" id="q1-opts">
+        <button class="quiz-opt" onclick="doQ(0,false,'q1')">The AI should automatically select the best option and update the schedule — it can calculate the optimal choice faster than a human can read the options</button>
+        <button class="quiz-opt" onclick="doQ(1,true,'q1')">A human supervisor or production manager should review all three options and choose — because they know things the AI doesn't, like which workers are available to move, whether a customer deadline is flexible, and whether the backup machine has been acting strangely lately</button>
+        <button class="quiz-opt" onclick="doQ(2,false,'q1')">Nobody should decide yet — the team should wait until the repair is done and then re-run the original schedule</button>
+        <button class="quiz-opt" onclick="doQ(3,false,'q1')">The machine operator whose press broke down should choose the re-plan option, since they're most directly affected</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. The AI generates options based on data it can see — time, machine availability, job deadlines. But the human brings context the AI can't access: Is that backup machine actually reliable right now, or has it been inconsistent? Does the customer on Job WO-1187 have any flexibility, or will a one-day delay cost the company the account? Is overtime tonight realistic given how the team has been feeling? The AI gives you well-calculated choices. The human makes the call.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ The AI generating the options is doing exactly what it should — fast, data-driven analysis of the best ways to recover. But automatically acting on one of those options without human review is where things can go wrong. The AI doesn't know that the "backup machine" option uses a machine that's been vibrating oddly and is two days from a maintenance check. It doesn't know that the rush overtime option assumes workers who are already exhausted from covering last week's sick-out. Human judgment — applied to AI-generated options — is the right combination.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">A production schedule answers five questions for every job: What? How much? When? With what? By whom? Getting all five right simultaneously — for dozens of jobs — is genuinely complex.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Building a schedule requires combining customer orders, machine availability, worker availability, material availability, job dependencies, and historical time estimates. Each piece of missing or wrong information degrades the whole plan.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Five major disruption types break schedules: machine breakdowns, worker absences, material shortages, quality escapes, and rush orders. Each creates ripple effects that touch other jobs, machines, and deadlines downstream.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Human planners bring judgment, context, and relationship knowledge. AI scheduling tools bring speed, simultaneous variable processing, and real-time re-planning capability. Together, they're far more effective than either alone.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Understanding why schedules break is the foundation for understanding what AI planning tools actually solve — and why human oversight of those tools remains essential.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const disruptions=[
+  {
+    title:'Machine Breakdown — Press Station 2 Goes Down',
+    text:"It's 7:15 AM. The operator on Press Station 2 notices the machine is making an unusual grinding sound. By 7:30, the press has stopped entirely. Maintenance is called. The diagnosis: a hydraulic seal failure. Estimated repair time: 6 hours. Press Station 2 was scheduled to run Work Orders WO-1187 and WO-1201 today — two jobs with deadlines later this week.",
+    ripples:[
+      "WO-1187 can't progress — it was scheduled on Press Station 2 all morning. 500 bracket units are stalled before step 1.",
+      "WO-1201's sub-assembly in the Assembly Bay can't start — it depends on pressed parts from WO-1187 that won't exist yet.",
+      "Welding Bay 1 is now idle — it was scheduled to begin welding WO-1187 parts this afternoon, but there are no parts to weld.",
+      "Press Station 1 (the backup machine) is currently running WO-1215. Can it be paused and switched over? Does it have the right tooling for WO-1187? Does rescheduling WO-1215 push that job past its deadline?",
+      "The customer for WO-1187 may need to be contacted if the deadline is at risk. Someone has to make that call — and decide what to tell them."
+    ],
+    response:"The shift supervisor assesses the situation. They ask maintenance for a firm repair estimate. They check whether Press Station 1 can be reconfigured for WO-1187 and how long the changeover takes. They review the deadlines for both affected jobs. The production manager receives an alert — possibly from an AI monitoring system — and reviews three AI-generated re-plan options. They pick the one that protects the most critical deadline while minimizing overtime cost, and the updated schedule is released to the floor."
+  },
+  {
+    title:'Key Worker Calls Out — The Certified Welder Doesn\'t Show',
+    text:"At 5:55 AM — 5 minutes before the day shift starts — the foreman gets a text. Marcus, the team's most experienced certified welder, is sick and won't be in. Marcus was the only person on the day shift certified to run the critical weld step on WO-1187. The weld step was scheduled to start at 10 AM today, right after the pressed parts are ready.",
+    ripples:[
+      "WO-1187's weld step cannot be completed on Day Shift — no other certified welder is scheduled today.",
+      "The downstream steps — coating and final inspection — can't happen until welding is done. Two more jobs in the schedule are now in question.",
+      "Can a certified welder be called in from the evening shift early? That adds cost and requires the worker to agree.",
+      "Is there a qualified contractor or temp worker available? What's the cost? What's the lead time to get them on-site?",
+      "If welding slips to evening shift, the coating step slips to tomorrow — which may push final delivery into the next week."
+    ],
+    response:"The foreman immediately notifies the shift supervisor. They check the skills database to see who else holds the welding certification — even if not currently scheduled. They find one person on evening shift who can come in 3 hours early for overtime. The production manager approves the overtime. The AI scheduling system is updated with the new availability, recalculates the timeline, and flags that WO-1187's deadline now depends on the evening shift completing the weld by 8 PM."
+  },
+  {
+    title:'Material Shortage — The Steel Sheet Didn\'t Arrive',
+    text:"Monday morning, the warehouse team does a materials check before the shift starts. The 45 square feet of 3.5mm stainless steel sheet scheduled for WO-1187 is not in the warehouse. A check with the purchasing team reveals: the supplier shipped it Thursday, but there was a freight delay. It won't arrive until Wednesday at the earliest.",
+    ripples:[
+      "WO-1187 cannot start. The first step — cutting the steel sheet to template — requires material that isn't there.",
+      "Press Station 2, which was set up and ready for WO-1187, is now sitting idle. The machine time was wasted.",
+      "Welding Bay 1 and Coating Line C, both downstream of WO-1187, now have gaps in their schedule.",
+      "Can another job be pulled forward to fill the gap? Does that job have all its materials? Does it conflict with another machine's schedule?",
+      "If WO-1187 can't start until Wednesday, can it still hit its Friday deadline? That requires running it through a compressed timeline — possibly requiring overtime or weekend work."
+    ],
+    response:"Purchasing immediately escalates with the freight carrier for an updated delivery estimate. The production planner identifies two smaller jobs that can be pulled forward to fill Press Station 2 and Welding Bay 1 for the next two days. The AI scheduling system re-sequences the week's plan around the gap. The customer for WO-1187 is contacted with a heads-up that their delivery may shift by one day, but the team is working to hold the original deadline."
+  },
+  {
+    title:'Quality Issue — Defects Discovered Mid-Run',
+    text:"Tuesday afternoon, the quality inspector reviewing finished WO-1187 brackets notices something wrong: 47 of the last 60 parts have a hairline crack at the same location on the bend. This is a process problem — something happened at Press Station 2. All 47 cracked parts are rejected. The press is stopped while the cause is investigated. Tooling inspection reveals the die has developed a micro-fracture and needs to be replaced.",
+    ripples:[
+      "240 parts produced so far need to be re-inspected — any with the crack are scrapped. The total good parts count may be far below the 500 needed.",
+      "The die replacement will take 2–4 hours. During that time, Press Station 2 is down again.",
+      "Even after the die is replaced, the team has to re-run the rejected quantity — which wasn't in the original schedule and wasn't budgeted for in time or materials.",
+      "The downstream weld and coating steps are paused again — they can't proceed until the correct pressed parts are available.",
+      "The WO-1187 deadline is now at serious risk. Extra shifts may be required to catch up."
+    ],
+    response:"Quality immediately documents the defect pattern and root cause (die fracture). Maintenance replaces the die. All 240 parts are re-inspected; 61 are scrapped. The production manager reviews the situation and authorizes evening shift overtime to re-run the scrapped quantity. The AI scheduling tool is updated with the adjusted quantity and re-plans the coating and assembly steps around the new timeline. A corrective action is logged to improve die inspection intervals going forward."
+  },
+  {
+    title:'Rush Order Added — A Customer Needs Parts Today',
+    text:"Wednesday at 9 AM, the sales team forwards an urgent request: a key customer had an equipment failure at their facility and needs 200 of your company's custom brackets delivered by Thursday morning — or their entire production line stops. This order doesn't exist in the schedule. It requires Press Station 2, Welding Bay 1, and coating — all of which are currently committed to existing jobs.",
+    ripples:[
+      "Fitting a new 200-unit job into an already full schedule means something else has to move or wait.",
+      "WO-1215, currently scheduled on Press Station 2 for Wednesday, has a lower-priority Friday deadline. Can it be pushed back? Does that create any downstream conflicts?",
+      "The rush job requires a coating step — but Coating Line C is committed to WO-1180 through Wednesday evening. Can the rush job get 2 hours on Thursday morning before WO-1187's coating is scheduled?",
+      "Does the facility have the materials for this rush job on hand? If not, can they be sourced from an alternate supplier today?",
+      "Is this customer important enough to accept the cost of overtime and expedited material sourcing? That's a business judgment — not a scheduling one."
+    ],
+    response:"The production manager consults with sales about the customer relationship and the cost implications. They decide to accept the order. The AI scheduling system receives the new work order and immediately generates two options for fitting it into the week's schedule — one that uses overtime, one that pushes WO-1215 back. The production manager chooses the overtime option because WO-1215's customer has more flexibility. Materials are confirmed in stock. The rush order starts Wednesday afternoon."
+  }
+];
+let explored=new Set();
+let currentDisruption=null;
+let impactShown=false;
+let responseShown=false;
+
+function showDisruption(idx,btn){
+  currentDisruption=idx;
+  impactShown=false;responseShown=false;
+  explored.add(idx);
+  document.getElementById('cs-progress').textContent=`Disruption ${explored.size} of 5 explored`;
+  document.querySelectorAll('[id^="dis-btn-"]').forEach(b=>b.classList.remove('active')&&b.classList.add('secondary'));
+  btn.classList.remove('secondary');btn.classList.add('active');
+  const d=disruptions[idx];
+  document.getElementById('cs-title').textContent=d.title;
+  document.getElementById('cs-text').textContent=d.text;
+  document.getElementById('cs-impact').classList.remove('show');
+  document.getElementById('cs-response').classList.remove('show');
+  document.getElementById('cs-display').style.display='block';
+  document.getElementById('cs-impact-btn').style.display='inline-block';
+  document.getElementById('cs-response-btn').style.display='none';
+}
+function showImpact(){
+  const d=disruptions[currentDisruption];
+  const ripplesEl=document.getElementById('cs-ripples');ripplesEl.innerHTML='';
+  d.ripples.forEach((r,i)=>{
+    const div=document.createElement('div');div.className='cs-ripple';
+    div.innerHTML=`<div class="cs-ripple-num">${i+1}</div><div class="cs-ripple-text">${r}</div>`;
+    ripplesEl.appendChild(div);
+  });
+  document.getElementById('cs-impact').classList.add('show');
+  document.getElementById('cs-impact-btn').style.display='none';
+  document.getElementById('cs-response-btn').style.display='inline-block';
+  impactShown=true;
+}
+function showResponse(){
+  const d=disruptions[currentDisruption];
+  document.getElementById('cs-response-text').textContent=d.response;
+  document.getElementById('cs-response').classList.add('show');
+  document.getElementById('cs-response-btn').style.display='none';
+  responseShown=true;
+}
+
+const qDone={};
+function doQ(idx,correct,qid){
+  if(qDone[qid])return;qDone[qid]=true;
+  const opts=document.querySelectorAll(`#${qid}-opts .quiz-opt`);
+  opts.forEach(b=>b.disabled=true);
+  opts[idx].classList.add(correct?'correct':'wrong');
+  document.getElementById(`${qid}-${correct?'good':'bad'}`).classList.add('show');
+}
+</script>
+</body>
+</html>

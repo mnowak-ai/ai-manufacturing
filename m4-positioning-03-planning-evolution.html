@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Handwritten Boards to AI: How Manufacturing Planning Has Evolved</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;
+  --white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;
+  --green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;
+  --red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;
+  --era1:#6B4C11;--era1-pale:#FFFBEB;--era2:#1D4ED8;--era2-pale:#EFF6FF;
+  --era3:#276749;--era3-pale:#F0FFF4;--era4:#7B2FBE;--era4-pale:#F3EAFF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* Era timeline */
+.era-timeline{display:flex;flex-direction:column;gap:0;margin:28px 0;}
+.era-entry{display:flex;gap:0;position:relative;}
+.era-spine{display:flex;flex-direction:column;align-items:center;width:60px;flex-shrink:0;}
+.era-dot{width:18px;height:18px;border-radius:50%;border:3px solid var(--white);flex-shrink:0;z-index:1;margin-top:20px;}
+.era-line{width:3px;flex:1;background:var(--purple-mid);}
+.era-entry:last-child .era-line{display:none;}
+.era-card{flex:1;margin-bottom:20px;border-radius:20px;overflow:hidden;border:2px solid;}
+.era-card-head{padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.era-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:100px;}
+.era-year{font-size:13px;font-weight:600;opacity:.7;}
+.era-card-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;padding:0 22px 8px;}
+.era-card-body{padding:0 22px 20px;}
+.era-card-body p{font-size:14px;line-height:1.8;margin-bottom:10px;}
+.era-card-body p:last-child{margin-bottom:0;}
+.era-strengths{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.era-str{border-radius:10px;padding:10px 12px;}
+.era-str-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.era-str-text{font-size:12px;line-height:1.6;}
+@media(max-width:520px){.era-strengths{grid-template-columns:1fr;}}
+
+/* Era 1 — boards */
+.era-card.e1{border-color:#D97706;background:var(--era1-pale);}
+.era-card.e1 .era-card-head{background:#FFFBEB;}
+.era-badge.e1{background:#FFFBEB;color:var(--era1);border:1px solid #D97706;}
+.era-dot.e1{background:#D97706;}
+.era-str.e1-good{background:#FEF3C7;border:1px solid #D97706;}
+.era-str.e1-good .era-str-label{color:var(--era1);}
+.era-str.e1-bad{background:var(--red-pale);border:1px solid var(--red);}
+.era-str.e1-bad .era-str-label{color:var(--red);}
+/* Era 2 — spreadsheets */
+.era-card.e2{border-color:#3B82F6;background:var(--era2-pale);}
+.era-card.e2 .era-card-head{background:#EFF6FF;}
+.era-badge.e2{background:#DBEAFE;color:var(--era2);border:1px solid #3B82F6;}
+.era-dot.e2{background:#3B82F6;}
+.era-str.e2-good{background:#DBEAFE;border:1px solid #3B82F6;}
+.era-str.e2-good .era-str-label{color:var(--era2);}
+.era-str.e2-bad{background:var(--red-pale);border:1px solid var(--red);}
+.era-str.e2-bad .era-str-label{color:var(--red);}
+/* Era 3 — MRP/ERP */
+.era-card.e3{border-color:#059669;background:var(--era3-pale);}
+.era-card.e3 .era-card-head{background:#F0FFF4;}
+.era-badge.e3{background:#D1FAE5;color:var(--era3);border:1px solid #059669;}
+.era-dot.e3{background:#059669;}
+.era-str.e3-good{background:#D1FAE5;border:1px solid #059669;}
+.era-str.e3-good .era-str-label{color:var(--era3);}
+.era-str.e3-bad{background:var(--red-pale);border:1px solid var(--red);}
+.era-str.e3-bad .era-str-label{color:var(--red);}
+/* Era 4 — AI */
+.era-card.e4{border-color:var(--purple);background:var(--era4-pale);}
+.era-card.e4 .era-card-head{background:#F3EAFF;}
+.era-badge.e4{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple);}
+.era-dot.e4{background:var(--purple);}
+.era-str.e4-good{background:var(--purple-pale);border:1px solid var(--purple);}
+.era-str.e4-good .era-str-label{color:var(--purple-dark);}
+.era-str.e4-caution{background:var(--orange-pale);border:1px solid var(--orange);}
+.era-str.e4-caution .era-str-label{color:var(--orange);}
+
+/* Capability comparison */
+.cap-compare{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cc-title{font-family:"Fraunces",serif;font-size:18px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.cc-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;}
+.cc-table th{background:var(--purple-dark);color:var(--white);padding:10px 14px;font-size:12px;font-weight:700;text-align:left;}
+.cc-table th:first-child{border-radius:12px 0 0 0;}
+.cc-table th:last-child{border-radius:0 12px 0 0;}
+.cc-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--purple-mid);vertical-align:middle;}
+.cc-table tr:last-child td{border-bottom:none;}
+.cc-table tr:nth-child(even) td{background:rgba(123,47,190,.04);}
+.cc-check{font-size:16px;}
+.cc-no{color:var(--red);}
+.cc-yes{color:var(--green);}
+.cc-part{color:var(--orange);}
+
+/* Myth cards */
+.myth-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.myth-card{border-radius:16px;overflow:hidden;border:1.5px solid var(--purple-mid);}
+.myth-head{padding:14px 20px;background:var(--red-pale);display:flex;align-items:center;gap:10px;}
+.myth-head-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);}
+.myth-head-text{font-weight:700;font-size:14px;color:var(--red);}
+.myth-body{padding:14px 20px;background:var(--green-pale);}
+.myth-body-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px;}
+.myth-body-text{font-size:14px;line-height:1.75;color:var(--gray-text);}
+
+/* Quiz */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not(:disabled){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-feedback{margin-top:16px;padding:16px 20px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.good{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.quiz-feedback.bad{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* Summary */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.summary-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.summary-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+
+/* Spotlight worker */
+.worker-spotlight{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:30px 34px;margin:28px 0;color:var(--white);}
+.ws-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.ws-heading{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:14px;}
+.ws-body{font-size:14px;line-height:1.8;color:rgba(255,255,255,.85);}
+.ws-body p{font-size:14px;margin-bottom:10px;color:rgba(255,255,255,.85);}
+.ws-body p:last-child{margin-bottom:0;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 4 · Positioning Article</div>
+  <h1>From Handwritten Boards to AI: How Manufacturing Planning Has Evolved</h1>
+  <p class="hero-sub">AI planning didn't arrive out of nowhere. It's the latest step in a 70-year journey — from chalk on a blackboard to real-time intelligent scheduling. Understanding that journey helps you see AI as progress, not magic or threat.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+  <div class="section fade-in">
+    <h2>Every Generation Thinks Their Tool Is the New One</h2>
+    <p>Here's something worth remembering before we dive in: every major change in manufacturing planning technology was met with the same two reactions — excitement from people who saw the opportunity, and fear from people who thought it would eliminate their jobs.</p>
+    <p>When spreadsheets replaced paper planning boards in the 1980s, some planners worried they'd be replaced by computers. They weren't. When MRP software replaced spreadsheets, some planners worried again. Same result. The planners who adapted thrived. The ones who refused to learn struggled.</p>
+    <p>AI scheduling is the latest chapter in this same story. Understanding the full arc — not just the newest chapter — is what turns anxiety into confidence.</p>
+    <div class="pull-quote"><p>Every tool that made planning easier also made the people using it more valuable — because the problems they could solve got bigger and more complex.</p></div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>The Four Eras of Manufacturing Planning</h2>
+    <p>Let's walk through each era — what the tools were, how they worked, what they solved, and what problems they left behind that pushed the industry toward the next generation.</p>
+
+    <div class="era-timeline">
+
+      <!-- Era 1 -->
+      <div class="era-entry">
+        <div class="era-spine">
+          <div class="era-dot e1"></div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-card e1">
+          <div class="era-card-head">
+            <span class="era-badge e1">Era 1</span>
+            <span class="era-year">1940s – 1970s</span>
+          </div>
+          <div class="era-card-title">The Whiteboard and the Clipboard</div>
+          <div class="era-card-body">
+            <p>In the early days of modern manufacturing, production planning happened on physical boards — large blackboards, magnetic scheduling boards, or hand-written paper systems pinned to a wall. A production planner or foreman would write job names, machine assignments, and time slots in physical columns. Workers came to the board each morning to see what they were making that day.</p>
+            <p>Everything was updated by hand. When a job moved, someone erased it and rewrote it. When a machine broke down, a person walked to the board, scratched out the affected jobs, and figured out the new plan in their head — or on a notepad — before writing the update. The planner's brain was the scheduling system.</p>
+            <p>This era relied entirely on <mark>expert knowledge</mark> — experienced people who knew the machines, knew the workers, and had developed an intuition for how to sequence jobs efficiently. When that person left or retired, a huge amount of institutional knowledge walked out the door with them.</p>
+            <div class="era-strengths">
+              <div class="era-str e1-good">
+                <div class="era-str-label">✅ Strengths</div>
+                <div class="era-str-text">Flexible. Human judgment applied directly. No software needed. Immediate — you could update the board in seconds. Everyone could see the plan at a glance.</div>
+              </div>
+              <div class="era-str e1-bad">
+                <div class="era-str-label">❌ Limitations</div>
+                <div class="era-str-text">Limited to what one person could hold in their head. No way to model "what if" scenarios. When the experienced planner was out sick, chaos. No data was saved — plans vanished when erased.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Era 2 -->
+      <div class="era-entry">
+        <div class="era-spine">
+          <div class="era-dot e2"></div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-card e2">
+          <div class="era-card-head">
+            <span class="era-badge e2">Era 2</span>
+            <span class="era-year">1980s – early 2000s</span>
+          </div>
+          <div class="era-card-title">The Spreadsheet Revolution</div>
+          <div class="era-card-body">
+            <p>When personal computers arrived in factories, spreadsheet software — first Lotus 1-2-3, then Microsoft Excel — transformed how production scheduling worked. For the first time, planners could store large amounts of scheduling data digitally, do calculations automatically, and update a plan without erasing anything.</p>
+            <p>A well-built Excel schedule could show the entire week's jobs across all machines, automatically calculate how many hours were scheduled on each machine, highlight jobs that were running behind, and even generate basic reports for management. Planners who learned to build these tools became extremely valuable.</p>
+            <p>But spreadsheets had a fundamental limitation: they were <mark>passive tools</mark>. They held whatever information you put in, but they didn't know if that information was still accurate. If a machine went down, the spreadsheet didn't update itself. The planner had to manually update every affected cell. In a facility with 20 machines and 50 active work orders, that could take hours — during which the old plan was still on everyone's screens.</p>
+            <p>And when two people tried to edit the same spreadsheet at the same time, things got messy fast.</p>
+            <div class="era-strengths">
+              <div class="era-str e2-good">
+                <div class="era-str-label">✅ Strengths</div>
+                <div class="era-str-text">Stored data persistently. Enabled calculations. Shareable. Could model basic "what if" scenarios by copying tabs. Much faster than manual methods for building the initial plan.</div>
+              </div>
+              <div class="era-str e2-bad">
+                <div class="era-str-label">❌ Limitations</div>
+                <div class="era-str-text">Didn't update automatically. One person edited at a time. Couldn't connect to real machine or inventory data. Required significant manual effort to keep current. Version control was a constant nightmare.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Era 3 -->
+      <div class="era-entry">
+        <div class="era-spine">
+          <div class="era-dot e3"></div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-card e3">
+          <div class="era-card-head">
+            <span class="era-badge e3">Era 3</span>
+            <span class="era-year">1990s – 2010s</span>
+          </div>
+          <div class="era-card-title">MRP and ERP Software: The Database Era</div>
+          <div class="era-card-body">
+            <p><mark>MRP</mark> stands for <strong>Materials Requirements Planning</strong>. <mark>ERP</mark> stands for <strong>Enterprise Resource Planning</strong>. These are sophisticated software systems — companies like SAP, Oracle, and Infor built them — that connected production scheduling with inventory management, purchasing, accounting, and customer orders all in one place.</p>
+            <p>For the first time, a planner could open one system and see: what orders exist, what materials are in stock, which machines are scheduled, what the current inventory levels are, and when jobs are due. When a new customer order came in, the MRP system could automatically calculate what materials needed to be ordered and when — based on lead times and current inventory. This was a massive step forward.</p>
+            <p>ERP systems made manufacturing data <mark>connected and shared</mark>. The quality manager, the purchasing department, and the production planner were all looking at the same information. When the purchasing team received a material shipment, it immediately showed up in the production planner's inventory count. No phone calls. No manual updates. No version control problems.</p>
+            <p>But ERP systems had a new limitation: they were excellent at storing and organizing data, but not great at <em>thinking</em>. They could tell you what was scheduled — but they couldn't automatically tell you what the optimal schedule was, or how to recover when disruptions happened. A planner still had to manually analyze the situation and make the judgment calls.</p>
+            <div class="era-strengths">
+              <div class="era-str e3-good">
+                <div class="era-str-label">✅ Strengths</div>
+                <div class="era-str-text">Connected all departments. Real-time data. Automatic material calculations. Could handle very large, complex operations. Data saved permanently and accessibly. Multiple users, one system.</div>
+              </div>
+              <div class="era-str e3-bad">
+                <div class="era-str-label">❌ Limitations</div>
+                <div class="era-str-text">Expensive and complex to implement. Required significant training. Could organize data but couldn't optimize it. Didn't respond dynamically to disruptions. Planners still did the "thinking" work manually.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Era 4 -->
+      <div class="era-entry">
+        <div class="era-spine">
+          <div class="era-dot e4"></div>
+          <div class="era-line"></div>
+        </div>
+        <div class="era-card e4">
+          <div class="era-card-head">
+            <span class="era-badge e4">Era 4 — Now</span>
+            <span class="era-year">2015s – Present</span>
+          </div>
+          <div class="era-card-title">AI-Assisted Planning: Optimization in Real Time</div>
+          <div class="era-card-body">
+            <p>AI planning tools — like the Wrkspce.ai system used at PrecisionTech Manufacturing — don't replace ERP systems. They sit on top of them, using all the connected data that ERP systems organize, and adding a new capability: <mark>optimization and real-time replanning</mark>.</p>
+            <p>An AI scheduling system can take a facility's entire set of active work orders, machine capabilities, worker availability, material stock levels, and delivery deadlines — and generate an optimized production sequence in seconds. Not just any sequence: the best sequence it can calculate, given all the constraints it knows about.</p>
+            <p>Even more powerful: when something disrupts that plan — a machine breaks down at 7:30 AM — the AI can immediately generate new options for how to recover. The human planner or supervisor doesn't have to start from scratch, manually recalculating every affected job. They review the AI's options, apply their judgment and experience, and pick the best path forward.</p>
+            <p>AI also learns over time. By analyzing thousands of past jobs, it develops increasingly accurate estimates for how long things actually take — not just how long the work order says they should take. This makes future schedules more realistic and more reliable.</p>
+            <div class="era-strengths">
+              <div class="era-str e4-good">
+                <div class="era-str-label">✅ What AI Adds</div>
+                <div class="era-str-text">Real-time optimization. Immediate re-planning when disruptions hit. Pattern recognition from historical data. Ability to process dozens of variables simultaneously. Gets better over time with more data.</div>
+              </div>
+              <div class="era-str e4-caution">
+                <div class="era-str-label">⚠️ What AI Still Can't Do</div>
+                <div class="era-str-text">Understand context that isn't in its data. Take responsibility for decisions. Notice that a machine is "technically working" but sounds wrong. Handle truly novel situations it hasn't seen before. Replace the need for human judgment.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>What Changed — And What Stayed the Same</h2>
+    <p>Across all four eras, one thing remained constant: <em>humans made the final decisions</em>. The tools changed. The speed and sophistication of the analysis changed. But the responsibility for approving a plan, for catching what the tool missed, and for managing the human consequences of scheduling decisions — that always stayed with people.</p>
+
+    <div class="cap-compare">
+      <div class="cc-label">Capability Comparison Across Eras</div>
+      <div class="cc-title">What Each Planning Era Could Do</div>
+      <table class="cc-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Whiteboard Era</th>
+            <th>Spreadsheet Era</th>
+            <th>ERP Era</th>
+            <th>AI Era</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Store data permanently</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Share data across departments</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗ (limited)</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Connect to live inventory data</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Optimize job sequences automatically</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗ (limited)</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Re-plan instantly when disruptions happen</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Learn from historical job data</td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-no">✗</span></td>
+            <td><span class="cc-check cc-part">✗ (stores, not analyzes)</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Apply contextual judgment</td>
+            <td><span class="cc-check cc-yes">✓ (human planner)</span></td>
+            <td><span class="cc-check cc-yes">✓ (human planner)</span></td>
+            <td><span class="cc-check cc-yes">✓ (human planner)</span></td>
+            <td><span class="cc-check cc-part">⚠️ (human reviews AI)</span></td>
+          </tr>
+          <tr>
+            <td>Understand floor conditions not in data</td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-yes">✓</span></td>
+            <td><span class="cc-check cc-no">✗ (AI can't do this)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Look at the last two rows carefully. AI adds enormous capabilities — but human judgment and floor knowledge remain essential because they cover things AI fundamentally cannot do. This is why the theme of Module 4 is <em>AI plans, humans approve and adjust</em> — not <em>AI plans, humans watch</em>.</p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>A Day in the Life — What Changed for the Planner</h2>
+
+    <div class="worker-spotlight">
+      <div class="ws-label">🕐 Monday Morning, 1975 vs. Today</div>
+      <div class="ws-heading">Same Problem, Very Different Tools</div>
+      <div class="ws-body">
+        <p><strong>1975:</strong> Diana arrives at the plant at 6:45 AM. She walks to the scheduling board — a 6-foot-wide magnetic board covered in colored tiles, each representing a job. She checks the previous shift's notes, hand-written on a clipboard. Machine 4 had an issue last night. She manually moves 8 tiles, recalculating the sequence in her head. It takes 45 minutes to update the board. Workers arrive at 7:30 and crowd around it to find their assignments. If two people read it at the same time from different angles, they sometimes see different things.</p>
+        <p><strong>Today:</strong> Jordan arrives at 7:00 AM and opens the production dashboard on their tablet. Overnight, the AI scheduling system detected that Machine 4's sensor data showed elevated vibration. It automatically generated three re-plan options and flagged the situation as requiring human review. Jordan reviews the options in 10 minutes, picks the one that best protects the highest-priority customer deadline, adds a note about why they chose it, and approves it. The updated schedule is instantly visible to every shift supervisor, foreman, and team lead in the facility — on their phones, tablets, or floor displays. Workers know their assignments before they clock in.</p>
+        <p>Diana was excellent at her job. So is Jordan. But Jordan can manage a facility three times the size of Diana's, with half the planning errors — because the tool has gotten dramatically better. Diana's judgment and experience made her valuable in 1975. Jordan's judgment and experience — applied to AI-generated options — makes them valuable today.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Three Myths About AI in Manufacturing Planning</h2>
+    <p>Before we move on, let's clear up three ideas that often get in the way of people understanding what AI planning tools actually are.</p>
+
+    <div class="myth-cards">
+      <div class="myth-card">
+        <div class="myth-head">
+          <span>❌</span>
+          <div>
+            <div class="myth-head-label">Myth 1</div>
+            <div class="myth-head-text">"AI will replace production planners and schedulers."</div>
+          </div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-body-label">✅ Reality</div>
+          <div class="myth-body-text">Spreadsheets didn't replace planners. ERP systems didn't replace planners. AI isn't replacing them either — it's changing what they spend their time on. Instead of spending 3 hours building a schedule from scratch, a planner spends 20 minutes reviewing and refining an AI-generated schedule. They then have time to focus on the harder problems: customer relationships, process improvements, training their team, handling unusual situations that the AI hasn't encountered before. The job changes. The value of the person doing it increases.</div>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-head">
+          <span>❌</span>
+          <div>
+            <div class="myth-head-label">Myth 2</div>
+            <div class="myth-head-text">"If the AI recommends it, you should just follow it."</div>
+          </div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-body-label">✅ Reality</div>
+          <div class="myth-body-text">AI recommendations are starting points, not orders. An AI might recommend a schedule that looks perfect on paper — but it doesn't know that the operator assigned to Machine 3 is new and still learning, or that the customer for Job WO-1187 called yesterday with a special request. The AI's job is to give you a well-calculated option. Your job is to apply the judgment and context it doesn't have. The combination of AI speed and human judgment produces better outcomes than either one alone.</div>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-head">
+          <span>❌</span>
+          <div>
+            <div class="myth-head-label">Myth 3</div>
+            <div class="myth-head-text">"AI planning is only for huge companies with big budgets."</div>
+          </div>
+        </div>
+        <div class="myth-body">
+          <div class="myth-body-label">✅ Reality</div>
+          <div class="myth-body-text">This was true in the ERP era — implementing SAP at a small shop was impractical. Modern AI planning tools are increasingly accessible to mid-size and smaller facilities, often as subscription software that connects to whatever systems are already in place. The technology is scaling down to where it makes sense for a 50-person shop, not just a 5,000-person plant. This means AI planning literacy is valuable for workers at all facility sizes, not just people heading to major corporations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>Check Your Understanding</h2>
+    <div class="quiz-box">
+      <div class="quiz-label">Quick Check</div>
+      <div class="quiz-q">A production planner has used Excel spreadsheets for 12 years and is very good at building complex schedules manually. Their company is about to roll out an AI scheduling tool. What is the most accurate way to think about what's happening to their job?</div>
+      <div class="quiz-opts" id="q1-opts">
+        <button class="quiz-opt" onclick="doQ(0,false,'q1')">Their job is becoming obsolete — if AI can build schedules, there's no need for a human planner anymore</button>
+        <button class="quiz-opt" onclick="doQ(1,false,'q1')">Nothing meaningful will change — AI tools are just fancy spreadsheets and experienced planners won't benefit from them</button>
+        <button class="quiz-opt" onclick="doQ(2,true,'q1')">Their deep scheduling experience becomes more valuable, not less — because they can now apply their judgment to AI-generated options, catch the things AI misses, and focus on higher-level problems that the AI can't address</button>
+        <button class="quiz-opt" onclick="doQ(3,false,'q1')">They should resist the change until the company can prove AI scheduling is actually better than their manual approach</button>
+      </div>
+      <div class="quiz-feedback good" id="q1-good">✅ Correct. This is the same transition that happened in every previous era — from boards to spreadsheets, from spreadsheets to ERP. Each time, planners who adapted and combined their expertise with the new tool became more valuable, because they could solve bigger and more complex problems. A planner who spent 3 hours building a schedule manually can now spend 20 minutes reviewing an AI-generated one — and use the other 2 hours and 40 minutes on analysis, problem-solving, and process improvement that they never had time for before.</div>
+      <div class="quiz-feedback bad" id="q1-bad">❌ History tells a consistent story here: every planning tool that made scheduling faster also made good planners more valuable, not less. When spreadsheets arrived, the planners who learned to use them became indispensable — they could manage larger, more complex operations than anyone with a whiteboard could. The same happened with ERP. An experienced planner who adds AI literacy to their 12 years of scheduling knowledge is the most capable version of that role that has ever existed — because their judgment is now applied at AI speed, to AI-scale problems.</div>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <div class="summary-box">
+      <h2>What You Learned</h2>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Manufacturing planning has evolved through four eras: physical boards (1940s–70s), spreadsheets (1980s–2000s), MRP/ERP software (1990s–2010s), and AI-assisted planning (now). Each era built on the last.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">Each new tool solved the biggest limitation of the previous one — but also introduced new limitations. AI solves the optimization and real-time re-planning problems that ERP couldn't address, but still can't replace human judgment and contextual knowledge.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">The capability that stayed constant across all four eras: humans making the final decisions. Tools changed. Responsibility stayed with people.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI planning tools are not replacements for experienced planners — they're amplifiers. Workers who combine trade or planning knowledge with AI literacy become more capable than any previous version of that role.</div></div>
+      <div class="summary-item"><div class="summary-check">✓</div><div class="summary-text">AI in manufacturing planning is evolution, not revolution. Workers who understand this history approach AI tools with the right mindset: these are powerful tools that require skilled human partners to work well.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';});
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+const qDone={};
+function doQ(idx,correct,qid){
+  if(qDone[qid])return;qDone[qid]=true;
+  const opts=document.querySelectorAll(`#${qid}-opts .quiz-opt`);
+  opts.forEach(b=>b.disabled=true);
+  opts[idx].classList.add(correct?'correct':'wrong');
+  document.getElementById(`${qid}-${correct?'good':'bad'}`).classList.add('show');
+}
+</script>
+</body>
+</html>
