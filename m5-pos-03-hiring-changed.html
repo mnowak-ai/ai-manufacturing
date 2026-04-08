@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Manufacturing Hiring Has Changed: What Employers Were Looking for 10 Years Ago vs. Today</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* THEN VS NOW COMPARISON */
+.compare-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cmp-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cmp-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cmp-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cmp-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.cmp-tab{flex:1;padding:10px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;text-align:center;}
+.cmp-tab.then{border-color:#9CA3AF;color:#9CA3AF;}
+.cmp-tab.now.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.cmp-tab.then.active{background:#374151;color:#fff;border-color:#374151;}
+.cmp-items{display:flex;flex-direction:column;gap:10px;}
+.cmp-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.7;color:var(--gray-text);}
+.cmp-item.then-style{border-color:#D1D5DB;background:#F9FAFB;}
+.cmp-role-tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-muted);margin-bottom:4px;}
+.cmp-phrase{font-weight:600;font-size:15px;margin-bottom:4px;}
+.cmp-phrase.then-style{color:#374151;}
+.cmp-phrase.now-style{color:var(--purple-dark);}
+.cmp-explain{font-size:13px;color:var(--gray-text);line-height:1.7;}
+.cmp-new-tag{display:inline-block;background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px;}
+.cmp-old-tag{display:inline-block;background:#F3F4F6;color:#6B7280;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px;}
+
+/* HISTORICAL TIMELINE */
+.timeline{margin:28px 0;}
+.tl-item{display:flex;gap:20px;align-items:flex-start;margin-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:60px;flex-shrink:0;}
+.tl-year{font-family:"Fraunces",serif;font-size:14px;font-weight:700;color:var(--purple);background:var(--purple-pale);border:2px solid var(--purple-mid);border-radius:8px;padding:4px 8px;text-align:center;z-index:1;}
+.tl-line{width:2px;background:var(--purple-mid);flex:1;min-height:24px;}
+.tl-item:last-child .tl-line{background:transparent;}
+.tl-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.tl-tech{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:4px;}
+.tl-title{font-family:"Fraunces",serif;font-size:16px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.tl-body{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.tl-worker{font-size:12px;color:var(--green);font-weight:600;margin-top:8px;}
+
+/* WHAT CHANGED METER */
+.change-meter{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px 28px;margin:24px 0;}
+.cm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
+.cm-items{display:flex;flex-direction:column;gap:14px;}
+.cm-item{}
+.cm-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.cm-item-name{font-size:14px;font-weight:600;color:var(--purple-dark);}
+.cm-item-pct{font-size:13px;font-weight:700;color:var(--purple);}
+.cm-bar-bg{height:10px;background:var(--purple-mid);border-radius:100px;overflow:hidden;}
+.cm-bar-fill{height:10px;background:var(--purple);border-radius:100px;width:0;transition:width 1.2s ease;}
+.cm-item-desc{font-size:12px;color:var(--gray-muted);margin-top:4px;line-height:1.6;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* REASSURANCE BOX */
+.reassure{background:var(--green-pale);border:1.5px solid var(--green);border-radius:20px;padding:26px 28px;margin:24px 0;}
+.reassure-title{font-family:"Fraunces",serif;font-size:18px;color:var(--green);font-weight:700;margin-bottom:10px;}
+.reassure-body{font-size:15px;line-height:1.8;color:#166534;}
+
+/* SUMMARY */
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Module 5 &middot; Workforce Readiness &amp; Career Growth</div>
+  <h1>How Manufacturing Hiring Has Changed: What Employers Were Looking for 10 Years Ago vs. Today</h1>
+  <p class="hero-sub">Every generation of manufacturing workers had to adapt to new technology. Here's how the hiring bar shifted — and why your AI training puts you ahead of where most workers are right now.</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="content">
+
+<div class="section fade-in">
+  <h2>This Isn't the First Time Manufacturing Changed</h2>
+  <p>If you talk to someone who has worked in manufacturing for 30 or 40 years, they'll tell you that the job has changed dramatically — more than once. They started with one set of skills and had to keep learning new ones as technology changed around them.</p>
+  <p>That's not unusual. That's how every major industry works. And understanding that history matters, because it tells you something important: <mark>the workers who kept learning are the ones who are still in the room</mark>. The ones who refused to adapt often got left behind. The ones who leaned in got promoted.</p>
+  <p>AI is the latest shift. It's a big one. But it's not the first — and knowing what happened before makes it easier to understand what's happening now.</p>
+
+  <div class="pull-quote">
+    <p>Every new wave of technology in manufacturing felt scary to some workers and exciting to others. The workers who got curious always came out ahead.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>A Brief History of Technology Shifts in Manufacturing</h2>
+  <p>Here are the major moments when manufacturing technology changed — and what workers had to learn each time. Notice the pattern: every time, the technology did more of the repetitive work. And every time, the humans who learned to work with the technology became more valuable, not less.</p>
+
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How Job Postings Have Actually Changed</h2>
+  <p>The clearest way to see how hiring has shifted is to look at real job posting language — what employers were writing in their listings 10 years ago versus what they're writing today.</p>
+  <p>Select a role below, then toggle between 2015 and 2025 job posting requirements. The highlighted phrases are the ones that changed most.</p>
+
+  <div class="compare-sim">
+    <div class="cmp-label">Then vs. Now Simulator</div>
+    <div class="cmp-title">Job Posting Language: 2015 vs. 2025</div>
+    <div class="cmp-sub">Choose a role, then flip between what employers asked for then and what they ask for now.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="role-tabs"></div>
+    <div class="cmp-tabs">
+      <div class="cmp-tab then" id="tab-then" onclick="setEra('then')">📋 2015 Job Posting</div>
+      <div class="cmp-tab now active" id="tab-now" onclick="setEra('now')">🤖 2025 Job Posting</div>
+    </div>
+    <div class="cmp-items" id="cmp-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How Much Has Changed? The Numbers</h2>
+  <p>The shift in job requirements isn't just anecdotal. Manufacturing job postings have measurably changed in the last several years. Here's what researchers tracking manufacturing hiring have found:</p>
+
+  <div class="change-meter">
+    <div class="cm-label">How Manufacturing Job Requirements Have Changed (2019–2024)</div>
+    <div class="cm-items" id="cm-items"></div>
+  </div>
+
+  <p>What this tells you: the technical job (making the product, running the machine) hasn't gone away. But <mark>the expectation of data and technology literacy alongside the technical work has increased sharply</mark>.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Workers Who Kept Up — And the Ones Who Didn't</h2>
+  <p>When CNC machines came into manufacturing in the 1980s, some workers refused to learn them. They said their manual machining skills were good enough. Some of them were right — for a while. But the plants that adopted CNC ran more productively, and eventually the workers who hadn't adapted found fewer places to work.</p>
+  <p>The workers who learned CNC programming didn't replace the manual machinists — they became more valuable than them. They could operate machines that were faster and more precise, and they commanded higher wages because their skills were harder to find.</p>
+  <p>The same thing happened with ERP software in the 1990s, with robotics in the 2000s, and with digital quality systems in the 2010s. Every time: the workers who learned the new technology moved up. The workers who didn't found the job getting smaller around them.</p>
+  <p>AI is happening on a faster timeline than any of these previous shifts. The workers who are learning it now — while it's still new — are positioning themselves the same way those early CNC programmers did.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What This Means for You Right Now</h2>
+  <div class="reassure">
+    <div class="reassure-title">You're on the right side of this shift</div>
+    <div class="reassure-body">Most manufacturing workers today were hired before AI tools became widespread in their facilities. They're figuring it out as they go — learning on the job, often without any structured training. You've done something different: you studied it deliberately, with curriculum, before entering the workforce. That's the equivalent of being an early CNC programmer. You're not behind — you're ahead of where most people are. The question is whether you use that advantage or let it sit unused.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Knowledge Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">Based on this article, what has been true of every major technology shift in manufacturing history — from manual machining to CNC to robotics to digital quality systems?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Each new technology eliminated the need for workers entirely, making human labor obsolete</button>
+      <button class="quiz-opt" onclick="doQ(1,false,'q1')">Technology shifts always made manufacturing jobs worse and lower-paying for everyone</button>
+      <button class="quiz-opt" onclick="doQ(2,true,'q1')">Workers who learned the new technology became more valuable and advanced faster — while those who resisted found fewer opportunities</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Technology changes happened so slowly that workers didn't need to adapt until they were about to retire</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Exactly right. The pattern across every major technology shift in manufacturing — CNC machines, ERP software, robotics, digital quality systems, and now AI — is consistent: workers who learned the new technology moved up, earned more, and found more opportunities. Workers who resisted found their skills becoming less valuable over time. That pattern is why your AI training now, before you've even entered the workforce, is such a meaningful advantage.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The historical pattern shows something different. Technology in manufacturing consistently made human workers more valuable when they learned to work with it — not obsolete. CNC programmers earned more than manual machinists. Workers who learned ERP systems became more promotable. The workers who adapted always came out ahead. The pattern applies to AI, too — which is exactly why your training is an advantage, not just a credential.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Manufacturing has gone through major technology shifts many times before — from manual machining to CNC, from paper systems to ERP software, from mechanical quality checks to digital monitoring, and now to AI. Each shift changed what skills employers needed.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The consistent pattern across every shift: workers who learned the new technology became more valuable, advanced faster, and earned more. Workers who resisted found fewer opportunities over time.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Job posting language in manufacturing has measurably changed in recent years — with AI awareness, data literacy, and tech adaptability appearing alongside (not replacing) traditional technical requirements.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Workers who study AI before entering the workforce are in the same position as early CNC programmers in the 1980s — ahead of the adoption curve, with a skill that is harder to find than most employers would like.</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');if(x.target.classList.contains('change-meter'))animateBars();}});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+// Timeline
+var tldata=[
+  {year:"1950s–60s",tech:"Mass Production & Assembly Lines",title:"The Rise of Specialized Machines",body:"Factories shifted from skilled craftsmen making whole products to workers each doing one specific task on an assembly line. The job changed from 'know everything about making a thing' to 'know your station perfectly.' Workers had to learn to keep pace with the line, spot defects quickly, and report problems up a clear chain of command.",worker:"What workers had to learn: Consistent precision, reading basic quality gauges, following standardized procedures."},
+  {year:"1970s–80s",tech:"CNC Machines & Computerized Control",title:"The First Big Computer Shift",body:"Computer Numerical Control (CNC) machines replaced many manual machining operations. Instead of a skilled machinist making every movement by hand, a computer controlled the cutting tool following a programmed path. Workers who could read technical drawings AND program CNC machines became highly sought after. Workers who could only do manual work found their skills gradually becoming less valuable.",worker:"What workers had to learn: Reading technical drawings, basic programming, understanding how computer-controlled movements translated to physical cuts."},
+  {year:"1990s–2000s",tech:"ERP Software & Digital Systems",title:"Paper to Digital — Everything Tracked",body:"Enterprise Resource Planning (ERP) software — programs like SAP and Oracle — replaced paper-based tracking of inventory, work orders, schedules, and production records. Suddenly, every worker was expected to log things digitally, read dashboards, and work within a shared system. Workers who resisted the computer systems became bottlenecks in the workflow.",worker:"What workers had to learn: Computer basics, logging data into software systems, reading digital dashboards, understanding that their inputs fed the entire factory's planning."},
+  {year:"2000s–10s",tech:"Robotics & Automated Assembly",title:"Robots Arrive on the Floor",body:"Industrial robots began taking over repetitive, physically demanding, or dangerous tasks — welding, painting, heavy lifting, precise screw-driving. Human workers didn't disappear — they shifted into programming robots, maintaining them, monitoring their output, and doing the complex tasks robots still couldn't perform. Workers who could work alongside robots and keep them running were valuable. Those who saw robots only as threats were often replaced by workers who felt differently.",worker:"What workers had to learn: Robot programming basics, understanding automated system behavior, working alongside automated equipment, performing maintenance on robotic systems."},
+  {year:"2015–Now",tech:"Digital Quality Systems & Sensors",title:"Every Machine Becomes a Data Source",body:"Sensors began attaching to almost every piece of manufacturing equipment — measuring temperature, vibration, pressure, speed, power consumption. Digital quality systems started using cameras and measurements to inspect products automatically. The factory floor became a data-producing environment, and workers were expected to interpret that data — not just operate machines.",worker:"What workers had to learn: Reading sensor dashboards, understanding what data patterns meant, distinguishing normal variation from real problems."},
+  {year:"2020s–Now",tech:"AI & Machine Learning",title:"AI Learns the Factory",body:"AI systems now analyze all that sensor and quality data to make predictions: this machine will fail in 3 weeks, this product batch has a higher defect probability, this schedule is inefficient given current conditions. The AI doesn't just display data — it interprets it and recommends actions. Workers now need to understand what the AI is doing, when to trust it, and when to override it.",worker:"What workers had to learn: How AI makes recommendations, what its limitations are, how to review AI outputs with professional judgment, and how to document decisions."}
+];
+var tlc=document.getElementById('timeline');
+tldata.forEach(function(t){
+  var div=document.createElement('div');div.className='tl-item';
+  div.innerHTML='<div class="tl-left"><div class="tl-year">'+t.year+'</div><div class="tl-line"></div></div>'
+    +'<div class="tl-card"><div class="tl-tech">'+t.tech+'</div><div class="tl-title">'+t.title+'</div>'
+    +'<div class="tl-body">'+t.body+'</div>'
+    +'<div class="tl-worker">👷 '+t.worker+'</div></div>';
+  tlc.appendChild(div);
+});
+
+// Compare Simulator
+var compareData=[
+  {role:"Maintenance Technician",then:[
+    {phrase:"Experience operating and maintaining industrial equipment",explain:"The focus was entirely on physical maintenance — the ability to diagnose problems by feel, sound, and experience. Technical knowledge of mechanical systems was the core requirement."},
+    {phrase:"Ability to read technical manuals and equipment schematics",explain:"Reading paper documentation was a primary skill — maintenance technicians needed to understand mechanical drawings and manufacturer manuals to diagnose and repair equipment."},
+    {phrase:"Experience with preventive maintenance scheduling",explain:"Preventive maintenance was scheduled by calendar — every 90 days, change the oil; every 6 months, replace belts. It was time-based, not condition-based."},
+    {phrase:"Strong troubleshooting skills and mechanical aptitude",explain:"Troubleshooting was primarily a physical and intuitive skill — experienced technicians could hear or feel that something was wrong before instruments confirmed it."}
+  ],now:[
+    {phrase:"Ability to interpret predictive maintenance dashboards and AI-generated equipment health alerts",explain:"Technicians today work with software platforms that analyze sensor data and flag developing problems. The posting assumes you know what these alerts look like and how to evaluate them — not just react to them.",is_new:true},
+    {phrase:"Experience with CMMS platforms (Computerized Maintenance Management Systems)",explain:"Maintenance is now tracked digitally. Work orders are generated and logged in software systems. Workers who can navigate these platforms — opening work orders, logging findings, closing out jobs — are expected from day one.",is_new:true},
+    {phrase:"Understanding of condition-based vs. time-based maintenance strategies",explain:"The shift from calendar-based to condition-based maintenance (driven by sensor data) is now a standard competency expectation. Technicians need to understand why this distinction matters.",is_new:true},
+    {phrase:"Strong troubleshooting skills and mechanical aptitude",explain:"This hasn't changed — physical diagnostic skill is still core. But it's now paired with digital literacy requirements that didn't exist a decade ago."}
+  ]},
+  {role:"Quality Inspector",then:[
+    {phrase:"Ability to use measurement tools: calipers, micrometers, gauges",explain:"Quality inspection was primarily a hands-on measurement skill. Knowing how to use physical measurement instruments was the central requirement."},
+    {phrase:"Ability to read engineering drawings and interpret tolerances",explain:"Understanding how to read a technical drawing — dimensions, tolerances, surface finish callouts — was the core technical knowledge for the role."},
+    {phrase:"Attention to detail and strong visual inspection skills",explain:"Visual inspection was a primary job function — looking at parts, identifying defects, and making pass/fail decisions through direct observation."},
+    {phrase:"Experience with SPC charts (Statistical Process Control)",explain:"Statistical process control was already part of quality jobs — understanding control charts and identifying process variation was a standard expectation."}
+  ],now:[
+    {phrase:"Ability to critically evaluate AI-generated quality alerts and distinguish signal from noise",explain:"AI vision systems and quality monitoring platforms now flag potential defects automatically. But they also generate false positives. Quality inspectors need to know how to evaluate these alerts — not just accept them.",is_new:true},
+    {phrase:"Experience with automated inspection systems and quality management software",explain:"Automated optical inspection, coordinate measuring machines with software outputs, and digital quality management systems are now standard tools in quality departments. Familiarity is expected.",is_new:true},
+    {phrase:"Ability to read engineering drawings and interpret tolerances",explain:"This hasn't changed — the ability to read technical documentation remains essential. But it's now paired with digital system literacy."},
+    {phrase:"Understanding of AI-assisted process monitoring and when to escalate vs. investigate",explain:"Knowing what to do with an AI quality alert — when to escalate immediately, when to investigate first, when to flag a trend — is now an expected quality inspector judgment skill.",is_new:true}
+  ]},
+  {role:"Production Planner",then:[
+    {phrase:"Experience with ERP systems for production scheduling",explain:"ERP-based scheduling was already digital in 2015 — but the ERP was largely a data entry and tracking tool. Planners entered data manually and made decisions based on their own analysis of that data."},
+    {phrase:"Strong Excel skills for capacity planning and analysis",explain:"Excel was the primary analytical tool for many planners — building capacity models, tracking performance, and analyzing production data. Advanced spreadsheet skills were a key differentiator."},
+    {phrase:"Ability to manage multiple priorities and communicate with production teams",explain:"Coordination and communication were core competencies — planners served as the link between sales forecasts, production capabilities, and floor execution."},
+    {phrase:"Understanding of inventory management and materials planning",explain:"Managing raw material and component inventory to support production schedules was a primary responsibility."}
+  ],now:[
+    {phrase:"Ability to review and adjust AI-assisted production schedules",explain:"Modern scheduling software generates AI-optimized schedules that planners then review, modify, and approve. The job has shifted from building the schedule to evaluating and refining what the AI built.",is_new:true},
+    {phrase:"Experience interpreting AI-generated resource utilization and capacity dashboards",explain:"Real-time dashboards showing machine utilization, labor allocation, and capacity constraints are now central tools. Planners need to read these fluently and act on what they show.",is_new:true},
+    {phrase:"Strong ERP and planning system skills",explain:"ERP skills remain essential — but the systems themselves have become more sophisticated, with AI-generated recommendations built into the scheduling and inventory modules."},
+    {phrase:"Ability to apply operational context when evaluating AI scheduling recommendations",explain:"This is the key new skill: knowing when the AI's optimized schedule doesn't account for real floor conditions — and being able to articulate why and adjust accordingly. This requires human judgment that no algorithm can replicate.",is_new:true}
+  ]}
+];
+var currentRole=0,currentEra='now';
+var roleTabsEl=document.getElementById('role-tabs');
+compareData.forEach(function(r,i){
+  var tab=document.createElement('div');
+  tab.style.cssText='padding:6px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);transition:all .2s;'+(i===0?'background:var(--purple);color:#fff;border-color:var(--purple);':'background:var(--white);color:var(--gray-muted);');
+  tab.textContent=r.role;
+  tab.onclick=function(){currentRole=i;roleTabsEl.querySelectorAll('div').forEach(function(t,j){t.style.background=j===i?'var(--purple)':'var(--white)';t.style.color=j===i?'#fff':'var(--gray-muted)';t.style.borderColor=j===i?'var(--purple)':'var(--purple-mid)';});renderCompare();};
+  roleTabsEl.appendChild(tab);
+});
+function setEra(era){currentEra=era;document.getElementById('tab-then').classList.toggle('active',era==='then');document.getElementById('tab-now').classList.toggle('active',era==='now');renderCompare();}
+function renderCompare(){
+  var items=currentEra==='now'?compareData[currentRole].now:compareData[currentRole].then;
+  var el=document.getElementById('cmp-items');el.innerHTML='';
+  items.forEach(function(item){
+    var d=document.createElement('div');
+    d.className='cmp-item'+(currentEra==='then'?' then-style':'');
+    d.innerHTML='<div class="cmp-phrase '+(currentEra==='then'?'then-style':'now-style')+'">"'+item.phrase+'"</div>'
+      +'<div class="cmp-explain">'+item.explain+'</div>'
+      +(item.is_new&&currentEra==='now'?'<span class="cmp-new-tag">🆕 New in 2025</span>':'')
+      +(currentEra==='then'?'<span class="cmp-old-tag">📋 2015 language</span>':'');
+    el.appendChild(d);
+  });
+}
+renderCompare();
+
+// Change Meter
+var cmdata=[
+  {label:"Job postings mentioning 'data' or 'digital' skills",pct:68,desc:"In manufacturing job postings that didn't previously require any data skills, the proportion mentioning data literacy or digital system experience has grown sharply."},
+  {label:"Postings for maintenance roles mentioning predictive/AI tools",pct:54,desc:"Maintenance technician postings specifically mentioning AI-powered or predictive maintenance platforms, condition monitoring software, or sensor data interpretation have more than doubled since 2019."},
+  {label:"Quality roles mentioning automated inspection systems",pct:61,desc:"Quality inspector and quality engineer postings increasingly reference automated inspection, machine vision systems, or AI-generated quality alerts as tools the candidate will work with."},
+  {label:"Postings adding 'tech adaptability' as a competency",pct:47,desc:"Soft skill requirements have also shifted — the ability to learn new software and adapt to changing systems now appears explicitly in job descriptions where it previously went unstated."}
+];
+var barsAnimated=false;
+function animateBars(){
+  if(barsAnimated)return;barsAnimated=true;
+  document.querySelectorAll('.cm-bar-fill').forEach(function(bar){bar.style.width=bar.getAttribute('data-pct')+'%';});
+}
+var cmc=document.getElementById('cm-items');
+cmdata.forEach(function(c){
+  var d=document.createElement('div');d.className='cm-item';
+  d.innerHTML='<div class="cm-item-head"><span class="cm-item-name">'+c.label+'</span><span class="cm-item-pct">+'+c.pct+'%</span></div>'
+    +'<div class="cm-bar-bg"><div class="cm-bar-fill" data-pct="'+c.pct+'"></div></div>'
+    +'<div class="cm-item-desc">'+c.desc+'</div>';
+  cmc.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
