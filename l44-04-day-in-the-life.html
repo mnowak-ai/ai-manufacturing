@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Day in the Life: How AI Changes the Workflow of Three Manufacturing Roles</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.role-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.role-tab{flex:1;min-width:140px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;text-align:center;cursor:pointer;transition:all .2s;}
+.role-tab:hover{border-color:var(--purple);}
+.role-tab.active{background:var(--purple);border-color:var(--purple);}
+.role-tab-icon{font-size:22px;margin-bottom:4px;}
+.role-tab-name{font-size:13px;font-weight:700;color:var(--gray-text);}
+.role-tab.active .role-tab-name{color:#fff;}
+.role-panel{display:none;}
+.role-panel.show{display:block;}
+.role-header{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:16px 22px;margin-bottom:16px;}
+.rh-name{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);}
+.rh-facility{font-size:13px;color:var(--gray-muted);margin-top:2px;}
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-event{display:flex;gap:0;align-items:stretch;}
+.tl-spine{width:52px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.tl-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;margin-top:16px;}
+.tl-dot.ai{background:var(--blue);}
+.tl-dot.human{background:var(--orange);}
+.tl-dot.both{background:var(--purple);}
+.tl-line{width:3px;flex:1;background:var(--purple-mid);margin:4px 0;}
+.tl-event:last-child .tl-line{display:none;}
+.tl-card{flex:1;border:1.5px solid var(--purple-mid);border-radius:12px;padding:12px 16px;margin-bottom:10px;background:var(--white);}
+.tl-time{font-size:11px;font-weight:700;color:var(--purple);margin-bottom:2px;}
+.tl-action{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.tl-detail{font-size:13px;line-height:1.7;color:var(--gray-text);}
+.tl-ai-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:5px;}
+.tl-ai-tag.ai{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-mid);}
+.tl-ai-tag.human{background:var(--orange-pale);color:var(--orange);border:1px solid #FCD34D;}
+.tl-ai-tag.both{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-mid);}
+.role-insight{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 20px;margin-top:14px;}
+.ri-title{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:6px;}
+.ri-text{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>A Day in the Life: How AI Changes the Actual Workflow of Three Manufacturing Roles</h1>
+  <p class="hero-sub">Module 4 covers AI in scheduling, resource management, and process optimization. But what does that look like for the person doing the actual job? This article walks through a Tuesday at Ridgeline Manufacturing through three different lenses: a production planner, a floor supervisor, and a machine operator.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>AI Doesn't Change What Manufacturing Does. It Changes How It Gets Done.</h2>
+  <p>Every role in manufacturing still has the same fundamental purpose it always had: parts need to be planned, the floor needs to run, and machines need to operate. What AI changes is the workflow around those tasks — what information arrives automatically, how decisions are supported, and where human time and attention get focused.</p>
+  <div class="pull-quote"><p>The workers who thrive alongside AI aren't the ones who never question it. They're the ones who know exactly where AI helps, exactly where it needs their judgment, and exactly how to add value in the space between those two things.</p></div>
+  <p>Click each role below to see a full Tuesday walkthrough. Notice where AI is doing the work, where it's supporting the human, and where the human is doing something the AI genuinely cannot.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Three Roles, One Facility, One Tuesday</h2>
+  <div class="role-tabs">
+    <div class="role-tab" onclick="showRole('planner',this)">
+      <div class="role-tab-icon">&#x1F4CB;</div>
+      <div class="role-tab-name">Production Planner</div>
+    </div>
+    <div class="role-tab" onclick="showRole('supervisor',this)">
+      <div class="role-tab-icon">&#x1F477;</div>
+      <div class="role-tab-name">Floor Supervisor</div>
+    </div>
+    <div class="role-tab" onclick="showRole('operator',this)">
+      <div class="role-tab-icon">&#x2699;&#xFE0F;</div>
+      <div class="role-tab-name">Machine Operator</div>
+    </div>
+  </div>
+
+  <div class="role-panel" id="rp-planner">
+    <div class="role-header">
+      <div class="rh-name">&#x1F4CB; Priya &mdash; Production Planner</div>
+      <div class="rh-facility">Ridgeline Manufacturing &bull; 180 employees &bull; Automotive components</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot ai"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">6:45 AM</div>
+          <div class="tl-action">AI overnight schedule arrives in her inbox</div>
+          <div class="tl-detail">The AI has already analyzed all open work orders, current inventory levels, machine availability, and worker certifications from the HR database. It generated today's complete shift schedule and flagged two exceptions: a material shortage risk on WO-4412 and a certification mismatch on a welding job assigned to Jordan.</div>
+          <div class="tl-ai-tag ai">&#x1F9E0; AI did this overnight</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">7:00 AM</div>
+          <div class="tl-action">Priya reviews the schedule and addresses both flags</div>
+          <div class="tl-detail">She confirms the material shortage is real and calls the supplier. She reassigns the welding job from Jordan to Sam &mdash; knowing Jordan certified only 3 weeks ago, this job requires someone with more experience than the system's "certified" status shows. She approves the rest of the schedule and releases it to the floor terminals by 7:20 AM.</div>
+          <div class="tl-ai-tag human">&#x1F9E0; Human judgment required</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot ai"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">9:30 AM</div>
+          <div class="tl-action">AI flags a developing bottleneck at Station 3</div>
+          <div class="tl-detail">The process monitoring system detects that Station 3's cycle time has increased to 19.8 minutes &mdash; above the 14-minute plan and building a queue. It calculates that three afternoon jobs will be affected and offers two recovery options with estimated throughput impacts.</div>
+          <div class="tl-ai-tag ai">&#x1F9E0; AI detected pattern</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot both"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">10:00 AM</div>
+          <div class="tl-action">Priya reviews options, chooses one, and coordinates</div>
+          <div class="tl-detail">She chooses Option A (pulling a worker from an underloaded station to assist at Station 3) after confirming with the floor supervisor that the assist worker knows the task. She updates the schedule in the system and sends an alert to affected workers. The recovery takes 40 minutes to implement &mdash; and works as predicted.</div>
+          <div class="tl-ai-tag both">&#x1F91D; AI options + human decision</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">2:30 PM</div>
+          <div class="tl-action">Priya prepares next week's capacity plan</div>
+          <div class="tl-detail">She uses AI-generated utilization reports and demand forecasts as inputs, but she's the one who factors in upcoming holidays, a planned maintenance window, and a conversation she had with a key customer about an order increase. She writes the capacity narrative for the operations manager &mdash; synthesizing AI data with business context the system doesn't hold.</div>
+          <div class="tl-ai-tag human">&#x1F9E0; Human synthesis required</div>
+        </div>
+      </div>
+    </div>
+    <div class="role-insight">
+      <div class="ri-title">What AI Changed for Priya</div>
+      <div class="ri-text">Before AI tools, building the daily schedule took Priya 2.5&ndash;3 hours every morning. Now it takes 30&ndash;45 minutes. The time she recovered isn't free time &mdash; she spends it on the work the AI can't do: customer relationships, contextual judgment on flagged items, and strategic capacity thinking that requires integrating business knowledge with data.</div>
+    </div>
+  </div>
+
+  <div class="role-panel" id="rp-supervisor">
+    <div class="role-header">
+      <div class="rh-name">&#x1F477; Marcus &mdash; Floor Supervisor, Day Shift</div>
+      <div class="rh-facility">Ridgeline Manufacturing &bull; 35 workers on his shift &bull; 6 production stations</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot both"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">6:55 AM</div>
+          <div class="tl-action">Marcus reviews the released schedule on his tablet before the shift starts</div>
+          <div class="tl-detail">The AI-generated schedule arrived on his tablet 10 minutes before shift start. He walks it quickly: does the station load make sense? Are the right people on the right jobs? He notices that Alex is scheduled at Station 4 &mdash; but Alex mentioned a shoulder strain yesterday. Marcus flags a quick swap with another equally-qualified worker and logs the override reason in the system.</div>
+          <div class="tl-ai-tag both">&#x1F91D; AI schedule + human context</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">7:00 AM</div>
+          <div class="tl-action">Shift start walkthrough &mdash; floor check before the day begins</div>
+          <div class="tl-detail">Marcus walks the full floor before production starts: checking that materials are staged correctly, machines are running cleanly, and workers are at their posts. He notices the air supply to Station 2 sounds slightly different today &mdash; calls maintenance for a check-in. No alarm fired. No sensor flagged it. His ear caught it.</div>
+          <div class="tl-ai-tag human">&#x1F477; Human observation only</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot ai"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">10:17 AM</div>
+          <div class="tl-action">Machine alert fires on his tablet &mdash; Station 3 performance anomaly</div>
+          <div class="tl-detail">The system detected Station 3's output rate dropped 28% in the past 45 minutes. Marcus walks to Station 3. Sam is there and looking frustrated. The issue: a material specification on this part requires a different setup than the work order showed. The AI flagged the performance drop; Sam knew there was a problem but hadn't radioed in yet.</div>
+          <div class="tl-ai-tag ai">&#x1F9E0; AI alert was early warning</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">10:30 AM</div>
+          <div class="tl-action">Marcus resolves the setup issue and communicates to Priya</div>
+          <div class="tl-detail">He reviews the work order with Sam, confirms the correct setup, and calls Priya to flag the downstream schedule impact. He also makes a note in the production log about the work order specification error &mdash; this needs to be corrected in the ERP so the AI doesn't encounter the same problem on future runs of this part.</div>
+          <div class="tl-ai-tag human">&#x1F477; Human resolution + system improvement</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot both"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">1:45 PM</div>
+          <div class="tl-action">Shift handoff report generated and reviewed</div>
+          <div class="tl-detail">The AI automatically generates a shift summary: output vs. plan, incidents, materials consumed, anomalies flagged. Marcus adds three narrative notes: the air supply observation (maintenance is checking it), the Station 3 work order error (needs ERP correction), and a heads-up that Jordan is ready to move to more complex jobs &mdash; context the AI can't capture.</div>
+          <div class="tl-ai-tag both">&#x1F91D; AI summary + human context</div>
+        </div>
+      </div>
+    </div>
+    <div class="role-insight">
+      <div class="ri-title">What AI Changed for Marcus</div>
+      <div class="ri-text">AI tools alert Marcus to problems 15&ndash;45 minutes earlier than he would have noticed them through floor observation alone. That early warning is genuinely valuable &mdash; it gives him recovery time rather than crisis time. But his most important contributions are still human: the things he sees, hears, and knows about his specific people that no data feed captures.</div>
+    </div>
+  </div>
+
+  <div class="role-panel" id="rp-operator">
+    <div class="role-header">
+      <div class="rh-name">&#x2699;&#xFE0F; Jordan &mdash; Machine Operator, Station 4 (Press Brake)</div>
+      <div class="rh-facility">Ridgeline Manufacturing &bull; 14 months experience &bull; Recently certified on Press Brake</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot ai"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">7:00 AM</div>
+          <div class="tl-action">Jordan checks their assignment on the floor terminal</div>
+          <div class="tl-detail">The digital floor terminal at Station 4 shows Jordan's first three jobs for the day, the materials to pull from staging, and the target cycle times. The AI has pre-staged the materials for the first job at the station&ndash;side rack. Jordan doesn't need to walk to the warehouse to start.</div>
+          <div class="tl-ai-tag ai">&#x1F9E0; AI-generated assignment and staging</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">7:08 AM</div>
+          <div class="tl-action">Jordan inspects the material before starting</div>
+          <div class="tl-detail">Jordan checks the steel sheet against the work order specification: correct grade, correct thickness. The edges on two sheets look slightly rougher than usual &mdash; within spec, but Jordan makes a note to watch for burring issues during bending. This inspection habit is something they developed through experience, not something the system prompted.</div>
+          <div class="tl-ai-tag human">&#x2699;&#xFE0F; Human quality awareness</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot both"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">9:40 AM</div>
+          <div class="tl-action">Cycle time warning appears on the terminal</div>
+          <div class="tl-detail">The floor terminal shows Jordan is running 2.3 minutes behind the planned cycle time on the current job. Jordan knows why &mdash; the burring issue they noticed at shift start is causing minor rework on each part. They log this in the terminal (production note: burring from edge condition on this material batch) and continue working.</div>
+          <div class="tl-ai-tag both">&#x1F91D; AI alert + human context added</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot human"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">11:15 AM</div>
+          <div class="tl-action">Jordan notices an unusual sound in the press brake ram</div>
+          <div class="tl-detail">Midway through a part, the press sounds slightly different &mdash; a faint click during the downstroke that wasn't there yesterday. Jordan stops production and radios Marcus. "Probably nothing, but it doesn't sound right." Marcus comes over, listens, and agrees. Maintenance is called. They find a worn guide bearing &mdash; not critical yet, but would have caused a failure within the week.</div>
+          <div class="tl-ai-tag human">&#x2699;&#xFE0F; Human sensory observation &mdash; no sensor caught this</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-spine"><div class="tl-dot ai"></div><div class="tl-line"></div></div>
+        <div class="tl-card">
+          <div class="tl-time">2:45 PM</div>
+          <div class="tl-action">End-of-shift report auto-generated; Jordan adds notes</div>
+          <div class="tl-detail">The system automatically logs Jordan's output for the day: units completed, cycle times, material used. Jordan adds two notes: the edge burring issue on this morning's batch (recommend checking supplier or storage condition) and the bearing sound observation (logged as a maintenance referral, separate from the AI's sensor data). These notes go to Marcus and into the production log.</div>
+          <div class="tl-ai-tag both">&#x1F91D; AI report + human observation log</div>
+        </div>
+      </div>
+    </div>
+    <div class="role-insight">
+      <div class="ri-title">What AI Changed for Jordan</div>
+      <div class="ri-text">Jordan's work is primarily physical and operational &mdash; the AI informs their day (what to make, in what order, with what materials) but doesn't replace the skilled judgment they apply at the machine. What the AI does give Jordan: clarity about their assignments before the shift starts, early warnings about pace, and a digital channel for logging observations that used to get lost or forgotten by shift end. Jordan's most important contributions &mdash; the bearing sound, the burring observation &mdash; came from human sensory attention that no sensor had flagged.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">Looking across all three roles, what is the most consistent pattern in how AI and human judgment work together at Ridgeline Manufacturing?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">AI handles all operational decisions so humans can focus on strategy and planning</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">AI handles high-volume data processing, early-warning detection, and routine generation tasks (schedules, reports, alerts) — freeing human attention for contextual judgment: applying floor knowledge, catching what sensors miss, resolving ambiguous situations, and logging observations that improve the system over time</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">AI is used only as a backup when human judgment fails — primary decisions are still made manually</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Human workers are primarily responsible for data entry while AI manages the actual production decisions</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. Across all three roles, the same pattern repeats: AI handles what it's good at (scale, speed, pattern detection, routine generation) and humans handle what they're good at (context, physical observation, relational knowledge, ambiguous judgment). The AI caught Station 3's performance drop faster than Marcus would have noticed it on a floor walk. Marcus caught the air supply sound that no sensor flagged. Priya reviewed Jordan's certification status with knowledge the system couldn't hold. These aren't competing contributions &mdash; they're complementary ones.</div>
+    <div class="quiz-fb bad" id="q1-bad">&#x274C; The pattern across all three roles is complementarity, not replacement. AI handles data-intensive tasks: overnight schedule generation, real-time performance monitoring, shift report compilation. Humans handle what AI can't: applying floor context to AI-generated schedules, physically observing conditions sensors miss, making relational and situational judgment calls, and logging observations that improve the system over time. Neither role makes the other unnecessary &mdash; both are essential to how the facility actually functions.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">For Priya (Production Planner): AI generated the schedule and flagged exceptions overnight. Her 3-hour morning task became 45 minutes — spent on contextual review and judgment rather than manual scheduling.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">For Marcus (Floor Supervisor): AI provided earlier warnings than floor observation alone would have. His most critical contributions — the air supply sound, the work order correction, the Jordan development note — were human observations the AI couldn't access.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">For Jordan (Machine Operator): AI clarified the assignment and provided pace alerts. Jordan's most important contributions — the bearing sound, the burring observation, the material note — required human sensory attention and experience that no sensor replaced.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The consistent pattern: AI handles scale and speed; humans handle context and observation. These contributions are complementary, not competitive. The facility needs both to run well.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var activeRole=null;
+function showRole(key,btn){
+  document.querySelectorAll('.role-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.role-panel').forEach(function(p){p.classList.remove('show');});
+  btn.classList.add('active');
+  document.getElementById('rp-'+key).classList.add('show');
+}
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Difference Between AI Confidence and AI Accuracy in Manufacturing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.confidence-gauge{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:22px;padding:28px 34px;margin:28px 0;color:#fff;}
+.cg-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:14px;}
+.cg-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;margin-bottom:18px;}
+.cg-scenarios{display:flex;flex-direction:column;gap:12px;}
+.cg-scenario{background:rgba(255,255,255,.07);border-radius:12px;padding:14px 18px;}
+.cg-s-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:5px;}
+.cg-s-rec{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.cg-s-detail{font-size:12px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:6px;}
+.cg-s-trust{display:flex;align-items:center;gap:8px;}
+.cg-s-trust-label{font-size:10px;color:rgba(255,255,255,.5);}
+.cg-s-bar{flex:1;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
+.cg-s-bar-fill{height:100%;border-radius:4px;}
+.cg-s-bar-fill.high{background:var(--green);}
+.cg-s-bar-fill.med{background:var(--orange);}
+.cg-s-bar-fill.low{background:var(--red);}
+.cg-s-pct{font-size:11px;font-weight:700;min-width:60px;text-align:right;}
+.cg-s-pct.high{color:var(--green);}
+.cg-s-pct.med{color:var(--orange);}
+.cg-s-pct.low{color:var(--red);}
+.dq-cards{display:flex;flex-direction:column;gap:12px;margin:24px 0;}
+.dq{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:14px;padding:15px 20px;display:flex;gap:12px;align-items:flex-start;}
+.dq-icon{font-size:20px;flex-shrink:0;}
+.dq-body{}
+.dq-question{font-weight:700;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.dq-why{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Reflection &amp; Judgment</div>
+  <h1>The Difference Between AI Confidence and AI Accuracy in Manufacturing</h1>
+  <p class="hero-sub">AI presents every recommendation with the same visual confidence — whether it's built on 10,000 data points or twelve. Understanding what actually determines AI accuracy is one of the most important critical thinking skills in modern manufacturing.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Confidence Illusion</h2>
+  <p>When an AI scheduling system displays a work order sequence on a production dashboard, it doesn't label the recommendation "94% confident" or "first time scheduling this product — treat carefully." The display looks identical regardless of how much data backed it up. The visual confidence of AI output is uniform. The actual reliability behind it is not.</p>
+  <div class="pull-quote"><p>AI doesn't hedge. It presents every recommendation with the same clean interface. The job of a critical human reviewer is to ask: what did this AI actually know when it made this suggestion?</p></div>
+  <p>This isn't a flaw unique to AI — it's the nature of algorithmic decision-making. The system calculates its best answer and presents it. It doesn't communicate uncertainty the way a cautious colleague might say "I think this is right, but you might want to double-check." That cautious hedging is a human behavior. AI requires the human reviewer to supply the skepticism.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Same Dashboard, Very Different Reliability</h2>
+  <p>The accuracy of an AI manufacturing recommendation depends on factors that aren't visible in the recommendation itself. Here are three scenarios from the same scheduling system — identical presentation, very different reliability.</p>
+
+  <div class="confidence-gauge">
+    <div class="cg-label">Calibrating Trust: Three Recommendations From the Same AI System</div>
+    <div class="cg-title">They Look Identical on the Dashboard — They Are Not Equally Reliable</div>
+    <div class="cg-scenarios">
+      <div class="cg-scenario">
+        <div class="cg-s-label">Scenario A — Rich Historical Foundation</div>
+        <div class="cg-s-rec">Recommendation: "Schedule WO-4412 (Standard Bracket) to CNC Mill #2, Tuesday 7–11 AM"</div>
+        <div class="cg-s-detail">This product has run 847 times. The AI has precise cycle time data across all prior runs, knows this machine's performance on this specific job, and has observed hundreds of scheduling decisions under varying conditions. Rich, directly relevant historical data.</div>
+        <div class="cg-s-trust">
+          <div class="cg-s-trust-label">Reliability:</div>
+          <div class="cg-s-bar"><div class="cg-s-bar-fill high" style="width:88%"></div></div>
+          <div class="cg-s-pct high">High — trust with standard review</div>
+        </div>
+      </div>
+      <div class="cg-scenario">
+        <div class="cg-s-label">Scenario B — Thin Data, New Product</div>
+        <div class="cg-s-rec">Recommendation: "Schedule WO-4490 (New Custom Housing — first run) to CNC Mill #2, Tuesday 2–5 PM"</div>
+        <div class="cg-s-detail">First production run of a new product. The AI estimated cycle time from similar products — but this housing has a geometry feature that doesn't exist in any prior job. Its cycle time estimate might be off by 40% or more. The recommendation looks identical to Scenario A.</div>
+        <div class="cg-s-trust">
+          <div class="cg-s-trust-label">Reliability:</div>
+          <div class="cg-s-bar"><div class="cg-s-bar-fill low" style="width:28%"></div></div>
+          <div class="cg-s-pct low">Low — verify with engineering before scheduling</div>
+        </div>
+      </div>
+      <div class="cg-scenario">
+        <div class="cg-s-label">Scenario C — Stale Data</div>
+        <div class="cg-s-rec">Recommendation: "Reorder stainless sheet — approaching reorder point"</div>
+        <div class="cg-s-detail">The inventory tracking system hasn't synced since Tuesday. It's Friday. A large batch ran Wednesday and wasn't logged. The AI's inventory figure is 3 days stale. The recommendation might be right — or the material may have already stocked out.</div>
+        <div class="cg-s-trust">
+          <div class="cg-s-trust-label">Reliability:</div>
+          <div class="cg-s-bar"><div class="cg-s-bar-fill med" style="width:52%"></div></div>
+          <div class="cg-s-pct med">Medium — verify physical count first</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Four Questions That Calibrate Your Trust</h2>
+  <p>Because the AI doesn't communicate its own uncertainty, you have to develop the habit of asking calibrating questions before acting on important recommendations.</p>
+
+  <div class="dq-cards">
+    <div class="dq">
+      <div class="dq-icon">📊</div>
+      <div class="dq-body">
+        <div class="dq-question">How much historical data did the AI have for this specific situation?</div>
+        <div class="dq-why">A recommendation built on hundreds of prior instances of the exact same job and machine is far more reliable than one built on an analogy to a different product. First runs, new product introductions, and situations outside the training data all warrant extra human scrutiny. Ask: "Has this product been run before? How many times?"</div>
+      </div>
+    </div>
+    <div class="dq">
+      <div class="dq-icon">🕐</div>
+      <div class="dq-body">
+        <div class="dq-question">How current is the data the AI is working from?</div>
+        <div class="dq-why">An inventory recommendation based on a count from 3 days ago is less reliable than one from an hour ago. A cycle time estimate from before a machine rebuild is less reliable than one from this week. Data recency matters — and in busy production environments, staleness is common. Ask: "When was this data last updated?"</div>
+      </div>
+    </div>
+    <div class="dq">
+      <div class="dq-icon">🔗</div>
+      <div class="dq-body">
+        <div class="dq-question">Has this AI been accurate in situations like this before?</div>
+        <div class="dq-why">AI tools have track records, and experienced workers develop intuition about where their specific system's recommendations tend to be reliable vs. where they need adjustment. If an AI scheduling tool consistently underestimates complex custom jobs, that's a pattern worth knowing. Ask: "What's this system's track record on jobs like this?"</div>
+      </div>
+    </div>
+    <div class="dq">
+      <div class="dq-icon">🌍</div>
+      <div class="dq-body">
+        <div class="dq-question">Has anything changed that the AI doesn't know about yet?</div>
+        <div class="dq-why">If an SOP changed this week but hasn't been entered into the ERP, the AI still operates on the old process. If a worker is on leave but not removed from the availability roster, the AI will schedule them. Anything that changed since the last data update is a blind spot. Ask: "What's happened recently that the system might not know about?"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Check Your Understanding</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Quick Check</div>
+    <div class="quiz-q">An AI inventory system shows a material at 87% of its reorder point — still above the threshold. A supervisor notices the system's last data sync was 4 days ago, and recalls a large batch using this material was run yesterday. What should the supervisor do?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Trust the system — it shows the material is above reorder point, so no immediate action is needed</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Verify the actual current inventory through a physical count or recent scan records — the 4-day data gap plus the large batch run since last sync means the system's reported level may be significantly higher than actual, and the real level might already be below the reorder point</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Place an emergency rush order immediately — data staleness always means potential stockout</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Report the data sync issue to IT and wait for an update before making any inventory decisions</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">&#x2705; Correct. The supervisor has specific, concrete knowledge that challenges the AI's reported level: a 4-day data gap plus a large batch run that would have consumed significant material. This is calibrated skepticism based on real information about data recency. Verify the actual current level through a physical count or recent scan records, then decide whether to reorder. This might confirm the system is roughly right — or reveal the level is already below the reorder point.</div>
+    <div class="quiz-fb bad" id="q1-bad">&#x274C; The supervisor has specific knowledge challenging the AI's figure: 4 days since last sync plus a large batch run. The AI's 87% reflects inventory from 4 days ago. After a large batch, the actual level could be well below the reorder point. Trusting the stale number risks a stockout. Placing an emergency order without verifying risks unnecessary cost. Verify first, then decide. This is exactly the calibrated skepticism that makes AI-assisted decisions reliable.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">AI presents every recommendation with the same visual confidence regardless of how much data supported it. A first-run estimate looks identical to a recommendation built on 800 prior runs. The human reviewer must supply the calibrating skepticism.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Four factors determine AI accuracy: how much historical data existed for this specific situation, how current the data is, the system's track record on similar situations, and whether anything changed since the last data update.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Good calibration means matching scrutiny to risk and data quality — not uniform suspicion and not uniform trust. Developing this intuition over time turns into genuine manufacturing expertise.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

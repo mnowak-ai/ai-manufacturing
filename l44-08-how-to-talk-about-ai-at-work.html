@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Talk About AI at Work: Communicating With Your Team About Data and Recommendations</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:32px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+.card-list{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;}
+.card-icon{font-size:24px;flex-shrink:0;}
+.card-body{}
+.card-title{font-weight:700;font-size:15px;color:var(--purple-dark);margin-bottom:5px;}
+.card-desc{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.card-note{margin-top:6px;background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:7px 11px;font-size:12px;color:var(--purple-dark);line-height:1.65;}
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+<style>
+.convo-comparison{display:flex;flex-direction:column;gap:16px;margin:24px 0;}
+.cc-pair{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;overflow:hidden;}
+.cc-pair-label{background:var(--purple-dark);padding:8px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;}
+.cc-pair-body{display:flex;gap:0;}
+.cc-bad{flex:1;background:var(--red-pale);border-right:1px solid var(--purple-mid);padding:12px 16px;}
+.cc-good{flex:1;background:var(--green-pale);padding:12px 16px;}
+.cc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.cc-bad .cc-label{color:var(--red);}
+.cc-good .cc-label{color:var(--green);}
+.cc-text{font-size:13px;line-height:1.75;color:var(--gray-text);font-style:italic;}
+.cc-why{font-size:12px;color:var(--gray-muted);margin-top:5px;}
+.doc-template{background:linear-gradient(135deg,#0f172a,#2d1b69);border-radius:20px;padding:24px 28px;margin:24px 0;color:#fff;}
+.dt-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-mid);margin-bottom:12px;}
+.dt-title{font-family:"Fraunces",serif;font-size:17px;font-weight:700;margin-bottom:16px;}
+.dt-fields{display:flex;flex-direction:column;gap:10px;}
+.dt-field{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 14px;}
+.dt-field-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-mid);margin-bottom:4px;}
+.dt-field-value{font-size:12px;color:rgba(255,255,255,.8);line-height:1.65;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 4.4 &middot; Professional Skills</div>
+  <h1>How to Talk About AI at Work: Communicating With Your Team About Data and Recommendations</h1>
+  <p class="hero-sub">Many workers can read an AI dashboard but struggle to communicate what they see to a coworker, supervisor, or team. This article teaches the professional communication skills that make AI-assisted manufacturing actually work: how to raise concerns, share findings, document decisions, and talk about data without sounding like you're just resistant to change.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why Communication Is the Underrated AI Skill</h2>
+  <p>Training programs for AI-assisted manufacturing focus heavily on the technical side: how to read dashboards, understand alerts, and interpret data. That's essential. But the skill that actually determines whether AI insights translate into improvements is communication — getting the right information to the right person in the right way.</p>
+  <p>A worker who reads an AI alert, interprets it correctly, and tells the right person in a clear, professional way creates change. A worker who reads the same alert, interprets it correctly, and either keeps it to themselves or communicates it badly creates nothing — or worse, creates conflict.</p>
+  <div class="pull-quote"><p>The value of an AI insight is zero until it reaches the person who can act on it. Communication is what closes that gap.</p></div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Raise an AI-Related Concern: Good vs. Not Good</h2>
+  <p>The way you frame a concern about an AI recommendation determines whether it gets heard as professional input or dismissed as resistance. Here are four common situations — and the difference between an effective and ineffective approach.</p>
+
+  <div class="convo-comparison">
+    <div class="cc-pair">
+      <div class="cc-pair-label">Situation 1: The AI assignment doesn't seem right for this worker</div>
+      <div class="cc-pair-body">
+        <div class="cc-bad">
+          <div class="cc-label">&#x274C; Less Effective</div>
+          <div class="cc-text">"The AI put Jordan on the TIG weld job again. I don't think the system knows what it's doing."</div>
+          <div class="cc-why">This criticizes the system broadly, offers no specific information, and puts your supervisor in a defensive position.</div>
+        </div>
+        <div class="cc-good">
+          <div class="cc-label">&#x2705; More Effective</div>
+          <div class="cc-text">"The schedule has Jordan on TIG weld for WO-4412 — they certified three weeks ago and I've noticed their technique on complex joints is still developing. Would it make sense to put Alex on this one and give Jordan something that builds their skills without the aerospace quality stakes?"</div>
+          <div class="cc-why">Specific, factual, proposes a solution. Your supervisor can act on this immediately.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cc-pair">
+      <div class="cc-pair-label">Situation 2: An AI inventory alert seems like it might be a sensor error</div>
+      <div class="cc-pair-body">
+        <div class="cc-bad">
+          <div class="cc-label">&#x274C; Less Effective</div>
+          <div class="cc-text">"The system says we're almost out of M6 bolts but I think it's wrong. I'm not going to order."</div>
+          <div class="cc-why">Unilateral decision without communication. No documentation. No one knows what you saw or why you acted that way.</div>
+        </div>
+        <div class="cc-good">
+          <div class="cc-label">&#x2705; More Effective</div>
+          <div class="cc-text">"I'm seeing a critical bolt shortage alert, but the system shows the spike happened between 11 PM and 4 AM when the floor was idle. I'd like to do a physical count before we place an emergency order — can I have 15 minutes to check? I'll document what I find either way."</div>
+          <div class="cc-why">Explains the reasoning, proposes a verification step, offers documentation. Supervisor is informed and can approve or redirect.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cc-pair">
+      <div class="cc-pair-label">Situation 3: Sharing an AI process finding with a team lead</div>
+      <div class="cc-pair-body">
+        <div class="cc-bad">
+          <div class="cc-label">&#x274C; Less Effective</div>
+          <div class="cc-text">"The dashboard says Station 3 is slow. Somebody should look at that."</div>
+          <div class="cc-why">Vague, assigns no responsibility, provides no context. This is unlikely to lead to action.</div>
+        </div>
+        <div class="cc-good">
+          <div class="cc-label">&#x2705; More Effective</div>
+          <div class="cc-text">"The process monitoring dashboard is showing Station 3's cycle time at 19.8 minutes — that's 42% above the 14-minute plan and the queue is at 11 units. The dashboard also shows this started around 2 PM. I know we started the new housing job at 2:15 — could the new setup time be the cause? Do you want me to check with the operator?"</div>
+          <div class="cc-why">Specific data, specific observation, specific hypothesis, specific proposed action. This is how a data finding becomes a conversation that leads to improvement.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cc-pair">
+      <div class="cc-pair-label">Situation 4: Disagreeing with an AI-suggested process change</div>
+      <div class="cc-pair-body">
+        <div class="cc-bad">
+          <div class="cc-label">&#x274C; Less Effective</div>
+          <div class="cc-text">"I don't think we should change the conveyor speed. The AI doesn't understand our process."</div>
+          <div class="cc-why">Defensive, no specific rationale, dismisses AI without engaging with its recommendation. This signals resistance, not analysis.</div>
+        </div>
+        <div class="cc-good">
+          <div class="cc-label">&#x2705; More Effective</div>
+          <div class="cc-text">"The AI recommends increasing the conveyor speed to 3.3 m/min — I'd like to check the coating spec before we implement. My concern is whether the minimum cure dwell time at that speed still meets the customer's specification. If it does, I'm comfortable with the trial. If it's marginal, I'd want to discuss with engineering first. Can we pull the spec before we schedule the change?"</div>
+          <div class="cc-why">Engages with the recommendation specifically, raises a technical concern with a rationale, proposes a verification step rather than blocking. This is how experienced engineering professionals talk about AI suggestions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How to Document an AI-Assisted Decision</h2>
+  <p>When you make a decision based on or in response to an AI recommendation — accepting it, modifying it, or overriding it — documenting your reasoning is both professional practice and organizational value. Here's a template for a good AI-assisted decision log entry.</p>
+
+  <div class="doc-template">
+    <div class="dt-label">&#x1F4DD; Decision Log Template</div>
+    <div class="dt-title">AI-Assisted Decision Documentation</div>
+    <div class="dt-fields">
+      <div class="dt-field">
+        <div class="dt-field-label">Date/Time &amp; Shift</div>
+        <div class="dt-field-value">Tuesday Nov 14, 10:22 AM &mdash; Day Shift</div>
+      </div>
+      <div class="dt-field">
+        <div class="dt-field-label">AI System and Alert/Recommendation</div>
+        <div class="dt-field-value">Process monitoring system flagged Station 3 cycle time at 19.8 min (plan: 14 min). System recommended reallocating a worker from Station 5 to assist at Station 3.</div>
+      </div>
+      <div class="dt-field">
+        <div class="dt-field-label">What I Did (Accept / Modify / Override)</div>
+        <div class="dt-field-value">Modified. Accepted the reallocation concept but assigned Alex (not the system's suggested worker) because Alex has more experience on this specific fixture. Also reduced reallocation scope to 2 hours instead of the full shift.</div>
+      </div>
+      <div class="dt-field">
+        <div class="dt-field-label">Reason for Any Change to AI Recommendation</div>
+        <div class="dt-field-value">Alex has run this fixture 40+ times; the system's suggested worker (Jordan) hasn't run it at all. Expected faster cycle time recovery with Alex. 2-hour scope instead of full shift because the afternoon's product mix returns to standard parts where Jordan can handle Station 3 pace independently.</div>
+      </div>
+      <div class="dt-field">
+        <div class="dt-field-label">Outcome (fill in at end of shift)</div>
+        <div class="dt-field-value">Station 3 recovered to 15.2 min by 11:40 AM. Queue cleared by 12:15 PM. No downstream schedule impact. Alex returned to Station 5 at 12:30 PM as planned.</div>
+      </div>
+    </div>
+  </div>
+
+  <p>This kind of documentation takes 5 minutes and creates enormous value: it builds your professional record, contributes to organizational learning, gives the AI system feedback that can improve future calibration, and creates an audit trail if anyone asks why a decision was made.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Talking About AI With Skeptical Colleagues</h2>
+  <p>Not everyone in a manufacturing facility will be enthusiastic about AI tools. Some experienced workers are skeptical — sometimes for good reasons (they've seen "the new system" fail before), sometimes because change is uncomfortable, sometimes both. How you talk about AI with skeptical colleagues matters for team dynamics and your own professional relationships.</p>
+  <div class="card-list">
+    <div class="card"><div class="card-icon">&#x1F91D;</div><div class="card-body"><div class="card-title">Don't be an AI evangelist</div><div class="card-desc">Workers who frame AI as revolutionary, transformative, or superior to human judgment alienate colleagues quickly. Instead, talk about specific tools and specific uses: "The dashboard caught that Station 3 alert before I noticed it on the floor walk" is credible. "AI is going to change everything" is not a useful workplace conversation.</div></div></div>
+    <div class="card"><div class="card-icon">&#x1F442;</div><div class="card-body"><div class="card-title">Acknowledge valid skepticism</div><div class="card-desc">When a skeptical colleague says "the system isn't always right" — agree, because it isn't. "You're right, it misfires sometimes — that's why we still have to review everything it surfaces" is honest and builds trust. Defending AI as infallible when everyone can see it's not makes you seem credulous, not informed.</div></div></div>
+    <div class="card"><div class="card-icon">&#x1F4CA;</div><div class="card-body"><div class="card-title">Let results speak</div><div class="card-desc">The most effective way to build team confidence in AI tools is to use them transparently, apply good judgment, and show that the combination of AI data and human review produces better outcomes than either alone. Results-based credibility is more durable than persuasion-based credibility.</div></div></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned</h2>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">The value of an AI insight is zero until it reaches the person who can act on it. Communication is the skill that closes the gap between data and improvement.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Effective AI-related communication is specific, factual, and action-oriented. It describes what you observed, why it matters, and what you propose — not a general critique of the technology.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">Documentation of AI-assisted decisions — what the system recommended, what you did, why, and the outcome — is professional practice, organizational learning, and your personal record of applied judgment.</div></div>
+    <div class="sum-item"><div class="sum-check">&#x2713;</div><div class="sum-text">With skeptical colleagues: don't be an evangelist, acknowledge valid concerns, and let results build credibility. The best case for AI tools is made by using them well — not by arguing about them.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+var done={};
+function doQ(i,correct,qid){if(done[qid])return;done[qid]=true;var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');opts.forEach(function(b){b.disabled=true;});opts[i].classList.add(correct?'correct':'wrong');document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');}
+</script>
+</body>
+</html>
