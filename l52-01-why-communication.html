@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Communication Is the #1 Skill That Gets Manufacturing Workers Promoted</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* COST SCENARIO */
+.cost-scenario{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cs-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cs-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cs-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cs-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.cs-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.cs-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.cs-panel{display:none;}
+.cs-panel.active{display:block;}
+.cs-breakdown{display:flex;flex-direction:column;gap:10px;}
+.cs-row{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;overflow:hidden;}
+.cs-row-header{padding:12px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;}
+.cs-row-icon{font-size:20px;flex-shrink:0;}
+.cs-row-title{font-weight:600;font-size:14px;color:var(--purple-dark);flex:1;}
+.cs-row-cost{font-size:12px;font-weight:700;color:var(--red);flex-shrink:0;}
+.cs-row-body{display:none;padding:0 16px 14px;font-size:13px;line-height:1.8;color:var(--gray-text);}
+.cs-row-body.open{display:block;}
+.cs-row-fix{margin-top:8px;background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:8px 12px;font-size:13px;color:var(--green);line-height:1.65;}
+
+/* SUPERVISOR VOICES */
+.sv-grid{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.sv-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px 22px;}
+.sv-quote{font-family:"Fraunces",serif;font-size:17px;font-style:italic;color:var(--purple-dark);line-height:1.6;margin-bottom:10px;}
+.sv-quote::before{content:"\201C";color:var(--purple-mid);}
+.sv-quote::after{content:"\201D";color:var(--purple-mid);}
+.sv-attribution{font-size:12px;color:var(--gray-muted);font-weight:600;}
+
+/* PROMOTION FACTORS */
+.factors-bar{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.factor-row{}
+.factor-label{display:flex;justify-content:space-between;margin-bottom:5px;}
+.factor-name{font-size:14px;font-weight:600;color:var(--purple-dark);}
+.factor-pct{font-size:13px;font-weight:700;color:var(--purple);}
+.factor-bar-bg{height:12px;background:var(--purple-mid);border-radius:100px;overflow:hidden;}
+.factor-bar-fill{height:12px;background:var(--purple);border-radius:100px;width:0;transition:width 1.3s ease;}
+.factor-note{font-size:12px;color:var(--gray-muted);margin-top:3px;line-height:1.5;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>Why Communication Is the #1 Skill That Gets Manufacturing Workers Promoted</h1>
+  <p class="hero-sub">Technical skill gets you hired. Communication skill gets you promoted. This article proves it — with real costs, supervisor perspectives, and the specific ways AI is making strong communication more achievable for everyone.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Skill Nobody Teaches but Everyone Notices</h2>
+  <p>Here's a pattern that plays out in manufacturing facilities everywhere: Two workers start on the same day with similar technical skills. Five years later, one is a supervisor. One is still at the same level. The supervisor is often not the more technically skilled one. They're the one who communicated better.</p>
+  <p>Supervisors notice communication constantly — in every shift handoff note, every maintenance request, every time a problem gets flagged or a status update gets sent. They notice the worker who is vague and the one who is specific. The one who sends an update at the right time and the one who lets things go unreported. <mark>Communication isn't a soft skill — it's a measurable, visible performance signal</mark> that supervisors read every single day.</p>
+  <p>And now, with AI tools throughout the factory generating alerts, producing reports, and surfacing data, the need for clear communication has gotten even higher. Someone has to translate what the AI is seeing into language other humans can act on. That someone — the worker who can read an alert and communicate it clearly and accurately — is the one who stands out.</p>
+
+  <div class="pull-quote">
+    <p>I have workers who can fix anything on this floor. But if I can't understand what they found or what they did about it, I can't trust them with more responsibility. Communication is how I see if someone is ready for the next level.</p>
+    <p style="font-style:normal;font-size:14px;color:rgba(74,21,128,.7);margin-top:10px;">— Manufacturing Supervisor, automotive components plant</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Bad Communication Actually Costs</h2>
+  <p>Communication breakdowns in manufacturing aren't just awkward — they're expensive and sometimes dangerous. Below are the three most common and costly communication failures on the factory floor. Click each one to see the real cost and what clear communication would have prevented.</p>
+
+  <div class="cost-scenario">
+    <div class="cs-label">The Real Cost of Poor Communication</div>
+    <div class="cs-title">Three Breakdowns That Happen Every Week in Manufacturing</div>
+    <div class="cs-sub">These aren't edge cases — they're patterns that manufacturing supervisors say happen constantly. Click each to see the full picture.</div>
+    <div class="cs-tabs" id="cs-tabs"></div>
+    <div id="cs-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Supervisors Actually Say</h2>
+  <p>When manufacturing supervisors are asked what separates workers who advance from workers who stay entry-level, communication comes up more than any other single factor. Here are representative perspectives from supervisors in manufacturing roles:</p>
+
+  <div class="sv-grid" id="sv-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Drives Promotion Decisions in Manufacturing</h2>
+  <p>Research on manufacturing promotion decisions consistently shows that supervisors weigh a combination of factors — and communication routinely ranks at or near the top. Here's how the factors stack up when supervisors are asked what most influences their promotion recommendations:</p>
+
+  <div style="background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:20px 0;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;">What Manufacturing Supervisors Say Drives Promotion Decisions</div>
+    <div class="factors-bar" id="factors-bar"></div>
+  </div>
+  <p>Notice that communication leads, but it's often connected to problem-solving and reliability. A worker who solves a problem but communicates it poorly gets less credit than one who solves the same problem and communicates it clearly. The communication is how the supervisor sees the skill.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>How AI Changes the Communication Picture</h2>
+  <p>Here's the good news about AI tools in manufacturing: they make clear communication more achievable. This doesn't mean AI does the communicating for you — it means AI gives you better raw material to communicate from.</p>
+  <p>When a maintenance technician used to report a machine problem to a supervisor, they might say: "Machine 4 is running weird — I think the bearing might be going." Now, with a predictive maintenance platform, that same technician can say: "Machine 4's vibration signature has increased 22% over baseline in the last 6 hours, consistent with the pattern the AI system associates with early bearing wear. I'd recommend scheduling an inspection before next shift."</p>
+  <p>Same person, same skill level — but the AI gave them the data to communicate with precision and credibility. <mark>The worker who uses that data in their communication stands out. The worker who ignores it and keeps saying "running weird" doesn't</mark>.</p>
+  <p>The rest of Lesson 5.2 is about building exactly this skill — how to communicate professionally in a manufacturing setting, how to use AI as a drafting tool, how to review and improve what AI generates, and how to make your communication a visible signal of your readiness for more responsibility.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A maintenance technician finishes investigating a bearing alert. She tells her supervisor: "Yeah, I looked at Machine 4. It's fine for now." What's the main problem with this communication?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">It's too long and detailed — supervisors prefer brief updates</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">It's vague — it doesn't say what she checked, what she found, what she decided, or when to follow up. The supervisor has no way to verify her judgment or act on the information</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">It's fine — verbal updates don't need to be detailed</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">She should have sent an email instead of speaking directly</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. "It's fine for now" tells the supervisor almost nothing useful. What did she check? What did the physical inspection reveal? What does "fine for now" mean — should they re-check in 3 days? 3 weeks? Is there a work order to create? A better update would say something like: "I investigated the bearing alert on Machine 4. Physical inspection shows normal heat and sound — the vibration reading appears consistent with the recent production surge rather than actual wear. I'll monitor it through the end of the week and escalate if the trend continues." That's the same outcome communicated in a way that's credible and actionable.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The problem is vagueness. A supervisor receiving "It's fine for now" has no information about what was checked, what evidence supports the conclusion, or what the next step is. Supervisors make decisions based on information — vague updates don't give them information to act on. They also can't tell whether the technician did a thorough investigation or a cursory one. Specific, complete communication is what makes a supervisor trust your judgment and consider you ready for more responsibility.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Communication is the skill supervisors most consistently cite when explaining promotion decisions in manufacturing — because it's visible every day, in every update, in every shift handoff, in every problem report.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Poor communication has real, measurable costs: production delays from incomplete shift handoffs, rework from misunderstood instructions, and safety incidents from unclear hazard reporting. These are problems that skilled communicators prevent.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI tools in manufacturing give workers better data to communicate from — but the worker still has to turn that data into clear, accurate, professional communication. The AI generates; the human communicates.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Vague communication hides competence. Specific, complete communication makes competence visible. That visibility is what supervisors use to decide who's ready for more responsibility.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');if(x.target.querySelector('.factor-bar-fill'))animateBars();}});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var scenarios=[
+  {name:"🔄 Shift Handoff Failure",icon:"🔄",cost:"3–6 hrs lost production",rows:[
+    {icon:"⚠️",title:"What happened",cost:"",body:"The outgoing shift technician tells the incoming team: 'Machine 3 was giving us some trouble earlier.' The incoming operator doesn't know what kind of trouble, whether it was fixed, whether to watch for it, or what to do if it happens again. Two hours into the shift, the machine stops for the same reason it was 'giving trouble' earlier — but now nobody knows the history, and it takes 90 minutes to diagnose because the context is gone.",fix:"What clear communication would have prevented it: 'Machine 3 had a sensor fault on the main conveyor at 10:20 AM — Error Code E-14. Maintenance reset the sensor and it ran clean for the rest of the shift. Watch the conveyor speed readout — if it shows zero while the motor is running, same fault. Call maintenance immediately, don't try to reset it yourself.'"},
+    {icon:"💰",title:"The real cost",cost:"~$8,000+",body:"A 3-hour production stop on a typical manufacturing line costs between $5,000 and $15,000 in lost output, overtime labor, and schedule disruption. Industry data suggests that incomplete shift handoffs account for a significant portion of all unplanned downtime — and most of it is preventable.",fix:"The fix is a complete handoff note — what happened, when, what was done, what to watch for. Takes 3 minutes to write. Saves hours of downtime."}
+  ]},
+  {name:"🔧 Unclear Maintenance Request",icon:"🔧",cost:"Rework + delays",rows:[
+    {icon:"⚠️",title:"What happened",cost:"",body:"An operator submits a maintenance request that says: 'Conveyor belt making noise.' The maintenance technician arrives, checks the conveyor, hears nothing unusual, marks the ticket resolved, and leaves. The noise was only audible during a specific product changeover — a detail the operator never mentioned. Three days later, the belt snaps during production, causing a 5-hour shutdown.",fix:"What clear communication would have prevented it: 'Conveyor belt on Line 2 makes a high-pitched squealing noise during changeover from Product A to Product B — specifically when the belt speed increases from 40 to 60 RPM. Started yesterday afternoon. Noise lasts about 90 seconds at each changeover. No noise at steady state.'"},
+    {icon:"💰",title:"The real cost",cost:"5-hr shutdown + emergency repair",body:"The technician who responds to a vague maintenance request can only fix what they can observe. When the description is incomplete, they can't find the problem — and the problem doesn't get fixed. This pattern of incomplete maintenance requests leading to repeat failures is one of the most common and preventable maintenance costs in manufacturing.",fix:"A complete maintenance request includes: what the problem is, when it happens, what conditions trigger it, and how long it's been happening. Every detail narrows the search time."}
+  ]},
+  {name:"🛡️ Safety Hazard Unreported",icon:"🛡️",cost:"Incident risk",rows:[
+    {icon:"⚠️",title:"What happened",cost:"",body:"A production worker notices a small oil spill near Machine 7. He thinks to himself: 'Someone will probably clean that up.' He doesn't report it because he's not sure whose responsibility it is and doesn't want to seem like he's complaining. An hour later, a coworker slips on the oil, falls, and injures their wrist. The injured worker misses three weeks of work.",fix:"What clear communication would have prevented it: Any report — even a verbal one to the nearest supervisor — that said 'There's an oil spill near Machine 7, about 2 feet across, on the operator side.' That's all it took. The maintenance team would have cleaned it in 10 minutes."},
+    {icon:"💰",title:"The real cost",cost:"Injury + OSHA + workers comp",body:"A single workplace injury costs an average of $38,000 in direct costs (medical, workers comp, lost productivity) and significantly more in indirect costs (investigation, OSHA reporting, morale impact, potential fines). The oil spill cleanup would have cost 10 minutes of labor. The failure to communicate it cost weeks of someone's health and thousands of dollars.",fix:"Clear hazard communication — even just 'there's an oil spill by Machine 7' — is one of the highest-value communication behaviors on the factory floor. It protects coworkers and it protects you."}
+  ]}
+];
+var csTabs=document.getElementById('cs-tabs'),csPanels=document.getElementById('cs-panels'),csActive=0,csOpen={};
+scenarios.forEach(function(s,i){
+  var tab=document.createElement('div');tab.className='cs-tab'+(i===0?' active':'');tab.textContent=s.name;
+  tab.onclick=function(){csActive=i;document.querySelectorAll('.cs-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.cs-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  csTabs.appendChild(tab);
+  var panel=document.createElement('div');panel.className='cs-panel'+(i===0?' active':'');
+  var html='<div class="cs-breakdown">';
+  s.rows.forEach(function(r,ri){
+    var key=i+'_'+ri;
+    html+='<div class="cs-row"><div class="cs-row-header" onclick="toggleRow(\''+key+'\')">'
+      +'<div class="cs-row-icon">'+r.icon+'</div>'
+      +'<div class="cs-row-title">'+r.title+'</div>'
+      +(r.cost?'<div class="cs-row-cost">'+r.cost+'</div>':'')
+      +'</div><div class="cs-row-body" id="crb'+key+'">'+r.body
+      +(r.fix?'<div class="cs-row-fix"><strong>✓ Better communication:</strong> '+r.fix+'</div>':'')
+      +'</div></div>';
+  });
+  html+='</div>';
+  panel.innerHTML=html;
+  csPanels.appendChild(panel);
+});
+function toggleRow(key){var b=document.getElementById('crb'+key);b.classList.toggle('open');}
+
+var voices=[
+  {quote:"I've passed over people for lead roles who were technically better than the person I promoted. Every time, it came down to this: could they tell me what was happening on the floor in a way I could actually use? The ones who couldn't — I didn't know what to do with that information.",role:"Production Supervisor, 12 years — aerospace manufacturing"},
+  {quote:"Communication skills show up in the first week. I can tell by the shift handoff notes whether someone takes their job seriously. A complete note tells me they're thinking beyond their own shift. A vague note tells me they clocked out mentally before they clocked out physically.",role:"Plant Manager — consumer goods manufacturing"},
+  {quote:"The AI systems give us a ton of data now. The workers who can look at that data and tell me what it means in plain language — those are the people I want in leadership conversations. That's a communication skill as much as it's a technical skill.",role:"Maintenance Manager — food processing facility"},
+  {quote:"I started keeping notes on who communicated well on my team. Not formally — just in my head. When a promotion came up, I knew immediately who I was recommending. It wasn't always the best technician. It was the one I trusted because they always kept me informed.",role:"Quality Supervisor — medical device manufacturer"}
+];
+var svEl=document.getElementById('sv-grid');
+voices.forEach(function(v){
+  var d=document.createElement('div');d.className='sv-card';
+  d.innerHTML='<div class="sv-quote">'+v.quote+'</div><div class="sv-attribution">— '+v.role+'</div>';
+  svEl.appendChild(d);
+});
+
+var factors=[
+  {name:"Reliability & follow-through",pct:89,note:"Does what they say they'll do, meets commitments"},
+  {name:"Communication — written and verbal",pct:86,note:"Keeps supervisor informed, asks good questions, documents clearly"},
+  {name:"Problem-solving ability",pct:78,note:"Investigates root causes, not just symptoms"},
+  {name:"Technical skill level",pct:74,note:"Strong at the core job functions — necessary but not sufficient"},
+  {name:"Team collaboration",pct:71,note:"Works well with coworkers, supports the whole team"},
+  {name:"Initiative & self-direction",pct:68,note:"Takes on tasks without being asked, brings solutions not just problems"}
+];
+var fbEl=document.getElementById('factors-bar'),barsAnimated=false;
+factors.forEach(function(f){
+  var d=document.createElement('div');d.className='factor-row';
+  d.innerHTML='<div class="factor-label"><span class="factor-name">'+f.name+'</span><span class="factor-pct">'+f.pct+'%</span></div>'
+    +'<div class="factor-bar-bg"><div class="factor-bar-fill" data-pct="'+f.pct+'"></div></div>'
+    +'<div class="factor-note">'+f.note+'</div>';
+  fbEl.appendChild(d);
+});
+function animateBars(){if(barsAnimated)return;barsAnimated=true;document.querySelectorAll('.factor-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-pct')+'%';});}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

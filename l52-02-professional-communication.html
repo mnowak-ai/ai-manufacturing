@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Professional Communication Looks Like in a Factory Setting — With Real Examples</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* FOUR QUALITIES */
+.quality-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.quality-grid{grid-template-columns:1fr;}}
+.quality-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:16px;padding:20px;}
+.qc-icon{font-size:28px;margin-bottom:8px;}
+.qc-title{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.qc-def{font-size:13px;line-height:1.75;color:var(--gray-text);margin-bottom:10px;}
+.qc-yes{background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:7px 10px;font-size:12px;color:var(--green);margin-bottom:5px;line-height:1.6;}
+.qc-no{background:var(--red-pale);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:7px 10px;font-size:12px;color:var(--red);line-height:1.6;}
+.qc-yes::before{content:"✓ ";font-weight:700;}
+.qc-no::before{content:"✗ ";font-weight:700;}
+
+/* MESSAGE EXAMPLES */
+.msg-explorer{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.me-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.me-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.me-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.me-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.me-tab{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.me-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.me-panel{display:none;}
+.me-panel.active{display:block;}
+.me-context{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:14px;line-height:1.75;color:var(--gray-text);}
+.me-context strong{color:var(--purple-dark);}
+.msg-compare{display:flex;flex-direction:column;gap:12px;}
+.msg-block{border-radius:14px;overflow:hidden;border:1.5px solid;}
+.msg-block.weak{border-color:#D1D5DB;}
+.msg-block.strong{border-color:var(--green);}
+.msg-block-header{padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.msg-block.weak .msg-block-header{background:#F3F4F6;color:#6B7280;}
+.msg-block.strong .msg-block-header{background:var(--green-pale);color:var(--green);}
+.msg-block-body{padding:14px 16px;font-size:13px;line-height:1.9;font-family:"DM Sans",sans-serif;}
+.msg-block.weak .msg-block-body{background:#FAFAFA;color:#4B5563;}
+.msg-block.strong .msg-block-body{background:var(--white);color:var(--gray-text);}
+.msg-annotation{padding:10px 14px;font-size:12px;line-height:1.7;}
+.msg-block.weak .msg-annotation{background:#F9FAFB;color:#6B7280;}
+.msg-block.strong .msg-annotation{background:#F0FFF4;color:var(--green);}
+.msg-quality-tags{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px;background:rgba(0,0,0,.03);}
+.mq-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.mq-tag.yes{background:var(--green-pale);color:var(--green);border:1px solid var(--green);}
+.mq-tag.no{background:var(--red-pale);color:var(--red);border:1px solid var(--red);}
+
+/* ANATOMY TOOL */
+.anatomy-tool{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.at-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.at-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.at-sub{font-size:14px;color:var(--gray-muted);margin-bottom:18px;line-height:1.6;}
+.at-msg{background:#0f172a;border-radius:14px;padding:20px 22px;font-family:"DM Sans",sans-serif;font-size:14px;line-height:2;color:rgba(255,255,255,.85);position:relative;}
+.at-highlight{cursor:pointer;border-radius:4px;padding:1px 4px;transition:filter .2s;}
+.at-highlight:hover{filter:brightness(1.15);}
+.at-highlight.clear{background:#c084fc;color:#0f172a;}
+.at-highlight.accurate{background:#4ade80;color:#0f172a;}
+.at-highlight.timely{background:#60a5fa;color:#0f172a;}
+.at-highlight.respectful{background:#fbbf24;color:#0f172a;}
+.at-highlight.next{background:#f87171;color:#0f172a;}
+.at-tooltip{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;font-size:13px;line-height:1.75;background:var(--white);border:1.5px solid var(--purple-mid);}
+.at-tooltip.show{display:block;}
+.at-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.at-leg{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;}
+.at-leg-dot{width:10px;height:10px;border-radius:50%;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>What Professional Communication Looks Like in a Factory Setting — With Real Examples</h1>
+  <p class="hero-sub">"Clear, accurate, timely, respectful" sounds simple. But what does it actually look like in a shift handoff, a maintenance request, a safety flag, or a status update? This article shows you — with real examples you can model.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Four Qualities — Made Concrete</h2>
+  <p>Professional communication in manufacturing has four qualities that employers consistently name. The lesson video lists them in one slide. This article unpacks what each one actually means on the job — not just as a definition, but as a specific behavior with examples of what it looks like when you do it and when you don't.</p>
+
+  <div class="quality-grid" id="quality-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Real Examples: Four Types of Manufacturing Communication</h2>
+  <p>Below are the four most common written communication tasks in manufacturing. For each one, you'll see a weak version and a strong version — side by side, with annotations explaining what the difference actually is. Study the strong versions. They're the model.</p>
+
+  <div class="msg-explorer">
+    <div class="me-label">Message Example Library</div>
+    <div class="me-title">Weak vs. Strong — Learn the Difference</div>
+    <div class="me-sub">Select a communication type to see real examples with full annotations.</div>
+    <div class="me-tabs" id="me-tabs"></div>
+    <div id="me-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Anatomy of a Strong Update — Interactive</h2>
+  <p>Here's a professionally written maintenance update. Click the highlighted phrases to see which quality each one is demonstrating — and why that detail matters.</p>
+
+  <div class="anatomy-tool">
+    <div class="at-label">Message Anatomy Tool</div>
+    <div class="at-title">Click Any Highlighted Phrase</div>
+    <div class="at-sub">Each color represents one of the four communication qualities. Click a phrase to see the explanation.</div>
+    <div class="at-msg" id="at-msg"></div>
+    <div class="at-legend" id="at-legend"></div>
+    <div class="at-tooltip" id="at-tooltip"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Which of the following maintenance requests is most likely to result in the problem getting fixed correctly on the first visit?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">A: "The press on Line 4 is making a banging noise. Please fix."</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">B: "Line 4 stamping press is making a loud metallic banging sound on every downstroke — started approximately 2:15 PM today. Sound only occurs during active stamping, not during idle cycling. Press is still operating but quality team has flagged 3 parts in the last 30 minutes. Please inspect before next production run."</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">C: "Please send maintenance to Line 4 when available. No rush."</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">D: "Something's wrong with the press. I don't know what it is but it doesn't sound right."</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct — Option B. It has all four qualities: Clear (exactly what sound, where, when), Accurate (specific details the maintenance tech can use to diagnose before arriving), Timely (includes onset time and current status), and Respectful (professional language, gives maintenance the information they need to do their job well). A technician responding to Option B arrives knowing what to look for. A technician responding to Options A, C, or D arrives and has to start from scratch.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Option B is the strongest. The others are vague in different ways — A is minimal, C implies no urgency when there may be one, and D admits to having no useful information. Option B gives the maintenance technician everything they need: what the problem is, where, when it started, under what conditions, whether quality is affected, and what action is requested. That's professional communication.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Clear means specific and unambiguous — not general statements like "it's not working right" but specific descriptions of what, where, and when. Precision is a professional skill.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Accurate means you only say what you know — not what you guess or assume. When you're not sure, you say so. This protects the person acting on your information and protects your professional credibility.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Timely means sending information when it can still be acted on — not hours later when the window to respond has closed. Timely communication also means not waiting to see if something works itself out when others need to know now.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Respectful means professional language appropriate to the workplace and audience — not casual texting language in a formal maintenance request, and not cold or accusatory language when reporting a problem that involves someone else's work.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Every type of manufacturing communication — shift handoffs, maintenance requests, safety flags, supervisor updates — follows the same four-quality framework. The format changes; the standards don't.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var qualities=[
+  {icon:"🎯",title:"Clear",def:"The reader knows exactly what you mean without having to ask follow-up questions. You use specific details: which machine, which time, what specifically happened, what you want the reader to do.",yes:"'Line 3 stamping press stopped at 2:47 PM due to Error Code E-09. Reset attempted twice, unsuccessful. Please inspect before 4 PM shift change.'",no:"'Line 3 is down again. Can someone come look at it?'"},
+  {icon:"✅",title:"Accurate",def:"What you say is true. You only report what you know — not what you guess. When you're uncertain, you say so. Inaccurate communication — even unintentional — can send maintenance to the wrong machine, create unnecessary alarm, or lead to the wrong fix.",yes:"'AI alert shows temperature 8°C above baseline on Motor 2. I inspected the motor — it feels warm but the fan is running and the cooling vents are clear. Could be a sensor issue or developing problem. Please advise.'",no:"'Motor 2 is overheating. Needs to be replaced immediately.' (when you don't actually know this)"},
+  {icon:"⏱️",title:"Timely",def:"You send information when it matters, not after the window to act on it has closed. A safety hazard reported after someone gets hurt is not timely. A machine alert mentioned casually at the end of a shift instead of when it was first noticed is not timely.",yes:"Reporting a spill immediately when you notice it — not at the end of the shift.",no:"Mentioning in the shift handoff note that 'there was a small leak earlier' when you noticed it three hours ago and said nothing."},
+  {icon:"🤝",title:"Respectful",def:"Professional tone and language appropriate for the workplace and the audience. Respectful doesn't mean formal or stiff — it means not casual to the point of being unclear, not accusatory when something went wrong, and not dismissive of the person receiving the information.",yes:"'The previous shift's maintenance log shows Machine 5 had an oil leak that was patched but not fully resolved. Flagging this for the maintenance team to follow up on.'",no:"'Whoever was on last night left Machine 5 leaking. Not my problem but someone needs to deal with it.'"}
+];
+var qgEl=document.getElementById('quality-grid');
+qualities.forEach(function(q){
+  var d=document.createElement('div');d.className='quality-card';
+  d.innerHTML='<div class="qc-icon">'+q.icon+'</div><div class="qc-title">'+q.title+'</div><div class="qc-def">'+q.def+'</div>'
+    +'<div class="qc-yes">'+q.yes+'</div>'
+    +'<div class="qc-no">'+q.no+'</div>';
+  qgEl.appendChild(d);
+});
+
+var msgTypes=[
+  {name:"📋 Shift Handoff",context:"<strong>Situation:</strong> You're ending a 12-hour shift on the production floor. The incoming shift operator needs to know what happened during your shift so they can pick up seamlessly. This note goes into the facility's digital log system.",weak:{header:"⚠️ Weak Shift Handoff Note",body:"Had a busy shift. Machine 3 gave us some trouble but it's okay now. There's a part shortage on Line 2 that you might need to deal with. Otherwise everything is fine. Good luck.",annotation:"Problems: No specifics about Machine 3 — what trouble? Fixed how? Verified by whom? 'Part shortage on Line 2' with no details. 'Otherwise everything is fine' with no evidence. The incoming operator learns almost nothing useful.",tags:[{t:"Clear",y:false},{t:"Accurate",y:false},{t:"Timely",y:true},{t:"Respectful",y:true}]},strong:{header:"✅ Strong Shift Handoff Note",body:"Shift Handoff — Line 2 & 3 — Day Shift\n\nMachine 3: Sensor fault (E-14) occurred at 10:20 AM on conveyor belt. Maintenance (Torres) reset sensor and monitored — ran clean for remainder of shift. No repeat issues. Watch the conveyor speed readout: if it reads zero while motor is running, same fault — call maintenance, don't reset yourself.\n\nLine 2 — Component Shortage: Part #C-447 dropped to 2-hour buffer at end of shift. Procurement notified at 2:45 PM. Delivery expected 6 AM. If buffer runs out before then, supervisor (Chen) approved running Line 1 to fill gap.\n\nNo other open issues. Maintenance log updated.",annotation:"Why it works: Specific detail on the machine issue (error code, who fixed it, what to watch for). Clear status on the part shortage (what's been done, what to expect, what to do if it gets worse). Complete — incoming operator can take over without guessing.",tags:[{t:"Clear",y:true},{t:"Accurate",y:true},{t:"Timely",y:true},{t:"Respectful",y:true}]}},
+  {name:"🔧 Maintenance Request",context:"<strong>Situation:</strong> You're a production operator and you've noticed an unusual noise from the stamping press on your line. You're submitting a maintenance request through the facility's digital maintenance management system.",weak:{header:"⚠️ Weak Maintenance Request",body:"The press is making noise. Please send someone to look at it.",annotation:"Problems: Which press? What kind of noise? When did it start? How often? Is production still running? The maintenance technician who receives this has to come to you first before they can even start diagnosing — which adds time and creates another round-trip.",tags:[{t:"Clear",y:false},{t:"Accurate",y:false},{t:"Timely",y:true},{t:"Respectful",y:true}]},strong:{header:"✅ Strong Maintenance Request",body:"Line 4 — Stamping Press Noise — Maintenance Request\n\nIssue: Loud metallic banging sound on every downstroke of the Line 4 stamping press. Sound is sharp and rhythmic, approximately one bang per cycle. It is NOT present during idle cycling — only when the press is actively stamping.\n\nOnset: Started approximately 2:15 PM today. Running normally this morning.\n\nStatus: Press is still operating but quality flagged 3 parts with edge defects in the last 30 minutes that may be related. Production supervisor notified.\n\nRequested action: Inspection before next production run. If it needs to come offline, supervisor Chen is aware and has approved.\n\nSubmitted by: D. Martinez, Line 4 Operator",annotation:"Why it works: The maintenance technician knows exactly which press, exactly what the sound is like, when it started, that it's intermittent (only during active stamping), that quality may be affected, and that the supervisor already knows. They can arrive with the right tools and a diagnostic plan.",tags:[{t:"Clear",y:true},{t:"Accurate",y:true},{t:"Timely",y:true},{t:"Respectful",y:true}]}},
+  {name:"🛡️ Safety Flag",context:"<strong>Situation:</strong> You notice a small chemical spill (machine coolant) near the base of a CNC machine during your shift. You're reporting it through the safety reporting system.",weak:{header:"⚠️ Weak Safety Report",body:"There's a spill by the CNC machines. Somebody should deal with it.",annotation:"Problems: Which CNC machine? What chemical? How big? When did it happen? Is anyone in the area at risk right now? The person receiving this has no information to act on efficiently — they have to go find it first.",tags:[{t:"Clear",y:false},{t:"Accurate",y:false},{t:"Timely",y:true},{t:"Respectful",y:true}]},strong:{header:"✅ Strong Safety Report",body:"Safety Report — Chemical Spill — Floor Area B\n\nLocation: Base of CNC Machine #7, Floor Area B, approximately 2 feet from the operator station. Spill is on the operator side of the machine.\n\nSubstance: Appears to be machine coolant (blue fluid). Spill is approximately 18 inches in diameter.\n\nTime noticed: 11:35 AM\n\nCurrent status: Area is not currently occupied. I have placed two safety cones around the spill to mark the hazard. The spill does not appear to be actively leaking — it may be a drip accumulation.\n\nRequested action: Spill cleanup and inspection of the coolant system on Machine #7 to confirm the source.\n\nReported by: M. Johnson, CNC Operator, Floor Area B",annotation:"Why it works: Exact location, substance identified, size, time, current safety status, what was already done, what action is needed. Someone reading this can respond efficiently and safely without first having to find the spill or ask follow-up questions.",tags:[{t:"Clear",y:true},{t:"Accurate",y:true},{t:"Timely",y:true},{t:"Respectful",y:true}]}},
+  {name:"📊 Supervisor Update",context:"<strong>Situation:</strong> You're a maintenance technician. You've just finished investigating an AI alert for a bearing issue on Conveyor 7. Your supervisor texted asking for an update.",weak:{header:"⚠️ Weak Status Update",body:"Checked it out. It's probably fine but might want to watch it.",annotation:"Problems: What did you check? What did you find? What does 'probably fine' mean — is there still a risk? 'Might want to watch it' — who? How often? What should they watch for? This update tells the supervisor almost nothing and forces them to follow up with more questions.",tags:[{t:"Clear",y:false},{t:"Accurate",y:false},{t:"Timely",y:true},{t:"Respectful",y:true}]},strong:{header:"✅ Strong Status Update",body:"Update on Conveyor 7 bearing alert:\n\nCompleted physical inspection at 1:40 PM. Checked bearing temperature (normal), vibration (slightly elevated but within acceptable range), and lubrication (adequate). Listened during operation — no audible abnormality.\n\nMy assessment: The AI alert is based on a 3-week trend in vibration data. Physical inspection doesn't show an immediate failure risk, but the trend is real and worth monitoring. I wouldn't classify this as urgent.\n\nRecommendation: Schedule a bearing replacement during the next planned downtime window (I see one scheduled for Saturday). Add Conveyor 7 to daily check list until then — specifically the vibration reading in the predictive maintenance dashboard.\n\nLet me know if you want me to set up a recurring check.",annotation:"Why it works: The supervisor now knows what was physically checked, what was found, the technician's professional assessment of the risk, a specific recommendation with timing, and a clear next step. No follow-up questions needed.",tags:[{t:"Clear",y:true},{t:"Accurate",y:true},{t:"Timely",y:true},{t:"Respectful",y:true}]}}
+];
+var meTabs=document.getElementById('me-tabs'),mePanels=document.getElementById('me-panels'),meActive=0;
+msgTypes.forEach(function(m,i){
+  var tab=document.createElement('div');tab.className='me-tab'+(i===0?' active':'');tab.textContent=m.name;
+  tab.onclick=function(){meActive=i;document.querySelectorAll('.me-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.querySelectorAll('.me-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  meTabs.appendChild(tab);
+  var panel=document.createElement('div');panel.className='me-panel'+(i===0?' active':'');
+  function buildMsg(msg,type){
+    var tagHtml=msg.tags.map(function(t){return '<span class="mq-tag '+(t.y?'yes':'no')+'">'+(t.y?'✓ ':'✗ ')+t.t+'</span>';}).join('');
+    return '<div class="msg-block '+type+'">'
+      +'<div class="msg-block-header">'+msg.header+'</div>'
+      +'<div class="msg-block-body">'+msg.body.replace(/\n/g,'<br>')+'</div>'
+      +'<div class="msg-annotation">'+msg.annotation+'</div>'
+      +'<div class="msg-quality-tags">'+tagHtml+'</div></div>';
+  }
+  panel.innerHTML='<div class="me-context">'+m.context+'</div><div class="msg-compare">'+buildMsg(m.weak,'weak')+buildMsg(m.strong,'strong')+'</div>';
+  mePanels.appendChild(panel);
+});
+
+// Anatomy tool
+var anatomyMsg='<span class="at-highlight clear" onclick="showTip(\'clear\')">Investigated the AI bearing alert on Conveyor 7 at 1:40 PM today.</span> '
+  +'<span class="at-highlight accurate" onclick="showTip(\'accurate\')">Physical inspection showed bearing temperature normal, vibration slightly elevated but within acceptable range, lubrication adequate. No audible abnormality during operation.</span> '
+  +'<span class="at-highlight timely" onclick="showTip(\'timely\')">Alert was flagged at 1:15 PM — inspected within 25 minutes and reporting now.</span> '
+  +'My assessment: <span class="at-highlight accurate" onclick="showTip(\'accurate2\')">The vibration trend is real but does not indicate immediate failure risk based on current physical evidence.</span> '
+  +'<span class="at-highlight next" onclick="showTip(\'next\')">Recommendation: Schedule bearing replacement for Saturday\'s planned downtime window and add Conveyor 7 to the daily dashboard check list until then.</span> '
+  +'<span class="at-highlight respectful" onclick="showTip(\'respectful\')">Let me know if you\'d like me to set up the recurring check or if you want a different approach.</span>';
+document.getElementById('at-msg').innerHTML=anatomyMsg;
+var tips={
+  clear:{label:'Clear',color:'#c084fc',text:'This phrase tells the supervisor exactly what was investigated, which piece of equipment, and when. No ambiguity — "the AI bearing alert on Conveyor 7" is specific enough that the supervisor doesn\'t need to ask "which alert?" or "which conveyor?"'},
+  accurate:{label:'Accurate',color:'#4ade80',text:'This is a report of what was physically observed — specific measurements and sensory checks. Notice it doesn\'t say "the bearing is fine" — it says what was checked and what was found. The distinction matters: one is an unsupported conclusion, the other is reported evidence.'},
+  timely:{label:'Timely',color:'#60a5fa',text:'Including the timing tells the supervisor that the response was prompt and that the update is current. "Reporting now" after a 25-minute turnaround on a bearing alert is professional. The supervisor knows the information is fresh.'},
+  accurate2:{label:'Accurate',color:'#4ade80',text:'This is a professional judgment — and notice how it\'s framed. "Based on current physical evidence" is an accurate qualification. It doesn\'t say the bearing will never fail — it says the current evidence doesn\'t indicate immediate failure. That\'s honest and accurate.'},
+  next:{label:'Next Steps',color:'#f87171',text:'Strong professional communication usually ends with a clear recommendation or next step — not just a status report. This tells the supervisor what action is suggested, with a specific timeline. The supervisor doesn\'t have to figure out what to do with the information.'},
+  respectful:{label:'Respectful',color:'#fbbf24',text:'Ending with an offer to help and an open door for the supervisor to direct differently is respectful and professional. It signals collaboration rather than just task completion — and it leaves control with the supervisor, which is appropriate.'}
+};
+var legendData=[
+  {color:'#c084fc',label:'Clear'},
+  {color:'#4ade80',label:'Accurate'},
+  {color:'#60a5fa',label:'Timely'},
+  {color:'#fbbf24',label:'Respectful'},
+  {color:'#f87171',label:'Next Steps'}
+];
+var legEl=document.getElementById('at-legend');
+legendData.forEach(function(l){
+  var d=document.createElement('div');d.className='at-leg';
+  d.innerHTML='<div class="at-leg-dot" style="background:'+l.color+'"></div><span style="font-size:12px;font-weight:600;color:var(--gray-muted);">'+l.label+'</span>';
+  legEl.appendChild(d);
+});
+function showTip(key){
+  var tip=tips[key];if(!tip)return;
+  var el=document.getElementById('at-tooltip');
+  el.className='at-tooltip show';
+  el.innerHTML='<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;color:var(--purple);">'+tip.label+'</div><div style="font-size:13px;line-height:1.8;color:var(--gray-text);">'+tip.text+'</div>';
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

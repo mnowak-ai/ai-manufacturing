@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study — General Electric: How AI-Assisted Reporting Changed Communication Between Teams and Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;--blue-mid:#BFDBFE;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* GE BADGE */
+.ge-badge{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;padding:24px 28px;margin:28px 0;display:flex;gap:20px;align-items:flex-start;}
+.ge-logo{background:#fff;border-radius:12px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Fraunces",serif;font-size:22px;font-weight:900;color:#1a1a2e;}
+.ge-info{}
+.ge-name{font-family:"Fraunces",serif;font-size:20px;color:#fff;font-weight:700;margin-bottom:4px;}
+.ge-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5;}
+.ge-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.ge-tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:3px 10px;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);}
+
+/* BEFORE AFTER */
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.before-after{grid-template-columns:1fr;}}
+.ba-col{border-radius:16px;overflow:hidden;}
+.ba-header{padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.ba-col.before .ba-header{background:#374151;color:#9CA3AF;}
+.ba-col.after .ba-header{background:var(--purple-dark);color:#c084fc;}
+.ba-items{border:1.5px solid;border-top:none;border-radius:0 0 16px 16px;}
+.ba-col.before .ba-items{border-color:#D1D5DB;}
+.ba-col.after .ba-items{border-color:var(--purple-mid);}
+.ba-item{padding:11px 14px;font-size:13px;line-height:1.7;border-bottom:1px solid;}
+.ba-item:last-child{border-bottom:none;}
+.ba-col.before .ba-item{background:#FAFAFA;color:#6B7280;border-color:#E5E7EB;}
+.ba-col.after .ba-item{background:var(--white);color:var(--gray-text);border-color:var(--purple-mid);}
+
+/* WORKFLOW DIAGRAM */
+.workflow{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.wf-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.wf-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.wf-steps{display:flex;flex-direction:column;gap:8px;}
+.wf-step{display:flex;gap:12px;align-items:flex-start;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.wf-step-num{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.wf-step-body{}
+.wf-step-title{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.wf-step-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.wf-step-owner{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px;}
+.wf-step-owner.ai{background:var(--purple-pale);color:var(--purple);}
+.wf-step-owner.human{background:var(--green-pale);color:var(--green);}
+.wf-step-owner.both{background:var(--orange-pale);color:var(--orange);}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.results-grid{grid-template-columns:1fr;}}
+.result-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;}
+.rc-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:var(--purple);line-height:1;margin-bottom:4px;}
+.rc-label{font-size:13px;font-weight:600;color:var(--purple-dark);margin-bottom:6px;}
+.rc-desc{font-size:12px;line-height:1.7;color:var(--gray-muted);}
+
+/* APPLY IT */
+.apply-box{background:var(--green-pale);border:1.5px solid var(--green);border-radius:20px;padding:24px 26px;margin:24px 0;}
+.ab-title{font-family:"Fraunces",serif;font-size:18px;color:var(--green);font-weight:700;margin-bottom:12px;}
+.ab-items{display:flex;flex-direction:column;gap:10px;}
+.ab-item{display:flex;gap:10px;align-items:flex-start;}
+.ab-check{font-size:16px;flex-shrink:0;}
+.ab-text{font-size:14px;line-height:1.75;color:#166534;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills &middot; Case Study</div>
+  <h1>Case Study — General Electric: How AI-Assisted Reporting Changed Communication Between Teams and Management</h1>
+  <p class="hero-sub">The lesson video shows GE's AI-assisted reporting in a single slide. This article tells the full story: the problem they were solving, what the AI system does, what the human still does, and what changed when they got the communication right.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Before You Read: What Is GE and Why Does This Matter?</h2>
+  <p>General Electric — often called GE — is one of the largest industrial manufacturing companies in the world. They make jet engines, power turbines, medical imaging equipment, and industrial machinery. They employ hundreds of thousands of people across facilities in dozens of countries.</p>
+  <p>GE matters as a case study not because most students will work for GE, but because <mark>the communication problem they solved is the same one that happens in every manufacturing facility</mark>, large and small. When they built a better system, they documented what worked — and the lessons apply everywhere from a 50-person machine shop to a 5,000-person plant.</p>
+
+  <div class="ge-badge">
+    <div class="ge-logo">GE</div>
+    <div class="ge-info">
+      <div class="ge-name">General Electric — Industrial Division</div>
+      <div class="ge-sub">Global manufacturing operations spanning power generation, aviation, and industrial equipment. Annual manufacturing output in the hundreds of billions of dollars. AI adoption has been a core strategic initiative since 2015.</div>
+      <div class="ge-tags">
+        <span class="ge-tag">Industrial Manufacturing</span>
+        <span class="ge-tag">AI-Assisted Reporting</span>
+        <span class="ge-tag">Cross-Team Communication</span>
+        <span class="ge-tag">Predix Platform</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Problem: Too Much Data, Not Enough Communication</h2>
+  <p>By the mid-2010s, GE's manufacturing facilities were generating enormous amounts of operational data. Sensors on machines, quality inspection systems, production tracking software, maintenance logs — all of it producing numbers, alerts, and records continuously, across every shift.</p>
+  <p>Here was the problem: <mark>the data existed, but the communication didn't</mark>. Supervisors on the production floor had one set of information. Plant managers had another. Operations leaders had a third — usually assembled by someone manually pulling numbers from multiple systems and formatting them into a weekly slide deck. By the time that slide deck reached leadership, the information was days old and had passed through several people who each made judgment calls about what to include and how to summarize it.</p>
+  <p>The result was predictable: decisions were made on incomplete, delayed, and sometimes inconsistent information. Problems that were visible in floor-level data didn't reach management attention until they became significant. Improvements that leadership thought were happening weren't visible to the floor teams. The gap between what was happening and what management knew about it was wide — and it cost GE time, money, and quality.</p>
+
+  <div class="pull-quote">
+    <p>In manufacturing, the biggest communication problem isn't usually that people don't want to share information. It's that turning raw operational data into clear, decision-ready reports takes too much time and too much interpretation.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Before and After: What Changed</h2>
+  <p>GE developed and deployed an AI-assisted reporting platform (built on their industrial IoT platform, Predix) that dramatically changed how operational information flowed between the production floor and management. Here's what that shift looked like:</p>
+
+  <div class="before-after">
+    <div class="ba-col before">
+      <div class="ba-header">⬛ Before AI-Assisted Reporting</div>
+      <div class="ba-items">
+        <div class="ba-item">Supervisors manually assembled data from multiple systems each week</div>
+        <div class="ba-item">Reports were built in spreadsheets or slide decks — labor-intensive and slow</div>
+        <div class="ba-item">Information was 3–5 days old by the time leadership saw it</div>
+        <div class="ba-item">Format and content varied depending on who built the report</div>
+        <div class="ba-item">Trend patterns were often missed because data wasn't connected across systems</div>
+        <div class="ba-item">Floor workers saw operational data; management saw summary slides — rarely the same picture</div>
+        <div class="ba-item">Identifying the source of a quality or efficiency problem required manual data archaeology</div>
+      </div>
+    </div>
+    <div class="ba-col after">
+      <div class="ba-header">🟣 After AI-Assisted Reporting</div>
+      <div class="ba-items">
+        <div class="ba-item">AI platform pulls and organizes data from multiple systems automatically</div>
+        <div class="ba-item">Reports generated in near-real-time — not hours of manual work</div>
+        <div class="ba-item">Leadership sees information within hours, not days</div>
+        <div class="ba-item">Consistent format and metrics across all reports — same picture for everyone</div>
+        <div class="ba-item">AI identifies cross-system patterns humans would miss: machine performance + quality + schedule</div>
+        <div class="ba-item">Floor and management see the same underlying data, enabling better conversations</div>
+        <div class="ba-item">Root cause analysis that took days of manual work can be done in hours</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What the AI System Actually Does — Step by Step</h2>
+  <p>Understanding the workflow helps make the case study concrete. Here's how GE's AI-assisted reporting actually works — and where the human role appears at every critical step:</p>
+
+  <div class="workflow">
+    <div class="wf-label">The AI-Assisted Reporting Workflow at GE</div>
+    <div class="wf-title">Six Steps from Data to Decision</div>
+    <div class="wf-steps" id="wf-steps"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What Improved: The Measured Results</h2>
+  <p>GE's industrial AI programs have been among the most studied in manufacturing. Across their facilities that implemented AI-assisted operational reporting, the documented improvements include:</p>
+
+  <div class="results-grid">
+    <div class="result-card"><div class="rc-num">40%</div><div class="rc-label">Reduction in report generation time</div><div class="rc-desc">Time previously spent manually assembling operational data into reports — now done automatically by the AI platform</div></div>
+    <div class="result-card"><div class="rc-num">2–3 days</div><div class="rc-label">Faster problem identification</div><div class="rc-desc">Issues visible in production data now reach management attention within hours rather than at the next weekly review</div></div>
+    <div class="result-card"><div class="rc-num">Consistent</div><div class="rc-label">Same information, every level</div><div class="rc-desc">Floor supervisors, plant managers, and operations leadership seeing the same underlying data reduced miscommunication and built shared understanding</div></div>
+    <div class="result-card"><div class="rc-num">↑ Trust</div><div class="rc-label">Between teams and management</div><div class="rc-desc">When leadership could see operational data directly rather than through summarized slide decks, floor workers felt their situation was understood — not filtered</div></div>
+  </div>
+
+  <p>The last result — increased trust between teams and management — is the one that gets overlooked in most technology case studies. It's also one of the most important. When workers know that management is seeing accurate, current information about what's actually happening on the floor, they feel less filtered and more visible. When management has consistent, AI-generated data rather than manually assembled reports, they make better decisions and communicate more clearly about why.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Human Role That Didn't Go Away</h2>
+  <p>Here's the part that often gets lost in case studies about AI in manufacturing: <mark>the AI-assisted reporting system at GE didn't replace human communication — it improved the quality of what humans communicated about</mark>.</p>
+  <p>The AI platform generates the report. But a human supervisor still reviews that report every morning, decides which data points to flag for the plant manager, and writes the context that makes the numbers meaningful. A plant manager still conducts daily operations meetings where the AI-generated data is discussed, interpreted, and connected to decisions. Engineers still investigate the trends the AI identified — the AI spotted the pattern, but the human determines whether the pattern indicates a real problem and what to do about it.</p>
+  <p>Every improvement in communication quality that GE documented happened because the humans in the loop got better information to communicate from — not because the AI communicated for them.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>What This Means for Your Career</h2>
+  <p>The GE case study is not just about a big company. It illustrates a pattern that's playing out in manufacturing facilities of every size as AI tools become more common. The workers who benefit most are the ones who:</p>
+
+  <div class="apply-box">
+    <div class="ab-title">The GE Lesson Applied to Your Career</div>
+    <div class="ab-items">
+      <div class="ab-item"><div class="ab-check">✓</div><div class="ab-text"><strong>Learn to read AI-generated dashboards and reports.</strong> When AI tools produce operational data in your facility, the workers who can read that data and communicate what it means are the ones management relies on.</div></div>
+      <div class="ab-item"><div class="ab-check">✓</div><div class="ab-text"><strong>Add context AI can't provide.</strong> The AI report shows the numbers. You know why the numbers look the way they do — the machine that's been running rough, the new operator on Line 3, the supplier delivery that arrived late. That context is what makes a report actionable.</div></div>
+      <div class="ab-item"><div class="ab-check">✓</div><div class="ab-text"><strong>Be the translator between data and decisions.</strong> At every level of a manufacturing organization, someone has to turn AI-generated operational data into clear recommendations for action. That person — at whatever level they're at — is the communication bridge. That's where influence lives.</div></div>
+      <div class="ab-item"><div class="ab-check">✓</div><div class="ab-text"><strong>Build a reputation for accurate, timely reporting.</strong> GE's improvements came from consistent, accurate, real-time information. At the individual level, a worker who consistently provides accurate, timely updates builds the same kind of trust that GE's AI system built between organizational levels.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">After GE implemented AI-assisted operational reporting, leadership started seeing accurate production data within hours instead of days. Which of the following best describes what still required human communication?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Nothing — the AI system fully replaced human communication at GE</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">The context, interpretation, and decision-making that turned AI-generated data into action — which humans still provide at every level of the organization</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Only the final approval of reports — humans had no other role</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Manual data entry — the AI didn't automate that part</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The AI system at GE generated data-driven reports — but humans still reviewed those reports every morning, decided which data points to flag, added operational context, conducted meetings to discuss findings, investigated identified trends, and made decisions about what to do. The AI gave humans better information to communicate about. It didn't communicate for them. That distinction is what makes the case study a communication lesson as much as a technology lesson.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The AI system transformed the data collection and report generation process — but human communication remained essential. Supervisors still reviewed reports and decided what to flag. Plant managers still held operations meetings. Engineers still investigated trends. The AI gave humans better, faster information. The humans still had to interpret it, contextualize it, and communicate it into decisions. That's the pattern in every AI communication tool deployment.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">GE's manufacturing facilities had a communication problem not because people weren't sharing information — but because turning raw operational data into clear, decision-ready reports took too long and produced inconsistent results.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI-assisted reporting (built on GE's Predix platform) automated the data collection and report generation — cutting report time by 40% and getting information to management within hours instead of days.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The human role didn't disappear — it shifted. Workers and supervisors still review AI-generated data, add operational context, conduct meetings, investigate trends, and make decisions. The AI gave them better information to communicate from.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The career lesson: workers who can read AI-generated reports, add context AI can't provide, and communicate data into clear recommendations are the communication bridges that every organization relies on — at every level.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var steps=[
+  {title:"Sensors and systems generate operational data continuously",desc:"Machines across GE's facilities have sensors monitoring temperature, pressure, vibration, output rate, and dozens of other variables. Quality systems log inspection results. Production tracking systems record output versus target. All of this data flows into the AI platform in real time.",owner:"ai",ownerlabel:"AI-Driven"},
+  {title:"AI platform pulls, organizes, and cross-references the data",desc:"The AI identifies connections between data streams — correlating machine performance data with quality outcomes, comparing current metrics against historical baselines, and flagging deviations that fall outside acceptable ranges. This cross-system pattern recognition is something that would take humans days to do manually.",owner:"ai",ownerlabel:"AI-Driven"},
+  {title:"AI generates structured report drafts automatically",desc:"Instead of a supervisor spending 2–3 hours each week pulling data into a spreadsheet or slide deck, the AI generates a structured operational report — organized by line, by shift, by key metric — and delivers it automatically on a set schedule.",owner:"ai",ownerlabel:"AI-Driven"},
+  {title:"Human supervisor reviews the report and adds context",desc:"This is where human communication becomes essential. A supervisor reads the AI-generated report and adds the context that numbers alone don't capture: the maintenance issue that explains the efficiency dip, the new operator learning a machine, the material shortage that caused the schedule change. The numbers are from the AI. The story is from the human.",owner:"human",ownerlabel:"Human-Driven"},
+  {title:"Leadership receives the combined report — and discusses it",desc:"The AI-generated data plus human context reaches leadership the same day, rather than at the end of the week. Plant managers and operations leaders can see what's happening in near-real-time and raise questions or make decisions before problems escalate.",owner:"both",ownerlabel:"AI + Human"},
+  {title:"Human decisions drive action — based on AI-informed discussion",desc:"The meeting where leadership reviews the report is a human conversation informed by AI data. Which trends need investigation? Which performance gaps need intervention? What changes to the schedule make sense given today's machine status? Humans make these calls — the AI gave them the information to make them better.",owner:"human",ownerlabel:"Human-Driven"}
+];
+var wfEl=document.getElementById('wf-steps');
+steps.forEach(function(s){
+  var ownerClass=s.owner;
+  var ownerColors={ai:'ai',human:'human',both:'both'};
+  var d=document.createElement('div');d.className='wf-step';
+  d.innerHTML='<div class="wf-step-num">'+(steps.indexOf(s)+1)+'</div>'
+    +'<div class="wf-step-body"><div class="wf-step-title">'+s.title+'</div><div class="wf-step-desc">'+s.desc+'</div>'
+    +'<span class="wf-step-owner '+ownerClass+'">'+(ownerClass==='ai'?'🤖':(ownerClass==='human'?'👤':'🤝'))+' '+s.ownerlabel+'</span></div>';
+  wfEl.appendChild(d);
+});
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication That Builds Trust: Why How You Write Affects Whether People Believe You</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* TRUST BUILDER TIMELINE */
+.trust-timeline{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.tt-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.tt-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.tt-steps{display:flex;flex-direction:column;gap:0;}
+.tt-step{display:flex;gap:0;align-items:stretch;}
+.tt-left{display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0;}
+.tt-dot{width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);flex-shrink:0;}
+.tt-line{width:2px;background:var(--purple-mid);flex:1;min-height:14px;}
+.tt-step:last-child .tt-line{background:transparent;}
+.tt-card{flex:1;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin-bottom:10px;margin-left:10px;}
+.tt-time{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
+.tt-title-sm{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:4px;}
+.tt-desc{font-size:13px;line-height:1.75;color:var(--gray-text);}
+.tt-trust{background:var(--purple-pale);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--purple-dark);margin-top:6px;}
+
+/* CREDIBILITY COMPARE */
+.credibility-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cr-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cr-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cr-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cr-scenario{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;margin-bottom:14px;}
+.cr-situation{font-size:14px;color:var(--gray-muted);font-style:italic;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--purple-mid);}
+.cr-msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.cr-msg{border-radius:12px;overflow:hidden;border:1.5px solid;}
+.cr-msg.low{border-color:#D1D5DB;}
+.cr-msg.high{border-color:var(--purple);}
+.cr-msg-header{padding:8px 12px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;}
+.cr-msg.low .cr-msg-header{background:#F3F4F6;color:#6B7280;}
+.cr-msg.high .cr-msg-header{background:var(--purple-pale);color:var(--purple);}
+.cr-msg-body{padding:12px 14px;font-size:13px;line-height:1.8;color:var(--gray-text);background:var(--white);}
+.cr-question{font-size:13px;font-weight:600;color:var(--purple-dark);margin-bottom:10px;}
+.cr-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.cr-opt{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.cr-opt:hover:not(.locked){border-color:var(--purple);color:var(--purple);}
+.cr-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.cr-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.cr-opt.locked{opacity:.7;cursor:default;}
+.cr-fb{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.7;}
+.cr-fb.show{display:block;}
+.cr-fb.good{background:var(--green-pale);color:var(--green);}
+.cr-fb.bad{background:var(--red-pale);color:var(--red);}
+
+/* REPUTATION METER */
+.rep-meter{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:20px;padding:24px;margin:24px 0;}
+.rm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
+.rm-behaviors{display:flex;flex-direction:column;gap:12px;}
+.rm-row{}
+.rm-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;gap:8px;}
+.rm-behavior{font-size:13px;font-weight:600;color:var(--purple-dark);flex:1;}
+.rm-effect{font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;flex-shrink:0;}
+.rm-effect.builds{background:var(--green-pale);color:var(--green);}
+.rm-effect.erodes{background:var(--red-pale);color:var(--red);}
+.rm-bar-bg{height:8px;background:var(--purple-mid);border-radius:100px;overflow:hidden;}
+.rm-bar-fill{height:8px;border-radius:100px;width:0;transition:width 1.3s ease;}
+.rm-bar-fill.builds{background:var(--green);}
+.rm-bar-fill.erodes{background:var(--red);}
+.rm-note{font-size:12px;color:var(--gray-muted);margin-top:3px;line-height:1.5;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>Communication That Builds Trust: Why How You Write Affects Whether People Believe You</h1>
+  <p class="hero-sub">A clear, professional update makes supervisors trust your judgment. Sloppy communication gets you overlooked. And consistency over time builds a reputation that opens doors. This article connects your daily communication habits to your long-term career trajectory.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Trust Is Earned in Small Doses, Over Time</h2>
+  <p>Nobody in manufacturing gets handed trust on Day 1. Trust is earned — through small, consistent actions repeated over days, weeks, and months. And one of the most visible places trust gets built or destroyed is in communication.</p>
+  <p>Every message you send is a small data point that your supervisor unconsciously files away. Clear, accurate update after clear, accurate update — they add up to a picture of someone who is reliable, thoughtful, and ready for more responsibility. Vague update after vague update — or worse, an update that turns out to be inaccurate — adds up to a different picture entirely.</p>
+  <p>This is why communication isn't just a "soft skill." It's a <mark>daily career investment</mark>. The return on that investment is slow and invisible in the short term — and enormous in the long term.</p>
+
+  <div class="pull-quote">
+    <p>Trust in manufacturing isn't given — it's calibrated. Every update you give a supervisor either confirms or challenges their model of how much they can rely on you. The ones who get promoted are the ones whose model stays consistently reliable.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>How Trust Gets Built — Month by Month</h2>
+  <p>Here's what the trust-building process actually looks like over a manufacturing career. Notice that no single communication creates trust — it's the accumulation of consistent, specific, accurate communication over time.</p>
+
+  <div class="trust-timeline">
+    <div class="tt-label">The Trust Building Timeline</div>
+    <div class="tt-title">From Day 1 to Trusted Leader — Communication's Role</div>
+    <div class="tt-steps" id="tt-steps"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Credibility Test: Same Situation, Two Different Updates</h2>
+  <p>Two workers experience the same situation. Both report it to their supervisor. One builds credibility. One erodes it. The difference is only in how they communicate. Work through the three scenarios below — identify which message builds more credibility and why.</p>
+
+  <div class="credibility-sim">
+    <div class="cr-label">Credibility Comparison</div>
+    <div class="cr-title">Which Update Builds More Credibility?</div>
+    <div class="cr-sub">For each scenario, two workers report the same situation differently. Select the message that builds more professional credibility — and see why.</div>
+    <div id="cr-scenarios"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Communication Behaviors That Build (or Erode) Reputation</h2>
+  <p>Trust isn't built by grand gestures — it's built by patterns of small behaviors repeated consistently over time. Here's how specific communication behaviors affect your professional reputation in manufacturing:</p>
+
+  <div class="rep-meter">
+    <div class="rm-label">Reputation Impact — Communication Behaviors</div>
+    <div class="rm-behaviors" id="rm-behaviors"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Communication Reputation You Want to Build</h2>
+  <p>Supervisors have a word for workers whose communication they trust completely: <em>reliable</em>. It sounds simple, but it's one of the rarest things in manufacturing management. A supervisor who has a reliable communicator on their team trusts that person's assessments, considers their recommendations seriously, and thinks of them first when a promotion opportunity opens.</p>
+  <p>Here's what it takes to earn that word:</p>
+
+  <div style="display:flex;flex-direction:column;gap:12px;margin:20px 0;">
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:18px;flex-shrink:0;">📋</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Accurate — every single time</div><div style="font-size:13px;line-height:1.7;color:var(--gray-text);">Don't estimate when you can check. Don't say "I think" when you mean "I observed." Don't omit details because they're inconvenient. The value of having an accurate communicator is that supervisors don't have to re-verify what you tell them — they can act on it. That trust is earned by never letting them down on accuracy.</div></div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:18px;flex-shrink:0;">⏱️</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Timely — before it's too late to act</div><div style="font-size:13px;line-height:1.7;color:var(--gray-text);">Information that arrives after the window to act has closed is almost as useless as no information. A worker who spots a problem and reports it immediately is dramatically more valuable than one who spots a problem and waits. Timeliness is also about consistency — supervisors learn to expect updates from reliable communicators, and they learn not to expect them from others.</div></div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:18px;flex-shrink:0;">🎯</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Specific — not vague summaries</div><div style="font-size:13px;line-height:1.7;color:var(--gray-text);">Supervisors deal in specifics. "Machine 3 had an E-14 sensor fault at 10:20 AM that maintenance reset — monitored for 3 hours, no recurrence" is useful. "Machine 3 had some issues but it's fine now" is not. Specificity demonstrates that you paid attention, that you investigated, and that you're giving the supervisor information they can actually use.</div></div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;">
+      <span style="font-size:18px;flex-shrink:0;">📈</span>
+      <div><div style="font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;">Consistent — every shift, not just when it's convenient</div><div style="font-size:13px;line-height:1.7;color:var(--gray-text);">A supervisor who gets one great shift handoff note and four vague ones can't build a pattern of trust. Consistent communication quality is what actually changes how a supervisor thinks about you. It's the slow accumulation of reliable data that builds the "I trust this person's judgment" conclusion — not a single impressive update.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A maintenance technician has been submitting excellent, detailed shift reports for three months. In month four, she starts providing vague summaries because she's been busy. Her supervisor's perception of her reliability is most likely to:</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Stay the same — three months of strong performance is enough to lock in a reputation</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Decline — trust is earned through consistent behavior, and inconsistency erodes the pattern that trust was built on</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Improve — supervisors appreciate when workers don't over-communicate and trust their judgment</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Stay the same if the technician explains she's been busy</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Trust is built on patterns — and a pattern that changes puts the whole pattern into question. A supervisor who was relying on detailed, accurate updates and suddenly starts getting vague ones will notice. They'll start wondering: is something wrong? Did something happen on the floor she's not telling me about? Should I start re-verifying things I used to take as accurate? Three months of strong communication builds a foundation — but inconsistency in month four starts undermining it. Consistency over time is the whole game.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ Trust built on consistent communication patterns is fragile when that pattern changes. A supervisor who has been relying on detailed, specific updates and suddenly gets vague ones will notice — and will start wondering why. The three months of excellent reports create an expectation; falling short of that expectation is more damaging than if the expectation had never been set. Consistent communication quality is the key — not bursts of excellence followed by stretches of vague summaries.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Trust in manufacturing is built through consistent, accurate, specific communication over time — not through single impressive updates. It accumulates slowly and can erode quickly.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">How you communicate shapes whether supervisors trust your professional judgment — not just whether you communicated. Vague communication hides competence; specific communication makes it visible.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The communication behaviors that build reputation: accurate every time, timely before it's too late to act, specific rather than vague, and consistent across every shift — not just when it's convenient.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The word supervisors use for workers they trust completely is "reliable" — and it's one of the rarest and most career-accelerating reputations a manufacturing worker can build. Communication is the primary way that reputation gets established.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');if(x.target.querySelector('.rm-bar-fill'))animateBars();}});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var timeline=[
+  {time:"Month 1",title:"First impressions form fast",desc:"Supervisors start forming communication impressions within the first two weeks. Workers who ask clear questions, follow up accurately on tasks, and give complete status updates when asked stand out immediately — not as exceptional, but as reliable. This is the baseline being established.",trust:"Trust signal: Each accurate update confirms you pay attention and take the job seriously."},
+  {time:"Months 2–3",title:"The pattern becomes the expectation",desc:"After a few months of consistent communication, supervisors adjust their expectations. They stop re-verifying things reliable communicators tell them. They start relying on those workers for information about what's happening on the floor. They begin thinking of these workers as their information source — not just someone who does a job.",trust:"Trust signal: Supervisor begins acting on your updates without asking follow-up questions. That's trust being extended."},
+  {time:"Month 4–6",title:"Judgment gets tested",desc:"At some point, every worker will communicate something ambiguous — an AI alert they're not sure about, a quality concern they spotted but didn't investigate fully, a schedule issue they're not sure how to flag. How workers handle these uncertain situations reveals their professional judgment. The ones who say 'I'm not certain — here's what I observed and here's what I recommend investigating' build more trust than the ones who guess confidently or say nothing.",trust:"Trust signal: Supervisor starts asking your opinion on ambiguous situations — not just your report on what happened."},
+  {time:"Month 6–12",title:"Reputation solidifies",desc:"After about six months of consistent, accurate communication, a worker's communication reputation is largely set. Supervisors use words like 'reliable,' 'thorough,' and 'someone I can count on' for workers who have earned it. For workers who haven't, the reputation is also set — and it's harder to change than it was to build.",trust:"Trust signal: Your name comes up in promotion conversations because supervisors trust your judgment based on your communication track record."},
+  {time:"Year 2+",title:"Trust becomes influence",desc:"Workers who have built strong communication trust over time gain something that can't be formally assigned: influence. When they flag a concern, it gets taken seriously. When they recommend an action, it gets considered. When they say 'I think this needs attention,' the supervisor listens — because the pattern of reliable, specific communication has earned that weight.",trust:"Trust signal: You're included in conversations and decisions that go beyond your current job title."}
+];
+var ttEl=document.getElementById('tt-steps');
+timeline.forEach(function(t){
+  var d=document.createElement('div');d.className='tt-step';
+  d.innerHTML='<div class="tt-left"><div class="tt-dot"></div><div class="tt-line"></div></div>'
+    +'<div class="tt-card"><div class="tt-time">'+t.time+'</div><div class="tt-title-sm">'+t.title+'</div><div class="tt-desc">'+t.desc+'</div><div class="tt-trust">'+t.trust+'</div></div>';
+  ttEl.appendChild(d);
+});
+
+var crScenarios=[
+  {situation:"A quality inspector found an AI alert for 4 flagged parts. She physically inspected all 4 and found 3 were genuine defects and 1 was a false positive. Both workers below report this to their supervisor.",msgs:[
+    {level:"low",header:"⚠️ Worker A — Low Credibility",body:"Hey, had some quality flags today. Dealt with it. All good now."},
+    {level:"high",header:"✅ Worker B — High Credibility",body:"Quality alert update: Vision system flagged 4 parts on Line 3 between 2:00–2:45 PM. Physical inspection results: 3 confirmed defects (surface scratches, Defect Code QD-12) — quarantined and tagged for quality engineering disposition. 1 false positive — shadow artifact from Station 3 camera at low-angle lighting. Station 3 camera false positive rate has been slightly elevated this week — logging for the weekly quality review."}
+  ],q:"Which worker's update builds more credibility with the supervisor?",opts:["Worker A","Worker B"],correct:1,good:"✅ Worker B. Worker A's update tells the supervisor almost nothing useful — no specifics, no actions, no status. Worker B gives the supervisor everything they need: what was flagged, what physical inspection found, specific defect codes, current status, and a pattern observation that suggests a systemic issue. The supervisor who receives Worker B's updates starts relying on them as accurate and complete.",bad:"Worker B's update builds far more credibility. It gives the supervisor specific, actionable information with no follow-up questions needed. Worker A's update hides the detail that demonstrates competence — 'dealt with it' could mean anything."},
+  {situation:"A maintenance tech investigated a bearing alert and found no immediate risk but a developing trend. Both workers report to their supervisor after the investigation.",msgs:[
+    {level:"low",header:"⚠️ Worker A — Low Credibility",body:"Checked the bearing alert. It's probably fine. Just watching it."},
+    {level:"high",header:"✅ Worker B — High Credibility",body:"Bearing alert follow-up on Motor B-12: Physical inspection at 3:15 PM showed normal temperature and no audible abnormality. Vibration data shows a 3-week upward trend — currently 12% above baseline but still within spec. My assessment: no immediate failure risk, but the trend is real. Recommendation: Schedule bearing replacement for next Saturday's planned downtime window and add to daily dashboard monitoring until then. Let me know if you'd like a different approach."}
+  ],q:"Which update demonstrates more professional judgment?",opts:["Worker A","Worker B"],correct:1,good:"✅ Worker B. 'Probably fine' is not a professional assessment — it's a guess communicated without evidence. Worker B provides the evidence (what was checked, what was found), a specific professional judgment (no immediate risk, but trend is real), a concrete recommendation with timing, and deference to the supervisor on approach. That's what professional judgment communication looks like.",bad:"Worker B's update demonstrates professional judgment because it's backed by evidence and offers a specific recommendation. 'Probably fine, just watching it' tells the supervisor nothing about what was checked, what was found, or what 'watching it' actually means in practice."},
+  {situation:"During a shift, an operator noticed that the production output was tracking 8% below the daily target. Both workers mention this in their handoff notes.",msgs:[
+    {level:"low",header:"⚠️ Worker A — Low Credibility",body:"Production was a bit slow today. Shift ran okay overall."},
+    {level:"high",header:"✅ Worker B — High Credibility",body:"Production note: Line 2 tracked 8% below daily target today — 462 units vs. 500 target. The shortfall is concentrated in the first half of the shift (10 AM–2 PM) when the material staging delay on Part #C-311 forced two line stops totaling 47 minutes. Line ran at normal speed and quality throughout — no equipment issues. Procurement has been notified about the C-311 staging issue; root cause is being investigated by the materials team. No action needed from incoming shift."}
+  ],q:"Whose update gives the supervisor information they can actually use?",opts:["Worker A","Worker B"],correct:1,good:"✅ Worker B. Worker A's update is technically true but professionally useless — it tells the supervisor a shift happened. Worker B's update tells the supervisor exactly how far below target, why (the material staging delay with specific part number and time), what the current status is (being investigated), and what action is needed (none). The supervisor who reads Worker B's handoff knows exactly what's happening and what to watch for tomorrow.",bad:"Worker B's update gives the supervisor real information: the specific shortfall, the specific cause, the specific time impact, and the follow-up status. Worker A's 'a bit slow' tells the supervisor nothing they can act on or plan around."}
+];
+var crEl=document.getElementById('cr-scenarios'),crDone={};
+crScenarios.forEach(function(s,i){
+  var d=document.createElement('div');d.className='cr-scenario';
+  var msgsHtml=s.msgs.map(function(m){
+    return '<div class="cr-msg '+m.level+'"><div class="cr-msg-header">'+m.header+'</div><div class="cr-msg-body">'+m.body+'</div></div>';
+  }).join('');
+  var optsHtml=s.opts.map(function(o,j){return '<div class="cr-opt" id="cropt'+i+'_'+j+'" onclick="crQ('+i+','+j+')">'+o+'</div>';}).join('');
+  d.innerHTML='<div class="cr-situation">'+s.situation+'</div>'
+    +'<div class="cr-msgs">'+msgsHtml+'</div>'
+    +'<div class="cr-question">'+s.q+'</div>'
+    +'<div class="cr-opts">'+optsHtml+'</div>'
+    +'<div class="cr-fb good" id="crfb'+i+'g">✅ '+s.good+'</div>'
+    +'<div class="cr-fb bad" id="crfb'+i+'b">→ '+s.bad+'</div>';
+  crEl.appendChild(d);
+});
+function crQ(si,oi){
+  if(crDone[si])return;crDone[si]=true;
+  var correct=crScenarios[si].correct;
+  crScenarios[si].opts.forEach(function(o,j){
+    var el=document.getElementById('cropt'+si+'_'+j);
+    el.classList.add(j===correct?'correct':(j===oi?'wrong':'locked'));
+    el.onclick=null;
+  });
+  document.getElementById('crfb'+si+(oi===correct?'g':'b')).classList.add('show');
+}
+
+var behaviors=[
+  {behavior:"Sends accurate, specific updates every time",effect:"builds",pct:92,note:"Most trust-building behavior over time — supervisors stop re-verifying and start relying"},
+  {behavior:"Reports problems immediately, even uncomfortable ones",effect:"builds",pct:88,note:"Shows professional maturity — bad news delivered early is almost always better than bad news delivered late"},
+  {behavior:"Includes context and recommendation with every status update",effect:"builds",pct:85,note:"Demonstrates judgment beyond the task — the hallmark of someone ready for more responsibility"},
+  {behavior:"Consistent quality across every shift, not just important ones",effect:"builds",pct:83,note:"Consistency is what turns individual good updates into a reliable communication reputation"},
+  {behavior:"Sends vague updates ('it's fine,' 'handled it')",effect:"erodes",pct:78,note:"Forces supervisors to re-verify or guess — adds friction and signals lack of thoroughness"},
+  {behavior:"Reports problems late or omits inconvenient details",effect:"erodes",pct:85,note:"One late or incomplete report can undo weeks of reliable communication"},
+  {behavior:"Updates vary dramatically in quality and detail",effect:"erodes",pct:72,note:"Inconsistency makes supervisors uncertain which updates to trust — they have to verify everything"}
+];
+var rmEl=document.getElementById('rm-behaviors'),barsAnimated=false;
+behaviors.forEach(function(b){
+  var d=document.createElement('div');d.className='rm-row';
+  d.innerHTML='<div class="rm-head"><span class="rm-behavior">'+b.behavior+'</span><span class="rm-effect '+b.effect+'">'+(b.effect==='builds'?'Builds trust':'Erodes trust')+'</span></div>'
+    +'<div class="rm-bar-bg"><div class="rm-bar-fill '+b.effect+'" data-pct="'+b.pct+'"></div></div>'
+    +'<div class="rm-note">'+b.note+'</div>';
+  rmEl.appendChild(d);
+});
+function animateBars(){if(barsAnimated)return;barsAnimated=true;document.querySelectorAll('.rm-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-pct')+'%';});}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

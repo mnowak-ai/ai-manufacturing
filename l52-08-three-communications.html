@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Write a Shift Handoff Note, a Maintenance Request, and a Safety Alert — With AI Assistance</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* COMM TYPE TABS */
+.comm-guide{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cg-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cg-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cg-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cg-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.cg-tab{padding:10px 18px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.cg-tab.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.cg-panel{display:none;}
+.cg-panel.active{display:block;}
+
+/* WITHIN EACH PANEL */
+.guide-section{margin-bottom:20px;}
+.gs-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
+.gs-body{font-size:14px;line-height:1.8;color:var(--gray-text);}
+.template-box{background:#0f172a;border-radius:14px;padding:18px 20px;font-size:13px;line-height:1.9;color:rgba(255,255,255,.85);font-family:"DM Sans",sans-serif;white-space:pre-wrap;margin:10px 0;}
+.template-field{color:#c084fc;font-weight:700;}
+.checklist-mini{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
+.cm-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.7;color:var(--gray-text);}
+.cm-bullet{color:var(--purple);font-weight:700;flex-shrink:0;}
+.ai-prompt-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;margin:10px 0;}
+.apb-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.apb-prompt{font-size:13px;line-height:1.8;color:var(--purple-dark);font-style:italic;}
+.copy-prompt-btn{margin-top:8px;background:var(--purple);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;}
+.example-msg{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;overflow:hidden;margin:10px 0;}
+.em-header{padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:var(--green-pale);color:var(--green);}
+.em-body{padding:14px;font-size:13px;line-height:1.9;color:var(--gray-text);}
+.review-steps{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
+.rs-item{display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:10px 14px;}
+.rs-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rs-text{font-size:13px;line-height:1.7;color:var(--gray-text);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>How to Write a Shift Handoff Note, a Maintenance Request, and a Safety Alert — With AI Assistance</h1>
+  <p class="hero-sub">Three of the most common written communications in manufacturing — explained from scratch, templated, and walked through with AI drafting and human review. Practical and immediately usable on Day 1 of any manufacturing job.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <p>These three types of communication happen every single day in manufacturing facilities everywhere. A shift handoff note at the end of every shift. Maintenance requests whenever equipment needs attention. Safety alerts whenever a hazard is spotted. Getting these right is a core job skill — not a nice-to-have.</p>
+  <p>This article gives you a complete guide for each one: what it needs to include, a template to follow, an AI prompt to use as a starting point, and a worked example showing the full process from situation to polished message.</p>
+
+  <div class="comm-guide">
+    <div class="cg-label">Three-Part Communication Guide</div>
+    <div class="cg-title">Select a Communication Type</div>
+    <div class="cg-sub">Work through each guide completely — each one has a template, an AI prompt, a worked example, and a review checklist.</div>
+    <div class="cg-tabs">
+      <div class="cg-tab active" onclick="setTab(0)">📋 Shift Handoff Note</div>
+      <div class="cg-tab" onclick="setTab(1)">🔧 Maintenance Request</div>
+      <div class="cg-tab" onclick="setTab(2)">🛡️ Safety Alert</div>
+    </div>
+    <div id="cg-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">You write a shift handoff note using AI assistance. The AI draft says "all equipment running normally." You know this is not true — you had a sensor fault on Machine 5 earlier that you manually reset, and it ran fine after that. What should you do before sending?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Send it as-is — the reset fixed the issue so technically everything is running normally now</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Edit the draft to include the sensor fault, the time it occurred, the reset that was performed, and that it ran normally after — so the incoming shift has the full picture</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Mention the Machine 5 issue verbally to the incoming operator rather than in writing</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Start the AI draft over with a new prompt that specifically mentions Machine 5</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. A sensor fault — even one that was resolved — belongs in the shift handoff note. The incoming shift needs to know it happened, when, what was done, and whether it recurred. "Running normally now" is true, but it hides the history that the next operator needs to watch for. The fix is simple: edit the AI draft to include the Machine 5 incident. That's what human review of AI-generated content is for.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The sensor fault belongs in the written handoff note — not just mentioned verbally. If you only say it verbally, there's no record of it, and if the incoming operator doesn't have time to relay the information to the next person, the history is lost. Starting a new AI prompt would produce another draft that also doesn't mention Machine 5 unless you specifically include it. The right fix is to edit the AI draft to add the Machine 5 incident: what happened, when, what was done, that it ran normally after.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A shift handoff note must include: what happened this shift, any equipment issues and their status, material or inventory flags, what the incoming shift needs to watch for, and any pending actions. The AI can organize and draft it — you verify every detail.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A maintenance request must include: which equipment (specific ID), what the problem is, when it started, under what conditions it occurs, current operational status, and what action is needed. Missing details force the maintenance tech to investigate before they even start.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">A safety alert must include: exact location, what the hazard is, approximate size or severity, what immediate action was taken, and what response is needed. Safety alerts should never wait — send immediately when a hazard is identified.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">For all three communication types: gather your specific facts first, build a detailed AI prompt, review the draft carefully for accuracy, edit what's wrong or missing, then send. The AI saves time on structure and phrasing — you ensure accuracy.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var guides=[
+  {
+    why:"A shift handoff note is the written record that connects one shift to the next. It tells the incoming team what happened, what to watch for, what's still open, and what they need to know to pick up without confusion. A good handoff note prevents the most common causes of manufacturing downtime: the incoming shift doesn't know about a pending problem, a material shortage, or a machine that needs watching.",
+    mustInclude:["Equipment status — any issues, faults, or alerts that occurred during the shift and their current status","Material and inventory — any shortages, pending deliveries, or changes to material availability","Production status — output versus target, any quality issues, what line(s) are running","Open actions — anything that needs to be done by the incoming shift or is waiting on someone else","Supervisor or management notes — anything communicated to or from leadership during the shift"],
+    template:"Shift Handoff Note — [Line/Area] — [Shift Date & Time]\n\nEquipment Status:\n• [Machine ID]: [Issue description, time, action taken, current status]\n• All other equipment: Running normally\n\nProduction Status:\n• Output: [Actual] units vs. [Target] target\n• Quality notes: [Any defects, AI flags, inspections]\n\nMaterial/Inventory:\n• [Part number]: [Status, delivery ETA if applicable]\n\nOpen Actions:\n• [Action item]: Assigned to [person/team], due [when]\n\nHandoff submitted by: [Name], [Role]",
+    prompt:'Write a professional shift handoff note for [line/area name] for [shift time]. Here is the situation in my own words:\n\n[Paste your rough notes here — everything that happened, any machine issues, material status, output numbers, anything the incoming shift needs to know]\n\nAudience: Incoming shift team and supervisor. Tone: Professional and clear. Format: Organized by category (equipment, production, materials, open actions).',
+    example:"Shift Handoff Note — Line 2 & 3 — Day Shift, April 7\n\nEquipment Status:\n• Machine 3 (Conveyor): Sensor fault (Error E-14) occurred at 10:20 AM. Maintenance reset sensor — monitored for 3 hours, ran clean. Watch the conveyor speed readout: if it shows zero while motor is running, same fault. Call maintenance — do not reset yourself.\n• Machine 7 (Stamping Press): Running normally. AI dashboard shows vibration within normal range.\n• All other equipment: No issues this shift.\n\nProduction Status:\n• Line 2: 487 units vs. 500 target (97%). Short 13 due to morning changeover delay.\n• Line 3: 602 units vs. 600 target (100%). Clean shift.\n• Quality: 2 parts flagged by vision system at 1:15 PM — both confirmed false positives. No genuine defects this shift.\n\nMaterial/Inventory:\n• Part #C-447: At 2-hour buffer as of end of shift. Procurement notified. Delivery expected 6 AM tomorrow. Supervisor Chen approved running Line 1 to fill gap if buffer runs out overnight.\n\nOpen Actions:\n• Machine 3 sensor — maintenance to follow up tomorrow AM to verify sensor calibration.\n\nHandoff by: D. Martinez, Line 2/3 Operator",
+    reviewSteps:["Does it cover equipment, production, materials, and open actions?","Are machine IDs specific — not just 'the machine'?","Does it say what happened AND the current status — not just one or the other?","For any AI alerts, does it note whether they were real or false positives?","Is the material flag complete — quantity, who was notified, expected resolution?","Is the handoff dated, timed, and signed?"]
+  },
+  {
+    why:"A maintenance request is how production workers communicate equipment problems to the people who fix them. The maintenance technician who receives your request needs enough information to arrive prepared — with the right tools and a diagnostic approach — rather than having to track you down first for details. An incomplete maintenance request adds a round-trip of communication before the work even starts.",
+    mustInclude:["Specific equipment ID — which machine, which line, which area","What the problem is — describe it specifically: what you hear, see, or smell","When it started — exact time or approximate time; whether it's intermittent or constant","Under what conditions — does it only happen at certain speeds, temperatures, or during specific operations?","Current operational status — is the machine still running? Shut down? Producing defects?","What action was already taken, if any — any resets, adjustments, or observations you've made","What action is requested — inspect, repair, replace, advise"],
+    template:"Maintenance Request — [Equipment ID], [Line/Area]\n\nIssue: [Describe the problem specifically — what you observe: sound, error code, behavior]\nOnset: [When did it start? Exact time if possible, or approximate]\nConditions: [Does it happen all the time, or only under specific conditions?]\nCurrent Status: [Is the machine running? Stopped? Producing quality issues?]\nPrevious Actions: [Anything already attempted — resets, adjustments, observations]\nRequested Action: [Inspect / Repair / Advise — by when if there's a deadline]\nSubmitted by: [Name, Role, Contact]\nSupervisor notified: [Yes/No — Name]",
+    prompt:"Write a professional maintenance request for our maintenance management system. Here is the situation in my own words:\n\n[Describe the equipment problem: which machine, what you noticed, when it started, whether it's constant or intermittent, whether the machine is still running, and what you want maintenance to do]\n\nAudience: Maintenance team. Tone: Clear and professional. Include all specific details I've provided. Do not add details I haven't mentioned.",
+    example:"Maintenance Request — Stamping Press Line 4\n\nIssue: Loud metallic banging sound on every downstroke of the Line 4 stamping press. Sound is sharp and rhythmic — approximately one bang per press cycle. The sound is NOT present during idle cycling, only during active stamping.\n\nOnset: Started at approximately 2:15 PM today. Machine was operating normally this morning with no unusual sounds.\n\nConditions: Occurs during every active stamping cycle. Frequency appears constant — not increasing or decreasing. Sound is localized to the lower press mechanism (near the die set).\n\nCurrent Status: Press is still operating but production supervisor has been notified. Quality team flagged 3 parts with edge irregularities in the last 30 minutes that may be related to the press issue.\n\nPrevious Actions: None — issue was reported immediately.\n\nRequested Action: Please inspect before the next production run. If the machine needs to come offline, Supervisor Chen is aware and has approved the downtime.\n\nSubmitted by: J. Reyes, Line 4 Operator\nSupervisor notified: Yes — T. Chen, Production Supervisor",
+    reviewSteps:["Is the specific machine/equipment ID included?","Is the problem described specifically — not just 'it's broken'?","Does it say WHEN it started and whether it's constant or intermittent?","Is current operational status clear — still running? Stopped? Producing defects?","Does it include the specific action requested and any timing constraints?","Is your name and supervisor notification included?"]
+  },
+  {
+    why:"A safety alert is the most time-sensitive communication in this article. The moment you identify a safety hazard, the clock starts. Every minute that hazard isn't communicated is a minute someone could get hurt. Safety alerts should be sent immediately — not at the end of the shift, not after you're done with another task. Safety communication is never 'when you get a chance.'",
+    mustInclude:["Exact location — building, floor, area, nearest landmark or machine ID","What the hazard is — chemical, physical, electrical, biological — and how it was identified","Approximate size or severity — a small drip vs. a large spill, a sparking wire vs. a blown fuse","Whether anyone has already been exposed or injured — if so, this becomes an incident report","What immediate action was taken — cones placed, area evacuated, power disconnected","What response is requested — cleanup, inspection, repair, evacuation","Who to contact — if escalation is needed, who is the right person"],
+    template:"SAFETY ALERT — [Location] — [Date & Time]\n\nHazard Type: [Chemical spill / Physical hazard / Electrical / Other]\nLocation: [Building, Floor, Area — be specific: 'Floor Area B, near Machine 7, operator side']\nHazard Description: [What it is, approximate size or severity]\nPersonnel Exposure: [None observed / [Name] was near the area — [status]]\nImmediate Actions Taken: [What you already did — cones placed, area cordoned, power off, etc.]\nRequested Response: [Cleanup / Inspection / Maintenance / Evacuation]\nReported by: [Name, Role, Location]\nSupervisor Notified: [Yes / No — Name]",
+    prompt:"Write a safety alert report for our facility safety system. Here is the situation in my own words:\n\n[Describe the hazard: what it is, exactly where it is, when you noticed it, how big or serious it seems, whether anyone was near it, what you already did, and what needs to happen next]\n\nAudience: Safety coordinator and facility management. Tone: Clear, urgent, professional. Include all details I've provided. Do not soften language about the hazard — safety reports should be accurate about severity.",
+    example:"SAFETY ALERT — Floor Area C, Machine Row 3 — April 7, 11:35 AM\n\nHazard Type: Chemical spill — machine coolant\nLocation: Floor Area C, base of CNC Machine #7 (Machine Row 3), on the operator side of the machine. Spill is approximately 18–24 inches in diameter.\n\nHazard Description: Blue coolant fluid pooled on floor surface. The spill does not appear to be actively flowing — likely accumulated from a drip. Floor is wet and represents a slip hazard for anyone passing the operator station.\n\nPersonnel Exposure: Area was unoccupied when discovered. No injuries observed or reported.\n\nImmediate Actions Taken: Two safety cones placed around spill perimeter at 11:35 AM. Area not cordoned — normal traffic flow around the machine row continues. Supervisor Chen notified verbally at 11:37 AM.\n\nRequested Response:\n1. Spill cleanup — floor cleaning team or maintenance\n2. Inspection of Machine #7 coolant system to identify and stop the leak source\n\nReported by: M. Johnson, CNC Operator, Floor Area C\nSupervisor Notified: Yes — T. Chen, 11:37 AM",
+    reviewSteps:["Is the exact location specific enough that someone unfamiliar with the area could find it?","Is the hazard type clearly identified — chemical, physical, electrical?","Is there a note about personnel exposure — even if none?","Are the immediate actions taken documented — cones placed, power off, etc.?","Is the requested response specific — who needs to do what?","Is the supervisor notification documented?","Was this sent immediately, not held until end of shift?"]
+  }
+];
+
+var panelsEl=document.getElementById('cg-panels');
+guides.forEach(function(g,i){
+  var panel=document.createElement('div');panel.className='cg-panel'+(i===0?' active':'');
+  var mustHtml=g.mustInclude.map(function(m){return '<div class="cm-item"><span class="cm-bullet">✓</span> '+m+'</div>';}).join('');
+  var reviewHtml=g.reviewSteps.map(function(r,j){return '<div class="rs-item"><div class="rs-num">'+(j+1)+'</div><div class="rs-text">'+r+'</div></div>';}).join('');
+  panel.innerHTML='<div class="guide-section"><div class="gs-label">Why This Communication Matters</div><div class="gs-body">'+g.why+'</div></div>'
+    +'<div class="guide-section"><div class="gs-label">What It Must Include</div><div class="checklist-mini">'+mustHtml+'</div></div>'
+    +'<div class="guide-section"><div class="gs-label">Template — Copy This Structure</div><div class="template-box">'+g.template.replace(/\[([^\]]+)\]/g,'<span class="template-field">[$1]</span>').replace(/\n/g,'<br>')+'</div></div>'
+    +'<div class="guide-section"><div class="gs-label">AI Prompt to Use</div>'
+    +'<div class="ai-prompt-box"><div class="apb-label">Copy this into ChatGPT, Claude, or any AI tool:</div><div class="apb-prompt">'+g.prompt.replace(/\n/g,'<br>')+'</div>'
+    +'<button class="copy-prompt-btn" onclick="copyPrompt('+i+')">Copy Prompt</button></div></div>'
+    +'<div class="guide-section"><div class="gs-label">✅ Worked Example — After Human Review</div><div class="example-msg"><div class="em-header">Polished Message</div><div class="em-body">'+g.example.replace(/\n/g,'<br>')+'</div></div></div>'
+    +'<div class="guide-section"><div class="gs-label">Human Review Checklist — Run This Before Sending</div><div class="review-steps">'+reviewHtml+'</div></div>';
+  panelsEl.appendChild(panel);
+});
+
+function setTab(i){
+  document.querySelectorAll('.cg-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});
+  document.querySelectorAll('.cg-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});
+}
+
+function copyPrompt(i){
+  navigator.clipboard.writeText(guides[i].prompt).then(function(){
+    var btns=document.querySelectorAll('.copy-prompt-btn');
+    btns[i].textContent='✓ Copied!';setTimeout(function(){btns[i].textContent='Copy Prompt';},2000);
+  }).catch(function(){});
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

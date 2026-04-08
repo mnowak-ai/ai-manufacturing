@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Texting vs. Email vs. Work Platform: How to Know Which Communication Channel to Use at Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;--blue:#1D4ED8;--blue-pale:#EFF6FF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* CHANNEL CARDS */
+.channel-grid{display:flex;flex-direction:column;gap:14px;margin:24px 0;}
+.channel-card{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:18px;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.channel-card:hover{border-color:var(--purple);box-shadow:0 4px 16px rgba(123,47,190,.1);}
+.cc-header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.cc-left{display:flex;gap:14px;align-items:center;}
+.cc-icon{font-size:28px;}
+.cc-name{font-family:"Fraunces",serif;font-size:17px;color:var(--purple-dark);font-weight:700;}
+.cc-tagline{font-size:12px;color:var(--gray-muted);margin-top:2px;}
+.cc-toggle{font-size:18px;color:var(--purple-mid);transition:transform .25s;}
+.cc-toggle.open{transform:rotate(45deg);}
+.cc-body{display:none;padding:0 20px 18px;border-top:1px solid var(--purple-mid);}
+.cc-body.open{display:block;}
+.cc-section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin:12px 0 6px;}
+.cc-text{font-size:13px;line-height:1.8;color:var(--gray-text);}
+.use-list{display:flex;flex-direction:column;gap:5px;}
+.use-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.65;}
+.use-item.yes{color:var(--green);}
+.use-item.no{color:var(--red);}
+.use-item.yes::before{content:"✓";font-weight:700;flex-shrink:0;}
+.use-item.no::before{content:"✗";font-weight:700;flex-shrink:0;}
+.cc-example{background:var(--gray-soft);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;color:var(--gray-text);line-height:1.7;}
+.cc-example strong{color:var(--purple-dark);}
+
+/* DECISION TOOL */
+.decision-tool{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.dt-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.dt-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.dt-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.dt-questions{display:flex;flex-direction:column;gap:12px;}
+.dt-q{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;}
+.dt-q-text{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:10px;}
+.dt-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.dt-opt{padding:7px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.dt-opt:hover:not(.selected){border-color:var(--purple);color:var(--purple);}
+.dt-opt.selected{background:var(--purple);color:#fff;border-color:var(--purple);}
+.dt-result{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;font-size:14px;line-height:1.75;}
+.dt-result.show{display:block;}
+.dt-result-channel{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:var(--purple-dark);margin-bottom:6px;}
+.dt-result-why{font-size:13px;color:var(--gray-text);line-height:1.75;}
+
+/* SCENARIO SIM */
+.scenario-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.ss-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.ss-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.ss-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.ss-items{display:flex;flex-direction:column;gap:12px;}
+.ss-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:16px 18px;}
+.ss-situation{font-size:14px;line-height:1.75;color:var(--gray-text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--purple-mid);}
+.ss-q{font-weight:600;font-size:13px;color:var(--purple-dark);margin-bottom:8px;}
+.ss-opts{display:flex;gap:6px;flex-wrap:wrap;}
+.ss-opt{padding:6px 12px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.ss-opt:hover:not(.locked){border-color:var(--purple);color:var(--purple);}
+.ss-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.ss-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.ss-opt.locked{opacity:.7;cursor:default;}
+.ss-fb{display:none;margin-top:8px;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.75;}
+.ss-fb.show{display:block;}
+.ss-fb.good{background:var(--green-pale);color:var(--green);}
+.ss-fb.bad{background:var(--red-pale);color:var(--red);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>Texting vs. Email vs. Work Platform: How to Know Which Communication Channel to Use at Work</h1>
+  <p class="hero-sub">This is a real skills gap that almost nobody teaches explicitly — and getting it wrong can make a professional message look unprofessional before anyone reads the words. This article covers every major channel and when to use each one.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why This Matters More Than You Think</h2>
+  <p>Imagine a maintenance technician submits a safety alert via a personal text message to a supervisor's cell phone. The supervisor is off-site and doesn't check their personal texts until three hours later. Meanwhile, the hazard goes unaddressed. The channel choice directly caused the delay.</p>
+  <p>Or imagine a worker sends a formal, carefully written maintenance request through the company's maintenance management system — but the supervisor's facility only uses that system for pre-planned work orders, not urgent requests. The request sits in a queue for two days before anyone sees it.</p>
+  <p><mark>The right message sent through the wrong channel can be as ineffective as the wrong message.</mark> Knowing which channel to use for which situation is a professional skill that CTE programs rarely teach — but every manufacturing employer expects you to figure it out.</p>
+  <p>There's also a simpler version of this problem: using casual social language (the way you'd text a friend) on a platform where formal records are kept. The words that feel normal in a text conversation can look unprofessional in a documented work communication system. Channel shapes tone expectations.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Major Channels — And When to Use Each</h2>
+  <p>Click any channel to see the full breakdown: what it's for, when to use it, when not to, and what your messages should look like on it.</p>
+
+  <div class="channel-grid" id="channel-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>The Channel Decision Tool</h2>
+  <p>Not sure which channel to use? Answer three questions about your situation and get a recommendation:</p>
+
+  <div class="decision-tool">
+    <div class="dt-label">Channel Decision Helper</div>
+    <div class="dt-title">Answer Three Questions</div>
+    <div class="dt-sub">Select the best answer for each question about your situation — then see the recommended channel.</div>
+    <div class="dt-questions" id="dt-questions"></div>
+    <div class="dt-result" id="dt-result">
+      <div class="dt-result-channel" id="dt-channel"></div>
+      <div class="dt-result-why" id="dt-why"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Scenarios: Which Channel Would You Use?</h2>
+  <div class="scenario-sim">
+    <div class="ss-label">Channel Selection Practice</div>
+    <div class="ss-title">Pick the Right Channel</div>
+    <div class="ss-sub">For each situation, select the most appropriate communication channel.</div>
+    <div class="ss-items" id="ss-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A production operator notices a coolant spill near Machine 5 at 11:45 AM. She types a message about it in the team's casual group chat (where everyone posts random work updates). It gets buried under other messages. The incoming afternoon shift doesn't see it. Someone slips on the spill at 2:30 PM. What went wrong from a channel perspective?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Nothing — she communicated it, so she fulfilled her responsibility</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">She used the wrong channel for an urgent safety hazard — a casual group chat is not the right place for a safety alert. Safety hazards need a dedicated safety reporting channel, direct verbal alert to a supervisor, or the facility's formal safety system — where someone is responsible for seeing and acting on it</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">She should have sent it to maintenance instead of the general team chat</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Group chats are fine for safety alerts — they reach more people</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. Posting a safety hazard in a casual group chat — where messages get buried, where nobody is specifically responsible for monitoring safety alerts, and where no formal record is created — is a channel mismatch for an urgent, time-sensitive, safety-critical situation. A safety hazard requires either direct verbal alert to a supervisor, a call to the safety coordinator, or submission through the facility's formal safety reporting system. Using the wrong channel made a timely, correctly-identified hazard effectively invisible until someone got hurt.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The channel choice was the problem. Posting a safety hazard in a casual group chat creates several failures: nobody is specifically responsible for monitoring that chat for safety alerts, messages get buried quickly, and there's no formal record that triggers accountability. A safety hazard requires a channel where someone will definitively see it and be responsible for responding — a direct verbal alert to a supervisor, the safety coordinator, or the facility's safety reporting system. "I posted it somewhere" is not equivalent to "I communicated it through the right channel."</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Channel choice affects whether your message gets seen, by whom, when, and what record it creates. The right message through the wrong channel can be as ineffective as the wrong message.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Different channels serve different purposes: CMMS for maintenance requests, safety systems for hazard reports, email for formal records, Slack/Teams for quick coordination and non-urgent updates, direct conversation for urgent real-time situations.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Safety alerts and urgent situations should never go through casual channels like group chats or informal texts — they need channels where someone is explicitly responsible for seeing and acting on them.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">When you're new to a facility, ask which channel is used for which type of communication — shift handoffs, maintenance requests, safety reports, supervisor updates. Different facilities use their tools differently, and finding out early is itself a professional communication skill.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var channels=[
+  {icon:"📞",name:"In-Person or Radio — Verbal Communication",tagline:"The fastest channel, no record, required for emergencies",uses:["Use for: Immediate safety hazards — anything that needs attention RIGHT NOW","Use for: Active machine emergencies where waiting for a typed message creates risk","Use for: Quick coordination when walking to someone is faster than any digital channel","Use for: Situations where tone of voice matters — difficult conversations, emotional situations"],nouse:["Not for: Complex technical information that needs to be referenced later","Not for: Instructions with multiple steps that someone needs to follow later","Not for: Anything that requires documentation (maintenance records, safety reports)"],example:"<strong>Right use:</strong> Walking over to your supervisor immediately after spotting a coolant spill: 'There's a coolant spill near Machine 5, about 18 inches across — I just put cones around it.' Follow up with a written safety report after."},
+  {icon:"🔧",name:"CMMS — Computerized Maintenance Management System",tagline:"The official channel for all maintenance requests and work orders",uses:["Use for: All maintenance requests — from urgent repairs to routine inspections","Use for: Work order documentation — what was done, when, what parts were used","Use for: Preventive maintenance scheduling and tracking","Use for: Equipment history — every entry becomes part of the machine's permanent record"],nouse:["Not for: Real-time emergencies where immediate verbal communication is needed first","Not for: Safety hazards (use the safety reporting system for those)","Not for: General questions or casual updates about equipment status"],example:"<strong>Right use:</strong> After verbally alerting your supervisor about an urgent machine issue, follow up with a formal work order in the CMMS: equipment ID, problem description, priority level, and what verbal notification was already given. The CMMS creates the official record."},
+  {icon:"🛡️",name:"Safety Reporting System",tagline:"The dedicated channel for all safety hazards and incidents",uses:["Use for: Chemical spills, slip hazards, electrical concerns, physical hazards of any kind","Use for: Near-miss events — situations that could have caused injury but didn't","Use for: Injury reports — any time a worker is hurt, however minor","Use for: Any observation of unsafe conditions or behavior"],nouse:["Not for: General maintenance issues with no safety component","Not for: Production problems (wrong channel — use CMMS or supervisor update)","Not for: Equipment efficiency concerns"],example:"<strong>Right use:</strong> After verbally alerting the area supervisor about a hazard, enter the formal safety report in the safety system: exact location, hazard type, what was done immediately, what response is requested. Both the verbal alert AND the written report are required — the verbal alert creates immediate awareness, the written report creates the official record."},
+  {icon:"📧",name:"Email",tagline:"Formal channel for documentation, management communication, and external messages",uses:["Use for: Communication with management or leadership — especially anything that needs a paper trail","Use for: Formal requests, approvals, or decisions that need documentation","Use for: Communications outside your facility — suppliers, contractors, other departments","Use for: Attaching documents, reports, or detailed information","Use for: Non-urgent information that needs to be searchable and retrievable later"],nouse:["Not for: Urgent or time-sensitive situations (email has no guaranteed response time)","Not for: Quick questions a team member could answer in 30 seconds","Not for: Real-time coordination during an active shift"],example:"<strong>Right use:</strong> Sending a formal quality concern to a supplier with documentation attached, or following up with plant management on a previously discussed equipment investment — situations where a formal record matters and immediate response isn't required."},
+  {icon:"💬",name:"Slack, Microsoft Teams, or Work Messaging Apps",tagline:"Fast team coordination and non-urgent internal communication",uses:["Use for: Quick team coordination — 'can someone cover Station 3 for 20 minutes?'","Use for: Sharing non-urgent updates that the team needs to be aware of but don't require formal documentation","Use for: Real-time questions that would otherwise require walking to someone","Use for: Informal updates to a supervisor that don't require documentation — 'heads up, changeover running about 10 min long'"],nouse:["Not for: Formal records — messages in chat apps can be deleted and aren't reliable as documentation","Not for: Safety hazards or urgent safety issues (use safety system + verbal alert)","Not for: Maintenance requests that need to be tracked (use CMMS)","Not for: Sensitive or confidential information"],example:"<strong>Right use:</strong> 'Machine 3 changeover went long — we're about 15 minutes behind on Line 2. Machine is running now. Heads up before the shift review.' This is informational, non-urgent, and doesn't require a formal record."},
+  {icon:"📱",name:"Personal Text Message (SMS)",tagline:"For personal use only — almost never appropriate for professional manufacturing communication",uses:["Acceptable: Contacting your supervisor directly about a schedule change when no other channel is available","Acceptable: Quick personal check-in if someone stepped away and there's no other way to reach them","Acceptable: When a supervisor explicitly asks you to text them for a specific type of communication"],nouse:["Not for: Safety alerts, maintenance requests, or any work communication that needs a record","Not for: Anything that requires documentation — texts aren't part of official records","Not for: Communication with people outside your direct team relationship — use email or the work system instead","Not for: Assuming your supervisor will check personal texts on work time"],example:"<strong>The problem with personal texts:</strong> They're not monitored by facility systems, they don't create official records, they can be ignored, and different supervisors have very different feelings about work-related personal texts. When in doubt: use the official channel, then follow up verbally if needed."}
+];
+var cgEl=document.getElementById('channel-grid'),openCard=null;
+channels.forEach(function(c,i){
+  var d=document.createElement('div');d.className='channel-card';
+  var usesHtml=c.uses.map(function(u){return '<div class="use-item yes">'+u+'</div>';}).join('');
+  var nouseHtml=c.nouse.map(function(n){return '<div class="use-item no">'+n+'</div>';}).join('');
+  d.innerHTML='<div class="cc-header" onclick="toggleCC('+i+')">'
+    +'<div class="cc-left"><div class="cc-icon">'+c.icon+'</div><div><div class="cc-name">'+c.name+'</div><div class="cc-tagline">'+c.tagline+'</div></div></div>'
+    +'<div class="cc-toggle" id="cct'+i+'">+</div></div>'
+    +'<div class="cc-body" id="ccb'+i+'">'
+    +'<div class="cc-section-label">Use this channel for:</div><div class="use-list">'+usesHtml+'</div>'
+    +'<div class="cc-section-label">Do NOT use this channel for:</div><div class="use-list">'+nouseHtml+'</div>'
+    +'<div class="cc-section-label">Real example</div><div class="cc-example">'+c.example+'</div></div>';
+  cgEl.appendChild(d);
+});
+function toggleCC(i){
+  var b=document.getElementById('ccb'+i),t=document.getElementById('cct'+i);
+  var open=b.classList.contains('open');
+  if(openCard!==null&&openCard!==i){document.getElementById('ccb'+openCard).classList.remove('open');document.getElementById('cct'+openCard).classList.remove('open');document.getElementById('cct'+openCard).textContent='+';}
+  b.classList.toggle('open',!open);t.classList.toggle('open',!open);t.textContent=open?'+':'×';
+  openCard=open?null:i;
+}
+
+// Decision tool
+var dtAnswers={},dtQs=[
+  {id:"urgent",q:"How urgent is this?",opts:["Right now — immediate action needed","Within the next few hours","Can wait until it's convenient"]},
+  {id:"record",q:"Does this need to be on the official record?",opts:["Yes — safety, maintenance, or documentation","Maybe — it's a professional update","No — quick coordination only"]},
+  {id:"audience",q:"Who is the audience?",opts:["Safety or maintenance team","My supervisor or management","My team / same-level coworkers"]}
+];
+var dtEl=document.getElementById('dt-questions');
+dtQs.forEach(function(q,qi){
+  var d=document.createElement('div');d.className='dt-q';
+  var optsHtml=q.opts.map(function(o,oi){
+    return '<div class="dt-opt" id="dtopt'+qi+'_'+oi+'" onclick="selectDT(\''+q.id+'\','+oi+','+qi+')">'+o+'</div>';
+  }).join('');
+  d.innerHTML='<div class="dt-q-text">'+q.q+'</div><div class="dt-opts">'+optsHtml+'</div>';
+  dtEl.appendChild(d);
+});
+function selectDT(id,oi,qi){
+  document.querySelectorAll('#dt-questions .dt-q:nth-child('+(qi+1)+') .dt-opt').forEach(function(b){b.classList.remove('selected');});
+  document.getElementById('dtopt'+qi+'_'+oi).classList.add('selected');
+  dtAnswers[id]=oi;
+  if(Object.keys(dtAnswers).length===3)showDTResult();
+}
+function showDTResult(){
+  var u=dtAnswers.urgent,r=dtAnswers.record,a=dtAnswers.audience;
+  var channel,why;
+  if(u===0){channel="🛡️ Safety System + Immediate Verbal Alert";why="Urgent situations always start with verbal communication to the nearest supervisor or safety coordinator. Follow up immediately with the official safety or maintenance reporting system to create the record. Never let urgency be an excuse to skip the official channel — do both.";}
+  else if(u===0&&r===0){channel="🛡️ Safety Reporting System (after verbal alert)";why="Safety hazards with an official record requirement: verbal alert immediately, formal safety system report right after.";}
+  else if(r===0&&a===0){channel="🔧 CMMS — Maintenance Management System";why="Maintenance requests always go through the CMMS — it creates the official work order record, assigns the request to the right team, and tracks the resolution. If it's also urgent, alert the maintenance supervisor verbally first, then submit the CMMS request.";}
+  else if(r===0&&a===1){channel="📧 Email";why="For supervisor or management communication that needs documentation — email creates a searchable record that both parties have. Use professional language and structure.";}
+  else if(u===2&&r===2){channel="💬 Slack / Teams / Work Chat";why="Non-urgent, no official record needed, coordinating with your team — this is exactly what work chat platforms are for. Keep it professional but it can be brief and conversational.";}
+  else if(u===1&&r===1){channel="💬 Work Chat + Follow-up in Official System";why="Within a few hours, with a supervisor — use work chat for the quick heads-up, then follow up with an email or official system entry if a record is needed.";}
+  else{channel="💬 Work Chat or Email — check your facility's norms";why="This situation fits multiple channels depending on your facility's communication culture. When starting a new job, ask which channel is used for this type of update — it varies by company.";}
+  document.getElementById('dt-channel').textContent=channel;
+  document.getElementById('dt-why').textContent=why;
+  document.getElementById('dt-result').style.background='var(--purple-pale)';
+  document.getElementById('dt-result').style.border='1.5px solid var(--purple-mid)';
+  document.getElementById('dt-result').style.borderRadius='12px';
+  document.getElementById('dt-result').style.padding='14px 16px';
+  document.getElementById('dt-result').classList.add('show');
+}
+
+var ssScenarios=[
+  {situation:"You need to submit a work order for a hydraulic pump that's been making an unusual noise. It started this morning. The pump is still running. This is a non-emergency maintenance issue.",q:"Which channel?",opts:["Personal text to maintenance supervisor","CMMS / Maintenance Management System","Slack / work chat","Email"],correct:1,good:"✅ CMMS. Non-urgent maintenance requests go through the CMMS — it creates the official work order, tracks the request, assigns it to the right technician, and becomes part of the pump's maintenance history. A text or chat message would create no official record and might not reach the right person.",bad:"CMMS is the right channel for maintenance requests. It creates the official work order record, tracks the request, and routes it to the right technician. Personal texts and chat messages don't create official records and may not reach the right person reliably."},
+  {situation:"You just discovered a small electrical arc from a control panel in Area D. Nobody is immediately near it but it's actively sparking.",q:"Which channel?",opts:["Safety reporting system (online form)","CMMS work order","Slack team channel","Verbal alert to nearest supervisor — immediately"],correct:3,good:"✅ Verbal alert immediately. An active electrical arc is an emergency — the speed of a walk to the supervisor or a radio call is the right response. Submit the formal safety report RIGHT AFTER the immediate alert is given. Urgent safety situations always start with the fastest available communication, then follow up with the official record.",bad:"An active electrical arc is an emergency requiring the fastest communication possible — direct verbal alert to the nearest supervisor or safety coordinator, right now. The formal safety report comes immediately after. Never let the time it takes to write a formal report delay the immediate alert for a live safety hazard."},
+  {situation:"Your supervisor asked in this morning's briefing to keep her updated on Line 3's changeover timing. It's been running about 12 minutes longer than expected. You want to give her a quick heads-up.",q:"Which channel?",opts:["Email","CMMS","Slack / Teams / Work Chat","Formal safety report"],correct:2,good:"✅ Slack/Teams (or work chat). This is a quick, non-urgent update to your supervisor — no official record needed, no safety component, just a timely heads-up on a schedule item she asked to track. Work chat is exactly what this is for. Keep it brief and professional.",bad:"Work chat is the right channel for a quick, non-urgent update to your supervisor about a schedule item. Email would be overkill for a quick heads-up. CMMS is for maintenance requests. A safety report isn't relevant here."},
+  {situation:"You need to formally request a change to a production standard that you've been discussing with your supervisor for two weeks. She asked you to put it in writing with your reasoning.",q:"Which channel?",opts:["Work chat message","Personal text","CMMS","Email to supervisor with formal write-up"],correct:3,good:"✅ Email. A formal request with reasoning that your supervisor explicitly asked you to put in writing calls for email — it creates a record for both of you, allows for an attached document if needed, and signals the appropriate formality for a request that may be reviewed or forwarded. Work chat would be too casual for something this significant.",bad:"Email is the right channel for a formal, documented request that your supervisor specifically asked you to put in writing. Work chat would be too informal and creates no reliable record. This is exactly the situation email exists for."}
+];
+var ssEl=document.getElementById('ss-items'),ssDone={};
+ssScenarios.forEach(function(s,i){
+  var d=document.createElement('div');d.className='ss-item';
+  var optsHtml=s.opts.map(function(o,j){return '<div class="ss-opt" id="ssopt'+i+'_'+j+'" onclick="ssQ('+i+','+j+')">'+o+'</div>';}).join('');
+  d.innerHTML='<div class="ss-situation">'+s.situation+'</div><div class="ss-q">'+s.q+'</div><div class="ss-opts">'+optsHtml+'</div>'
+    +'<div class="ss-fb good" id="ssfb'+i+'g">✅ '+s.good+'</div>'
+    +'<div class="ss-fb bad" id="ssfb'+i+'b">→ '+s.bad+'</div>';
+  ssEl.appendChild(d);
+});
+function ssQ(si,oi){
+  if(ssDone[si])return;ssDone[si]=true;
+  var correct=ssScenarios[si].correct;
+  ssScenarios[si].opts.forEach(function(o,j){
+    var el=document.getElementById('ssopt'+si+'_'+j);
+    el.classList.add(j===correct?'correct':(j===oi?'wrong':'locked'));
+    el.onclick=null;
+  });
+  document.getElementById('ssfb'+si+(oi===correct?'g':'b')).classList.add('show');
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

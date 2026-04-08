@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Helps You Write — But You Decide What to Say: Understanding the Human's Role</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+.pull-quote{margin:28px 0;padding:28px 36px;background:var(--purple-pale);border-left:5px solid var(--purple);border-radius:0 16px 16px 0;position:relative;overflow:hidden;}
+.pull-quote::before{content:"\201C";position:absolute;top:-10px;left:20px;font-family:"Fraunces",serif;font-size:100px;color:var(--purple-mid);line-height:1;pointer-events:none;}
+.pull-quote p{font-family:"Fraunces",serif;font-size:20px;font-style:italic;font-weight:300;color:var(--purple-dark);margin:0;position:relative;z-index:1;line-height:1.55;}
+
+/* RESPONSIBILITY MAP */
+.resp-map{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.rm-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.rm-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:20px;}
+.rm-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start;}
+@media(max-width:560px){.rm-cols{grid-template-columns:1fr;}}
+.rm-col-header{font-family:"Fraunces",serif;font-size:16px;font-weight:700;padding:12px 14px;border-radius:12px 12px 0 0;text-align:center;}
+.rm-col-header.ai{background:#1e1547;color:#c084fc;}
+.rm-col-header.human{background:var(--purple-dark);color:#fff;}
+.rm-col-items{border:1.5px solid var(--purple-mid);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;}
+.rm-col-item{padding:10px 14px;font-size:13px;line-height:1.7;border-bottom:1px solid var(--purple-mid);}
+.rm-col-item:last-child{border-bottom:none;}
+.rm-col-item.ai{background:#0f172a;color:rgba(255,255,255,.8);}
+.rm-col-item.human{background:var(--white);color:var(--gray-text);}
+.rm-arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--purple-mid);padding-top:44px;}
+
+/* SCENARIO OWNERSHIP */
+.ownership-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.os-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.os-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.os-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.os-items{display:flex;flex-direction:column;gap:12px;}
+.os-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px 20px;cursor:pointer;transition:border-color .2s;}
+.os-item:hover{border-color:var(--purple);}
+.os-situation{font-size:14px;font-weight:600;color:var(--purple-dark);margin-bottom:10px;}
+.os-situation::before{content:"Scenario: ";color:var(--purple);}
+.os-q{font-size:13px;color:var(--gray-muted);margin-bottom:10px;font-style:italic;}
+.os-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.os-opt{padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.os-opt:hover:not(.locked){border-color:var(--purple);color:var(--purple);}
+.os-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.os-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.os-opt.locked{opacity:.7;cursor:default;}
+.os-fb{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75;}
+.os-fb.show{display:block;}
+.os-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.os-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+/* USE VS MISUSE */
+.boundary-grid{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.boundary-item{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-radius:12px;border:1.5px solid;}
+.boundary-item.use{background:var(--green-pale);border-color:var(--green);}
+.boundary-item.misuse{background:var(--red-pale);border-color:var(--red);}
+.bi-icon{font-size:18px;flex-shrink:0;}
+.bi-text{font-size:14px;line-height:1.75;}
+.bi-text.use{color:var(--green);}
+.bi-text.misuse{color:var(--red);}
+.bi-text strong{font-weight:700;}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>AI Helps You Write — But You Decide What to Say</h1>
+  <p class="hero-sub">Understanding the human's role in AI-assisted communication. The lesson says "AI is a support, not a replacement." This article explains exactly what that means — including the professional and legal implications that every manufacturing worker needs to understand before using AI to draft work messages.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>The Core Principle — Say It Out Loud Until It Sticks</h2>
+  <p>Here is the single most important thing to understand about using AI for workplace communication:</p>
+
+  <div style="background:var(--purple-dark);border-radius:20px;padding:28px 32px;margin:24px 0;text-align:center;">
+    <div style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:10px;">AI drafts the words.<br>You decide what's true.</div>
+    <div style="font-size:15px;color:rgba(255,255,255,.7);line-height:1.6;">Everything you send is your professional communication — regardless of who or what helped you write it.</div>
+  </div>
+
+  <p>This isn't just a philosophy point. It has practical consequences. If an AI draft contains a wrong detail and you send it without catching the error, <mark>you sent the wrong information</mark>. If a maintenance request you sent with AI help leads to the wrong machine being serviced, that's your mistake — not the AI's. If a safety report you drafted with AI assistance contains an inaccuracy that becomes part of the legal record, you're accountable.</p>
+  <p>This isn't meant to make using AI feel risky. Using AI to help draft work messages is smart and professional. This is meant to make the human review step feel as important as it is — because it is.</p>
+
+  <div class="pull-quote">
+    <p>Think of AI like autocorrect, but for whole sentences. Autocorrect helps you type faster. You still read what you typed before sending. Same principle — just at a higher level.</p>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>What AI Owns vs. What You Own</h2>
+  <p>There's a clear division of responsibility in AI-assisted communication. Understanding it helps you use AI confidently without losing sight of where your judgment is required.</p>
+
+  <div class="resp-map">
+    <div class="rm-label">Responsibility Map</div>
+    <div class="rm-title">AI's Job vs. Your Job in Every Message</div>
+    <div class="rm-cols">
+      <div>
+        <div class="rm-col-header ai">🤖 What AI Does</div>
+        <div class="rm-col-items">
+          <div class="rm-col-item ai">Organizes your raw notes into structured paragraphs</div>
+          <div class="rm-col-item ai">Suggests professional phrasing for what you described</div>
+          <div class="rm-col-item ai">Applies consistent tone throughout the message</div>
+          <div class="rm-col-item ai">Catches some grammar and spelling errors</div>
+          <div class="rm-col-item ai">Formats the message appropriately for the type</div>
+          <div class="rm-col-item ai">Saves time on the mechanical work of writing</div>
+        </div>
+      </div>
+      <div class="rm-arrow">→</div>
+      <div>
+        <div class="rm-col-header human">👤 What You Do</div>
+        <div class="rm-col-items">
+          <div class="rm-col-item human">Provide the facts — AI can only work with what you give it</div>
+          <div class="rm-col-item human">Verify every detail in the draft is accurate</div>
+          <div class="rm-col-item human">Add context AI doesn't have (what's really happening on the floor)</div>
+          <div class="rm-col-item human">Decide the right tone for this specific situation and audience</div>
+          <div class="rm-col-item human">Catch and fix AI errors before sending</div>
+          <div class="rm-col-item human">Own the message completely after sending</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Where AI Drafting Goes Right — And Where It Goes Wrong</h2>
+  <p>AI communication assistance works well in some situations and causes problems in others. Knowing the difference helps you use it appropriately.</p>
+
+  <div class="boundary-grid" id="boundary-grid"></div>
+</div>
+
+<div class="section fade-in">
+  <h2>Who's Responsible? Practice Scenarios</h2>
+  <p>Work through these scenarios. In each one, something went wrong with a message that was AI-assisted. Decide who is responsible for the problem.</p>
+
+  <div class="ownership-sim">
+    <div class="os-label">Accountability Scenarios</div>
+    <div class="os-title">Who's Responsible When Something Goes Wrong?</div>
+    <div class="os-sub">For each scenario, decide who bears professional responsibility for the communication problem.</div>
+    <div class="os-items" id="os-items"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>A Note on Legal and Safety Documentation</h2>
+  <p>This matters most for safety reports, incident documentation, and maintenance records — three types of communication that often have legal significance.</p>
+  <p>Safety incident reports become part of the facility's OSHA recordkeeping. Maintenance records are used for warranty claims, equipment audits, and liability purposes. If an AI draft contains inaccurate information in these documents and you send it without reviewing it, <mark>you've created an inaccurate official record</mark> — and you're accountable for it.</p>
+  <p>This doesn't mean you can't use AI to help structure these documents. It means that for high-stakes documentation, the review step is especially careful. Every specific detail — dates, quantities, substances, actions taken, people involved — must be verified against what you actually know before the document is submitted.</p>
+
+  <div style="background:var(--orange-pale);border:1.5px solid #FCD34D;border-radius:16px;padding:20px 22px;margin:20px 0;">
+    <div style="font-family:'Fraunces',serif;font-size:16px;color:#92400E;font-weight:700;margin-bottom:8px;">⚠️ Extra care required for:</div>
+    <div style="font-size:14px;line-height:1.8;color:#92400E;">Safety incident reports · OSHA documentation · Maintenance records used for warranty or audit purposes · Quality records in regulated industries (medical devices, aerospace, food processing) · Any message that will be stored as a formal record</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">A supervisor confronts a maintenance technician about a safety report that contained incorrect information — the report said an inspection was completed, but the AI generated that detail and the technician never actually inspected the equipment. The technician says: "That's what the AI wrote — I just sent it." Is this a valid defense?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Yes — if the AI generated the error, the AI is responsible for it</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">No — the technician reviewed and sent the message, which means they accepted responsibility for every claim it contained. The AI is a drafting tool, not an accountable party.</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Partially — the AI and the technician share responsibility equally</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">It depends on the company's AI policy</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. "The AI wrote it" is not a professional defense for sending inaccurate communication. The moment you review and send a message, you accept ownership of its contents. The AI cannot be held professionally accountable — you can. This is exactly why the review step is non-negotiable, and why the principle "AI drafts, humans own" matters. The technician sent a false safety record. That is the technician's professional problem, not the AI's.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ "The AI wrote it" is not a valid professional defense. When you send a message, you're saying "this is what I'm communicating." AI is a drafting tool — it has no professional accountability. The technician reviewed the document (or should have), sent it, and submitted it as a safety record. That makes it their professional communication and their responsibility. The lesson here: never send anything you haven't read and verified, especially for safety or legal documentation.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The core principle: AI drafts the words, you decide what's true. Everything you send is your professional communication, regardless of who or what helped you write it.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI's job is to organize, phrase, and format. Your job is to provide facts, verify accuracy, add floor context AI doesn't have, and own the message completely after sending.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">AI drafting works best for routine updates, shift handoffs, and professional formatting help. It requires extra human review for safety reports, maintenance records, incident documentation, and anything with legal significance.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">"The AI wrote it" is not a professional defense. When you send it, you own it. That's not a limitation — it's the accountability structure that makes AI-assisted communication trustworthy.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var boundaries=[
+  {type:"use",icon:"✅",text:"<strong>Good use:</strong> Using AI to help structure a shift handoff note when you have all the facts and just need help organizing them clearly."},
+  {type:"use",icon:"✅",text:"<strong>Good use:</strong> Using AI to improve the tone of a message that you know is accurate but sounds too casual or too aggressive."},
+  {type:"use",icon:"✅",text:"<strong>Good use:</strong> Using AI to draft a professional maintenance request when you've already documented the specific details of the problem."},
+  {type:"use",icon:"✅",text:"<strong>Good use:</strong> Using AI to add professional structure to a supervisor update when you know what happened but aren't sure how to organize the information."},
+  {type:"misuse",icon:"❌",text:"<strong>Misuse:</strong> Sending an AI draft of a safety report without verifying that every specific detail — quantities, substances, times, actions — matches what actually happened."},
+  {type:"misuse",icon:"❌",text:"<strong>Misuse:</strong> Letting AI fill in details you're not sure about (machine numbers, error codes, times) and sending the draft without checking if those details are accurate."},
+  {type:"misuse",icon:"❌",text:"<strong>Misuse:</strong> Using AI to draft a message about a complex situation it doesn't have full context for — and not reading the draft carefully enough to catch where it filled in assumptions."},
+  {type:"misuse",icon:"❌",text:"<strong>Misuse:</strong> Treating an AI draft as a finished message rather than a first draft that requires human verification and judgment before sending."}
+];
+var bgEl=document.getElementById('boundary-grid');
+boundaries.forEach(function(b){
+  var d=document.createElement('div');d.className='boundary-item '+b.type;
+  d.innerHTML='<div class="bi-icon">'+b.icon+'</div><div class="bi-text '+b.type+'">'+b.text+'</div>';
+  bgEl.appendChild(d);
+});
+
+var scenarios=[
+  {situation:"A maintenance technician uses AI to draft an equipment inspection report. The AI writes 'All safety systems verified and functioning.' The technician didn't actually verify the safety systems during this inspection — it was a quick visual check, not a full verification. He sends the report without changing this line.",q:"Who is professionally responsible for the inaccuracy in this report?",opts:["The AI tool","The technician","Both equally","The company that provides the AI tool"],correct:1,good:"✅ The technician. He read (or should have read) the draft before sending it. The AI wrote 'all safety systems verified' — but the technician knows whether that's true or not. Sending it without correcting that inaccuracy makes it his professional statement. In a safety context, this is a serious problem: it creates a false inspection record.",bad:"The technician is responsible. 'The AI wrote it' is not a defense — the technician sent it. The AI doesn't know whether the safety systems were actually verified. Only the technician knows, and only the technician can ensure the report accurately reflects what actually happened."},
+  {situation:"A quality inspector uses AI to draft a shift handoff note. The AI draft is accurate in every detail — she gave it complete, correct information and the draft correctly reflects what happened on her shift. She reviews it, confirms it's accurate, makes one small edit, and sends it.",q:"Who is responsible for this communication?",opts:["The AI tool","The inspector","Both the AI and the inspector"],correct:1,good:"✅ The inspector — and this is actually a good thing. She did everything right: gave the AI accurate information, reviewed the draft carefully, confirmed its accuracy, edited it, and sent it. She owns it completely — and the message is accurate and professional. This is exactly how AI-assisted communication should work.",bad:"The inspector is responsible — and she should feel confident about this. She gave the AI accurate information, reviewed and confirmed the draft, made an edit, and sent it. The process worked correctly and the message is hers. Ownership of communication you've verified and sent is not a burden — it's professional accountability."},
+  {situation:"A production coordinator asks AI to draft an email to a supplier about a late delivery. The AI draft is professional and well-structured, but it overstates the financial impact of the delay — claiming $50,000 in losses when the actual impact hasn't been calculated. She sends it without noticing.",q:"What went wrong, and who is responsible?",opts:["The AI made an error — no one is responsible","The coordinator is responsible for sending unverified claims","The supplier is responsible for creating the situation","The IT team is responsible for the AI tool"],correct:1,good:"✅ The coordinator is responsible. The AI invented the $50,000 figure — it had no way to know the actual financial impact. But the coordinator sent a message claiming $50,000 in losses to a business partner without verifying it. That's a significant professional and potentially legal problem: she's made a specific, unverified claim in a business communication. The review step would have caught this.",bad:"The coordinator is responsible. She sent an email containing a specific financial claim that was invented by the AI and not verified. 'The AI wrote it' does not protect her professionally. Business communications that contain specific claims — financial or otherwise — need to be verified before sending. This is why the review step is not optional."}
+];
+var osEl=document.getElementById('os-items'),osDone={};
+scenarios.forEach(function(s,i){
+  var d=document.createElement('div');d.className='os-item';
+  var optsHtml=s.opts.map(function(o,j){return '<div class="os-opt" id="osopt'+i+'_'+j+'" onclick="ownerQ('+i+','+j+')">'+o+'</div>';}).join('');
+  d.innerHTML='<div class="os-situation">'+s.situation+'</div><div class="os-q">'+s.q+'</div><div class="os-opts">'+optsHtml+'</div>'
+    +'<div class="os-fb good" id="osfb'+i+'g">✅ '+s.good+'</div>'
+    +'<div class="os-fb bad" id="osfb'+i+'b">→ '+s.bad+'</div>';
+  osEl.appendChild(d);
+});
+function ownerQ(si,oi){
+  if(osDone[si])return;osDone[si]=true;
+  var correct=scenarios[si].correct;
+  scenarios[si].opts.forEach(function(o,j){
+    var el=document.getElementById('osopt'+si+'_'+j);
+    el.classList.add(j===correct?'correct':(j===oi?'wrong':'locked'));
+    el.onclick=null;
+  });
+  document.getElementById('osfb'+si+(oi===correct?'g':'b')).classList.add('show');
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>

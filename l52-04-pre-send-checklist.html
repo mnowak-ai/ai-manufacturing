@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pre-Send Checklist: Is It Accurate? Is It Clear? Is It Right for the Audience?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#7B2FBE;--purple-pale:#F3EAFF;--purple-mid:#E8D5FF;--purple-dark:#4A1580;--white:#FFFFFF;--gray-soft:#F8F7FA;--gray-text:#3D3547;--gray-muted:#8B7FA0;--green:#276749;--green-pale:#F0FFF4;--orange:#D97706;--orange-pale:#FFFBEB;--red:#DC2626;--red-pale:#FFF1F1;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--white);color:var(--gray-text);}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--purple);width:0%;z-index:100;transition:width .1s;}
+.hero{padding:80px 40px 0;max-width:860px;margin:0 auto;}
+.lesson-tag{display:inline-flex;align-items:center;gap:8px;background:var(--purple-pale);color:var(--purple);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:100px;margin-bottom:32px;border:1.5px solid var(--purple-mid);}
+.lesson-tag::before{content:"";width:6px;height:6px;background:var(--purple);border-radius:50%;}
+h1{font-family:"Fraunces",serif;font-size:clamp(26px,4vw,48px);font-weight:900;line-height:1.05;color:var(--purple-dark);margin-bottom:24px;letter-spacing:-.02em;}
+.hero-sub{font-size:18px;line-height:1.7;color:var(--gray-muted);max-width:640px;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:2px;margin:32px 0;}
+.content{max-width:860px;margin:0 auto;padding:0 40px 80px;}
+.section{padding:36px 0 0;}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+h2{font-family:"Fraunces",serif;font-size:28px;font-weight:700;color:var(--purple-dark);margin-bottom:16px;line-height:1.2;}
+p{font-size:17px;line-height:1.8;color:var(--gray-text);margin-bottom:16px;}
+mark{background:var(--purple-mid);color:var(--purple-dark);border-radius:3px;padding:1px 4px;font-weight:500;}
+
+/* CHECKLIST CARD */
+.checklist-card{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.cc-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.cc-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.cc-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.cl-items{display:flex;flex-direction:column;gap:10px;}
+.cl-item{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:border-color .2s;}
+.cl-item:hover{border-color:var(--purple);}
+.cl-check{width:22px;height:22px;border:2px solid var(--purple-mid);border-radius:6px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:var(--white);}
+.cl-check.checked{background:var(--purple);border-color:var(--purple);}
+.cl-check.checked::after{content:"✓";color:#fff;font-size:12px;font-weight:700;}
+.cl-text{}
+.cl-question{font-weight:600;font-size:14px;color:var(--purple-dark);margin-bottom:3px;}
+.cl-expand{font-size:13px;line-height:1.7;color:var(--gray-muted);}
+.cl-score{margin-top:16px;padding:12px 16px;background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;font-size:14px;font-weight:600;color:var(--purple-dark);display:none;}
+.cl-score.show{display:block;}
+
+/* MESSAGE EVAL SIM */
+.eval-sim{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:28px;margin:28px 0;}
+.es-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.es-title{font-family:"Fraunces",serif;font-size:20px;color:var(--purple-dark);font-weight:700;margin-bottom:6px;}
+.es-sub{font-size:14px;color:var(--gray-muted);margin-bottom:20px;line-height:1.6;}
+.es-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.es-nav-btn{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.es-nav-btn.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+.es-panel{display:none;}
+.es-panel.active{display:block;}
+.es-msg-box{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:14px;padding:18px;margin-bottom:16px;}
+.es-msg-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-muted);margin-bottom:8px;}
+.es-msg-context{font-size:13px;color:var(--gray-muted);font-style:italic;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--purple-mid);}
+.es-msg-text{font-size:14px;line-height:1.9;color:var(--gray-text);font-family:"DM Sans",sans-serif;}
+.es-questions{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.es-q{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:10px;padding:12px 14px;}
+.es-q-text{font-size:13px;font-weight:600;color:var(--purple-dark);margin-bottom:8px;}
+.es-q-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.es-q-opt{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--purple-mid);background:var(--white);color:var(--gray-muted);transition:all .2s;}
+.es-q-opt:hover:not(.locked){border-color:var(--purple);color:var(--purple);}
+.es-q-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.es-q-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.es-feedback{display:none;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75;margin-top:8px;}
+.es-feedback.show{display:block;}
+.es-feedback.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.es-feedback.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+.es-verdict{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.8;color:var(--purple-dark);}
+
+/* QUIZ */
+.quiz-box{background:var(--gray-soft);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.quiz-q{font-family:"Fraunces",serif;font-size:20px;font-weight:700;color:var(--purple-dark);margin-bottom:20px;line-height:1.3;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{background:var(--white);border:1.5px solid var(--purple-mid);border-radius:12px;padding:14px 18px;font-size:14px;font-weight:500;text-align:left;cursor:pointer;font-family:"DM Sans",sans-serif;color:var(--gray-text);transition:all .2s;line-height:1.5;}
+.quiz-opt:hover:not([disabled]){border-color:var(--purple);background:var(--purple-pale);}
+.quiz-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);font-weight:600;}
+.quiz-opt.wrong{background:var(--red-pale);border-color:var(--red);color:var(--red);}
+.quiz-fb{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.75;display:none;}
+.quiz-fb.show{display:block;}
+.quiz-fb.good{background:var(--green-pale);border:1px solid var(--green);color:var(--green);}
+.quiz-fb.bad{background:var(--red-pale);border:1px solid var(--red);color:var(--red);}
+
+.summary-box{background:var(--purple-pale);border:1.5px solid var(--purple-mid);border-radius:24px;padding:32px;margin:28px 0;}
+.summary-box h2{margin-bottom:20px;}
+.sum-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sum-item:last-child{margin-bottom:0;}
+.sum-check{width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.sum-text{font-size:15px;line-height:1.7;color:var(--gray-text);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="pb"></div>
+<div class="hero fade-in">
+  <div class="lesson-tag">Lesson 5.2 &middot; Communication Skills</div>
+  <h1>The Pre-Send Checklist: Is It Accurate? Is It Clear? Is It Right for the Audience?</h1>
+  <p class="hero-sub">Three questions that should pass through your mind before every work message you send. This article turns the checklist slide into a full practice session — including four real messages to evaluate yourself.</p>
+  <div class="hero-divider"></div>
+</div>
+<div class="content">
+
+<div class="section fade-in">
+  <h2>Why a Checklist Matters</h2>
+  <p>Most communication mistakes in manufacturing happen in the last 30 seconds before sending. The content is basically right, but a key detail is wrong. The tone is off. The message goes to the wrong person. The urgency level is misjudged.</p>
+  <p>A pre-send checklist is not about slowing you down — it takes about 20 seconds. It's about creating a moment of intentional review between "I wrote this" and "I sent this." That pause is where mistakes get caught.</p>
+  <p><mark>This is even more important when you've used AI to draft the message</mark>. AI drafts can have errors you didn't put in. A pre-send check catches them before they become your professional problem.</p>
+</div>
+
+<div class="section fade-in">
+  <h2>The Pre-Send Checklist — Use It Every Time</h2>
+  <p>Work through all seven questions before you send any professional message. Click each one to see the full explanation and what to do if the answer is no.</p>
+
+  <div class="checklist-card">
+    <div class="cc-label">Pre-Send Checklist</div>
+    <div class="cc-title">Seven Questions Before You Hit Send</div>
+    <div class="cc-sub">Click each item to expand the explanation. Check it off when you're confident the answer is yes.</div>
+    <div class="cl-items" id="cl-items"></div>
+    <div class="cl-score" id="cl-score"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Practice: Evaluate These Four Messages</h2>
+  <p>Now you try it. Below are four real manufacturing messages — one that passes all checklist questions, and three that fail at least one. For each message, answer the checklist questions and see the explanation.</p>
+
+  <div class="eval-sim">
+    <div class="es-label">Message Evaluation Simulation</div>
+    <div class="es-title">Apply the Checklist — Which Messages Pass?</div>
+    <div class="es-sub">Work through each message. Answer the checklist questions and see detailed feedback on what the problems are.</div>
+    <div class="es-nav" id="es-nav"></div>
+    <div id="es-panels"></div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <h2>Quick Check</h2>
+  <div class="quiz-box">
+    <div class="quiz-label">Knowledge Check</div>
+    <div class="quiz-q">Before sending a maintenance request you drafted using AI, you run the pre-send checklist and realize the AI included a detail that isn't accurate — it said the noise started "yesterday afternoon" but it actually started this morning. What do you do?</div>
+    <div class="quiz-opts" id="q1-opts">
+      <button class="quiz-opt" onclick="doQ(0,false,'q1')">Send it anyway — the timing is close enough and doesn't change the maintenance task</button>
+      <button class="quiz-opt" onclick="doQ(1,true,'q1')">Fix the timing before sending — accuracy is non-negotiable, and "yesterday afternoon" vs. "this morning" changes how the maintenance team prioritizes the response</button>
+      <button class="quiz-opt" onclick="doQ(2,false,'q1')">Delete the draft and start over from scratch</button>
+      <button class="quiz-opt" onclick="doQ(3,false,'q1')">Send it and add a note saying "the AI wrote this so some details might be off"</button>
+    </div>
+    <div class="quiz-fb good" id="q1-good">✅ Correct. The timing detail matters more than it might seem: "yesterday afternoon" tells the maintenance team this is a slow-developing issue that can be scheduled; "this morning" tells them it's new and may be more urgent. That distinction affects prioritization. Fixing one phrase takes 5 seconds. Sending an inaccurate message can cause the wrong response. Always fix it before sending — that's what the pre-send checklist is for.</div>
+    <div class="quiz-fb bad" id="q1-bad">❌ The timing matters. "Yesterday afternoon" vs. "this morning" tells the maintenance team whether this is an escalating issue or something brand new — which affects how they prioritize the response. You always fix inaccurate details before sending, no matter how minor they seem. Sending with a disclaimer that the AI might be wrong undermines your credibility and doesn't actually protect you professionally. Fix it, then send it.</div>
+  </div>
+</div>
+
+<div class="section fade-in">
+  <div class="summary-box">
+    <h2>What You Learned in This Article</h2>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The pre-send checklist has seven questions covering accuracy, clarity, audience appropriateness, tone, completeness, timing, and next steps. Running through them takes about 20 seconds and catches most communication mistakes before they become problems.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Accuracy is non-negotiable — even small details matter. "Yesterday" vs. "this morning," "Line 3" vs. "Line 4," "warning" vs. "error" — these distinctions change how people respond to your message.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">Audience appropriateness means asking whether the right person is getting this message, at the right level of detail, in the right format. A message to maintenance and a message to a supervisor about the same issue should look different.</div></div>
+    <div class="sum-item"><div class="sum-check">✓</div><div class="sum-text">The checklist is especially important for AI-drafted messages, because AI can introduce inaccuracies you didn't put in. The human review step is what makes AI-assisted communication trustworthy.</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el);});
+
+var checklistItems=[
+  {q:"Is every fact in this message accurate?",expand:"Double-check every specific detail — machine numbers, times, error codes, who was involved, what was done, what was found. One wrong detail can send someone to the wrong place, cause unnecessary alarm, or result in the wrong fix. If you're not sure of a fact, say so explicitly rather than guessing.",action:"If no: Fix the inaccurate detail or remove it and note uncertainty."},
+  {q:"Is this message clear — would someone who doesn't know the situation understand it?",expand:"Read it as if you've never heard of this situation. Would you know what machine? What happened? When? What's needed? If any of those are ambiguous, the message needs to be more specific.",action:"If no: Add the missing specific details — which machine, what exactly happened, when, what action is needed."},
+  {q:"Is this going to the right person?",expand:"Is the audience for this message the person who can actually act on it? A safety hazard should go to the safety coordinator, not just to a coworker. A machine problem should go to maintenance, not just get mentioned in the shift chat. The right person depends on who can do something about it.",action:"If no: Adjust the recipient or add additional recipients who need to know."},
+  {q:"Is the tone appropriate for the audience and situation?",expand:"Formal tone for management or safety documentation. Clear professional tone for supervisors and maintenance. Accessible tone for shift handoffs. Never accusatory, dismissive, or casual to the point of being unclear. Especially important if AI drafted the message — AI sometimes overcalibrates toward formal corporate language.",action:"If no: Adjust the tone — remove overly formal phrases, soften accusatory language, or add professional structure to something that reads too casual."},
+  {q:"Is this complete — does it include all the information the reader needs?",expand:"Does the message include: what happened, when, what was found, what was done (if anything), and what action is needed? Missing pieces force follow-up questions, which wastes time and signals incomplete thinking.",action:"If no: Add the missing pieces. It's better to be slightly long and complete than brief and incomplete."},
+  {q:"Is this message being sent at the right time?",expand:"A safety hazard needs to be reported now — not at the end of shift. A maintenance request for a non-urgent issue doesn't need to go at midnight. A shift handoff should go out before the incoming shift starts, not 20 minutes after. Timing affects whether action can actually be taken.",action:"If no: Send immediately if it's urgent. If it's not urgent, schedule it for business hours or the appropriate shift transition point."},
+  {q:"Does the message make clear what action is expected (if any)?",expand:"If you need something done, say what it is. 'Please inspect before the next shift.' 'No action needed — informational only.' 'Please advise.' A message without a clear next step forces the reader to figure out whether to respond, and often results in no response at all.",action:"If no: Add a clear call to action or note that no response is needed."}
+];
+var clEl=document.getElementById('cl-items'),checked=0,clDone=[];
+checklistItems.forEach(function(item,i){
+  clDone.push(false);
+  var d=document.createElement('div');d.className='cl-item';
+  d.innerHTML='<div class="cl-check" id="clc'+i+'"></div><div class="cl-text"><div class="cl-question">'+item.q+'</div><div class="cl-expand" id="cle'+i+'" style="display:none;">'+item.expand+'<br><br><em>'+item.action+'</em></div></div>';
+  d.onclick=function(e){
+    if(e.target.classList.contains('cl-check')||e.target.closest('.cl-check')){
+      clDone[i]=!clDone[i];
+      document.getElementById('clc'+i).classList.toggle('checked',clDone[i]);
+      checked=clDone.filter(Boolean).length;
+      var sc=document.getElementById('cl-score');sc.classList.add('show');
+      if(checked===7)sc.innerHTML='✅ All seven checked — you\'re ready to send. This is what professional communication review looks like.';
+      else if(checked>=5)sc.innerHTML='✓ '+checked+'/7 checked — almost there. Make sure all seven pass before sending.';
+      else sc.innerHTML=''+checked+'/7 checked — keep working through the list.';
+    } else {
+      var expEl=document.getElementById('cle'+i);
+      expEl.style.display=expEl.style.display==='none'?'block':'none';
+    }
+  };
+  clEl.appendChild(d);
+});
+
+// Message eval sim
+var messages=[
+  {label:"Message A",title:"✅ Passes All Checks",context:"Scenario: A quality technician is reporting an AI quality flag to her supervisor at the end of her shift.",msg:"Quality Alert Follow-up — Line 4 Vision System\n\nThe AI vision system flagged 8 parts on Line 4 between 2:00 and 2:45 PM today. I physically inspected all 8:\n\n• 6 confirmed defects (surface scratches, Defect Code QD-12) — quarantined and tagged for disposition by quality engineering\n• 2 false positives — lighting variation on the camera at station 3 caused shadow artifacts; no actual defect present\n\nThe elevated false positive rate on Station 3 camera has been an intermittent issue this week. I'm logging this occurrence for the weekly quality meeting.\n\nNo further action required from your end tonight. I'll flag the camera calibration issue in tomorrow's quality review.\n\nT. Okafor, Quality Technician — Line 4",qs:[
+    {q:"Is this message accurate?",correct:"Yes",wrong:"No",fb:"Yes — it reports exactly what was found, distinguishes confirmed defects from false positives, and notes the ongoing camera issue without overstating it.",bad:"This message is accurate — it reports physical findings, distinguishes confirmed defects from false positives, and correctly attributes the false positives to a documented camera issue."},
+    {q:"Is this message clear?",correct:"Yes",wrong:"No",fb:"Yes — the reader knows which line, what the AI flagged, what physical inspection found, and what's happening next.",bad:"This message is very clear — it specifies which line, what the AI flagged, how many of each outcome, and what the next step is."},
+    {q:"Is it right for the audience?",correct:"Yes",wrong:"No",fb:"Yes — professional tone appropriate for a supervisor update, enough detail to be informative without being overwhelming, clear call to action (no action required tonight).",bad:"This message is well-suited for a supervisor — professional tone, appropriate level of detail, clear on next steps."}
+  ],verdict:"This message passes all checklist criteria. It's accurate, complete, clear, appropriately toned, addressed to the right person, and makes next steps explicit. This is the model to replicate."},
+  {label:"Message B",title:"❌ Accuracy Problem",context:"Scenario: A maintenance tech is submitting a work order for a coolant leak. He noticed it at 10 AM. It's now 3 PM.",msg:"Work Order Request\n\nThere's a coolant leak on Machine 8. The leak started this morning. It's not a big deal but should probably get looked at when there's time.\n\nThanks",qs:[
+    {q:"Is this message accurate?",correct:"No",wrong:"Yes",fb:"Accuracy problem: 'not a big deal' is a judgment the maintenance team should make — not the operator. A coolant leak could indicate a serious seal failure or a minor drip. The operator should report what they observed, not editorialize on severity.",bad:"There is an accuracy/reliability problem: 'not a big deal' is an interpretation, not an observation. The operator may be right — or the leak could be serious. The maintenance team needs to make that call, not the person submitting the request."},
+    {q:"Is this message timely?",correct:"No",wrong:"Yes",fb:"Timeliness problem: The leak started at 10 AM and it's now 3 PM. A 5-hour delay reporting a coolant leak is not timely. This could have been causing equipment damage or floor safety issues for hours.",bad:"The message was sent 5 hours after the leak was noticed — that's a timeliness problem. Coolant leaks can cause floor slipping hazards, equipment damage, and production contamination. This should have been reported immediately."},
+    {q:"Is it complete?",correct:"No",wrong:"Yes",fb:"Completeness problem: Which machine is Machine 8? Where is the coolant leaking from — the fitting, the reservoir, the hose? How large is the leak? Has it gotten worse? The maintenance tech needs this to respond appropriately.",bad:"This message is missing critical details: the leak location on the machine, approximate size/volume, and whether it's getting worse. 'Machine 8' with no other detail is not enough for a technician to arrive prepared."}
+  ],verdict:"This message has three problems: it editorializes on severity instead of reporting observations ('not a big deal'), it was sent 5 hours after the problem was noticed, and it lacks the specific details a maintenance technician needs to respond efficiently. The fix: report immediately, describe what you see, let maintenance assess the severity."},
+  {label:"Message C",title:"❌ Tone Problem (Too Casual)",context:"Scenario: A shift lead is sending a handoff note to the incoming shift team via the group messaging app.",msg:"hey guys whats up, shift was crazy. machine 3 was being dumb again lol. someone should probably look at it. also we're low on that part, idk which one ask tom. have a good one ✌️",qs:[
+    {q:"Is the tone appropriate?",correct:"No",wrong:"Yes",fb:"Tone problem: This reads like a text to a friend, not a professional shift handoff. 'Machine 3 was being dumb again lol' tells the incoming team nothing useful and sounds dismissive of a potential problem.",bad:"The tone is not appropriate for a shift handoff that goes into the facility's communication record. 'Being dumb again lol' and 'idk which one ask tom' are not professional communication — and they also don't give the incoming team the information they need."},
+    {q:"Is it clear?",correct:"No",wrong:"Yes",fb:"Clarity problem: 'Machine 3 was being dumb' — what does that mean? An error? A quality issue? A noise? And 'that part' — which part? The incoming team has to track down Tom to find out basic information.",bad:"This message has major clarity problems. What happened to Machine 3? What type of issue? What part is low? 'Ask Tom' is not a substitute for the actual information the incoming shift needs."},
+    {q:"Is it complete?",correct:"No",wrong:"Yes",fb:"Completeness problem: A shift handoff needs to tell the incoming team what happened, what was done, what they need to watch for, and what's pending. This message provides none of that in usable form.",bad:"A handoff note needs to include: what happened, when, what was done, what to watch for, and what's still open. This message fails to provide any of that in a usable way."}
+  ],verdict:"This message fails on tone, clarity, and completeness. The incoming shift team gets no useful operational information and has to start fresh figuring out what happened. The fix: switch to professional language, name the specific machine issue and what happened, name the specific part that's low, and remove the casual filler."},
+  {label:"Message D",title:"❌ AI Draft — Inaccurate Detail",context:"Scenario: A production coordinator used AI to draft a safety report for a minor chemical spill. The AI added a detail that isn't accurate.",msg:"Safety Incident Report\n\nDate: [Today's date]\nLocation: Building C, Production Floor\n\nIncident Summary: A minor chemical spill occurred in the production area. The spill involved approximately 2 gallons of hydraulic fluid and has been contained. The affected area has been cleaned and decontaminated using standard protocols. No personnel were exposed to the substance.\n\nCorrective Action: The spill has been fully remediated. A maintenance inspection of the hydraulic system has been scheduled to identify the source of the leak.\n\nReported by: C. Reyes, Production Coordinator",qs:[
+    {q:"Is this message accurate?",correct:"No",wrong:"Yes",fb:"Accuracy problem: The AI wrote '2 gallons of hydraulic fluid' — but the coordinator never told it the quantity or type of fluid. If the actual spill was a small drip of machine coolant, this report is significantly inaccurate and could create a false record.",bad:"Accuracy is the main problem here. The AI generated a specific quantity ('2 gallons') and a specific substance ('hydraulic fluid') — but these details came from the AI, not from the person who observed the spill. If wrong, this creates a false safety record."},
+    {q:"Is it complete?",correct:"Yes",wrong:"No",fb:"For what it includes, it is complete — it covers incident summary, corrective action, and reporter. The problem isn't completeness; it's the accuracy of the specific details the AI invented.",bad:"The message structure is actually complete — it includes the necessary components of a safety report. The problem is accuracy, not completeness."},
+    {q:"Was the AI draft reviewed carefully before sending?",correct:"No",wrong:"Yes",fb:"This is the key problem. The coordinator appears to have sent the AI draft without verifying the specific details. 'Approximately 2 gallons of hydraulic fluid' and 'decontaminated using standard protocols' — did those things actually happen? These need to be confirmed before a safety report is submitted.",bad:"The coordinator should have caught the unverified specifics before sending. A safety report with fabricated quantities and substances creates a false record — which can cause regulatory problems and undermine trust."}
+  ],verdict:"This AI-drafted safety report contains specific details (quantity, substance type, decontamination method) that the AI generated without being told — meaning they may be inaccurate. Safety reports especially must be 100% accurate because they create legal records. The fix: before sending any AI-drafted safety communication, verify every specific detail matches what actually happened."}
+];
+var esNav=document.getElementById('es-nav'),esPanels=document.getElementById('es-panels'),esActive=0,esDone={};
+messages.forEach(function(m,i){
+  var btn=document.createElement('div');btn.className='es-nav-btn'+(i===0?' active':'');btn.textContent=m.label;
+  btn.onclick=function(){esActive=i;document.querySelectorAll('.es-nav-btn').forEach(function(b,j){b.classList.toggle('active',j===i);});document.querySelectorAll('.es-panel').forEach(function(p,j){p.classList.toggle('active',j===i);});};
+  esNav.appendChild(btn);
+  var panel=document.createElement('div');panel.className='es-panel'+(i===0?' active':'');
+  var qHtml='<div class="es-questions">';
+  m.qs.forEach(function(q,qi){
+    var key=i+'_'+qi;
+    qHtml+='<div class="es-q"><div class="es-q-text">'+q.q+'</div>'
+      +'<div class="es-q-opts">'
+      +'<div class="es-q-opt" id="esopt'+key+'_yes" onclick="evalQ(\''+key+'\',true,'+JSON.stringify(q.correct==='Yes')+')" >Yes</div>'
+      +'<div class="es-q-opt" id="esopt'+key+'_no" onclick="evalQ(\''+key+'\',false,'+JSON.stringify(q.correct==='No')+')">No</div>'
+      +'</div>'
+      +'<div class="es-feedback good" id="esfb'+key+'g">✅ '+q.fb+'</div>'
+      +'<div class="es-feedback bad" id="esfb'+key+'b">→ '+q.bad+'</div>'
+      +'</div>';
+  });
+  qHtml+='</div>';
+  panel.innerHTML='<div class="es-msg-box"><div class="es-msg-label">'+m.title+'</div><div class="es-msg-context">'+m.context+'</div><div class="es-msg-text">'+m.msg.replace(/\n/g,'<br>')+'</div></div>'
+    +qHtml
+    +'<div class="es-verdict" id="esv'+i+'" style="display:none;"><strong>Overall assessment:</strong> '+m.verdict+'</div>';
+  esPanels.appendChild(panel);
+});
+function evalQ(key,isYes,isCorrect){
+  if(esDone[key])return;esDone[key]=true;
+  document.getElementById('esopt'+key+'_yes').classList.add(isYes?(isCorrect?'correct':'wrong'):'locked');
+  document.getElementById('esopt'+key+'_no').classList.add(!isYes?(isCorrect?'correct':'wrong'):'locked');
+  document.getElementById('esopt'+key+'_yes').onclick=null;
+  document.getElementById('esopt'+key+'_no').onclick=null;
+  document.getElementById('esfb'+key+(isCorrect?'g':'b')).classList.add('show');
+  var panelIdx=parseInt(key.split('_')[0]);
+  var allDone=true;
+  messages[panelIdx].qs.forEach(function(q,qi){if(!esDone[panelIdx+'_'+qi])allDone=false;});
+  if(allDone)document.getElementById('esv'+panelIdx).style.display='block';
+}
+
+var done={};
+function doQ(i,correct,qid){
+  if(done[qid])return;done[qid]=true;
+  var opts=document.querySelectorAll('#'+qid+'-opts .quiz-opt');
+  opts.forEach(function(b){b.disabled=true;});
+  opts[i].classList.add(correct?'correct':'wrong');
+  document.getElementById(qid+'-'+(correct?'good':'bad')).classList.add('show');
+}
+</script>
+</body>
+</html>
