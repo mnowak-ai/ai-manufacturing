@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hands-On Activity: Review Sample Data</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7B2FBE;
+  --purple-dark:#4A1580;
+  --purple-pale:#F3EAFF;
+  --purple-mid:#E8D5FF;
+  --white:#FFFFFF;
+  --ink:#2B1A3D;
+  --grey:#6B6275;
+  --green:#1E8A5F;
+  --green-pale:#E6F7EF;
+  --amber:#B5700A;
+  --amber-pale:#FFF3DD;
+  --red:#C23B3B;
+  --red-pale:#FCEAEA;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:"DM Sans",sans-serif;
+  background:var(--white);
+  color:var(--ink);
+}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px;}
+
+.hero{text-align:center;padding:20px 0 28px;}
+.lesson-tag{
+  display:inline-block;background:var(--purple-pale);color:var(--purple-dark);
+  font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  padding:6px 16px;border-radius:999px;margin-bottom:18px;
+}
+.hero h1{
+  font-family:"Fraunces",serif;font-weight:700;font-size:32px;line-height:1.18;
+  margin:0 0 12px;color:var(--purple-dark);
+}
+.hero p{font-size:16px;line-height:1.6;color:var(--grey);max-width:600px;margin:0 auto;}
+.hero-divider{width:60px;height:4px;background:var(--purple);border-radius:4px;margin:24px auto 0;}
+
+.instructions{
+  background:var(--purple-pale);border-radius:18px;padding:20px 24px;margin:24px 0 36px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.instructions .icon{font-size:24px;flex-shrink:0;line-height:1;margin-top:2px;}
+.instructions p{margin:0;font-size:15px;line-height:1.6;color:var(--purple-dark);}
+.instructions strong{font-weight:700;}
+
+.progress-track{display:flex;justify-content:center;gap:10px;margin-bottom:34px;}
+.progress-dot{
+  width:34px;height:34px;border-radius:50%;background:var(--purple-mid);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  color:var(--purple-dark);transition:all .3s ease;
+}
+.progress-dot.active{background:var(--purple);color:#fff;transform:scale(1.1);}
+.progress-dot.done{background:var(--green);color:#fff;}
+
+.case{display:none;}
+.case.active{display:block;animation:slideIn .4s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+.case-label{
+  font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:14px;
+  color:var(--purple);text-align:center;margin-bottom:6px;
+}
+.case-title{
+  font-family:"Fraunces",serif;font-weight:700;font-size:22px;text-align:center;
+  margin:0 0 22px;color:var(--ink);
+}
+
+/* Side by side compare */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+@media (max-width:600px){.compare-grid{grid-template-columns:1fr;}}
+
+.compare-card{
+  border-radius:18px;padding:20px;background:var(--purple-pale);border:2px solid var(--purple-mid);
+}
+.compare-card.part{background:var(--white);border:2px solid var(--purple-mid);}
+.compare-head{
+  display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--purple-dark);margin-bottom:14px;
+}
+.compare-head .dot{width:8px;height:8px;border-radius:50%;background:var(--purple);}
+
+.part-stage{
+  background:var(--purple-pale);border-radius:14px;padding:16px;display:flex;justify-content:center;
+  align-items:center;margin-bottom:12px;min-height:140px;
+}
+.part-stage svg{width:100%;max-width:180px;height:auto;}
+
+.ai-flag-text{
+  font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:var(--purple-dark);
+  line-height:1.4;margin:0 0 6px;
+}
+.ai-confidence{font-size:13px;color:var(--grey);margin:0;}
+
+.part-note{font-size:14px;line-height:1.6;color:var(--ink);margin:0;}
+
+/* Inspect toggle */
+.inspect-btn{
+  width:100%;background:var(--purple);color:#fff;border:none;border-radius:12px;
+  padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:"DM Sans",sans-serif;
+  margin-bottom:18px;
+}
+.inspect-btn:hover{background:var(--purple-dark);}
+.inspect-btn.opened{background:var(--green);}
+.inspect-btn.opened:hover{background:var(--green);}
+
+.detail-panel{
+  display:none;background:var(--white);border:2px solid var(--purple-mid);border-radius:16px;
+  padding:18px 20px;margin-bottom:18px;font-size:14px;line-height:1.65;color:var(--ink);
+}
+.detail-panel.show{display:block;animation:slideIn .35s ease;}
+.detail-panel strong{color:var(--purple-dark);}
+
+/* Decision buttons - three way */
+.decision-row{display:flex;flex-direction:column;gap:10px;}
+.decision-opt{
+  border:2px solid var(--purple-mid);border-radius:14px;padding:16px 18px;
+  font-size:15px;font-weight:700;color:var(--purple-dark);cursor:pointer;
+  background:var(--white);transition:all .15s ease;text-align:left;display:flex;
+  align-items:center;gap:12px;
+}
+.decision-opt .opt-icon{font-size:18px;}
+.decision-opt:hover{border-color:var(--purple);background:var(--purple-pale);}
+.decision-opt.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.decision-opt.partial{background:var(--amber-pale);border-color:var(--amber);color:var(--amber);}
+.decision-opt.disabled{cursor:default;}
+.decision-opt.disabled:hover{background:inherit;border-color:inherit;}
+
+.decision-feedback{
+  margin-top:16px;padding:16px 18px;border-radius:14px;font-size:14px;line-height:1.7;display:none;
+}
+.decision-feedback.show{display:block;animation:slideIn .35s ease;}
+.decision-feedback.good{background:var(--green-pale);color:var(--green);}
+.decision-feedback.ok{background:var(--amber-pale);color:var(--amber);}
+
+.case-next{
+  display:none;width:100%;background:var(--purple);color:#fff;border:none;
+  border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;
+  font-family:"DM Sans",sans-serif;margin-top:18px;
+}
+.case-next.show{display:block;}
+.case-next:hover{background:var(--purple-dark);}
+
+/* Finale */
+.finale{display:none;text-align:center;}
+.finale.show{display:block;animation:slideIn .4s ease;}
+.finale-icon{font-size:48px;margin-bottom:12px;}
+.finale h2{font-family:"Fraunces",serif;font-weight:700;font-size:26px;color:var(--purple-dark);margin:0 0 12px;}
+.finale p{font-size:15px;line-height:1.7;color:var(--grey);max-width:560px;margin:0 auto 24px;}
+
+.summary-box{
+  background:linear-gradient(135deg,var(--purple-dark),var(--purple));
+  border-radius:22px;padding:30px 28px;color:#fff;text-align:left;margin-top:8px;
+}
+.summary-box h3{font-family:"Fraunces",serif;font-size:19px;margin:0 0 16px;color:#fff;}
+.summary-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.summary-item:last-child{margin-bottom:0;}
+.summary-check{
+  width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.summary-item p{font-size:14px;line-height:1.65;opacity:.93;margin:0;color:#fff;}
+
+.restart-btn{
+  margin-top:24px;background:var(--white);color:var(--purple);border:2px solid var(--purple);
+  border-radius:14px;padding:13px 28px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:"DM Sans",sans-serif;
+}
+.restart-btn:hover{background:var(--purple-pale);}
+
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+@media (max-width:560px){
+  .hero h1{font-size:25px;}
+  .case-title{font-size:19px;}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero fade-in">
+    <div class="lesson-tag">Hands-On Activity</div>
+    <h1>Review Sample Data</h1>
+    <p>Look at what AI flagged, look at the actual part, then make the call a quality technician would make.</p>
+    <div class="hero-divider"></div>
+  </div>
+
+  <div class="instructions fade-in">
+    <div class="icon">👆</div>
+    <p><strong>How this works:</strong> For each part, check the AI flag, inspect the part up close, then decide: accept, rework, or escalate. No typing — just tap and decide.</p>
+  </div>
+
+  <div class="progress-track" id="progressTrack"></div>
+
+  <!-- CASE 1: True defect - scratch -->
+  <div class="case active" id="case-0">
+    <div class="case-label">Case 1 of 4</div>
+    <div class="case-title">Part #A-1042</div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-head"><div class="dot"></div>AI Flag</div>
+        <p class="ai-flag-text">"Surface scratch detected on housing panel."</p>
+        <p class="ai-confidence">Confidence: High</p>
+      </div>
+      <div class="compare-card part">
+        <div class="compare-head"><div class="dot"></div>Actual Part</div>
+        <div class="part-stage">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="120" height="100" rx="14" fill="#E8D5FF" stroke="#7B2FBE" stroke-width="2"/>
+            <line x1="45" y1="50" x2="105" y2="95" stroke="#C23B3B" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="45" cy="50" r="4" fill="#C23B3B"/>
+            <circle cx="105" cy="95" r="4" fill="#C23B3B"/>
+          </svg>
+        </div>
+        <p class="part-note">A long, visible scratch runs across the panel surface.</p>
+      </div>
+    </div>
+
+    <button class="inspect-btn" id="inspect-0" onclick="toggleInspect(0)">🔍 Inspect Closer</button>
+    <div class="detail-panel" id="detail-0">
+      <strong>Close inspection:</strong> The scratch is roughly 3 inches long and deep enough to catch a fingernail. It's outside the cosmetic tolerance spec for this housing panel, and it's in a visible, customer-facing location.
+    </div>
+
+    <div class="decision-row" id="decision-row-0">
+      <button class="decision-opt" onclick="decideCase(0,this,'good','Right call. A defect this size, in a visible location, and outside tolerance should not ship. The AI flag matched what you could actually see — this is a clear case of agreeing with the AI for the right reasons.')">
+        <span class="opt-icon">🔧</span> Rework — scratch exceeds cosmetic tolerance
+      </button>
+      <button class="decision-opt" onclick="decideCase(0,this,'ok','Not quite. This scratch is visible, deep, and outside spec — letting it pass would mean a real defect reaches the customer.')">
+        <span class="opt-icon">✅</span> Accept — looks like normal wear
+      </button>
+      <button class="decision-opt" onclick="decideCase(0,this,'ok','More than needed here. The defect is clear and falls within a quality technician's own authority to call — it doesn't need engineering input.')">
+        <span class="opt-icon">📨</span> Escalate for engineering review
+      </button>
+    </div>
+    <div class="decision-feedback" id="fb-0"></div>
+
+    <button class="case-next" id="next-0" onclick="goToCase(1)">Next Part →</button>
+  </div>
+
+  <!-- CASE 2: False positive - within tolerance -->
+  <div class="case" id="case-1">
+    <div class="case-label">Case 2 of 4</div>
+    <div class="case-title">Part #B-2208</div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-head"><div class="dot"></div>AI Flag</div>
+        <p class="ai-flag-text">"Possible surface mark detected."</p>
+        <p class="ai-confidence">Confidence: Low</p>
+      </div>
+      <div class="compare-card part">
+        <div class="compare-head"><div class="dot"></div>Actual Part</div>
+        <div class="part-stage">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="120" height="100" rx="14" fill="#E8D5FF" stroke="#7B2FBE" stroke-width="2"/>
+            <line x1="70" y1="65" x2="78" y2="72" stroke="#9B7FC4" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="part-note">A faint mark, barely visible without close inspection.</p>
+      </div>
+    </div>
+
+    <button class="inspect-btn" id="inspect-1" onclick="toggleInspect(1)">🔍 Inspect Closer</button>
+    <div class="detail-panel" id="detail-1">
+      <strong>Close inspection:</strong> Under bright light, this is a faint surface mark less than a quarter-inch long. It's a known camera lighting artifact this AI model sometimes flags — it's within the cosmetic tolerance spec and isn't deep enough to be felt by touch.
+    </div>
+
+    <div class="decision-row" id="decision-row-1">
+      <button class="decision-opt" onclick="decideCase(1,this,'good','Right call. The AI flagged this with low confidence, and your inspection confirmed it''s within tolerance. Reworking a part that already meets spec would waste time and slow the line for no real benefit.')">
+        <span class="opt-icon">✅</span> Accept — within tolerance, low-confidence flag
+      </button>
+      <button class="decision-opt" onclick="decideCase(1,this,'ok','This adds unnecessary rework. The mark is within spec — pulling this part for rework slows the line without fixing an actual problem.')">
+        <span class="opt-icon">🔧</span> Rework — better safe than sorry
+      </button>
+      <button class="decision-opt" onclick="decideCase(1,this,'ok','Not needed here. This is a routine, low-confidence flag that a quality technician can resolve directly — it doesn''t require pulling in engineering.')">
+        <span class="opt-icon">📨</span> Escalate for engineering review
+      </button>
+    </div>
+    <div class="decision-feedback" id="fb-1"></div>
+
+    <button class="case-next" id="next-1" onclick="goToCase(2)">Next Part →</button>
+  </div>
+
+  <!-- CASE 3: Missing component, true defect -->
+  <div class="case" id="case-2">
+    <div class="case-label">Case 3 of 4</div>
+    <div class="case-title">Part #C-3391</div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-head"><div class="dot"></div>AI Flag</div>
+        <p class="ai-flag-text">"Component missing from assembly point 4."</p>
+        <p class="ai-confidence">Confidence: High</p>
+      </div>
+      <div class="compare-card part">
+        <div class="compare-head"><div class="dot"></div>Actual Part</div>
+        <div class="part-stage">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="120" height="100" rx="14" fill="#E8D5FF" stroke="#7B2FBE" stroke-width="2"/>
+            <circle cx="55" cy="50" r="9" fill="#7B2FBE"/>
+            <circle cx="105" cy="50" r="9" fill="#7B2FBE"/>
+            <circle cx="55" cy="90" r="9" fill="#7B2FBE"/>
+            <circle cx="105" cy="90" r="9" fill="none" stroke="#C23B3B" stroke-width="2" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+        <p class="part-note">One of four mounting clips is missing entirely.</p>
+      </div>
+    </div>
+
+    <button class="inspect-btn" id="inspect-2" onclick="toggleInspect(2)">🔍 Inspect Closer</button>
+    <div class="detail-panel" id="detail-2">
+      <strong>Close inspection:</strong> Assembly point 4 has no clip installed at all — not loose, not misaligned, just absent. This component is required for structural integrity. There's no tolerance range for "missing."
+    </div>
+
+    <div class="decision-row" id="decision-row-2">
+      <button class="decision-opt" onclick="decideCase(2,this,'good','Right call. A missing structural component is a true defect with no acceptable tolerance. This needs to be pulled and reworked before it moves further down the line.')">
+        <span class="opt-icon">🔧</span> Rework — install the missing component
+      </button>
+      <button class="decision-opt" onclick="decideCase(2,this,'ok','Not safe to accept. A missing structural part isn''t a borderline case — it''s an incomplete assembly that needs to be fixed before moving on.')">
+        <span class="opt-icon">✅</span> Accept — rest of the part looks fine
+      </button>
+      <button class="decision-opt" onclick="decideCase(2,this,'ok','More than this needs. A missing part with an obvious fix is within a quality technician''s call — it doesn''t require engineering input unless the cause is unclear.')">
+        <span class="opt-icon">📨</span> Escalate for engineering review
+      </button>
+    </div>
+    <div class="decision-feedback" id="fb-2"></div>
+
+    <button class="case-next" id="next-2" onclick="goToCase(3)">Next Part →</button>
+  </div>
+
+  <!-- CASE 4: Ambiguous - needs escalation -->
+  <div class="case" id="case-3">
+    <div class="case-label">Case 4 of 4</div>
+    <div class="case-title">Part #D-4475</div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-head"><div class="dot"></div>AI Flag</div>
+        <p class="ai-flag-text">"Unusual seam pattern, no match in defect library."</p>
+        <p class="ai-confidence">Confidence: Medium</p>
+      </div>
+      <div class="compare-card part">
+        <div class="compare-head"><div class="dot"></div>Actual Part</div>
+        <div class="part-stage">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="120" height="100" rx="14" fill="#E8D5FF" stroke="#7B2FBE" stroke-width="2"/>
+            <path d="M30 70 Q80 50 130 70" stroke="#B5700A" stroke-width="3" fill="none" stroke-dasharray="5 4"/>
+          </svg>
+        </div>
+        <p class="part-note">A wavy seam line that doesn't match typical patterns.</p>
+      </div>
+    </div>
+
+    <button class="inspect-btn" id="inspect-3" onclick="toggleInspect(3)">🔍 Inspect Closer</button>
+    <div class="detail-panel" id="detail-3">
+      <strong>Close inspection:</strong> The seam pattern is unusual — not a typical defect shape, and not a normal seam either. There's no clear spec to compare it against, and you can't tell from looking whether it's cosmetic or a sign of a process problem upstream.
+    </div>
+
+    <div class="decision-row" id="decision-row-3">
+      <button class="decision-opt" onclick="decideCase(3,this,'good','Right call. When something doesn''t clearly match a known defect or a known acceptable pattern, that''s exactly when it should go to engineering. Guessing either way — accept or rework — risks missing a process issue or wasting time on something harmless.')">
+        <span class="opt-icon">📨</span> Escalate for engineering review
+      </button>
+      <button class="decision-opt" onclick="decideCase(3,this,'ok','Risky. Since this doesn''t match anything in the defect library, accepting it without understanding what it is could let an upstream process problem keep going.')">
+        <span class="opt-icon">✅</span> Accept — probably just cosmetic
+      </button>
+      <button class="decision-opt" onclick="decideCase(3,this,'ok','Premature. Reworking it without understanding the cause might not fix anything — if it''s a process issue, the same pattern will keep showing up on the next parts.')">
+        <span class="opt-icon">🔧</span> Rework — better to fix it now
+      </button>
+    </div>
+    <div class="decision-feedback" id="fb-3"></div>
+
+    <button class="case-next" id="next-3" onclick="showFinale()">See My Results →</button>
+  </div>
+
+  <!-- FINALE -->
+  <div class="finale" id="finale">
+    <div class="finale-icon">🛠️</div>
+    <h2>You Just Thought Like a Quality Decision-Maker</h2>
+    <p>The AI's job is to flag possible issues. Your job is to confirm whether the flag matches reality — and choose the action that actually fits.</p>
+
+    <div class="summary-box">
+      <h3>What This Activity Showed</h3>
+      <div class="summary-item">
+        <div class="summary-check">✓</div>
+        <p>Agreeing with the AI isn't the goal — confirming whether the flag matches what you can actually observe is.</p>
+      </div>
+      <div class="summary-item">
+        <div class="summary-check">✓</div>
+        <p>Some flags are true defects that need rework. Some are within tolerance and can be accepted. Some are unclear enough that they need engineering review.</p>
+      </div>
+      <div class="summary-item">
+        <div class="summary-check">✓</div>
+        <p>The right call keeps production moving. The wrong call either lets a defect through or slows the line for nothing.</p>
+      </div>
+    </div>
+
+    <button class="restart-btn" onclick="restartActivity()">Try It Again</button>
+  </div>
+
+</div>
+
+<script>
+const totalCases = 4;
+let currentCase = 0;
+
+function buildProgress(){
+  const track = document.getElementById('progressTrack');
+  track.innerHTML = '';
+  for(let i=0;i<totalCases;i++){
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i===currentCase ? ' active' : '');
+    dot.textContent = i+1;
+    dot.id = 'pdot-'+i;
+    track.appendChild(dot);
+  }
+}
+buildProgress();
+
+function toggleInspect(caseIdx){
+  const btn = document.getElementById('inspect-'+caseIdx);
+  const panel = document.getElementById('detail-'+caseIdx);
+  if(panel.classList.contains('show')){
+    panel.classList.remove('show');
+    btn.classList.remove('opened');
+    btn.textContent = '🔍 Inspect Closer';
+  } else {
+    panel.classList.add('show');
+    btn.classList.add('opened');
+    btn.textContent = '✓ Inspected';
+  }
+}
+
+function decideCase(caseIdx, btn, type, feedbackText){
+  const opts = document.querySelectorAll('#decision-row-'+caseIdx+' .decision-opt');
+  opts.forEach(o => { o.classList.add('disabled'); o.onclick = null; });
+  btn.classList.add(type === 'good' ? 'correct' : 'partial');
+
+  const fb = document.getElementById('fb-'+caseIdx);
+  fb.textContent = feedbackText;
+  fb.classList.add(type === 'good' ? 'good' : 'ok');
+  fb.classList.add('show');
+
+  document.getElementById('next-'+caseIdx).classList.add('show');
+  document.getElementById('pdot-'+caseIdx).classList.add('done');
+
+  fb.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function goToCase(n){
+  document.getElementById('case-'+currentCase).classList.remove('active');
+  currentCase = n;
+  document.getElementById('case-'+currentCase).classList.add('active');
+  document.getElementById('pdot-'+n).classList.add('active');
+  window.scrollTo({top: document.querySelector('.progress-track').offsetTop - 20, behavior:'smooth'});
+}
+
+function showFinale(){
+  document.getElementById('pdot-3').classList.add('done');
+  document.getElementById('case-3').classList.remove('active');
+  document.getElementById('finale').classList.add('show');
+  window.scrollTo({top: document.getElementById('finale').offsetTop - 40, behavior:'smooth'});
+}
+
+function restartActivity(){
+  location.reload();
+}
+
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.15});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
+
+</body>
+</html>
